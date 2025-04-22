@@ -1,3 +1,6 @@
+# Environment
+*.env
+
 # Intellij
 .idea
 *.iml
