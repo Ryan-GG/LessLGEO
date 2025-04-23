@@ -14,6 +14,10 @@
     <name>LessLGEO</name>
     <description>Minimize legos needed</description>
     <packaging>pom</packaging>
+    <modules>
+        <module>parser</module>
+        <module>util</module>
+    </modules>
     <url/>
     <licenses>
         <license/>
