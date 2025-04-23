@@ -3,7 +3,7 @@ package less.lgeo.primitive;
 public class Triangle {
 
   private static final LineType type = LineType.TRIANGLE;
-  
+
   private final Color color;
   private final int x1;
   private final int y1;
