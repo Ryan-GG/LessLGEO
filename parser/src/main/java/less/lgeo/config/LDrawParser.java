@@ -1,12 +1,13 @@
-package less.lgeo.set;
+package less.lgeo.config;
 
-import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+
+import less.lgeo.set.Model;
 
 public class LDrawParser {
    // only UTF-8 encoding
@@ -27,15 +28,11 @@ public class LDrawParser {
 
     // LDraw parts are measured in LDraw Units LDU
 
-    class Model
-    {
-
-    }
     // TODO, This should parse into some POJO which we can use to modify or do something with
     public Model parse(File toParse) throws IOException {
         try(BufferedReader bufferedReader = new BufferedReader( new FileReader( toParse, StandardCharsets.UTF_8 ) ) )
         {
-            bufferedReader.lines()
+            // bufferedReader.lines()
         }
         return null;
     }
