@@ -15,6 +15,7 @@
     <description>Minimize legos needed</description>
     <packaging>pom</packaging>
     <modules>
+        <module>geometry</module>
         <module>parser</module>
         <module>util</module>
     </modules>

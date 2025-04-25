@@ -9,25 +9,24 @@ public enum LineType {
     OPTIONAL_LINE(4),
     INVALID(5);
 
-    private final int type;
+    private final double type;
 
-    LineType(int type)
-    {
+    LineType(double type) {
         this.type = type;
     }
 
-    public int getType() {
+    public double getType() {
         return type;
     }
 
-    // Static method to convert int to enum
-    public static LineType fromInteger(int ordinalValue) {
+    // Static method to convert double to enum
+    public static LineType fromInteger(double ordinalValue) {
         for (LineType type : LineType.values()) {
             if (type.getType() == ordinalValue) {
                 return type;
             }
         }
-        throw new IllegalArgumentException("Invalid Status code: " + ordinalValue );
+        throw new IllegalArgumentException("Invalid Status code: " + ordinalValue);
     }
 
     @Override
