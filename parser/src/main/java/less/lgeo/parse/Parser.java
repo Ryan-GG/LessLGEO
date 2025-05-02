@@ -5,18 +5,24 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
 import less.lgeo.Matrix;
 import less.lgeo.primitive.Color;
+import less.lgeo.primitive.Comment;
 import less.lgeo.primitive.Line;
 import less.lgeo.primitive.LineType;
+import less.lgeo.primitive.MetaCommand;
 import less.lgeo.primitive.OptionalLine;
 import less.lgeo.primitive.Quadrilateral;
 import less.lgeo.primitive.SubFileReference;
 import less.lgeo.primitive.Triangle;
+import less.lgeo.set.Model;
+import less.lgeo.set.Model.Builder;
 
 public class Parser {
+
   // only UTF-8 encoding
   // file name maximum 255 characters long including extension
   // Special characters, such as &, #, |, and ?, should be avoided as they may
@@ -38,42 +44,72 @@ public class Parser {
   // the file is permitted **but not required** to eend with <CR><LF>
 
   // LDraw parts are measured in LDraw Units LDU
-
+  
   private static double toDouble(String string) {
     return Double.parseDouble(string);
   }
 
-  // TODO, This should parse into some POJO which we can use to modify or do
-  // something with
-  public void parse(File toParse) throws IOException {
+  public Model parse(File toParse) throws IOException {
+    Model.Builder modelBuilder = Builder.newBuilder();
     try (BufferedReader bufferedReader = new BufferedReader(
         new FileReader(toParse, StandardCharsets.UTF_8))) {
-      bufferedReader.lines().forEachOrdered(this::parseTextLine);
+      bufferedReader.lines().forEachOrdered(line -> {
+        List<String> values = Arrays.asList(line.trim().split(" +"));
+
+        double commandValue = Integer.parseInt(values.removeFirst());
+        LineType lineType = LineType.fromInteger(commandValue);
+
+        switch (lineType) {
+          case COMMENT_OR_META_CMD -> {
+            if (isComment(values)) {
+              modelBuilder.addComment(parseComment(values));
+            } else {
+              modelBuilder.addCommand(parseCommand(values));
+            }
+          }
+          case SUB_FILE_REF -> modelBuilder.addPiece(parseSubFileReference(values));
+          case LINE -> modelBuilder.addLine(parseLine(values));
+          case TRIANGLE -> modelBuilder.addTriangle(parseTriangle(values));
+          case QUADRILATERAL -> modelBuilder.addQuadrilateral(parseQuadrilateral(values));
+          case OPTIONAL_LINE -> modelBuilder.addOptionalLine(parseOptionalLine(values));
+          default -> throw new IllegalStateException(
+              "Line Type has an Illegal type of " + lineType.getType());
+        }
+      });
+      // TODO setup logger rather than system out
+      System.out.println("Finished parsing");
+      return modelBuilder.build();
     }
-    // TODO setup logger rather than system out
-    System.out.println("Finished parsing");
   }
 
-  private void parseTextLine(String line) {
-    List<String> values = Arrays.asList(line.trim().split(" +"));
-
-    double commandValue = Integer.parseInt(values.removeFirst());
-    LineType lineType = LineType.fromInteger(commandValue);
-
-    switch (lineType) {
-      case COMMENT_OR_META_CMD -> parseCommentOrMetaCommand();
-      case SUB_FILE_REF -> parseSubFileReference(values);
-      case LINE -> parseLine(values);
-      case TRIANGLE -> parseTriangle(values);
-      case QUADRILATERAL -> parseQuadrilateral(values);
-      case OPTIONAL_LINE -> parseOptionalLine(values);
-      default ->
-          throw new IllegalStateException("Line Type has an Illegal type of " + lineType.getType());
-    }
+  /**
+   * TODO
+   *
+   * @param values
+   * @return
+   */
+  private boolean isComment(List<String> values) {
+    return true;
   }
 
-  private void parseCommentOrMetaCommand() {
+  /**
+   * TODO
+   *
+   * @param values
+   * @return
+   */
+  private Comment parseComment(List<String> values) {
+    return null;
+  }
 
+  /**
+   * TODO
+   *
+   * @param values
+   * @return
+   */
+  private MetaCommand parseCommand(List<String> values) {
+    return null;
   }
 
   /**
@@ -104,11 +140,14 @@ public class Parser {
     double i = toDouble(values.removeFirst());
 
     Matrix matrix = new Matrix(x, y, z, a, b, c, d, e, f, g, h, i);
-    String fileReference = values.getFirst();
+    Path fileReference = new File(values.getFirst()).toPath();
 
     return new SubFileReference(color, matrix, fileReference);
   }
 
+  /**
+   * @return parsed LDraw {@link Line}
+   */
   private Line parseLine(List<String> values) {
     if (values.size() != 7) {
       throw new IllegalStateException(
@@ -124,6 +163,9 @@ public class Parser {
     return new Line(color, x1, y1, z1, x2, y2, z2);
   }
 
+  /**
+   * @return parsed LDraw {@link Triangle}
+   */
   private Triangle parseTriangle(List<String> values) {
     if (values.size() != 10) {
       throw new IllegalStateException(
@@ -142,6 +184,9 @@ public class Parser {
     return new Triangle(color, x1, y1, z1, x2, y2, z2, x3, y3, z3);
   }
 
+  /**
+   * @return parsed LDraw {@link Quadrilateral}
+   */
   private Quadrilateral parseQuadrilateral(List<String> values) {
     if (values.size() != 13) {
       throw new IllegalStateException(
@@ -164,6 +209,9 @@ public class Parser {
     return new Quadrilateral(color, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4);
   }
 
+  /**
+   * @return parsed LDraw {@link OptionalLine}
+   */
   private OptionalLine parseOptionalLine(List<String> values) {
     if (values.size() != 13) {
       throw new IllegalStateException(
@@ -186,6 +234,9 @@ public class Parser {
     return new OptionalLine(color, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4);
   }
 
+  /**
+   * @return parsed LDraw {@link Color}
+   */
   private Color parseColor(String color) {
     return null;
   }
