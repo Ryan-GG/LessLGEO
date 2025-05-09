@@ -36,6 +36,19 @@ public class Model {
     return this.pieces;
   }
 
+  @Override
+  public String toString() {
+    return "Model{" +
+        "comments=" + comments +
+        ", commands=" + commands +
+        ", lines=" + lines +
+        ", triangles=" + triangles +
+        ", quadrilaterals=" + quadrilaterals +
+        ", optionalLines=" + optionalLines +
+        ", pieces=" + pieces +
+        '}';
+  }
+
   public static class Builder {
 
     private final List<Comment> builderComments;

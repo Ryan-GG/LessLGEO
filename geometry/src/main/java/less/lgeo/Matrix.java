@@ -32,7 +32,7 @@ public class Matrix {
   private final double g;
   private final double h;
   private final double i;
-  private final double[][] matrix = new double[4][4];
+  private final double scale = 1.0;
 
   /**
    * TODO I'm choosing this format, no idea if its right
@@ -56,53 +56,34 @@ public class Matrix {
     this.g = g;
     this.h = h;
     this.i = i;
-    setMatrix();
   }
 
-  private void setMatrix() {
-    matrix[0][0] = this.a;
-    matrix[1][0] = this.b;
-    matrix[2][0] = this.c;
-    matrix[3][0] = this.x;
-    matrix[0][1] = this.d;
-    matrix[1][1] = this.e;
-    matrix[2][1] = this.f;
-    matrix[3][1] = this.y;
-    matrix[0][2] = this.g;
-    matrix[1][2] = this.h;
-    matrix[2][2] = this.i;
-    matrix[3][2] = this.z;
-    matrix[0][3] = 0.0; // x rotation
-    matrix[1][3] = 0.0; // y rotation
-    matrix[2][3] = 0.0; // z rotation
-    matrix[3][3] = 1;   // scaling
-  }
 
   public Point getOrigin() {
     return new Point(this.x, this.y, this.z);
   }
 
-  public void rotateTo(double xRotation, double yRotation, double zRotation) {
-    matrix[0][3] = xRotation;
-    matrix[1][3] = yRotation;
-    matrix[2][3] = zRotation;
+
+  @Override
+  public String toString() {
+    return String.format("""
+                    %f, %f, %f, 0 \n
+                    %f, %f, %f, 0 \n
+                    %f, %f, %f, 0 \n
+                    %f, %f, %f, %f \n
+            """,
+        this.a,
+        this.d,
+        this.g,
+        this.b,
+        this.e,
+        this.h,
+        this.c,
+        this.f,
+        this.i,
+        this.x,
+        this.y,
+        this.z,
+        this.scale);
   }
-
-  public void setXRotation(double rotation) {
-    matrix[0][3] = rotation;
-  }
-
-  public void setYRotation(double rotation) {
-    matrix[1][3] = rotation;
-  }
-
-  public void setZRotation(double rotation) {
-    matrix[2][3] = rotation;
-  }
-
-  public void setScaling(double scale) {
-    matrix[3][3] = scale;
-  }
-
-
 }

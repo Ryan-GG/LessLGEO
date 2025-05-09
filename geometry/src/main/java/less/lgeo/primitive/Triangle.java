@@ -15,7 +15,8 @@ public class Triangle {
   private final double y3;
   private final double z3;
 
-  public Triangle(Color color, double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3,
+  public Triangle(Color color, double x1, double y1, double z1, double x2, double y2, double z2,
+      double x3, double y3,
       double z3) {
     this.color = color;
     this.x1 = x1;
@@ -27,5 +28,18 @@ public class Triangle {
     this.x3 = x3;
     this.y3 = y3;
     this.z3 = z3;
+  }
+
+  @Override
+  public String toString() {
+    Point p1 = new Point(x1, y1, z1);
+    Point p2 = new Point(x2, y2, z2);
+    Point p3 = new Point(x3, y3, z3);
+    return "Triangle{" +
+        "color=" + color +
+        ", p1=" + p1 +
+        ", p2=" + p2 +
+        ", p3=" + p3 +
+        '}';
   }
 }

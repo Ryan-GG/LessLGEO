@@ -21,4 +21,15 @@ public class Line {
     this.y2 = y2;
     this.z2 = z2;
   }
+
+  @Override
+  public String toString() {
+    Point p1 = new Point(x1, y1, z1);
+    Point p2 = new Point(x2, y2, z2);
+    return "Line{" +
+        "color=" + color +
+        ", p1=" + p1 +
+        ", p2=" + p2 +
+        '}';
+  }
 }

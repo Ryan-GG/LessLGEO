@@ -61,4 +61,12 @@ public class SubFileReference {
     return this.fileReference;
   }
 
+  @Override
+  public String toString() {
+    return "SubFileReference{" +
+        "color=" + color +
+        ", matrix=" + matrix +
+        ", fileReference=" + fileReference +
+        '}';
+  }
 }
