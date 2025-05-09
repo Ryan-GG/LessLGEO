@@ -4,11 +4,8 @@ import java.io.File;
 import java.io.IOException;
 import less.lgeo.parse.Parser;
 import less.lgeo.set.Model;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-@SpringBootApplication
 public class ParserHandler {
-
 
   public static void main(String[] args) {
     Parser parser = new Parser();

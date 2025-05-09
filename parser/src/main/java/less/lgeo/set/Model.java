@@ -1,5 +1,6 @@
 package less.lgeo.set;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import less.lgeo.primitive.Comment;
@@ -51,16 +52,15 @@ public class Model {
 
   public static class Builder {
 
-    private final List<Comment> builderComments;
-    private final List<MetaCommand> builderCommands;
-    private final List<Line> builderLines;
-    private final List<Triangle> builderTriangles;
-    private final List<Quadrilateral> builderQuadrilaterals;
-    private final List<OptionalLine> builderOptionalLines;
-    private final List<SubFileReference> builderPieces;
+    private final List<Comment> builderComments = new ArrayList<>();
+    private final List<MetaCommand> builderCommands = new ArrayList<>();
+    private final List<Line> builderLines = new ArrayList<>();
+    private final List<Triangle> builderTriangles = new ArrayList<>();
+    private final List<Quadrilateral> builderQuadrilaterals = new ArrayList<>();
+    private final List<OptionalLine> builderOptionalLines = new ArrayList<>();
+    private final List<SubFileReference> builderPieces = new ArrayList<>();
 
     private Builder() {
-      throw new RuntimeException("Private Constructor - Model.Builder");
     }
 
     public static Builder newBuilder() {

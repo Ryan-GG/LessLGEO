@@ -6,7 +6,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 import less.lgeo.Matrix;
 import less.lgeo.primitive.Color;
@@ -44,7 +44,7 @@ public class Parser {
   // the file is permitted **but not required** to eend with <CR><LF>
 
   // LDraw parts are measured in LDraw Units LDU
-  
+
   private static double toDouble(String string) {
     return Double.parseDouble(string);
   }
@@ -53,8 +53,8 @@ public class Parser {
     Model.Builder modelBuilder = Builder.newBuilder();
     try (BufferedReader bufferedReader = new BufferedReader(
         new FileReader(toParse, StandardCharsets.UTF_8))) {
-      bufferedReader.lines().forEachOrdered(line -> {
-        List<String> values = Arrays.asList(line.trim().split(" +"));
+      bufferedReader.lines().forEach(line -> {
+        List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
 
         double commandValue = Integer.parseInt(values.removeFirst());
         LineType lineType = LineType.fromInteger(commandValue);
