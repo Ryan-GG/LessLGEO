@@ -63,10 +63,15 @@ public class SubFileReference {
 
   @Override
   public String toString() {
-    return "SubFileReference{" +
-        "color=" + color +
-        ", matrix=" + matrix +
-        ", fileReference=" + fileReference +
-        '}';
+    return String.format("""
+              SubFileReference {
+              color=TODO,
+              matrix=%s,
+              fileRef=%s
+            }""",
+        //this.color.toString(),
+        this.matrix.toString(),
+        this.fileReference.toString()
+    );
   }
 }

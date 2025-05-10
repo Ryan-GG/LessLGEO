@@ -67,11 +67,10 @@ public class Matrix {
   @Override
   public String toString() {
     return String.format("""
-                    %f, %f, %f, 0 \n
-                    %f, %f, %f, 0 \n
-                    %f, %f, %f, 0 \n
-                    %f, %f, %f, %f \n
-            """,
+            [ %f, %f, %f, 0
+              %f, %f, %f, 0
+              %f, %f, %f, 0
+              %f, %f, %f, %f ]""",
         this.a,
         this.d,
         this.g,

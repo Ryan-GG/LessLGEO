@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import less.lgeo.Matrix;
 import less.lgeo.primitive.Color;
 import less.lgeo.primitive.Comment;
@@ -53,6 +54,7 @@ public class Parser {
     Model.Builder modelBuilder = Builder.newBuilder();
     try (BufferedReader bufferedReader = new BufferedReader(
         new FileReader(toParse, StandardCharsets.UTF_8))) {
+      AtomicInteger lineNumber = new AtomicInteger();
       bufferedReader.lines().forEach(line -> {
         List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
 
@@ -61,10 +63,10 @@ public class Parser {
 
         switch (lineType) {
           case COMMENT_OR_META_CMD -> {
-            if (isComment(values)) {
-              modelBuilder.addComment(parseComment(values));
-            } else {
+            if (isMetaCommand(values)) {
               modelBuilder.addCommand(parseCommand(values));
+            } else {
+              modelBuilder.addComment(parseComment(lineNumber.get(), values));
             }
           }
           case SUB_FILE_REF -> modelBuilder.addPiece(parseSubFileReference(values));
@@ -75,6 +77,7 @@ public class Parser {
           default -> throw new IllegalStateException(
               "Line Type has an Illegal type of " + lineType.getType());
         }
+        lineNumber.getAndIncrement();
       });
       // TODO setup logger rather than system out
       System.out.println("Finished parsing");
@@ -83,33 +86,34 @@ public class Parser {
   }
 
   /**
-   * TODO
-   *
-   * @param values
-   * @return
+   * @return True, if line is marked as a comment containing '//' as '0 <comment>' format is
+   * deprecated
    */
   private boolean isComment(List<String> values) {
-    return true;
+    return values.getFirst().equals("//");
   }
 
   /**
-   * TODO
-   *
-   * @param values
-   * @return
+   * @return If the next string is all Uppercase letters this is treated as a meta command
+   * @deprecated
    */
-  private Comment parseComment(List<String> values) {
-    return null;
+  private boolean isMetaCommand(List<String> values) {
+    return values.getFirst().toUpperCase().equals(values.getFirst());
   }
 
   /**
-   * TODO
-   *
-   * @param values
-   * @return
+   * @return Join line values as singular string 'comment'
+   */
+  private Comment parseComment(int lineNumber, List<String> values) {
+    return new Comment(lineNumber, values.toString());
+  }
+
+  /**
+   * @return MetaCommand, with command and additional parameters
    */
   private MetaCommand parseCommand(List<String> values) {
-    return null;
+    String command = values.removeFirst();
+    return new MetaCommand(command, values);
   }
 
   /**
