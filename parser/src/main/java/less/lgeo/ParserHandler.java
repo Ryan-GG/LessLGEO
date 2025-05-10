@@ -4,21 +4,20 @@ import java.io.File;
 import java.io.IOException;
 import less.lgeo.parse.Parser;
 import less.lgeo.set.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ParserHandler {
 
-  public static void main(String[] args) {
+  private static final Logger logger = LoggerFactory.getLogger(ParserHandler.class);
+
+  public static void main(String[] args) throws IOException {
     Parser parser = new Parser();
     File fileToParse = new File(args[0]);
 
-    try {
-      Model model = parser.parse(fileToParse);
+    Model model = parser.parse(fileToParse);
 
-      System.out.println(model.toString());
-
-    } catch (IOException e) {
-      System.out.println(e.getMessage());
-    }
+    logger.info("Model result: {}", model.toString());
   }
 
 }

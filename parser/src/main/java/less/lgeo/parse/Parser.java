@@ -21,9 +21,12 @@ import less.lgeo.primitive.SubFileReference;
 import less.lgeo.primitive.Triangle;
 import less.lgeo.set.Model;
 import less.lgeo.set.Model.Builder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class Parser {
 
+  private static final Logger logger = LoggerFactory.getLogger(Parser.class);
   // only UTF-8 encoding
   // file name maximum 255 characters long including extension
   // Special characters, such as &, #, |, and ?, should be avoided as they may
@@ -79,8 +82,7 @@ public class Parser {
         }
         lineNumber.getAndIncrement();
       });
-      // TODO setup logger rather than system out
-      System.out.println("Finished parsing");
+      logger.info("Finished Parsing");
       return modelBuilder.build();
     }
   }
