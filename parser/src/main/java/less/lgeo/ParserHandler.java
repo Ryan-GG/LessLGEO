@@ -6,7 +6,9 @@ import less.lgeo.parse.Parser;
 import less.lgeo.set.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+@SpringBootApplication
 public class ParserHandler {
 
   private static final Logger logger = LoggerFactory.getLogger(ParserHandler.class);
