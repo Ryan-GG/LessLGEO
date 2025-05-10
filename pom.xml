@@ -17,41 +17,20 @@
       <groupId>org.springframework.boot</groupId>
     </dependency>
     <dependency>
-      <artifactId>spring-boot-devtools</artifactId>
-      <groupId>org.springframework.boot</groupId>
-      <optional>true</optional>
-    </dependency>
-    <dependency>
       <artifactId>spring-boot-starter-logging</artifactId>
       <groupId>org.springframework.boot</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>spring-boot-docker-compose</artifactId>
-      <groupId>org.springframework.boot</groupId>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <artifactId>postgresql</artifactId>
       <groupId>org.postgresql</groupId>
     </dependency>
-    <dependency>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <groupId>org.springframework.boot</groupId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-  <artifactId>slf4j-api</artifactId>
-  <groupId>org.slf4j</groupId>
-</dependency>
-<dependency>
-  <artifactId>slf4j-simple</artifactId>
-  <groupId>org.slf4j</groupId>
-  <scope>runtime</scope>
-</dependency>
   </dependencies>
   <description>Minimize legos needed</description>
   <developers>
-    <developer/>
+    <developer>
+      <email>ryangross47@gmail.com</email>
+      <name>Ryan Gross</name>
+    </developer>
   </developers>
   <groupId>less.lgeo</groupId>
   <licenses>
