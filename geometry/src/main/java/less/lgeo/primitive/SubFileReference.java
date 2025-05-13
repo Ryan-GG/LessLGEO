@@ -1,7 +1,7 @@
 package less.lgeo.primitive;
 
-import java.nio.file.Path;
 import less.lgeo.Matrix;
+import less.lgeo.set.Model;
 
 /**
  * <colour> is a number representing the colour of the part. See the Colours section for allowable
@@ -17,20 +17,20 @@ public class SubFileReference {
 
   private final Color color;
   private final Matrix matrix;
-  private final Path fileReference;
+  private final less.lgeo.set.Model subModel;
 
   public SubFileReference(Color color, double x, double y, double z, double a, double b, double c,
       double d, double e,
-      double f, double g, double h, double i, Path fileReference) {
+      double f, double g, double h, double i, Model subModel) {
     this.color = color;
     this.matrix = new Matrix(x, y, z, a, b, c, d, e, f, g, h, i);
-    this.fileReference = fileReference;
+    this.subModel = subModel;
   }
 
-  public SubFileReference(Color color, Matrix matrix, Path fileReference) {
+  public SubFileReference(Color color, Matrix matrix, Model subModel) {
     this.color = color;
     this.matrix = matrix;
-    this.fileReference = fileReference;
+    this.subModel = subModel;
   }
 
   public Color getColor() {
@@ -39,26 +39,6 @@ public class SubFileReference {
 
   public Matrix getMatrix() {
     return this.matrix;
-  }
-
-
-  /**
-   * sub-files can be located in the LDRAW\PARTS sub-directory, the LDRAW\P sub-directory, the
-   * LDRAW\MODELS sub-directory, the current file's directory, a path relative to one of these
-   * directories, or a full path may be specified. Sub-parts are typically stored in the
-   * LDRAW\PARTS\S sub-directory and so are referenced as s\subpart.dat, while hi-res primitives are
-   * stored in the LDRAW\P\48 sub-directory and so referenced as 48\hires.dat
-   * <p>
-   * While there is no specified limit on how deep sub-files may be nested, there are probably
-   * practical limitations imposed by individual software programs.
-   * <p>
-   * There are many on-line references about transformation matrices, one such reference is 3D
-   * Transformations – Part 1 Matrices
-   *
-   * @return
-   */
-  public Path getFileReference() {
-    return this.fileReference;
   }
 
   @Override
@@ -71,7 +51,7 @@ public class SubFileReference {
             }""",
         //this.color.toString(),
         this.matrix.toString(),
-        this.fileReference.toString()
+        this.subModel.toString()
     );
   }
 }

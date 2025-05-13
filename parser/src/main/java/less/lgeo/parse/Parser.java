@@ -4,8 +4,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -57,10 +57,11 @@ public class Parser {
     Model.Builder modelBuilder = Builder.newBuilder();
     try (BufferedReader bufferedReader = new BufferedReader(
         new FileReader(toParse, StandardCharsets.UTF_8))) {
-      AtomicInteger lineNumber = new AtomicInteger();
-      bufferedReader.lines().forEach(line -> {
-        List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
 
+      logger.info("Parsing file name: {}", toParse);
+      AtomicInteger lineNumber = new AtomicInteger();
+      bufferedReader.lines().filter(line -> line != null && !line.isBlank()).forEach(line -> {
+        List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
         double commandValue = Integer.parseInt(values.removeFirst());
         LineType lineType = LineType.fromInteger(commandValue);
 
@@ -146,9 +147,21 @@ public class Parser {
     double i = toDouble(values.removeFirst());
 
     Matrix matrix = new Matrix(x, y, z, a, b, c, d, e, f, g, h, i);
-    Path fileReference = new File(values.getFirst()).toPath();
 
-    return new SubFileReference(color, matrix, fileReference);
+    String subFileName = values.getFirst();
+    Model parsedSubModel = null;
+    try {
+
+      parsedSubModel = parse(
+          new File(getClass().getClassLoader().getResource(subFileName).toURI()));
+    } catch (URISyntaxException | IOException uriSyntaxException) {
+      logger.error("Failed to parse sub-file reference");
+    }
+
+    if (parsedSubModel == null) {
+      throw new RuntimeException("null sub model");
+    }
+    return new SubFileReference(color, matrix, parsedSubModel);
   }
 
   /**
