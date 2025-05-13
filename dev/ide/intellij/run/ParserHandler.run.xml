@@ -2,7 +2,7 @@
   <configuration default="false" name="ParserHandler" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="less.lgeo.ParserHandler" />
     <module name="parser" />
-    <option name="PROGRAM_PARAMETERS" value="parser/src/test/resources/railway_test.ldr" />
+    <option name="PROGRAM_PARAMETERS" value="parser/src/test/resources/single.ldr" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="less.lgeo.*" />

@@ -32,14 +32,14 @@ public class Triangle {
 
   @Override
   public String toString() {
-    Point p1 = new Point(x1, y1, z1);
-    Point p2 = new Point(x2, y2, z2);
-    Point p3 = new Point(x3, y3, z3);
+    Vertex v1 = new Vertex(x1, y1, z1);
+    Vertex v2 = new Vertex(x2, y2, z2);
+    Vertex v3 = new Vertex(x3, y3, z3);
     return "Triangle{" +
         "color=" + color +
-        ", p1=" + p1 +
-        ", p2=" + p2 +
-        ", p3=" + p3 +
+        ", v1=" + v1 +
+        ", v2=" + v2 +
+        ", v3=" + v3 +
         '}';
   }
 }

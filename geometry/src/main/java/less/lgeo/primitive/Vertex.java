@@ -1,12 +1,12 @@
 package less.lgeo.primitive;
 
-public class Point {
+public class Vertex {
 
   private final double x;
   private final double y;
   private final double z;
 
-  public Point(double x, double y, double z) {
+  public Vertex(double x, double y, double z) {
     this.x = x;
     this.y = y;
     this.z = z;
@@ -26,6 +26,6 @@ public class Point {
 
   @Override
   public String toString() {
-    return "Point{x=" + x + ", y=" + y + ", z=" + z + '}';
+    return "Vertex{x=" + x + ", y=" + y + ", z=" + z + '}';
   }
 }

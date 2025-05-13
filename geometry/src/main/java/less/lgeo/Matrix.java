@@ -1,6 +1,6 @@
 package less.lgeo;
 
-import less.lgeo.primitive.Point;
+import less.lgeo.primitive.Vertex;
 
 // @formatter:off
 /**
@@ -59,8 +59,8 @@ public class Matrix {
   }
 
 
-  public Point getOrigin() {
-    return new Point(this.x, this.y, this.z);
+  public Vertex getOrigin() {
+    return new Vertex(this.x, this.y, this.z);
   }
 
 
