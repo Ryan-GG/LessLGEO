@@ -16,9 +16,14 @@ public class MetaCommand {
 
   @Override
   public String toString() {
-    return "MetaCommand{" +
-        "command='" + command + '\'' +
-        ", additionalParams=" + additionalParams +
-        "}\n";
+    return String.format("""
+            {
+              command='%s',
+              additionalParams='%s'
+            }
+            """,
+        this.command,
+        this.additionalParams
+    );
   }
 }

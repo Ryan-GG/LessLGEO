@@ -26,10 +26,16 @@ public class Line {
   public String toString() {
     Vertex v1 = new Vertex(x1, y1, z1);
     Vertex v2 = new Vertex(x2, y2, z2);
-    return "Line{" +
-        "color=" + color +
-        ", v1=" + v1 +
-        ", v2=" + v2 +
-        '}';
+    return String.format(
+        """
+            {
+              color='%s',
+              v1='%s',
+              v2='%s'
+            }
+            """,
+        this.color,
+        v1,
+        v2);
   }
 }

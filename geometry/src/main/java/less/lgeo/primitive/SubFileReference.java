@@ -17,7 +17,7 @@ public class SubFileReference {
 
   private final Color color;
   private final Matrix matrix;
-  private final less.lgeo.set.Model subModel;
+  private final Model subModel;
 
   public SubFileReference(Color color, double x, double y, double z, double a, double b, double c,
       double d, double e,
@@ -46,8 +46,8 @@ public class SubFileReference {
     return String.format("""
               SubFileReference {
               color=TODO,
-              matrix=%s,
-              fileRef=%s
+              matrix='%s',
+              fileRef='%s'
             }""",
         //this.color.toString(),
         this.matrix.toString(),

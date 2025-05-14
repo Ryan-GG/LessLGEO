@@ -24,6 +24,12 @@
       <groupId>org.springframework.boot</groupId>
       <version>3.4.4</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.springframework/spring-core -->
+    <dependency>
+      <artifactId>spring-core</artifactId>
+      <groupId>org.springframework</groupId>
+      <version>7.0.0-M4</version>
+    </dependency>
   </dependencies>
   <groupId>less.lgeo</groupId>
   <modelVersion>4.0.0</modelVersion>

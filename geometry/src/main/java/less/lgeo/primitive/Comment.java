@@ -12,6 +12,6 @@ public class Comment {
 
   @Override
   public String toString() {
-    return "Comment='" + comment + "', ln: " + lineNumber + "\n";
+    return this.comment;
   }
 }

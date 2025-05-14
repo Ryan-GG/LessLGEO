@@ -23,6 +23,7 @@ import less.lgeo.set.Model;
 import less.lgeo.set.Model.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
 
 public class Parser {
 
@@ -60,7 +61,8 @@ public class Parser {
 
       logger.info("Parsing file name: {}", toParse);
       AtomicInteger lineNumber = new AtomicInteger();
-      bufferedReader.lines().filter(line -> line != null && !line.isBlank()).forEach(line -> {
+
+      bufferedReader.lines().filter(StringUtils::hasText).forEach(line -> {
         List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
         double commandValue = Integer.parseInt(values.removeFirst());
         LineType lineType = LineType.fromInteger(commandValue);

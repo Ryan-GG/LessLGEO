@@ -44,12 +44,20 @@ public class Quadrilateral {
     Vertex v2 = new Vertex(x2, y2, z2);
     Vertex v3 = new Vertex(x3, y3, z3);
     Vertex v4 = new Vertex(x4, y4, z4);
-    return "Quadrilateral{" +
-        "color=" + color +
-        ", v1=" + v1 +
-        ", v2=" + v2 +
-        ", v3=" + v3 +
-        ", v4=" + v4 +
-        '}';
+    return String.format(
+        """
+            {
+              color='%s',
+              v1='%s',
+              v2='%s',
+              v3='%s',
+              v4='%s'
+            }
+            """,
+        this.color,
+        v1,
+        v2,
+        v3,
+        v4);
   }
 }

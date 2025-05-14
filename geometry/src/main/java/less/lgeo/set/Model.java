@@ -39,15 +39,25 @@ public class Model {
 
   @Override
   public String toString() {
-    return "Model{" +
-        "comments=" + comments +
-        ", commands=" + commands +
-        ", lines=" + lines +
-        ", triangles=" + triangles +
-        ", quadrilaterals=" + quadrilaterals +
-        ", optionalLines=" + optionalLines +
-        ", pieces=" + pieces +
-        '}';
+    return String.format("""
+            Model {
+              comments='%s',
+              commands='%s,
+              lines='%s',
+              triangles='%s,
+              quadrilaterals='%s',
+              optionalLines='%s',
+              pieces='%s'
+            }
+            """,
+        this.comments,
+        this.commands,
+        this.lines,
+        this.triangles,
+        this.quadrilaterals,
+        this.optionalLines,
+        this.pieces
+    );
   }
 
   public static class Builder {

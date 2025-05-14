@@ -26,6 +26,6 @@ public class Vertex {
 
   @Override
   public String toString() {
-    return "Vertex{x=" + x + ", y=" + y + ", z=" + z + '}';
+    return String.format("{ x=%f, y=%f, z=%f }", this.x, this.y, this.z);
   }
 }
