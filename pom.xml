@@ -41,8 +41,6 @@
     <module>geometry</module>
     <module>parser</module>
     <module>util</module>
-    <module>reducer</module>
-    <module>web-server</module>
   </modules>
   <name>LessLGEO</name>
   <packaging>pom</packaging>
