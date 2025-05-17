@@ -32,3 +32,6 @@ replay_pid*
 
 # Target files
 */target/
+
+# Local ldraw files
+ldraw/
