@@ -4,11 +4,15 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 import less.lgeo.Matrix;
 import less.lgeo.primitive.Color;
 import less.lgeo.primitive.Comment;
@@ -69,7 +73,9 @@ public class Parser {
 
         switch (lineType) {
           case COMMENT_OR_META_CMD -> {
-            if (isMetaCommand(values)) {
+            if (values.isEmpty()) {
+              logger.warn("Found '0' line");
+            } else if (isMetaCommand(values)) {
               modelBuilder.addCommand(parseCommand(values));
             } else {
               modelBuilder.addComment(parseComment(lineNumber.get(), values));
@@ -103,8 +109,10 @@ public class Parser {
    * @deprecated
    */
   private boolean isMetaCommand(List<String> values) {
-    return values.getFirst().toUpperCase().equals(values.getFirst());
+    String command = values.getFirst();
+    return command.toUpperCase().equals(command);
   }
+
 
   /**
    * @return Join line values as singular string 'comment'
@@ -150,18 +158,31 @@ public class Parser {
 
     Matrix matrix = new Matrix(x, y, z, a, b, c, d, e, f, g, h, i);
 
-    String subFileName = values.getFirst();
+    /*
+     * FIXME
+     * this recursive parsing is not good, as it will find the first instance of a matching file name,
+     * possibly not find the correct directory one. Why there are multiple .dat files with the same name IDK
+     */
+    List<String> subFileParts = Arrays.stream(values.getFirst().split("\\\\")).toList();
+    String subFileName = subFileParts.getLast();
     Model parsedSubModel = null;
-    try {
+    // split on \, and use last as file name to search for
+    try (Stream<Path> ldrawDir = Files.walk(Path.of("ldraw"))) {
 
-      parsedSubModel = parse(
-          new File(getClass().getClassLoader().getResource(subFileName).toURI()));
-    } catch (URISyntaxException | IOException uriSyntaxException) {
-      logger.error("Failed to parse sub-file reference");
+      Optional<Path> subFilePath = ldrawDir.filter(
+              path -> path.getFileName().toString().equals(subFileName))
+          .findFirst();
+      if (subFilePath.isEmpty()) {
+        throw new IOException();
+      }
+
+      parsedSubModel = parse(subFilePath.get().toFile());
+
+    } catch (IOException ex) {
+      logger.error("Sub file does not exist, {}", subFileName);
     }
-
     if (parsedSubModel == null) {
-      throw new RuntimeException("null sub model");
+      throw new IllegalStateException("Sub File Reference is null");
     }
     return new SubFileReference(color, matrix, parsedSubModel);
   }
