@@ -1,4 +1,4 @@
-package rabbitmq;
+package less.lgeo.rabbitmq;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -14,7 +14,7 @@ import org.springframework.context.annotation.Bean;
 @SpringBootApplication
 public class RabbitBroker {
 
-  static final String topicExchangeName = "spring-boot-exchange";
+  public static final String topicExchangeName = "spring-boot-exchange";
 
   static final String queueName = "spring-boot";
 
