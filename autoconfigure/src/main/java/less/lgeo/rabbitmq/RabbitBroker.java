@@ -7,8 +7,10 @@ import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
-import org.springframework.boot.SpringApplication;
+import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
@@ -19,7 +21,12 @@ public class RabbitBroker {
   static final String queueName = "spring-boot";
 
   public static void main(String[] args) throws InterruptedException {
-    SpringApplication.run(RabbitBroker.class, args).close();
+    //SpringApplication.run(RabbitBroker.class, args).
+    ConfigurableApplicationContext context = new SpringApplicationBuilder()
+        .web(WebApplicationType.NONE)
+        .sources(RabbitBroker.class)
+        .build()
+        .run(args);
   }
 
   @Bean

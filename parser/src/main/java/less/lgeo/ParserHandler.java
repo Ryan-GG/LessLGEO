@@ -46,6 +46,6 @@ public class ParserHandler implements ApplicationRunner {
     System.out.println("Sending message...");
     rabbitTemplate.convertAndSend(RabbitBroker.topicExchangeName, "foo.bar.baz",
         "Hello from RabbitMQ!");
-    receiver.getLatch().await(10000, TimeUnit.MILLISECONDS);
+    receiver.getLatch().await(1000, TimeUnit.MILLISECONDS);
   }
 }
