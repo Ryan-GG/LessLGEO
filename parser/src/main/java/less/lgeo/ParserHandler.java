@@ -1,6 +1,6 @@
 package less.lgeo;
 
-import static less.lgeo.ReducerHandler.TOPIC_EXCHANGE_NAME;
+import static less.lgeo.config.RabbitBeanCreator.TOPIC_EXCHANGE_NAME;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
