@@ -2,3 +2,8 @@ spring:
   rabbitmq:
     username: "myuser"
     password: "secret"
+
+rabbit:
+  topicName: "parser-to-reducer-exchange"
+  queueName: "parser-to-reducer-queue"
+  routingKey: "foo.bar.#"

@@ -14,33 +14,34 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitBeanCreator {
 
-  public static final String TOPIC_EXCHANGE_NAME = "parser-to-reducer-exchange";
-  public static final String QUEUE_NAME = "parser-to-reducer-queue";
-  public static final String ROUTING_KEY = "foo.bar.#";
-  
+//  public static final String TOPIC_EXCHANGE_NAME = "parser-to-reducer-exchange";
+//  public static final String QUEUE_NAME = "parser-to-reducer-queue";
+//  public static final String ROUTING_KEY = "foo.bar.#";
+
   @Bean
-  Queue queue() {
-    return new Queue(QUEUE_NAME, false);
+  Queue queue(RabbitProperties rabbitProperties) {
+    return new Queue(rabbitProperties.queueName(), false);
   }
 
   @Bean
-  TopicExchange exchange() {
-    return new TopicExchange(TOPIC_EXCHANGE_NAME);
+  TopicExchange exchange(RabbitProperties rabbitProperties) {
+    return new TopicExchange(rabbitProperties.topicName());
   }
 
   @Bean
-  Binding binding(Queue queue, TopicExchange exchange) {
+  Binding binding(Queue queue, TopicExchange exchange, RabbitProperties rabbitProperties) {
     return BindingBuilder.bind(queue)
         .to(exchange)
-        .with(ROUTING_KEY);
+        .with(rabbitProperties.routingKey());
   }
 
   @Bean
   SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
-      MessageListenerAdapter listenerAdapter) {
+      MessageListenerAdapter listenerAdapter,
+      RabbitProperties rabbitProperties) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(QUEUE_NAME);
+    container.setQueueNames(rabbitProperties.queueName());
     container.setMessageListener(listenerAdapter);
     return container;
   }

@@ -1,9 +1,8 @@
 package less.lgeo;
 
-import static less.lgeo.config.RabbitBeanCreator.TOPIC_EXCHANGE_NAME;
-
 import java.io.File;
 import java.util.concurrent.TimeUnit;
+import less.lgeo.config.RabbitProperties;
 import less.lgeo.parse.Parser;
 import less.lgeo.rabbitmq.RabbitReceiver;
 import less.lgeo.set.Model;
@@ -15,17 +14,22 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+@EnableConfigurationProperties(value = RabbitProperties.class)
 @SpringBootApplication
 public class ParserHandler implements ApplicationRunner {
 
   private static final Logger logger = LoggerFactory.getLogger(ParserHandler.class);
   private final RabbitTemplate rabbitTemplate;
-  private final RabbitReceiver receiver;
+  private final RabbitReceiver rabbitReceiver;
+  private final RabbitProperties rabbitProperties;
 
-  public ParserHandler(RabbitReceiver receiver, RabbitTemplate rabbitTemplate) {
-    this.receiver = receiver;
+  public ParserHandler(RabbitReceiver rabbitReceiver, RabbitTemplate rabbitTemplate,
+      RabbitProperties rabbitProperties) {
+    this.rabbitReceiver = rabbitReceiver;
     this.rabbitTemplate = rabbitTemplate;
+    this.rabbitProperties = rabbitProperties;
   }
 
   public static void main(String[] args) {
@@ -47,8 +51,8 @@ public class ParserHandler implements ApplicationRunner {
     logger.info("Model result: {}", model.toString());
 
     System.out.println("Sending message...");
-    rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_NAME, "foo.bar.baz",
+    rabbitTemplate.convertAndSend(rabbitProperties.topicName(), "foo.bar.baz",
         "Hello from RabbitMQ!");
-    receiver.getLatch().await(1000, TimeUnit.MILLISECONDS);
+    rabbitReceiver.getLatch().await(1000, TimeUnit.MILLISECONDS);
   }
 }

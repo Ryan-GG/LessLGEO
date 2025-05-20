@@ -1,5 +1,6 @@
 package less.lgeo;
 
+import less.lgeo.config.RabbitProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.ApplicationArguments;
@@ -7,7 +8,9 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
+@EnableConfigurationProperties(value = RabbitProperties.class)
 @SpringBootApplication
 public class ReducerHandler implements ApplicationRunner {
 
