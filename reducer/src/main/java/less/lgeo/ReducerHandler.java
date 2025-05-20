@@ -1,12 +1,17 @@
 package less.lgeo;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 
 @SpringBootApplication
-public class ReducerHandler {
+public class ReducerHandler implements ApplicationRunner {
 
+  private static final Logger logger = LoggerFactory.getLogger(ReducerHandler.class);
 
   public static void main(String[] args) {
     new SpringApplicationBuilder()
@@ -17,4 +22,7 @@ public class ReducerHandler {
   }
 
 
+  @Override
+  public void run(ApplicationArguments args) {
+  }
 }

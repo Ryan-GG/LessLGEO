@@ -15,11 +15,6 @@
       <version>1.0-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <artifactId>spring-boot-starter-logging</artifactId>
-      <groupId>org.springframework.boot</groupId>
-      <version>3.4.4</version>
-    </dependency>
-    <dependency>
       <artifactId>messaging</artifactId>
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
@@ -29,11 +24,6 @@
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <artifactId>snakeyaml</artifactId>
-      <groupId>org.yaml</groupId>
-      <version>2.4</version>
-    </dependency>
   </dependencies>
   <groupId>less.lgeo</groupId>
   <modelVersion>4.0.0</modelVersion>
@@ -42,7 +32,7 @@
     <artifactId>parent</artifactId>
     <groupId>less.lgeo</groupId>
     <relativePath/>
-    <version>0.0.1-SNAPSHOT</version> <!-- lookup parent from repository -->
+    <version>0.0.1-SNAPSHOT</version>
   </parent>
   <properties>
     <maven.compiler.source>23</maven.compiler.source>
