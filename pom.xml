@@ -62,7 +62,7 @@
     <module>parser</module>
     <module>util</module>
     <module>reducer</module>
-    <module>autoconfigure</module>
+    <module>messaging</module>
   </modules>
   <name>LessLGEO</name>
   <packaging>pom</packaging>

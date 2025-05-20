@@ -44,7 +44,7 @@ public class ParserHandler implements ApplicationRunner {
     logger.info("Model result: {}", model.toString());
 
     System.out.println("Sending message...");
-    rabbitTemplate.convertAndSend(RabbitBroker.topicExchangeName, "foo.bar.baz",
+    rabbitTemplate.convertAndSend(RabbitBroker.TOPIC_EXCHANGE_NAME, "foo.bar.baz",
         "Hello from RabbitMQ!");
     receiver.getLatch().await(1000, TimeUnit.MILLISECONDS);
   }

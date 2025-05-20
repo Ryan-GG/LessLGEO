@@ -10,19 +10,18 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
 public class RabbitBroker {
 
-  public static final String topicExchangeName = "spring-boot-exchange";
+  public static final String TOPIC_EXCHANGE_NAME = "parser-to-reducer-exchange";
+  public static final String QUEUE_NAME = "parser-to-reducer-queue";
+  public static final String ROUTING_KEY = "foo.bar.#";
 
-  static final String queueName = "spring-boot";
 
-  public static void main(String[] args) throws InterruptedException {
-    //SpringApplication.run(RabbitBroker.class, args).
-    ConfigurableApplicationContext context = new SpringApplicationBuilder()
+  public static void main(String[] args) {
+    new SpringApplicationBuilder()
         .web(WebApplicationType.NONE)
         .sources(RabbitBroker.class)
         .build()
@@ -31,17 +30,19 @@ public class RabbitBroker {
 
   @Bean
   Queue queue() {
-    return new Queue(queueName, false);
+    return new Queue(QUEUE_NAME, false);
   }
 
   @Bean
   TopicExchange exchange() {
-    return new TopicExchange(topicExchangeName);
+    return new TopicExchange(TOPIC_EXCHANGE_NAME);
   }
 
   @Bean
   Binding binding(Queue queue, TopicExchange exchange) {
-    return BindingBuilder.bind(queue).to(exchange).with("foo.bar.#");
+    return BindingBuilder.bind(queue)
+        .to(exchange)
+        .with(ROUTING_KEY);
   }
 
   @Bean
@@ -49,7 +50,7 @@ public class RabbitBroker {
       MessageListenerAdapter listenerAdapter) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(queueName);
+    container.setQueueNames(QUEUE_NAME);
     container.setMessageListener(listenerAdapter);
     return container;
   }
