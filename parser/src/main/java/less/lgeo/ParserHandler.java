@@ -1,9 +1,10 @@
 package less.lgeo;
 
+import static less.lgeo.ReducerHandler.TOPIC_EXCHANGE_NAME;
+
 import java.io.File;
 import java.util.concurrent.TimeUnit;
 import less.lgeo.parse.Parser;
-import less.lgeo.rabbitmq.RabbitBroker;
 import less.lgeo.rabbitmq.RabbitReceiver;
 import less.lgeo.set.Model;
 import org.slf4j.Logger;
@@ -44,7 +45,7 @@ public class ParserHandler implements ApplicationRunner {
     logger.info("Model result: {}", model.toString());
 
     System.out.println("Sending message...");
-    rabbitTemplate.convertAndSend(RabbitBroker.TOPIC_EXCHANGE_NAME, "foo.bar.baz",
+    rabbitTemplate.convertAndSend(TOPIC_EXCHANGE_NAME, "foo.bar.baz",
         "Hello from RabbitMQ!");
     receiver.getLatch().await(1000, TimeUnit.MILLISECONDS);
   }

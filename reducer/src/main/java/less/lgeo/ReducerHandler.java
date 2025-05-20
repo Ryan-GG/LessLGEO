@@ -1,5 +1,6 @@
-package less.lgeo.rabbitmq;
+package less.lgeo;
 
+import less.lgeo.rabbitmq.RabbitReceiver;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -13,7 +14,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.context.annotation.Bean;
 
 @SpringBootApplication
-public class RabbitBroker {
+public class ReducerHandler {
 
   public static final String TOPIC_EXCHANGE_NAME = "parser-to-reducer-exchange";
   public static final String QUEUE_NAME = "parser-to-reducer-queue";
@@ -23,7 +24,7 @@ public class RabbitBroker {
   public static void main(String[] args) {
     new SpringApplicationBuilder()
         .web(WebApplicationType.NONE)
-        .sources(RabbitBroker.class)
+        .sources(ReducerHandler.class)
         .build()
         .run(args);
   }

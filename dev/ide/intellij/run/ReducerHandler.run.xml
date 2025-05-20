@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="RabbitBroker" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="less.lgeo.rabbitmq.RabbitBroker" />
-    <module name="messaging" />
+  <configuration default="false" name="ReducerHandler" type="Application" factoryName="Application" nameIsGenerated="true">
+    <option name="MAIN_CLASS_NAME" value="less.lgeo.ReducerHandler" />
+    <module name="reducer" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value="less.lgeo.rabbitmq.*" />
