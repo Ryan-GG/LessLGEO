@@ -1,8 +1,4 @@
 spring:
-  amqp:
-    deserialization:
-      trust:
-        all: true
   rabbitmq:
     host: localhost
     port: 5672

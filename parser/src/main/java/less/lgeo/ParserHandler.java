@@ -45,6 +45,6 @@ public class ParserHandler implements ApplicationRunner {
     logger.info("Model result: {}", model.toString());
 
     logger.info("Sending Model...");
-    rabbitProducer.sendMessage(model.toString());
+    rabbitProducer.sendMessage(model);
   }
 }

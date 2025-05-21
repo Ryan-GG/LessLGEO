@@ -1,5 +1,6 @@
 package less.lgeo.rabbitmq;
 
+import less.lgeo.primitive.Model;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
@@ -11,11 +12,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class RabbitBeanCreator {
+public class RabbitConfig {
 
-//  public static final String TOPIC_EXCHANGE_NAME = "parser-to-reducer-exchange";
-//  public static final String QUEUE_NAME = "parser-to-reducer-queue";
-//  public static final String ROUTING_KEY = "foo.bar.#";
 
   @Bean
   Queue queue(RabbitProperties rabbitProperties) {
@@ -47,6 +45,7 @@ public class RabbitBeanCreator {
 
   @Bean
   MessageListenerAdapter listenerAdapter(RabbitReceiver rabbitReceiver) {
-    return new MessageListenerAdapter(rabbitReceiver, "receiveMessage");
+    return new MessageListenerAdapter(rabbitReceiver,
+        new AmqpProtobufMessageConverter(Model.getDefaultInstance()));
   }
 }

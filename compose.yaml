@@ -4,5 +4,6 @@ services:
     environment:
       - 'RABBITMQ_DEFAULT_PASS=secret'
       - 'RABBITMQ_DEFAULT_USER=myuser'
+      - 'SPRING_AMQP_DESERIALIZATION_TRUST_ALL=true'
     ports:
       - '5672:5672'
