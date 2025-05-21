@@ -1,7 +1,13 @@
 spring:
+  amqp:
+    deserialization:
+      trust:
+        all: true
   rabbitmq:
-    username: "myuser"
-    password: "secret"
+    host: localhost
+    port: 5672
+    username: myuser
+    password: secret
 
 rabbit:
   topicName: "parser-to-reducer-exchange"

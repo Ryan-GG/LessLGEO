@@ -20,6 +20,11 @@
       <version>3.2.4</version>
     </dependency>
     <dependency>
+      <artifactId>geometry</artifactId>
+      <groupId>less.lgeo</groupId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <artifactId>snakeyaml</artifactId>
       <groupId>org.yaml</groupId>
       <version>2.4</version>

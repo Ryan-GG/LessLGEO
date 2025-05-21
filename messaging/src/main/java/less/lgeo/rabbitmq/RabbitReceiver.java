@@ -1,20 +1,17 @@
 package less.lgeo.rabbitmq;
 
-import java.util.concurrent.CountDownLatch;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
 public class RabbitReceiver {
 
-  private final CountDownLatch latch = new CountDownLatch(1);
+  private static final Logger logger = LoggerFactory.getLogger(RabbitReceiver.class);
 
+  @RabbitListener(queues = "parser-to-reducer-queue")
   public void receiveMessage(String message) {
-    System.out.println("Received <" + message + ">");
-    latch.countDown();
+    logger.info("Received Model {}", message);
   }
-
-  public CountDownLatch getLatch() {
-    return latch;
-  }
-
 }
