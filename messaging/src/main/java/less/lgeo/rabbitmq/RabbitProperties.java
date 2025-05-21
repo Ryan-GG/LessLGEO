@@ -1,4 +1,4 @@
-package less.lgeo.config;
+package less.lgeo.rabbitmq;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.lang.NonNull;

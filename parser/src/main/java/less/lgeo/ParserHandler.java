@@ -2,8 +2,8 @@ package less.lgeo;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
-import less.lgeo.config.RabbitProperties;
 import less.lgeo.parse.Parser;
+import less.lgeo.rabbitmq.RabbitProperties;
 import less.lgeo.rabbitmq.RabbitReceiver;
 import less.lgeo.set.Model;
 import org.slf4j.Logger;
