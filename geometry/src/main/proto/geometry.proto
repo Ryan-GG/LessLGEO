@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package geometry;
+
+option java_multiple_files = true;
+option java_package = "less.lgeo.geometry";
+option java_outer_classname = "Geometry";
+
+message Model {
+  repeated Comment comments = 1;
+  repeated MetaCommand commands = 2;
+  repeated Line lines = 3;
+  repeated Triangle triangles = 4;
+  repeated Quadrilateral quadrilaterals = 5;
+  repeated OptionalLine optionalLines = 6;
+  repeated SubFileReference pieces = 7;
+}
+
+message Comment {
+  LineType type = 1;
+  int32 line_number = 2;
+  string comment = 3;
+}
+
+message MetaCommand {
+  LineType type = 1;
+  string command = 2;
+  repeated string additional_params = 3;
+}
+
+message Line {
+  LineType type = 1;
+  Color color = 2;
+  Vertex p1 = 3;
+  Vertex p2 = 4;
+}
+
+message Triangle {
+  LineType type = 1;
+  Color color = 2;
+  Vertex p1 = 3;
+  Vertex p2 = 4;
+  Vertex p3 = 5;
+}
+
+message Quadrilateral {
+  LineType type = 1;
+  Color color = 2;
+  Vertex p1 = 3;
+  Vertex p2 = 4;
+  Vertex p3 = 5;
+  Vertex p4 = 6;
+}
+message OptionalLine {
+  LineType type = 1;
+  Color color = 2;
+  Vertex p1 = 3;
+  Vertex p2 = 4;
+  Vertex p3 = 5;
+  Vertex p4 = 6;
+}
+message SubFileReference {
+  LineType type = 1;
+  Color color = 2;
+  Matrix matrix = 3;
+  Model sub_model = 4;
+}
+
+message Matrix {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+  double a = 4;
+  double b = 5;
+  double c = 6;
+  double d = 7;
+  double e = 8;
+  double f = 9;
+  double g = 10;
+  double h = 11;
+  double i = 12;
+  double scale = 13;
+}
+
+message Vertex {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}
+
+message Color {
+}
+
+enum LineType {
+  // TODO, do not match directly to line parsing
+  LINE_TYPE_UNKNOWN = 0;
+  COMMENT_OR_META_CMD = 1;
+  SUB_FILE_REF = 2;
+  LINE = 3;
+  TRIANGLE = 4;
+  QUADRILATERAL = 5;
+  OPTIONAL_LINE = 6;
+}
