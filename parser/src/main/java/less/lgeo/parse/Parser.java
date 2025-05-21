@@ -1,5 +1,12 @@
 package less.lgeo.parse;
 
+import static less.lgeo.primitive.PrimitiveUtils.getLine;
+import static less.lgeo.primitive.PrimitiveUtils.getLineType;
+import static less.lgeo.primitive.PrimitiveUtils.getOptionalLine;
+import static less.lgeo.primitive.PrimitiveUtils.getPoint;
+import static less.lgeo.primitive.PrimitiveUtils.getQuadrilateral;
+import static less.lgeo.primitive.PrimitiveUtils.getTriangle;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -13,18 +20,16 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import less.lgeo.Matrix;
 import less.lgeo.primitive.Color;
 import less.lgeo.primitive.Comment;
 import less.lgeo.primitive.Line;
 import less.lgeo.primitive.LineType;
 import less.lgeo.primitive.MetaCommand;
+import less.lgeo.primitive.Model;
 import less.lgeo.primitive.OptionalLine;
 import less.lgeo.primitive.Quadrilateral;
 import less.lgeo.primitive.SubFileReference;
 import less.lgeo.primitive.Triangle;
-import less.lgeo.set.Model;
-import less.lgeo.set.Model.Builder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -59,7 +64,7 @@ public class Parser {
   }
 
   public Model parse(File toParse) throws IOException {
-    Model.Builder modelBuilder = Builder.newBuilder();
+    Model.Builder modelBuilder = Model.newBuilder();
     try (BufferedReader bufferedReader = new BufferedReader(
         new FileReader(toParse, StandardCharsets.UTF_8))) {
 
@@ -68,8 +73,9 @@ public class Parser {
 
       bufferedReader.lines().filter(StringUtils::hasText).forEach(line -> {
         List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
-        double commandValue = Integer.parseInt(values.removeFirst());
-        LineType lineType = LineType.fromInteger(commandValue);
+        int commandValue = Integer.parseInt(values.removeFirst());
+
+        LineType lineType = getLineType(commandValue);
 
         switch (lineType) {
           case COMMENT_OR_META_CMD -> {
@@ -87,7 +93,7 @@ public class Parser {
           case QUADRILATERAL -> modelBuilder.addQuadrilateral(parseQuadrilateral(values));
           case OPTIONAL_LINE -> modelBuilder.addOptionalLine(parseOptionalLine(values));
           default -> throw new IllegalStateException(
-              "Line Type has an Illegal type of " + lineType.getType());
+              "Line Type has an Illegal type of " + lineType.getDescriptorForType().toString());
         }
         lineNumber.getAndIncrement();
       });
@@ -118,7 +124,12 @@ public class Parser {
    * @return Join line values as singular string 'comment'
    */
   private Comment parseComment(int lineNumber, List<String> values) {
-    return new Comment(lineNumber, values.toString());
+    return Comment.newBuilder()
+        .setType(LineType.COMMENT_OR_META_CMD)
+        .setLineNumber(lineNumber)
+        // TODO, Not sure if this needs to be improved
+        .setComment(values.toString())
+        .build();
   }
 
   /**
@@ -126,7 +137,12 @@ public class Parser {
    */
   private MetaCommand parseCommand(List<String> values) {
     String command = values.removeFirst();
-    return new MetaCommand(command, values);
+    return MetaCommand.newBuilder()
+        .setType(LineType.COMMENT_OR_META_CMD)
+        .setCommand(command)
+        // TODO, This needs to actually do something when parsed
+        .addAllAdditionalParams(values)
+        .build();
   }
 
   /**
@@ -156,8 +172,6 @@ public class Parser {
     double h = toDouble(values.removeFirst());
     double i = toDouble(values.removeFirst());
 
-    Matrix matrix = new Matrix(x, y, z, a, b, c, d, e, f, g, h, i);
-
     /*
      * FIXME
      * this recursive parsing is not good, as it will find the first instance of a matching file name,
@@ -184,7 +198,30 @@ public class Parser {
     if (parsedSubModel == null) {
       throw new IllegalStateException("Sub File Reference is null");
     }
-    return new SubFileReference(color, matrix, parsedSubModel);
+    return SubFileReference.newBuilder()
+        .setType(LineType.SUB_FILE_REF)
+        .setColor(
+            Color.getDefaultInstance()
+        )
+        .setMatrix(
+            less.lgeo.primitive.Matrix.newBuilder()
+                .setX(x)
+                .setY(y)
+                .setZ(z)
+                .setA(a)
+                .setB(b)
+                .setC(c)
+                .setD(d)
+                .setE(e)
+                .setF(f)
+                .setG(g)
+                .setH(h)
+                .setI(i)
+                .setScale(1.0)
+                .build()
+        )
+        .setSubModel(parsedSubModel)
+        .build();
   }
 
   /**
@@ -202,7 +239,11 @@ public class Parser {
     double x2 = toDouble(values.removeFirst());
     double y2 = toDouble(values.removeFirst());
     double z2 = toDouble(values.removeFirst());
-    return new Line(color, x1, y1, z1, x2, y2, z2);
+    return getLine(
+        color,
+        getPoint(x1, y1, z1),
+        getPoint(x2, y2, z2)
+    );
   }
 
   /**
@@ -223,7 +264,12 @@ public class Parser {
     double x3 = toDouble(values.removeFirst());
     double y3 = toDouble(values.removeFirst());
     double z3 = toDouble(values.removeFirst());
-    return new Triangle(color, x1, y1, z1, x2, y2, z2, x3, y3, z3);
+    return getTriangle(
+        color,
+        getPoint(x1, y1, z1),
+        getPoint(x2, y2, z2),
+        getPoint(x3, y3, z3)
+    );
   }
 
   /**
@@ -248,7 +294,13 @@ public class Parser {
     double y4 = toDouble(values.removeFirst());
     double z4 = toDouble(values.removeFirst());
 
-    return new Quadrilateral(color, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4);
+    return getQuadrilateral(
+        color,
+        getPoint(x1, y1, z1),
+        getPoint(x2, y2, z2),
+        getPoint(x3, y3, z3),
+        getPoint(x4, y4, z4)
+    );
   }
 
   /**
@@ -273,14 +325,20 @@ public class Parser {
     double y4 = toDouble(values.removeFirst());
     double z4 = toDouble(values.removeFirst());
 
-    return new OptionalLine(color, x1, y1, z1, x2, y2, z2, x3, y3, z3, x4, y4, z4);
+    return getOptionalLine(
+        color,
+        getPoint(x1, y1, z1),
+        getPoint(x2, y2, z2),
+        getPoint(x3, y3, z3),
+        getPoint(x4, y4, z4)
+    );
   }
 
   /**
    * @return parsed LDraw {@link Color}
    */
   private Color parseColor(String color) {
-    return null;
+    return Color.getDefaultInstance();
   }
 
 }

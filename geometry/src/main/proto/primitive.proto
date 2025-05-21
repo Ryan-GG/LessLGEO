@@ -3,17 +3,17 @@ syntax = "proto3";
 package geometry;
 
 option java_multiple_files = true;
-option java_package = "less.lgeo.geometry";
+option java_package = "less.lgeo.primitive";
 option java_outer_classname = "Geometry";
 
 message Model {
-  repeated Comment comments = 1;
-  repeated MetaCommand commands = 2;
-  repeated Line lines = 3;
-  repeated Triangle triangles = 4;
-  repeated Quadrilateral quadrilaterals = 5;
-  repeated OptionalLine optionalLines = 6;
-  repeated SubFileReference pieces = 7;
+  repeated Comment comment = 1;
+  repeated MetaCommand command = 2;
+  repeated Line line = 3;
+  repeated Triangle triangle = 4;
+  repeated Quadrilateral quadrilateral = 5;
+  repeated OptionalLine optionalLine = 6;
+  repeated SubFileReference piece = 7;
 }
 
 message Comment {
