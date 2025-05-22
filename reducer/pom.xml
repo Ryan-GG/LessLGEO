@@ -23,7 +23,7 @@
   <parent>
     <artifactId>parent</artifactId>
     <groupId>less.lgeo</groupId>
-    <relativePath/>
+    <relativePath>../pom.xml</relativePath>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
 
