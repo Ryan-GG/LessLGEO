@@ -2,10 +2,10 @@ spring:
   rabbitmq:
     host: localhost
     port: 5672
-    username: myuser
-    password: secret
+    username: ${RABBIT_USER}
+    password: ${RABBIT_PASSWORD}
 
 rabbit:
   topicName: "parser-to-reducer-exchange"
   queueName: "parser-to-reducer-queue"
-  routingKey: "foo.bar.#"
+  routingKey: "parser.reducer.#"

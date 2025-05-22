@@ -4,7 +4,7 @@
     <module name="reducer" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="less.lgeo.rabbitmq.*" />
+        <option name="PATTERN" value="less.lgeo.reducer.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

@@ -1,4 +1,4 @@
-package less.lgeo.rabbitmq;
+package less.lgeo.reducer;
 
 import less.lgeo.primitive.Model;
 import org.slf4j.Logger;
@@ -7,13 +7,13 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 @Component
-public class RabbitReceiver {
+public class ReducerConsumer {
 
-  private static final Logger logger = LoggerFactory.getLogger(RabbitReceiver.class);
+  private static final Logger logger = LoggerFactory.getLogger(ReducerConsumer.class);
 
   @RabbitListener(queues = "parser-to-reducer-queue")
   public void handleMessage(Model message) {
-    logger.info("Received Model GPB \n {}", message.toString());
+    logger.info("Received Model: \n {}", message.toString());
   }
 
 }

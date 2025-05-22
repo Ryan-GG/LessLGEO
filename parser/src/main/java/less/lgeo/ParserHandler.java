@@ -2,7 +2,7 @@ package less.lgeo;
 
 import java.io.File;
 import less.lgeo.parse.Parser;
-import less.lgeo.parser.RabbitProducer;
+import less.lgeo.parser.ParserProducer;
 import less.lgeo.primitive.Model;
 import less.lgeo.rabbitmq.RabbitProperties;
 import org.slf4j.Logger;
@@ -20,10 +20,10 @@ public class ParserHandler implements ApplicationRunner {
 
   private static final Logger logger = LoggerFactory.getLogger(ParserHandler.class);
 
-  private final RabbitProducer rabbitProducer;
+  private final ParserProducer parserProducer;
 
-  public ParserHandler(RabbitProducer rabbitProducer) {
-    this.rabbitProducer = rabbitProducer;
+  public ParserHandler(ParserProducer parserProducer) {
+    this.parserProducer = parserProducer;
   }
 
   public static void main(String[] args) {
@@ -45,6 +45,6 @@ public class ParserHandler implements ApplicationRunner {
     logger.info("Model result: {}", model.toString());
 
     logger.info("Sending Model...");
-    rabbitProducer.sendMessage(model);
+    parserProducer.sendMessage(model);
   }
 }
