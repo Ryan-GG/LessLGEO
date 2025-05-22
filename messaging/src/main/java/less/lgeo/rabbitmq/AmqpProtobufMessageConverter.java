@@ -5,6 +5,7 @@ import java.util.Collections;
 import org.springframework.amqp.core.Message;
 import org.springframework.amqp.core.MessageProperties;
 import org.springframework.amqp.support.converter.MessageConverter;
+import org.springframework.lang.NonNull;
 import org.springframework.messaging.MessageHeaders;
 import org.springframework.messaging.converter.ProtobufMessageConverter;
 import org.springframework.messaging.support.GenericMessage;
@@ -20,18 +21,14 @@ public class AmqpProtobufMessageConverter implements MessageConverter {
   }
 
   @Override
-  public Message toMessage(Object object, MessageProperties messageProperties) {
-    org.springframework.messaging.Message<?> messagingMessage =
-        delegate.toMessage(object, new MessageHeaders(Collections.emptyMap()));
+  public Message toMessage(@NonNull Object object, @NonNull MessageProperties messageProperties) {
+    org.springframework.messaging.Message<?> delegateToSpringMessage =
+        delegate.toMessage(object, new MessageHeaders(messageProperties.getHeaders()));
 
-    Object payload = messagingMessage.getPayload();
+    byte[] payload = (byte[]) delegateToSpringMessage.getPayload();
 
-    if (!(payload instanceof byte[] bytes)) {
-      throw new IllegalArgumentException("Expected byte[] payload from ProtobufMessageConverter");
-    }
-
-    messageProperties.setContentType("application/x-protobuf");
-    return new Message(bytes, messageProperties);
+    messageProperties.setContentType(ProtobufMessageConverter.PROTOBUF.toString());
+    return new Message(payload, messageProperties);
   }
 
   @Override
