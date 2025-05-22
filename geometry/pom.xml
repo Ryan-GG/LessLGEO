@@ -5,15 +5,22 @@
   <artifactId>geometry</artifactId>
 
   <build>
+    <extensions>
+      <extension>
+        <artifactId>os-maven-plugin</artifactId>
+        <groupId>kr.motd.maven</groupId>
+        <version>1.7.1</version>
+      </extension>
+    </extensions>
+
     <plugins>
       <!-- Protobuf plugin to generate Java sources from .proto files -->
       <plugin>
         <artifactId>protobuf-maven-plugin</artifactId>
         <configuration>
-          <!-- The protoc artifact should have an os classifer at the end but its not working
-           this is hard coded but should be some kind of property -->
+          <!-- OS-maven-plugin: no goals, just adds os.detected.classifier -->
           <protocArtifact>
-            com.google.protobuf:protoc:${protobuf.version}:exe:osx-x86_64
+            com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
           </protocArtifact>
         </configuration>
         <executions>
@@ -26,14 +33,8 @@
         <groupId>org.xolstice.maven.plugins</groupId>
         <version>0.6.1</version>
       </plugin>
-
-      <!-- OS-maven-plugin: no goals, just adds os.detected.classifier -->
-      <plugin>
-        <artifactId>os-maven-plugin</artifactId>
-        <groupId>kr.motd.maven</groupId>
-        <version>1.7.1</version>
-      </plugin>
     </plugins>
+
   </build>
 
   <dependencies>
