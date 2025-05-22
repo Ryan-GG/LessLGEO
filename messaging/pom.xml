@@ -2,12 +2,22 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <artifactId>parser</artifactId>
+  <artifactId>messaging</artifactId>
   <dependencies>
     <dependency>
-      <artifactId>annotations</artifactId>
-      <groupId>org.jetbrains</groupId>
-      <version>17.0.0</version>
+      <artifactId>spring-amqp</artifactId>
+      <groupId>org.springframework.amqp</groupId>
+      <version>3.2.4</version>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-autoconfigure</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <version>3.4.4</version>
+    </dependency>
+    <dependency>
+      <artifactId>spring-rabbit</artifactId>
+      <groupId>org.springframework.amqp</groupId>
+      <version>3.2.4</version>
     </dependency>
     <dependency>
       <artifactId>geometry</artifactId>
@@ -15,30 +25,20 @@
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <artifactId>messaging</artifactId>
-      <groupId>less.lgeo</groupId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <artifactId>reducer</artifactId>
-      <groupId>less.lgeo</groupId>
-      <version>0.0.1-SNAPSHOT</version>
+      <artifactId>snakeyaml</artifactId>
+      <groupId>org.yaml</groupId>
+      <version>2.4</version>
     </dependency>
   </dependencies>
   <groupId>less.lgeo</groupId>
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
-  <parent>
-    <artifactId>parent</artifactId>
-    <groupId>less.lgeo</groupId>
-    <relativePath>../pom.xml</relativePath>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
   <properties>
     <maven.compiler.source>23</maven.compiler.source>
     <maven.compiler.target>23</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+
   <version>0.0.1-SNAPSHOT</version>
 
 </project>

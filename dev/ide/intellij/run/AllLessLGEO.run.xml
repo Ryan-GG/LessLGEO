@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="AllLessLGEO" type="CompoundRunConfigurationType">
+    <toRun name="ParserHandler" type="Application" />
+    <toRun name="ReducerHandler" type="Application" />
+    <toRun name="compose.yaml: Compose Deployment" type="docker-deploy" />
+    <method v="2" />
+  </configuration>
+</component>

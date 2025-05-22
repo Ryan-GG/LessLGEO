@@ -13,16 +13,34 @@
   </build>
   <dependencies>
     <dependency>
-      <artifactId>spring-boot-starter-web</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
-    <dependency>
       <artifactId>spring-boot-starter-logging</artifactId>
       <groupId>org.springframework.boot</groupId>
+      <version>3.4.4</version>
     </dependency>
     <dependency>
-      <artifactId>postgresql</artifactId>
-      <groupId>org.postgresql</groupId>
+      <artifactId>spring-boot-starter-amqp</artifactId>
+      <groupId>org.springframework.boot</groupId>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-docker-compose</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <optional>true</optional>
+      <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <artifactId>spring-rabbit-test</artifactId>
+      <groupId>org.springframework.amqp</groupId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <artifactId>snakeyaml</artifactId>
+      <groupId>org.yaml</groupId>
+      <version>2.4</version>
     </dependency>
   </dependencies>
   <description>Minimize legos needed</description>
@@ -41,6 +59,8 @@
     <module>geometry</module>
     <module>parser</module>
     <module>util</module>
+    <module>reducer</module>
+    <module>messaging</module>
   </modules>
   <name>LessLGEO</name>
   <packaging>pom</packaging>
@@ -48,7 +68,7 @@
     <artifactId>spring-boot-starter-parent</artifactId>
     <groupId>org.springframework.boot</groupId>
     <relativePath/>
-    <version>3.4.4</version> <!-- lookup parent from repository -->
+    <version>3.4.4</version>
   </parent>
   <properties>
     <java.version>23</java.version>
