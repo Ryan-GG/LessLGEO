@@ -42,7 +42,7 @@ public class ParserHandler implements ApplicationRunner {
 
     Model model = parser.parse(fileToParse);
 
-    logger.info("Model result: {}", model.toString());
+    logger.info("Model result: {}", model);
 
     logger.info("Sending Model...");
     parserProducer.sendMessage(model);

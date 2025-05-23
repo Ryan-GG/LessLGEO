@@ -44,42 +44,4 @@ public class PrimitiveUtils {
         .build();
   }
 
-  public static Line getLine(Color color, Vertex p1, Vertex p2) {
-    return Line.newBuilder()
-        .setColor(color)
-        .setP1(p1)
-        .setP2(p2)
-        .build();
-  }
-
-  public static Triangle getTriangle(Color color, Vertex p1, Vertex p2, Vertex p3) {
-    return Triangle.newBuilder()
-        .setColor(color)
-        .setP1(p1)
-        .setP2(p2)
-        .setP3(p3)
-        .build();
-  }
-
-  public static Quadrilateral getQuadrilateral(Color color, Vertex p1, Vertex p2, Vertex p3,
-      Vertex p4) {
-    return Quadrilateral.newBuilder()
-        .setColor(color)
-        .setP1(p1)
-        .setP2(p2)
-        .setP3(p3)
-        .setP4(p4)
-        .build();
-  }
-
-  public static OptionalLine getOptionalLine(Color color, Vertex p1, Vertex p2, Vertex p3,
-      Vertex p4) {
-    return OptionalLine.newBuilder()
-        .setColor(color)
-        .setP1(p1)
-        .setP2(p2)
-        .setP3(p3)
-        .setP4(p4)
-        .build();
-  }
 }

@@ -1,11 +1,11 @@
 package less.lgeo.parse;
 
-import static less.lgeo.primitive.PrimitiveUtils.getLine;
+import static less.lgeo.primitive.LineUtils.getLine;
+import static less.lgeo.primitive.OptionalLineUtils.getOptionalLine;
 import static less.lgeo.primitive.PrimitiveUtils.getLineType;
-import static less.lgeo.primitive.PrimitiveUtils.getOptionalLine;
 import static less.lgeo.primitive.PrimitiveUtils.getPoint;
-import static less.lgeo.primitive.PrimitiveUtils.getQuadrilateral;
-import static less.lgeo.primitive.PrimitiveUtils.getTriangle;
+import static less.lgeo.primitive.QuaderilateralUtils.getQuadrilateral;
+import static less.lgeo.primitive.TriangleUtils.getTriangle;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -58,6 +58,10 @@ public class Parser {
   // the file is permitted **but not required** to eend with <CR><LF>
 
   // LDraw parts are measured in LDraw Units LDU
+
+  public Parser() {
+
+  }
 
   private static double toDouble(String string) {
     return Double.parseDouble(string);
