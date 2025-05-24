@@ -4,10 +4,6 @@ import javafx.application.Application;
 import javafx.scene.*;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.CullFace;
-import javafx.scene.shape.DrawMode;
-import javafx.scene.shape.MeshView;
-import javafx.scene.shape.TriangleMesh;
 import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
 import javafx.scene.transform.Rotate;
@@ -19,7 +15,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
 
-public class ModelMeshDemoApp extends Application {
+public class RenderMesh extends Application {
 
     @Override
     public void start(Stage stage) {

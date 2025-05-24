@@ -60,7 +60,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <mainClass>less.lgeo.javafx.ModelMeshDemoApp</mainClass>
+                    <mainClass>less.lgeo.javafx.RenderMesh</mainClass>
                     <arguments>
                         <argument>parser/src/test/resources/single.ldr</argument>
                     </arguments>
