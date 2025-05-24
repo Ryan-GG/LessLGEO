@@ -10,6 +10,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
+import less.lgeo.parse.Parser;
 
 public class Plot extends Application {
 
@@ -21,7 +22,7 @@ public class Plot extends Application {
   public void start(Stage stage) {
 
     AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
-
+    Parser parser = new Parser();
     // Group for all rendered points
     Group pointsGroup = new Group();
 

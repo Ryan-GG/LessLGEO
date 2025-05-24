@@ -6,22 +6,6 @@
 
   <artifactId>visualization</artifactId>
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <!--Turns out javafx maven plugin conflicts with spring maven plugin, so disable that therefore
-              it can rely on other modules with transitive or direct dependencies to parent pom.xml -->
-          <artifactId>spring-boot-maven-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>default-cli</id>
-              <phase>none</phase>
-            </execution>
-          </executions>
-          <groupId>org.springframework.boot</groupId>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>javafx-maven-plugin</artifactId>
@@ -44,16 +28,16 @@
       <groupId>org.openjfx</groupId>
       <version>${javafx.version}</version>
     </dependency>
+    <dependency>
+      <artifactId>parser</artifactId>
+      <groupId>less.lgeo</groupId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
+  <groupId>less.lgeo</groupId>
   <modelVersion>4.0.0</modelVersion>
-
-  <parent>
-    <artifactId>parent</artifactId>
-    <groupId>less.lgeo</groupId>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
-
+  <packaging>jar</packaging>
   <properties>
     <javafx.version>21</javafx.version>
     <maven.compiler.source>23</maven.compiler.source>
