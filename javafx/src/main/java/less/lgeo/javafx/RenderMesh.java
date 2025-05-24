@@ -1,7 +1,11 @@
 package less.lgeo.javafx;
 
+import static less.lgeo.primitive.ModelUtils.getLines;
+import static less.lgeo.primitive.ModelUtils.getVertices;
+
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import javafx.application.Application;
@@ -16,9 +20,12 @@ import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
 import less.lgeo.camera.CameraController;
 import less.lgeo.parse.Parser;
+import less.lgeo.primitive.LineUtils;
 import less.lgeo.primitive.Model;
-import less.lgeo.primitive.ModelUtils;
 import less.lgeo.primitive.Vertex;
+import less.lgeo.utils.RenderUtils;
+import org.fxyz3d.geometry.Point3D;
+import org.fxyz3d.shapes.composites.PolyLine3D;
 
 public class RenderMesh extends Application {
 
@@ -41,7 +48,9 @@ public class RenderMesh extends Application {
     AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
     Group modelVerticiesGroup = getModelVerticiesGroup(model);
 
+    List<PolyLine3D> lines = getModelLines(model);
     Group world = new Group(modelVerticiesGroup, ambientLight);
+    world.getChildren().addAll(lines);
 
     Scene scene = new Scene(world, 800, 600, true, SceneAntialiasing.BALANCED);
     attachCamera(scene);
@@ -60,8 +69,8 @@ public class RenderMesh extends Application {
    * @return A group of all vertices of the parsed {@link Model} Gpb
    */
   private Group getModelVerticiesGroup(Model model) {
-    Group pointsGroup = new Group();
-    Set<Vertex> vertexSet = ModelUtils.getVertices(model);
+    Group meshGroup = new Group();
+    Set<Vertex> vertexSet = getVertices(model);
 
     for (Vertex v : vertexSet) {
       Sphere point = new Sphere(1.0); // tiny sphere per point
@@ -69,10 +78,22 @@ public class RenderMesh extends Application {
       point.setTranslateY(v.getY() * 10);
       point.setTranslateZ(v.getZ() * 10);
       point.setMaterial(new PhongMaterial(Color.BLUE));
-      pointsGroup.getChildren().add(point);
+      meshGroup.getChildren().add(point);
     }
 
-    return pointsGroup;
+    return meshGroup;
+  }
+
+  private List<PolyLine3D> getModelLines(Model model) {
+    return getLines(model).stream()
+        .map(line -> {
+          List<Point3D> points = LineUtils.getVertices(line).stream()
+              .map(RenderUtils::gpbToFx)
+              .map(p -> new Point3D(p.x * 10, p.y * 10, p.z * 10)) // scale for visibility
+              .toList();
+          return new PolyLine3D(points, 5.0f, Color.BLUE);
+        })
+        .toList();
   }
 
   private void attachCamera(Scene scene) {

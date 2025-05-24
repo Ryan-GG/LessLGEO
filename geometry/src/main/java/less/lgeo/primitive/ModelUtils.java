@@ -25,14 +25,21 @@ public class ModelUtils {
             .flatMap(line -> OptionalLineUtils.getVertices(line).stream())
             .toList());
 
-    model.getPieceList().stream()
-        .forEach(subFileRef -> getVerticiesHelper(subFileRef.getSubModel(), vertices));
+    model.getPieceList()
+        .forEach(subFileRef -> vertices.addAll(getVertices(subFileRef.getSubModel())));
+
     return vertices;
   }
 
-  private static void getVerticiesHelper(Model model, Set<Vertex> vertices) {
+  public static Set<Line> getLines(Model model) {
 
-    vertices.addAll(getVertices(model));
+    Set<Line> lines = new HashSet<>(model.getLineList());
+
+    model.getPieceList()
+        .forEach(subFileReference -> lines.addAll(getLines(subFileReference.getSubModel())));
+
+    return lines;
   }
+
 
 }
