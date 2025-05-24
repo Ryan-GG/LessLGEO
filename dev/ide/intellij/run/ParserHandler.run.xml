@@ -5,7 +5,7 @@
     <option name="PROGRAM_PARAMETERS" value="parser/src/test/resources/single.ldr" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="less.lgeo.*" />
+        <option name="PATTERN" value=".*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>
