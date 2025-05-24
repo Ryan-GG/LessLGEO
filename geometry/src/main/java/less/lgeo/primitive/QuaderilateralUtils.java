@@ -16,7 +16,7 @@ public class QuaderilateralUtils {
         .build();
   }
 
-  public static List<Vertex> getVerticies(Quadrilateral quadrilateral) {
+  public static List<Vertex> getVertices(Quadrilateral quadrilateral) {
     return List.of(quadrilateral.getP1(),
         quadrilateral.getP2(),
         quadrilateral.getP3(),

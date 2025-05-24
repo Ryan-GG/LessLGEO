@@ -12,7 +12,7 @@ public class LineUtils {
         .build();
   }
 
-  public static List<Vertex> getVerticies(Line line) {
+  public static List<Vertex> getVertices(Line line) {
     return List.of(line.getP1(), line.getP2());
   }
 }

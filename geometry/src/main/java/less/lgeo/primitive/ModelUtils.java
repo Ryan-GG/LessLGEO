@@ -5,24 +5,24 @@ import java.util.Set;
 
 public class ModelUtils {
 
-  public static Set<Vertex> getVerticies(Model model) {
+  public static Set<Vertex> getVertices(Model model) {
     Set<Vertex> vertices = new HashSet<>();
     vertices.addAll(
-        model.getLineList().stream().flatMap(line -> LineUtils.getVerticies(line).stream())
+        model.getLineList().stream().flatMap(line -> LineUtils.getVertices(line).stream())
             .toList());
 
     vertices.addAll(
-        model.getTriangleList().stream().flatMap(line -> TriangleUtils.getVerticies(line).stream())
+        model.getTriangleList().stream().flatMap(line -> TriangleUtils.getVertices(line).stream())
             .toList());
 
     vertices.addAll(
         model.getQuadrilateralList().stream()
-            .flatMap(line -> QuaderilateralUtils.getVerticies(line).stream())
+            .flatMap(line -> QuaderilateralUtils.getVertices(line).stream())
             .toList());
 
     vertices.addAll(
         model.getOptionalLineList().stream()
-            .flatMap(line -> OptionalLineUtils.getVerticies(line).stream())
+            .flatMap(line -> OptionalLineUtils.getVertices(line).stream())
             .toList());
 
     model.getPieceList().stream()
@@ -32,7 +32,7 @@ public class ModelUtils {
 
   private static void getVerticiesHelper(Model model, Set<Vertex> vertices) {
 
-    vertices.addAll(getVerticies(model));
+    vertices.addAll(getVertices(model));
   }
 
 }

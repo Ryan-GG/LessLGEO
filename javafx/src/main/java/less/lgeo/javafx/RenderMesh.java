@@ -1,88 +1,96 @@
 package less.lgeo.javafx;
 
-import javafx.application.Application;
-import javafx.scene.*;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.PhongMaterial;
-import javafx.scene.shape.Sphere;
-import javafx.stage.Stage;
-import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Translate;
-import less.lgeo.primitive.*;
-import less.lgeo.parse.Parser;
 import java.io.File;
 import java.io.IOException;
 import java.util.Optional;
 import java.util.Set;
+import javafx.application.Application;
+import javafx.scene.AmbientLight;
+import javafx.scene.Camera;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.SceneAntialiasing;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.Sphere;
+import javafx.stage.Stage;
+import less.lgeo.camera.CameraController;
+import less.lgeo.parse.Parser;
+import less.lgeo.primitive.Model;
+import less.lgeo.primitive.ModelUtils;
+import less.lgeo.primitive.Vertex;
 
 public class RenderMesh extends Application {
 
-    @Override
-    public void start(Stage stage) {
+  private static final String TITLE = "Less LGEO RenderMesh";
 
-        AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
+  public static void main(String[] args) {
+    if (args.length < 1) {
+      System.err.println("Usage: java ModelMeshDemoApp <LDraw file path>");
+      System.exit(1);
+    }
+    launch(args);
+  }
 
-        // Group for all rendered points
-        Group pointsGroup = new Group();
+  @Override
+  public void start(Stage stage) {
 
-        File fileToParse = new File( getParameters().getRaw().getFirst() );
-        Model model = getModel( fileToParse ) .orElseThrow();
+    File fileToParse = new File(getParameters().getRaw().getFirst());
+    Model model = getModel(fileToParse).orElseThrow();
 
-        Set<Vertex> vertexSet = ModelUtils.getVerticies(model);
+    AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
+    Group modelVerticiesGroup = getModelVerticiesGroup(model);
 
-        for (Vertex v : vertexSet) {
-            Sphere point = new Sphere(1.0); // tiny sphere per point
-            point.setTranslateX(v.getX() * 10); // scale for visibility
-            point.setTranslateY(v.getY() * 10);
-            point.setTranslateZ(v.getY() * 10);
-            point.setMaterial(new PhongMaterial(Color.BLUE));
-            pointsGroup.getChildren().add(point);
-        }
+    Group world = new Group(modelVerticiesGroup, ambientLight);
 
-        // World group for transforms
-        Group world = new Group(pointsGroup, ambientLight);
+    Scene scene = new Scene(world, 800, 600, true, SceneAntialiasing.BALANCED);
+    attachCamera(scene);
 
-        // Camera
-        PerspectiveCamera camera = new PerspectiveCamera(true);
-        camera.setNearClip(0.1);
-        camera.setFarClip(10000);
-        camera.setTranslateZ(-500);
-        camera.getTransforms().addAll(
-                new Rotate(-20, Rotate.X_AXIS),
-                new Rotate(-20, Rotate.Y_AXIS),
-                new Translate(0, 0, -400)
-        );
+    setUpStage(stage, scene);
+  }
 
-        // Scene
-        Scene scene = new Scene(world, 800, 600, true, SceneAntialiasing.BALANCED);
-        scene.setFill(Color.BLACK);
-        scene.setCamera(camera);
+  private void setUpStage(Stage stage, Scene scene) {
+    stage.setTitle(TITLE);
+    stage.setScene(scene);
+    stage.show();
+  }
 
-        stage.setTitle("3D Points Visualization");
-        stage.setScene(scene);
-        stage.show();
+  /**
+   * @param model Model containing vertices
+   * @return A group of all vertices of the parsed {@link Model} Gpb
+   */
+  private Group getModelVerticiesGroup(Model model) {
+    Group pointsGroup = new Group();
+    Set<Vertex> vertexSet = ModelUtils.getVertices(model);
+
+    for (Vertex v : vertexSet) {
+      Sphere point = new Sphere(1.0); // tiny sphere per point
+      point.setTranslateX(v.getX() * 10); // scale for visibility
+      point.setTranslateY(v.getY() * 10);
+      point.setTranslateZ(v.getZ() * 10);
+      point.setMaterial(new PhongMaterial(Color.BLUE));
+      pointsGroup.getChildren().add(point);
     }
 
+    return pointsGroup;
+  }
 
-    public static void main(String[] args) {
-        if (args.length < 1) {
-            System.err.println("Usage: java ModelMeshDemoApp <LDraw file path>");
-            System.exit(1);
-        }
-        launch(args);
-    }
+  private void attachCamera(Scene scene) {
+    scene.setFill(Color.BLACK);
+    CameraController cameraController = new CameraController(scene);
+    Camera camera = cameraController.getCamera();
+    scene.setCamera(camera);
+  }
 
-    /**
-     *
-     * @param file
-     * @return
-     */
-    private Optional<Model> getModel(File file )
-    {
-        try {
-            return Optional.of( new Parser().parse( file ) );
-        } catch (IOException e) {
-            return Optional.empty();
-        }
+  /**
+   * @param file LDraw File to Parse
+   * @return {@link Model} representations
+   */
+  private Optional<Model> getModel(File file) {
+    try {
+      return Optional.of(new Parser().parse(file));
+    } catch (IOException e) {
+      return Optional.empty();
     }
+  }
 } 

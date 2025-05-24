@@ -16,7 +16,7 @@ public class OptionalLineUtils {
         .build();
   }
 
-  public static List<Vertex> getVerticies(OptionalLine optionalLine) {
+  public static List<Vertex> getVertices(OptionalLine optionalLine) {
     return List.of(
         optionalLine.getP1(),
         optionalLine.getP2(),

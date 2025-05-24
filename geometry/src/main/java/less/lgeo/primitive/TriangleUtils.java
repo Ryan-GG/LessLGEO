@@ -13,7 +13,7 @@ public class TriangleUtils {
         .build();
   }
 
-  public static List<Vertex> getVerticies(Triangle triangle) {
+  public static List<Vertex> getVertices(Triangle triangle) {
     return List.of(triangle.getP1(), triangle.getP2(), triangle.getP3());
   }
 }
