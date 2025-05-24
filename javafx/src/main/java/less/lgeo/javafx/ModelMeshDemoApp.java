@@ -8,64 +8,85 @@ import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
+import javafx.scene.shape.Sphere;
 import javafx.stage.Stage;
 import javafx.scene.transform.Rotate;
 import javafx.scene.transform.Translate;
-import less.lgeo.primitive.Model;
-import less.lgeo.primitive.Triangle;
-import less.lgeo.primitive.Quadrilateral;
-import less.lgeo.primitive.Vertex;
+import less.lgeo.primitive.*;
 import less.lgeo.parse.Parser;
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
+import java.util.Set;
 
 public class ModelMeshDemoApp extends Application {
-    private static String ldrawFilePath;
 
     @Override
-    public void start(Stage primaryStage) {
-        if (ldrawFilePath == null) {
-            System.err.println("No LDraw file path provided.");
-            System.exit(1);
-        }
-        Model model;
-        try {
-            Parser parser = new Parser();
-            model = parser.parse(new File(ldrawFilePath));
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.err.println("Failed to parse LDraw file: " + ldrawFilePath);
-            System.exit(1);
-            return;
-        }
-        TriangleMesh mesh = ModelMeshBuilder.buildMesh(model);
-        MeshView meshView = new MeshView(mesh);
-        meshView.setMaterial(new PhongMaterial(Color.LIGHTBLUE));
-        meshView.setDrawMode(DrawMode.FILL);
-        meshView.setCullFace(CullFace.BACK);
+    public void start(Stage stage) {
 
-        Group root = new Group(meshView);
-        Scene scene = new Scene(root, 800, 600, true);
-        scene.setFill(Color.GRAY);
+        AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
+
+        // Group for all rendered points
+        Group pointsGroup = new Group();
+
+        File fileToParse = new File( getParameters().getRaw().getFirst() );
+        Model model = getModel( fileToParse ) .orElseThrow();
+
+        Set<Vertex> vertexSet = ModelUtils.getVerticies(model);
+
+        for (Vertex v : vertexSet) {
+            Sphere point = new Sphere(1.0); // tiny sphere per point
+            point.setTranslateX(v.getX() * 10); // scale for visibility
+            point.setTranslateY(v.getY() * 10);
+            point.setTranslateZ(v.getY() * 10);
+            point.setMaterial(new PhongMaterial(Color.BLUE));
+            pointsGroup.getChildren().add(point);
+        }
+
+        // World group for transforms
+        Group world = new Group(pointsGroup, ambientLight);
+
+        // Camera
         PerspectiveCamera camera = new PerspectiveCamera(true);
+        camera.setNearClip(0.1);
+        camera.setFarClip(10000);
+        camera.setTranslateZ(-500);
         camera.getTransforms().addAll(
-            new Rotate(-20, Rotate.X_AXIS),
-            new Rotate(-20, Rotate.Y_AXIS),
-            new Translate(0, 0, -400)
+                new Rotate(-20, Rotate.X_AXIS),
+                new Rotate(-20, Rotate.Y_AXIS),
+                new Translate(0, 0, -400)
         );
+
+        // Scene
+        Scene scene = new Scene(world, 800, 600, true, SceneAntialiasing.BALANCED);
+        scene.setFill(Color.BLACK);
         scene.setCamera(camera);
 
-        primaryStage.setTitle("ModelMesh JavaFX Demo");
-        primaryStage.setScene(scene);
-        primaryStage.show();
+        stage.setTitle("3D Points Visualization");
+        stage.setScene(scene);
+        stage.show();
     }
+
 
     public static void main(String[] args) {
         if (args.length < 1) {
             System.err.println("Usage: java ModelMeshDemoApp <LDraw file path>");
             System.exit(1);
         }
-        ldrawFilePath = args[0];
         launch(args);
+    }
+
+    /**
+     *
+     * @param file
+     * @return
+     */
+    private Optional<Model> getModel(File file )
+    {
+        try {
+            return Optional.of( new Parser().parse( file ) );
+        } catch (IOException e) {
+            return Optional.empty();
+        }
     }
 } 
