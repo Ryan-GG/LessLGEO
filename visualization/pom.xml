@@ -5,39 +5,76 @@
                              http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <artifactId>visualization</artifactId>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>javafx-maven-plugin</artifactId>
-        <configuration>
-          <mainClass>less.lgeo.Plot</mainClass>
-        </configuration>
-        <groupId>org.openjfx</groupId>
-        <version>0.0.8</version>
-      </plugin>
-    </plugins>
-  </build>
+
   <dependencies>
-    <dependency>
-      <artifactId>javafx-controls</artifactId>
-      <groupId>org.openjfx</groupId>
-      <version>${javafx.version}</version>
-    </dependency>
-    <dependency>
-      <artifactId>javafx-graphics</artifactId>
-      <groupId>org.openjfx</groupId>
-      <version>${javafx.version}</version>
-    </dependency>
+    <!-- Your own module -->
     <dependency>
       <artifactId>parser</artifactId>
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+
+    <!-- LWJGL core -->
+    <dependency>
+      <artifactId>lwjgl</artifactId>
+      <groupId>org.lwjgl</groupId>
+      <version>3.3.6</version>
+    </dependency>
+    <dependency>
+      <artifactId>lwjgl</artifactId>
+      <classifier>natives-macos</classifier>
+      <groupId>org.lwjgl</groupId>
+      <version>3.3.6</version>
+    </dependency>
+
+    <!-- LWJGL GLFW -->
+    <dependency>
+      <artifactId>lwjgl-glfw</artifactId>
+      <groupId>org.lwjgl</groupId>
+      <version>3.3.6</version>
+    </dependency>
+    <dependency>
+      <artifactId>lwjgl-glfw</artifactId>
+      <classifier>natives-macos</classifier>
+      <groupId>org.lwjgl</groupId>
+      <version>3.3.6</version>
+    </dependency>
+
+    <!-- LWJGL OpenGL -->
+    <dependency>
+      <artifactId>lwjgl-opengl</artifactId>
+      <groupId>org.lwjgl</groupId>
+      <version>3.3.6</version>
+    </dependency>
+    <dependency>
+      <artifactId>lwjgl-opengl</artifactId>
+      <classifier>natives-macos</classifier>
+      <groupId>org.lwjgl</groupId>
+      <version>3.3.6</version>
+    </dependency>
+
+    <!-- LWJGL OpenAL -->
+    <dependency>
+      <artifactId>lwjgl-openal</artifactId>
+      <groupId>org.lwjgl</groupId>
+      <version>3.3.6</version>
+    </dependency>
+    <dependency>
+      <artifactId>lwjgl-openal</artifactId>
+      <classifier>natives-macos</classifier>
+      <groupId>org.lwjgl</groupId>
+      <version>3.3.6</version>
+    </dependency>
   </dependencies>
 
-  <groupId>less.lgeo</groupId>
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
+  <parent>
+    <artifactId>parent</artifactId>
+    <groupId>less.lgeo</groupId>
+    <relativePath>../pom.xml</relativePath>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
   <properties>
     <javafx.version>21</javafx.version>
     <maven.compiler.source>23</maven.compiler.source>
