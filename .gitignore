@@ -5,9 +5,6 @@
 .idea
 *.iml
 
-# Vscode
-.vscode
-
 # Compiled class file
 *.class
 
