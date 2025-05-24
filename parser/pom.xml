@@ -19,13 +19,7 @@
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <artifactId>reducer</artifactId>
-      <groupId>less.lgeo</groupId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
   </dependencies>
-  <groupId>less.lgeo</groupId>
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
   <parent>

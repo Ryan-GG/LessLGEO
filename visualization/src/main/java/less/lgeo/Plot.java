@@ -4,13 +4,11 @@ import javafx.application.Application;
 import javafx.scene.AmbientLight;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
-import javafx.scene.PointLight;
 import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.Sphere;
-import javafx.scene.transform.Rotate;
 import javafx.stage.Stage;
 
 public class Plot extends Application {
@@ -21,71 +19,93 @@ public class Plot extends Application {
 
   @Override
   public void start(Stage stage) {
-    Sphere sphere = new Sphere(50);
-    PhongMaterial material = new PhongMaterial(Color.RED);
-    sphere.setMaterial(material);
 
-    PointLight light = new PointLight(Color.WHITE);
-    light.setTranslateX(-100);
-    light.setTranslateY(-100);
-    light.setTranslateZ(-100);
+    AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
 
-    AmbientLight ambientLight = new AmbientLight(Color.color(0.3, 0.3, 0.3));
+    // Group for all rendered points
+    Group pointsGroup = new Group();
 
-    Group root = new Group(sphere, light, ambientLight);
+    double[][] coords = {
+        {0.9239, 1.0, 0.3827},
+        {0.7071, 1.0, 0.7071},
+        {-0.7071, 1.0, 0.7071},
+        {-0.9239, 1.0, 0.3827},
+        {-0.9239, 1.0, -0.3827},
+        {-0.7071, 1.0, -0.7071},
+        {0.7071, 1.0, -0.7071},
+        {0.9239, 1.0, -0.3827},
+        {-10.0, 24.0, -10.0},
+        {10.0, 24.0, -10.0},
+        {10.0, 24.0, 10.0},
+        {-10.0, 24.0, 10.0},
+        {0.0, 0.0, 0.0},
+        {1.0, 1.0, 1.0},
+        {-1.0, 1.0, 1.0},
+        {-1.0, 1.0, -1.0},
+        {1.0, 1.0, -1.0},
+        {-6.0, 24.0, -6.0},
+        {6.0, 24.0, -6.0},
+        {6.0, 24.0, 6.0},
+        {-6.0, 24.0, 6.0},
+        {0.3827, 0.0, 0.9239},
+        {-0.3827, 0.0, 0.9239},
+        {-0.3827, 0.0, -0.9239},
+        {0.3827, 0.0, -0.9239},
+        {1.0, 1.0, 0.0},
+        {0.0, 1.0, 1.0},
+        {-1.0, 1.0, 0.0},
+        {0.0, 1.0, -1.0},
+        {1.0, 0.0, 1.0},
+        {-1.0, 0.0, 1.0},
+        {-1.0, 0.0, -1.0},
+        {1.0, 0.0, -1.0},
+        {10.0, 0.0, -10.0},
+        {-10.0, 0.0, -10.0},
+        {0.3827, 1.0, 0.9239},
+        {-0.3827, 1.0, 0.9239},
+        {-0.3827, 1.0, -0.9239},
+        {0.3827, 1.0, -0.9239},
+        {0.7071, 0.0, 0.7071},
+        {-0.7071, 0.0, 0.7071},
+        {-0.7071, 0.0, -0.7071},
+        {0.7071, 0.0, -0.7071},
+        {0.9239, 0.0, 0.3827},
+        {-0.9239, 0.0, 0.3827},
+        {-0.9239, 0.0, -0.3827},
+        {0.9239, 0.0, -0.3827},
+        {1.0, 0.0, 0.0},
+        {0.0, 0.0, 1.0},
+        {-1.0, 0.0, 0.0},
+        {0.0, 0.0, -1.0}
+    };
 
-    // Create a sub-group to apply rotations to
-    Group world = new Group(root);
+    for (double[] c : coords) {
+      Sphere point = new Sphere(1.0); // tiny sphere per point
+      point.setTranslateX(c[0] * 10); // scale for visibility
+      point.setTranslateY(c[1] * 10); // flip Y for intuitive view
+      point.setTranslateZ(c[2] * 10);
+      point.setMaterial(new PhongMaterial(Color.BLUE));
+      pointsGroup.getChildren().add(point);
+    }
 
+    // World group for transforms
+    Group world = new Group(pointsGroup, ambientLight);
+
+    // Camera
     PerspectiveCamera camera = new PerspectiveCamera(true);
-    camera.setTranslateZ(-300);
     camera.setNearClip(0.1);
-    camera.setFarClip(1000);
+    camera.setFarClip(10000);
+    camera.setTranslateZ(-500);
 
-    Scene scene = new Scene(world, 600, 400, true, SceneAntialiasing.BALANCED);
-    scene.setFill(Color.GRAY);
+    // Scene
+    Scene scene = new Scene(world, 800, 600, true, SceneAntialiasing.BALANCED);
+    scene.setFill(Color.BLACK);
     scene.setCamera(camera);
 
-    // Variables to track mouse position and rotation
-    final double[] mouseOldX = new double[1];
-    final double[] mouseOldY = new double[1];
-    final Rotate rotateX = new Rotate(0, Rotate.X_AXIS);
-    final Rotate rotateY = new Rotate(0, Rotate.Y_AXIS);
+    new CameraController(camera, scene);
 
-    root.getTransforms().addAll(rotateX, rotateY);
-
-    scene.setOnMousePressed(event -> {
-      mouseOldX[0] = event.getSceneX();
-      mouseOldY[0] = event.getSceneY();
-    });
-
-    scene.setOnMouseDragged(event -> {
-      double deltaX = event.getSceneX() - mouseOldX[0];
-      double deltaY = event.getSceneY() - mouseOldY[0];
-      rotateY.setAngle(rotateY.getAngle() + deltaX * 0.5);
-      rotateX.setAngle(rotateX.getAngle() - deltaY * 0.5);
-      mouseOldX[0] = event.getSceneX();
-      mouseOldY[0] = event.getSceneY();
-    });
-
-    scene.setOnScroll(event -> {
-      double delta = event.getDeltaY();
-      double currentZ = camera.getTranslateZ();
-      double newZ = currentZ + (delta > 0 ? 20 : -20);
-      // Clamp zoom
-      if (newZ < -1000) {
-        newZ = -1000;
-      }
-      if (newZ > -50) {
-        newZ = -50;
-      }
-      camera.setTranslateZ(newZ);
-    });
-
-    stage.setTitle("3D Sphere with Mouse Controls");
+    stage.setTitle("3D Points Visualization");
     stage.setScene(scene);
     stage.show();
   }
-
-
 }
