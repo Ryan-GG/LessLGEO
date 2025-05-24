@@ -37,7 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.IntBuffer;
 import java.util.Optional;
-import less.lgeo.parse.Parser;
+import less.lgeo.parser.Parser;
 import less.lgeo.primitive.Model;
 import org.lwjgl.Version;
 import org.lwjgl.glfw.GLFWErrorCallback;
@@ -45,28 +45,28 @@ import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 
-public class HelloWorld {
+public class Main {
 
   // The window handle
   private long window;
 
   public static void main(String[] args) {
-    Model model = getModel(args).orElseThrow();
-    new HelloWorld().run(model);
+    Model model = getModel(new File(args[0])).orElseThrow();
+    System.out.println(model);
+    new Main().run();
   }
 
-  private static Optional<Model> getModel(String[] args) {
+  private static Optional<Model> getModel(File file) {
     Parser parser = new Parser();
-    File fileToParse = new File(args[0]);
-
     try {
-      return Optional.of(parser.parse(fileToParse));
+      return Optional.of(parser.parse(file));
     } catch (IOException e) {
       return Optional.empty();
     }
   }
 
-  public void run(Model model) {
+  public void run() {
+    less.lgeo.parser.Parser parser = new less.lgeo.parser.Parser();
     System.out.println("Hello LWJGL " + Version.getVersion() + "!");
 
     init();
@@ -160,4 +160,5 @@ public class HelloWorld {
       glfwPollEvents();
     }
   }
+
 }

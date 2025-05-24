@@ -1,15 +1,16 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="ReducerHandler" type="Application" factoryName="Application" nameIsGenerated="true">
-    <option name="MAIN_CLASS_NAME" value="less.lgeo.ReducerHandler" />
-    <module name="reducer" />
+  <configuration default="false" factoryName="Application" name="less.lgeo.ReducerHandler"
+    nameIsGenerated="true" type="Application">
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="less.lgeo.reducer.*" />
-        <option name="ENABLED" value="true" />
+        <option name="PATTERN" value="less.lgeo.reducer.*"/>
+        <option name="ENABLED" value="true"/>
       </pattern>
     </extension>
     <method v="2">
-      <option name="Make" enabled="true" />
+      <option enabled="true" name="Make"/>
     </method>
+    <module name="reducer"/>
+    <option name="MAIN_CLASS_NAME" value="less.lgeo.ReducerHandler"/>
   </configuration>
 </component>

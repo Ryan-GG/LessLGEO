@@ -1,4 +1,4 @@
-package less.lgeo.parser;
+package less.lgeo.producer;
 
 import less.lgeo.primitive.Model;
 import less.lgeo.rabbitmq.AmqpProtobufMessageConverter;
@@ -12,7 +12,8 @@ public class ParserProducer {
   private final RabbitTemplate rabbitTemplate;
   private final RabbitProperties rabbitProperties;
 
-  public ParserProducer(RabbitTemplate rabbitTemplate, RabbitProperties rabbitProperties) {
+  public ParserProducer(RabbitTemplate rabbitTemplate,
+      RabbitProperties rabbitProperties) {
     this.rabbitTemplate = rabbitTemplate;
     this.rabbitTemplate.setMessageConverter(
         new AmqpProtobufMessageConverter(Model.getDefaultInstance()));

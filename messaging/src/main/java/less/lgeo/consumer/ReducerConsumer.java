@@ -1,4 +1,4 @@
-package less.lgeo.reducer;
+package less.lgeo.consumer;
 
 import less.lgeo.primitive.Model;
 import org.slf4j.Logger;
