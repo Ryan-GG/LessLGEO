@@ -1,4 +1,4 @@
-package less.lgeo.parser;
+package less.lgeo.parse;
 
 import static less.lgeo.primitive.LineUtils.getLine;
 import static less.lgeo.primitive.OptionalLineUtils.getOptionalLine;

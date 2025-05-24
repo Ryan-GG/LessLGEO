@@ -1,9 +1,9 @@
 package less.lgeo;
 
 import java.io.File;
-import less.lgeo.parser.Parser;
+import less.lgeo.parse.Parser;
+import less.lgeo.parser.ParserProducer;
 import less.lgeo.primitive.Model;
-import less.lgeo.producer.ParserProducer;
 import less.lgeo.rabbitmq.RabbitProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

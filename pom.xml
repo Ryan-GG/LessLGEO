@@ -61,6 +61,7 @@
     <module>util</module>
     <module>reducer</module>
     <module>messaging</module>
+    <module>visualization</module>
   </modules>
   <name>LessLGEO</name>
   <packaging>pom</packaging>
