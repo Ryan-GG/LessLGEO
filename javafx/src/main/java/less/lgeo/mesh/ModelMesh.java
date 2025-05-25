@@ -1,8 +1,10 @@
 package less.lgeo.mesh;
 
 import static less.lgeo.primitive.ModelUtils.getLines;
+import static less.lgeo.primitive.ModelUtils.getOptionalLines;
 import static less.lgeo.primitive.ModelUtils.getQuadrilaterals;
 import static less.lgeo.primitive.ModelUtils.getTriangles;
+import static less.lgeo.primitive.OptionalLineUtils.getVertices;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,9 +27,15 @@ import org.fxyz3d.shapes.composites.PolyLine3D;
 
 public class ModelMesh {
 
-  private static final Float SPHERE_RADIUS = 1.0f;
+  private static final Float SPHERE_RADIUS = 0.5f;
   private static final Float LINE_WIDTH = 1.0f;
-  private static final Color MESH_COLOR = Color.BLUE;
+
+  private static final Color VERT_COLOR = Color.WHITE;
+  private static final Color LINE_COLOR = Color.BLUE;
+  private static final Color QUAD_COLOR = Color.GREEN;
+  private static final Color TRIANGLE_COLOR = Color.YELLOW;
+  private static final Color OPTIONAL_LINE_COLOR = Color.PURPLE;
+
   private Group mesh;
 
   public ModelMesh(Model model) {
@@ -44,6 +52,7 @@ public class ModelMesh {
     children.addAll(drawLines(model));
     children.addAll(drawQuadrilaterals(model));
     children.addAll(drawTriangles(model));
+    children.addAll(drawOptionalLines(model));
     mesh = new Group(children);
   }
 
@@ -60,7 +69,7 @@ public class ModelMesh {
       point.setTranslateX(v.getX() * 10); // scale for visibility
       point.setTranslateY(v.getY() * 10);
       point.setTranslateZ(v.getZ() * 10);
-      point.setMaterial(new PhongMaterial(MESH_COLOR));
+      point.setMaterial(new PhongMaterial(VERT_COLOR));
       verticesGroup.getChildren().add(point);
     }
 
@@ -80,7 +89,7 @@ public class ModelMesh {
               .map(point -> new Point3D(point.x * 10, point.y * 10,
                   point.z * 10)) // scale for visibility
               .toList();
-          return new PolyLine3D(points, LINE_WIDTH, MESH_COLOR);
+          return new PolyLine3D(points, LINE_WIDTH, LINE_COLOR);
         })
         .toList());
 
@@ -105,7 +114,7 @@ public class ModelMesh {
               // Add first point again to close loop
               points.add(points.getFirst());
 
-              return new PolyLine3D(points, LINE_WIDTH, MESH_COLOR);
+              return new PolyLine3D(points, LINE_WIDTH, QUAD_COLOR);
             })
             .toList());
 
@@ -131,10 +140,32 @@ public class ModelMesh {
               // Add first point again to close loop
               points.add(points.getFirst());
 
-              return new PolyLine3D(points, LINE_WIDTH, MESH_COLOR);
+              return new PolyLine3D(points, LINE_WIDTH, TRIANGLE_COLOR);
             })
             .toList());
 
     return triangleGroup.getChildren();
+  }
+
+  private List<Node> drawOptionalLines(Model model) {
+    Group optionalLineGroup = new Group();
+
+    optionalLineGroup.getChildren().addAll(
+        getOptionalLines(model).stream()
+            .map(optionalLine -> {
+              List<Point3D> points = getVertices(optionalLine).stream()
+                  .map(RenderUtils::gpbToPoint3D)
+                  .map(point -> new Point3D(point.x * 10, point.y * 10,
+                      point.z * 10)) // scale for visibility
+                  .collect(Collectors.toList()); // To modifiable list
+
+              // Add first point again to close loop
+              points.add(points.getFirst());
+
+              return new PolyLine3D(points, LINE_WIDTH, OPTIONAL_LINE_COLOR);
+            })
+            .toList());
+
+    return optionalLineGroup.getChildren();
   }
 }

@@ -80,5 +80,17 @@ public class ModelUtils {
     return quadrilaterals;
   }
 
+  public static Set<OptionalLine> getOptionalLines(Model model) {
+
+    Set<OptionalLine> optionalLines = new HashSet<>(model.getOptionalLineList());
+
+    model.getPieceList()
+        .forEach(
+            subFileReference -> optionalLines.addAll(
+                getOptionalLines(subFileReference.getSubModel())));
+
+    return optionalLines;
+  }
+
 
 }
