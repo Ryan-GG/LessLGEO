@@ -34,7 +34,7 @@ public class CameraController {
   public void enable() {
     this.camera.setNearClip(0.1);
     this.camera.setFarClip(10000);
-    this.camera.setTranslateZ(-500);
+    this.camera.setTranslateZ(-10);
     scene.setOnMousePressed(this::onMousePressed);
     scene.setOnMouseDragged(this::onMouseDragged);
     scene.setOnScroll(this::onScroll);
@@ -63,10 +63,10 @@ public class CameraController {
   private void onKeyPressed(KeyEvent event) {
     double moveAmount = 10;
     switch (event.getCode()) {
-      case UP -> translate.setY(translate.getY() - moveAmount);
-      case DOWN -> translate.setY(translate.getY() + moveAmount);
-      case LEFT -> translate.setX(translate.getX() - moveAmount);
-      case RIGHT -> translate.setX(translate.getX() + moveAmount);
+      case UP, W -> translate.setY(translate.getY() - moveAmount);
+      case DOWN, S -> translate.setY(translate.getY() + moveAmount);
+      case LEFT, A -> translate.setX(translate.getX() - moveAmount);
+      case RIGHT, D -> translate.setX(translate.getX() + moveAmount);
       default -> {
       }
     }

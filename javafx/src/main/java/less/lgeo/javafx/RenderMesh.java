@@ -15,10 +15,13 @@ import less.lgeo.camera.CameraController;
 import less.lgeo.mesh.ModelMesh;
 import less.lgeo.parse.Parser;
 import less.lgeo.primitive.Model;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class RenderMesh extends Application {
 
   private static final String TITLE = "Less LGEO RenderMesh";
+  private static final Logger logger = LoggerFactory.getLogger(RenderMesh.class);
 
   public static void main(String[] args) {
     if (args.length < 1) {
@@ -30,9 +33,10 @@ public class RenderMesh extends Application {
 
   @Override
   public void start(Stage stage) {
-
     File fileToParse = new File(getParameters().getRaw().getFirst());
     Model model = getModel(fileToParse).orElseThrow();
+
+    logger.info("Rendering Mesh");
 
     AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
 

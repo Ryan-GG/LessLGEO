@@ -27,8 +27,8 @@ import org.fxyz3d.shapes.composites.PolyLine3D;
 
 public class ModelMesh {
 
-  private static final Float SPHERE_RADIUS = 0.5f;
-  private static final Float LINE_WIDTH = 1.0f;
+  private static final Float SPHERE_RADIUS = 0.05f;
+  private static final Float LINE_WIDTH = 0.10f;
 
   private static final Color VERT_COLOR = Color.WHITE;
   private static final Color LINE_COLOR = Color.BLUE;
@@ -66,9 +66,9 @@ public class ModelMesh {
 
     for (Vertex v : vertexSet) {
       Sphere point = new Sphere(SPHERE_RADIUS);
-      point.setTranslateX(v.getX() * 10); // scale for visibility
-      point.setTranslateY(v.getY() * 10);
-      point.setTranslateZ(v.getZ() * 10);
+      point.setTranslateX(v.getX()); // scale for visibility
+      point.setTranslateY(v.getY());
+      point.setTranslateZ(v.getZ());
       point.setMaterial(new PhongMaterial(VERT_COLOR));
       verticesGroup.getChildren().add(point);
     }
@@ -86,8 +86,8 @@ public class ModelMesh {
         .map(line -> {
           List<Point3D> points = LineUtils.getVertices(line).stream()
               .map(RenderUtils::gpbToPoint3D)
-              .map(point -> new Point3D(point.x * 10, point.y * 10,
-                  point.z * 10)) // scale for visibility
+              .map(point -> new Point3D(point.x, point.y,
+                  point.z)) // scale for visibility
               .toList();
           return new PolyLine3D(points, LINE_WIDTH, LINE_COLOR);
         })
@@ -107,8 +107,8 @@ public class ModelMesh {
             .map(quadrilateral -> {
               List<Point3D> points = QuaderilateralUtils.getVertices(quadrilateral).stream()
                   .map(RenderUtils::gpbToPoint3D)
-                  .map(point -> new Point3D(point.x * 10, point.y * 10,
-                      point.z * 10)) // scale for visibility
+                  .map(point -> new Point3D(point.x, point.y,
+                      point.z)) // scale for visibility
                   .collect(Collectors.toList()); // To modifiable list
 
               // Add first point again to close loop
@@ -133,8 +133,8 @@ public class ModelMesh {
             .map(triangle -> {
               List<Point3D> points = TriangleUtils.getVertices(triangle).stream()
                   .map(RenderUtils::gpbToPoint3D)
-                  .map(point -> new Point3D(point.x * 10, point.y * 10,
-                      point.z * 10)) // scale for visibility
+                  .map(point -> new Point3D(point.x, point.y,
+                      point.z)) // scale for visibility
                   .collect(Collectors.toList()); // To modifiable list
 
               // Add first point again to close loop
@@ -155,8 +155,8 @@ public class ModelMesh {
             .map(optionalLine -> {
               List<Point3D> points = getVertices(optionalLine).stream()
                   .map(RenderUtils::gpbToPoint3D)
-                  .map(point -> new Point3D(point.x * 10, point.y * 10,
-                      point.z * 10)) // scale for visibility
+                  .map(point -> new Point3D(point.x, point.y,
+                      point.z)) // scale for visibility
                   .collect(Collectors.toList()); // To modifiable list
 
               // Add first point again to close loop
