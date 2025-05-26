@@ -6,11 +6,15 @@ public class PrimitiveUtils {
 
 
   /**
-   * This weird switch statement is because GPB wants the unknown value as 0, cause thats the
-   * default value assigned to the empty gpb
+   * TODO: Come back and verify if this is need or the gpb can be modified
    *
-   * @param commandValue
-   * @return
+   * <p>
+   * This weird switch statement is because GPB wants the unknown value as 0, cause that's the
+   * default value assigned to the empty gpb
+   * </p>
+   *
+   * @param commandValue Line's Command Value
+   * @return Returns the corrected LineType Enum based on the scene line value
    */
   public static LineType getLineType( int commandValue ) {
     switch ( commandValue ) {
@@ -51,7 +55,8 @@ public class PrimitiveUtils {
         matrix.getA(), matrix.getD(), matrix.getG(), matrix.getX(),
         matrix.getB(), matrix.getE(), matrix.getH(), matrix.getY(),
         matrix.getC(), matrix.getF(), matrix.getI(), matrix.getZ(),
-        0.0, 0.0, 0.0, matrix.getScale() );
+        0.0, 0.0, 0.0, matrix.getScale()
+    );
   }
 
   public static Matrix dMatrixToGpb( DMatrix4x4 matrix ) {
@@ -59,15 +64,18 @@ public class PrimitiveUtils {
         .setA( matrix.a11 )
         .setD( matrix.a12 )
         .setG( matrix.a13 )
+        .setX( matrix.a14 )
+
         .setB( matrix.a21 )
         .setE( matrix.a22 )
         .setH( matrix.a23 )
+        .setY( matrix.a24 )
+
         .setC( matrix.a31 )
         .setF( matrix.a32 )
         .setI( matrix.a33 )
-        .setX( matrix.a14 )
-        .setY( matrix.a24 )
         .setZ( matrix.a34 )
+
         .setScale( matrix.a44 )
         .build();
 
