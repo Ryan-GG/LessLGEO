@@ -16,8 +16,8 @@ public class PrimitiveUtils {
    * @param commandValue Line's Command Value
    * @return Returns the corrected LineType Enum based on the scene line value
    */
-  public static LineType getLineType( int commandValue ) {
-    switch ( commandValue ) {
+  public static LineType getLineType(int commandValue) {
+    switch (commandValue) {
       case 0 -> {
         return LineType.COMMENT_OR_META_CMD;
       }
@@ -44,39 +44,39 @@ public class PrimitiveUtils {
 
   /**
    * @formatter:off
-   * / a d g x \
-   * | b e h y |
-   * | c f i z |
+   * / a b c x \
+   * | d e f y |
+   * | g h i z |
    * \ 0 0 0 1 /
    * @formatter:on
    */
-  public static DMatrix4x4 gpbToDMatrix( Matrix matrix ) {
+  public static DMatrix4x4 gpbToDMatrix(Matrix matrix) {
     return new DMatrix4x4(
-        matrix.getA(), matrix.getD(), matrix.getG(), matrix.getX(),
-        matrix.getB(), matrix.getE(), matrix.getH(), matrix.getY(),
-        matrix.getC(), matrix.getF(), matrix.getI(), matrix.getZ(),
+        matrix.getA(), matrix.getB(), matrix.getC(), matrix.getX(),
+        matrix.getD(), matrix.getE(), matrix.getF(), matrix.getY(),
+        matrix.getG(), matrix.getH(), matrix.getI(), matrix.getZ(),
         0.0, 0.0, 0.0, matrix.getScale()
     );
   }
 
-  public static Matrix dMatrixToGpb( DMatrix4x4 matrix ) {
+  public static Matrix dMatrixToGpb(DMatrix4x4 matrix) {
     return Matrix.newBuilder()
-        .setA( matrix.a11 )
-        .setD( matrix.a12 )
-        .setG( matrix.a13 )
-        .setX( matrix.a14 )
+        .setA(matrix.a11)
+        .setB(matrix.a12)
+        .setC(matrix.a13)
+        .setX(matrix.a14)
 
-        .setB( matrix.a21 )
-        .setE( matrix.a22 )
-        .setH( matrix.a23 )
-        .setY( matrix.a24 )
+        .setD(matrix.a21)
+        .setE(matrix.a22)
+        .setF(matrix.a23)
+        .setY(matrix.a24)
 
-        .setC( matrix.a31 )
-        .setF( matrix.a32 )
-        .setI( matrix.a33 )
-        .setZ( matrix.a34 )
+        .setG(matrix.a31)
+        .setH(matrix.a32)
+        .setI(matrix.a33)
+        .setZ(matrix.a34)
 
-        .setScale( matrix.a44 )
+        .setScale(matrix.a44)
         .build();
 
   }
