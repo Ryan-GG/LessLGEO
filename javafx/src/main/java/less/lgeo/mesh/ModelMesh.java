@@ -27,8 +27,8 @@ import org.fxyz3d.shapes.composites.PolyLine3D;
 
 public class ModelMesh {
 
-  private static final Float SPHERE_RADIUS = 0.05f;
-  private static final Float LINE_WIDTH = 0.10f;
+  private static final Float SPHERE_RADIUS = 0.5f;
+  private static final Float LINE_WIDTH = 0.5f;
 
   private static final Color VERT_COLOR = Color.WHITE;
   private static final Color LINE_COLOR = Color.BLUE;

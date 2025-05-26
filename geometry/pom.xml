@@ -34,7 +34,6 @@
         <version>0.6.1</version>
       </plugin>
     </plugins>
-
   </build>
 
   <dependencies>
@@ -43,6 +42,18 @@
       <artifactId>protobuf-java</artifactId>
       <groupId>com.google.protobuf</groupId>
       <version>4.31.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.ejml/ejml-core -->
+    <dependency>
+      <artifactId>ejml-core</artifactId>
+      <groupId>org.ejml</groupId>
+      <version>0.44.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.ejml/ejml-ddense -->
+    <dependency>
+      <artifactId>ejml-ddense</artifactId>
+      <groupId>org.ejml</groupId>
+      <version>0.44.0</version>
     </dependency>
   </dependencies>
 

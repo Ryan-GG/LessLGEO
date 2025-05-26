@@ -2,17 +2,21 @@
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>less.lgeo</groupId>
   <artifactId>parser</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <packaging>jar</packaging>
-  <parent>
-    <artifactId>parent</artifactId>
-    <groupId>less.lgeo</groupId>
-    <relativePath>../pom.xml</relativePath>
-    <version>0.0.1-SNAPSHOT</version>
-  </parent>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>repackage</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+        <groupId>org.springframework.boot</groupId>
+      </plugin>
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <artifactId>annotations</artifactId>
@@ -30,23 +34,18 @@
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>jar</packaging>
+  <parent>
+    <artifactId>parent</artifactId>
+    <groupId>less.lgeo</groupId>
+    <relativePath>../pom.xml</relativePath>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
   <properties>
     <maven.compiler.source>23</maven.compiler.source>
     <maven.compiler.target>23</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>repackage</id>
-            <phase>none</phase>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
-  </build>
+  <version>0.0.1-SNAPSHOT</version>
 </project>
