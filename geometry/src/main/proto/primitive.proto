@@ -59,6 +59,7 @@ message OptionalLine {
   Vertex p3 = 5;
   Vertex p4 = 6;
 }
+
 message SubFileReference {
   LineType type = 1;
   Color color = 2;
@@ -66,6 +67,12 @@ message SubFileReference {
   Model sub_model = 4;
 }
 
+/**
+  * / a b c x \
+  * | d e f y |
+  * | g h i z |
+  * \ 0 0 0 scale /
+ */
 message Matrix {
   double x = 1;
   double y = 2;

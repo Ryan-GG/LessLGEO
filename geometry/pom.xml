@@ -33,8 +33,17 @@
         <groupId>org.xolstice.maven.plugins</groupId>
         <version>0.6.1</version>
       </plugin>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>repackage</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+        <groupId>org.springframework.boot</groupId>
+      </plugin>
     </plugins>
-
   </build>
 
   <dependencies>
@@ -44,11 +53,29 @@
       <groupId>com.google.protobuf</groupId>
       <version>4.31.0</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.ejml/ejml-core -->
+    <dependency>
+      <artifactId>ejml-core</artifactId>
+      <groupId>org.ejml</groupId>
+      <version>0.44.0</version>
+    </dependency>
+    <!-- https://mvnrepository.com/artifact/org.ejml/ejml-ddense -->
+    <dependency>
+      <artifactId>ejml-ddense</artifactId>
+      <groupId>org.ejml</groupId>
+      <version>0.44.0</version>
+    </dependency>
   </dependencies>
 
-  <groupId>less.lgeo</groupId>
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
+
+  <parent>
+    <artifactId>parent</artifactId>
+    <groupId>less.lgeo</groupId>
+    <relativePath>../pom.xml</relativePath>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
 
   <properties>
     <maven.compiler.source>23</maven.compiler.source>

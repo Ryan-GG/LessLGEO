@@ -1,14 +1,20 @@
 package less.lgeo.primitive;
 
+import org.ejml.data.DMatrix4x4;
+
 public class PrimitiveUtils {
 
 
   /**
-   * This weird switch statement is because GPB wants the unknown value as 0, cause thats the
-   * default value assigned to the empty gpb
+   * TODO: Come back and verify if this is need or the gpb can be modified
    *
-   * @param commandValue
-   * @return
+   * <p>
+   * This weird switch statement is because GPB wants the unknown value as 0, cause that's the
+   * default value assigned to the empty gpb
+   * </p>
+   *
+   * @param commandValue Line's Command Value
+   * @return Returns the corrected LineType Enum based on the scene line value
    */
   public static LineType getLineType(int commandValue) {
     switch (commandValue) {
@@ -36,50 +42,42 @@ public class PrimitiveUtils {
     }
   }
 
-  public static Vertex getPoint(double x, double y, double z) {
-    return Vertex.newBuilder()
-        .setX(x)
-        .setY(y)
-        .setZ(z)
-        .build();
+  /**
+   * @formatter:off
+   * / a b c x \
+   * | d e f y |
+   * | g h i z |
+   * \ 0 0 0 1 /
+   * @formatter:on
+   */
+  public static DMatrix4x4 gpbToDMatrix(Matrix matrix) {
+    return new DMatrix4x4(
+        matrix.getA(), matrix.getB(), matrix.getC(), matrix.getX(),
+        matrix.getD(), matrix.getE(), matrix.getF(), matrix.getY(),
+        matrix.getG(), matrix.getH(), matrix.getI(), matrix.getZ(),
+        0.0, 0.0, 0.0, matrix.getScale()
+    );
   }
 
-  public static Line getLine(Color color, Vertex p1, Vertex p2) {
-    return Line.newBuilder()
-        .setColor(color)
-        .setP1(p1)
-        .setP2(p2)
-        .build();
-  }
+  public static Matrix dMatrixToGpb(DMatrix4x4 matrix) {
+    return Matrix.newBuilder()
+        .setA(matrix.a11)
+        .setB(matrix.a12)
+        .setC(matrix.a13)
+        .setX(matrix.a14)
 
-  public static Triangle getTriangle(Color color, Vertex p1, Vertex p2, Vertex p3) {
-    return Triangle.newBuilder()
-        .setColor(color)
-        .setP1(p1)
-        .setP2(p2)
-        .setP3(p3)
-        .build();
-  }
+        .setD(matrix.a21)
+        .setE(matrix.a22)
+        .setF(matrix.a23)
+        .setY(matrix.a24)
 
-  public static Quadrilateral getQuadrilateral(Color color, Vertex p1, Vertex p2, Vertex p3,
-      Vertex p4) {
-    return Quadrilateral.newBuilder()
-        .setColor(color)
-        .setP1(p1)
-        .setP2(p2)
-        .setP3(p3)
-        .setP4(p4)
-        .build();
-  }
+        .setG(matrix.a31)
+        .setH(matrix.a32)
+        .setI(matrix.a33)
+        .setZ(matrix.a34)
 
-  public static OptionalLine getOptionalLine(Color color, Vertex p1, Vertex p2, Vertex p3,
-      Vertex p4) {
-    return OptionalLine.newBuilder()
-        .setColor(color)
-        .setP1(p1)
-        .setP2(p2)
-        .setP3(p3)
-        .setP4(p4)
+        .setScale(matrix.a44)
         .build();
+
   }
 }

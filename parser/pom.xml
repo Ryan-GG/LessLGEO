@@ -3,6 +3,20 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>parser</artifactId>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>repackage</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+        <groupId>org.springframework.boot</groupId>
+      </plugin>
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <artifactId>annotations</artifactId>
@@ -19,13 +33,7 @@
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <artifactId>reducer</artifactId>
-      <groupId>less.lgeo</groupId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
   </dependencies>
-  <groupId>less.lgeo</groupId>
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
   <parent>
@@ -40,5 +48,4 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
   <version>0.0.1-SNAPSHOT</version>
-
 </project>
