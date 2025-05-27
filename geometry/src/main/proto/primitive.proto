@@ -71,7 +71,7 @@ message SubFileReference {
   * / a b c x \
   * | d e f y |
   * | g h i z |
-  * \ 0 0 0 1 /
+  * \ 0 0 0 scale /
  */
 message Matrix {
   double x = 1;

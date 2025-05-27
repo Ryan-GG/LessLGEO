@@ -10,6 +10,18 @@ public class VertexUtils {
         .build();
   }
 
+  /**
+   * @formatter:off
+   * u' = a*u + b*v + c*w + x
+   * v' = d*u + e*v + f*w + y
+   * w' = g*u + h*v + i*w + z
+   * @formatter:on
+   *
+   * @param oldVertex point location
+   * @param matrix    Matrix that holds transformation
+   * @return The resulting {@link Vertex} from the previous position with the transformation
+   * applied.
+   */
   public static Vertex transform(Vertex oldVertex, Matrix matrix) {
     double newX = matrix.getA() * oldVertex.getX() + matrix.getB() * oldVertex.getY()
         + matrix.getC() * oldVertex.getZ() + matrix.getX();

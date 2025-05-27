@@ -66,7 +66,7 @@ public class ModelMesh {
 
     for (Vertex v : vertexSet) {
       Sphere point = new Sphere(SPHERE_RADIUS);
-      point.setTranslateX(v.getX()); // scale for visibility
+      point.setTranslateX(v.getX());
       point.setTranslateY(v.getY());
       point.setTranslateZ(v.getZ());
       point.setMaterial(new PhongMaterial(VERT_COLOR));
@@ -87,7 +87,7 @@ public class ModelMesh {
           List<Point3D> points = LineUtils.getVertices(line).stream()
               .map(RenderUtils::gpbToPoint3D)
               .map(point -> new Point3D(point.x, point.y,
-                  point.z)) // scale for visibility
+                  point.z))
               .toList();
           return new PolyLine3D(points, LINE_WIDTH, LINE_COLOR);
         })
@@ -108,8 +108,8 @@ public class ModelMesh {
               List<Point3D> points = QuaderilateralUtils.getVertices(quadrilateral).stream()
                   .map(RenderUtils::gpbToPoint3D)
                   .map(point -> new Point3D(point.x, point.y,
-                      point.z)) // scale for visibility
-                  .collect(Collectors.toList()); // To modifiable list
+                      point.z))
+                  .collect(Collectors.toList());
 
               // Add first point again to close loop
               points.add(points.getFirst());
@@ -134,8 +134,8 @@ public class ModelMesh {
               List<Point3D> points = TriangleUtils.getVertices(triangle).stream()
                   .map(RenderUtils::gpbToPoint3D)
                   .map(point -> new Point3D(point.x, point.y,
-                      point.z)) // scale for visibility
-                  .collect(Collectors.toList()); // To modifiable list
+                      point.z))
+                  .collect(Collectors.toList());
 
               // Add first point again to close loop
               points.add(points.getFirst());
@@ -147,6 +147,10 @@ public class ModelMesh {
     return triangleGroup.getChildren();
   }
 
+  /**
+   * @param model gpb {@link Model}
+   * @return {@link less.lgeo.primitive.OptionalLine} as JavaFX {@link Node}
+   */
   private List<Node> drawOptionalLines(Model model) {
     Group optionalLineGroup = new Group();
 
@@ -156,8 +160,8 @@ public class ModelMesh {
               List<Point3D> points = getVertices(optionalLine).stream()
                   .map(RenderUtils::gpbToPoint3D)
                   .map(point -> new Point3D(point.x, point.y,
-                      point.z)) // scale for visibility
-                  .collect(Collectors.toList()); // To modifiable list
+                      point.z))
+                  .collect(Collectors.toList());
 
               // Add first point again to close loop
               points.add(points.getFirst());

@@ -25,8 +25,7 @@ public class RenderMesh extends Application {
 
   public static void main(String[] args) {
     if (args.length < 1) {
-      System.err.println("Usage: java ModelMeshDemoApp <LDraw file path>");
-      System.exit(1);
+      logger.error("Usage: RenderMesh <LDraw file path>", new IllegalStateException());
     }
     launch(args);
   }

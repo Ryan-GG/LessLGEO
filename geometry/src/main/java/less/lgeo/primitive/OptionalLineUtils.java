@@ -16,13 +16,10 @@ public class OptionalLineUtils {
         .build();
   }
 
+  /**
+   * @return List of rendered line {@link Vertex}, disregard control points.
+   */
   public static List<Vertex> getVertices(OptionalLine optionalLine) {
-   /* return List.of(
-        optionalLine.getP1(),
-        optionalLine.getP2(),
-        optionalLine.getP3(),
-        optionalLine.getP4());*/
-
     return List.of(
         optionalLine.getP1(),
         optionalLine.getP2());

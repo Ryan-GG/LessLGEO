@@ -80,6 +80,10 @@ public class ModelUtils {
     return quadrilaterals;
   }
 
+  /**
+   * @param model gpb {@link Model}
+   * @return All {@link OptionalLine} from the Parent Model
+   */
   public static Set<OptionalLine> getOptionalLines(Model model) {
 
     Set<OptionalLine> optionalLines = new HashSet<>(model.getOptionalLineList());
