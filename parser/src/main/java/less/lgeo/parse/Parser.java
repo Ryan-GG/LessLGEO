@@ -37,6 +37,7 @@ import less.lgeo.primitive.Vertex;
 import less.lgeo.primitive.VertexUtils;
 import org.ejml.data.DMatrix4x4;
 import org.ejml.dense.fixed.CommonOps_DDF4;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
@@ -204,7 +205,18 @@ public class Parser {
      */
     List<String> subFileParts = Arrays.stream( values.getFirst().split( "\\\\" ) ).toList();
     String subFileName = subFileParts.getLast();
-    Model parsedSubFileModel = null;
+    Model parsedSubFileModel = getParsedSubFileModel( subFileName, resulted );
+    return SubFileReference.newBuilder()
+        .setType( LineType.SUB_FILE_REF )
+        .setColor(
+            Color.getDefaultInstance()
+        )
+        .setMatrix( resulted )
+        .setSubModel( parsedSubFileModel )
+        .build();
+  }
+
+  private @NotNull Model getParsedSubFileModel( String subFileName, Matrix resulted ) {
     // split on \, and use last as file name to search for
     try ( Stream<Path> ldrawDir = Files.walk( Path.of( "ldraw" ) ) ) {
 
@@ -216,23 +228,13 @@ public class Parser {
         throw new IOException();
       }
 
-      parsedSubFileModel = parse( subFilePath.get().toFile(), Optional.of( resulted ) );
+      return parse( subFilePath.get().toFile(), Optional.of( resulted ) );
 
     } catch ( IOException ex ) {
       logger.error( "Sub file does not exist, {}", subFileName );
-    }
-    if ( parsedSubFileModel == null ) {
       throw new IllegalStateException(
           "Parsed Sub File Model is null, failed trying to parse " + subFileName );
     }
-    return SubFileReference.newBuilder()
-        .setType( LineType.SUB_FILE_REF )
-        .setColor(
-            Color.getDefaultInstance()
-        )
-        .setMatrix( resulted )
-        .setSubModel( parsedSubFileModel )
-        .build();
   }
 
   /**
