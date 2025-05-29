@@ -44,27 +44,6 @@ import org.springframework.util.StringUtils;
 public class Parser {
 
   private static final Logger logger = LoggerFactory.getLogger( Parser.class );
-  // only UTF-8 encoding
-  // file name maximum 255 characters long including extension
-  // Special characters, such as &, #, |, and ?, should be avoided as they may
-  // also cause cross-platform issues and create problems when used in URLs.
-  // Extension
-  // All LDraw files carry the LDR (default), DAT or MPD extension.
-  // one command per line
-  // no line length restriction
-  // each command optional leading whitespacce followed by white space delimtied
-  // tokens
-  // trailing arbitrary data which could include internal white space, treated as
-  // a single unit
-  // white space is tabs or one or more spacese
-  // empty lines or consist of only whitespace are skiped
-  // if a line is non-empty the first token must be an integer from the valid line
-  // type numbers
-  // this number dictates the number of parsing token for that line
-  // all lines in the file must usee the line termination of <CR><LF>
-  // the file is permitted **but not required** to eend with <CR><LF>
-
-  // LDraw parts are measured in LDraw Units LDU
 
   public Parser() {
 
