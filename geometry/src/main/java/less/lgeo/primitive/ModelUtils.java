@@ -124,9 +124,7 @@ public class ModelUtils {
   }
 
   private static Model transformModel(Model model, Optional<Matrix> transformationMatrix) {
-
-    logger.info("transformation matrix: {}",
-        transformationMatrix.isPresent() ? transformationMatrix.get() : "empty");
+    
     List<Line> transformedLines =
         model.getLineList().stream().map(line -> transformLine(line, transformationMatrix))
             .toList();
@@ -162,7 +160,6 @@ public class ModelUtils {
               }
 
               return SubFileReference.newBuilder()
-                  .setName(subFileReference.getName())
                   .setColor(subFileReference.getColor())
                   .setMatrix(IDENTITY_MATRIX)
                   .setSubModel(

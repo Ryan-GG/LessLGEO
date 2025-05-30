@@ -18,7 +18,9 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import less.lgeo.primitive.Color;
@@ -42,8 +44,10 @@ public class Parser {
 
   private static final Logger logger = LoggerFactory.getLogger(Parser.class);
 
-  public Parser() {
+  private final Map<String, Model> modelCache;
 
+  public Parser() {
+    this.modelCache = new ConcurrentHashMap<>();
   }
 
   private static double toDouble(String string) {
@@ -192,7 +196,6 @@ public class Parser {
     String subFileName = subFileParts.getLast();
     Model parsedSubFileModel = getParsedSubFileModel(subFileName);
     return SubFileReference.newBuilder()
-        .setName(subFileName)
         .setType(LineType.SUB_FILE_REF)
         .setColor(
             Color.getDefaultInstance()
@@ -204,6 +207,9 @@ public class Parser {
 
   private @NotNull Model getParsedSubFileModel(String subFileName) {
     // split on \, and use last as file name to search for
+    if (this.modelCache.containsKey(subFileName)) {
+      return this.modelCache.get(subFileName);
+    }
     try (Stream<Path> ldrawDir = Files.walk(Path.of("ldraw"))) {
 
       Optional<Path> subFilePath = ldrawDir.filter(
@@ -214,7 +220,9 @@ public class Parser {
         throw new IOException();
       }
 
-      return parse(subFilePath.get().toFile());
+      Model parsedSubModel = parse(subFilePath.get().toFile());
+      this.modelCache.put(subFileName, parsedSubModel);
+      return parsedSubModel;
 
     } catch (IOException ex) {
       logger.error("Sub file does not exist, {}", subFileName);
