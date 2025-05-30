@@ -65,6 +65,7 @@ message SubFileReference {
   Color color = 2;
   Matrix matrix = 3;
   Model sub_model = 4;
+  string name = 5;
 }
 
 /**

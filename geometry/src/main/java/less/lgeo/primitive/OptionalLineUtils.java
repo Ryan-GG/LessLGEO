@@ -1,6 +1,7 @@
 package less.lgeo.primitive;
 
 import java.util.List;
+import java.util.Optional;
 
 public class OptionalLineUtils {
 
@@ -23,5 +24,20 @@ public class OptionalLineUtils {
     return List.of(
         optionalLine.getP1(),
         optionalLine.getP2());
+  }
+
+  public static OptionalLine transformOptionalLine(OptionalLine optionalLine,
+      Optional<Matrix> transformationMatrix) {
+    Vertex p1 = optionalLine.getP1();
+    Vertex p2 = optionalLine.getP2();
+    Vertex p3 = optionalLine.getP1();
+    Vertex p4 = optionalLine.getP2();
+    return getOptionalLine(
+        optionalLine.getColor(),
+        transformationMatrix.map(value -> VertexUtils.transform(p1, value)).orElse(p1),
+        transformationMatrix.map(value -> VertexUtils.transform(p2, value)).orElse(p2),
+        transformationMatrix.map(value -> VertexUtils.transform(p3, value)).orElse(p3),
+        transformationMatrix.map(value -> VertexUtils.transform(p4, value)).orElse(p4)
+    );
   }
 }
