@@ -18,6 +18,13 @@ import org.slf4j.LoggerFactory;
 
 public class ModelUtils {
 
+  public static final Matrix IDENTITY_MATRIX = Matrix.newBuilder()
+      .setA(1)
+      .setE(1)
+      .setI(1)
+      .setScale(1)
+      .build();
+
   private static final Logger logger = LoggerFactory.getLogger(ModelUtils.class);
 
   /**
@@ -112,11 +119,14 @@ public class ModelUtils {
   }
 
   public static Model transformModel(Model model) {
-    return transformModel(model, Optional.empty());
+    return transformModel(model, Optional.empty()
+    );
   }
 
   private static Model transformModel(Model model, Optional<Matrix> transformationMatrix) {
 
+    logger.info("transformation matrix: {}",
+        transformationMatrix.isPresent() ? transformationMatrix.get() : "empty");
     List<Line> transformedLines =
         model.getLineList().stream().map(line -> transformLine(line, transformationMatrix))
             .toList();
@@ -154,7 +164,7 @@ public class ModelUtils {
               return SubFileReference.newBuilder()
                   .setName(subFileReference.getName())
                   .setColor(subFileReference.getColor())
-                  .setMatrix(resulted)
+                  .setMatrix(IDENTITY_MATRIX)
                   .setSubModel(
                       transformModel(subFileReference.getSubModel(),
                           Optional.of(resulted)))
