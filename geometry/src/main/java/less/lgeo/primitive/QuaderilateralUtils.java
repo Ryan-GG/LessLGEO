@@ -1,6 +1,7 @@
 package less.lgeo.primitive;
 
 import java.util.List;
+import java.util.Optional;
 
 public class QuaderilateralUtils {
 
@@ -21,6 +22,21 @@ public class QuaderilateralUtils {
         quadrilateral.getP2(),
         quadrilateral.getP3(),
         quadrilateral.getP4());
+  }
+
+  public static Quadrilateral transformQuadrilateral(Quadrilateral quadrilateral,
+      Optional<Matrix> transformationMatrix) {
+    Vertex p1 = quadrilateral.getP1();
+    Vertex p2 = quadrilateral.getP2();
+    Vertex p3 = quadrilateral.getP1();
+    Vertex p4 = quadrilateral.getP2();
+    return getQuadrilateral(
+        quadrilateral.getColor(),
+        transformationMatrix.map(value -> VertexUtils.transform(p1, value)).orElse(p1),
+        transformationMatrix.map(value -> VertexUtils.transform(p2, value)).orElse(p2),
+        transformationMatrix.map(value -> VertexUtils.transform(p3, value)).orElse(p3),
+        transformationMatrix.map(value -> VertexUtils.transform(p4, value)).orElse(p4)
+    );
   }
 
 }

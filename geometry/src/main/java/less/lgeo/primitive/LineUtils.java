@@ -1,6 +1,7 @@
 package less.lgeo.primitive;
 
 import java.util.List;
+import java.util.Optional;
 
 public class LineUtils {
 
@@ -14,5 +15,15 @@ public class LineUtils {
 
   public static List<Vertex> getVertices(Line line) {
     return List.of(line.getP1(), line.getP2());
+  }
+
+  public static Line transformLine(Line line, Optional<Matrix> transformationMatrix) {
+    Vertex p1 = line.getP1();
+    Vertex p2 = line.getP2();
+    return getLine(
+        line.getColor(),
+        transformationMatrix.map(value -> VertexUtils.transform(p1, value)).orElse(p1),
+        transformationMatrix.map(value -> VertexUtils.transform(p2, value)).orElse(p2)
+    );
   }
 }

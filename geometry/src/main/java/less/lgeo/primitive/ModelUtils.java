@@ -1,9 +1,31 @@
 package less.lgeo.primitive;
 
+import static less.lgeo.primitive.LineUtils.transformLine;
+import static less.lgeo.primitive.OptionalLineUtils.transformOptionalLine;
+import static less.lgeo.primitive.PrimitiveUtils.dMatrixToGpb;
+import static less.lgeo.primitive.PrimitiveUtils.gpbToDMatrix;
+import static less.lgeo.primitive.QuaderilateralUtils.transformQuadrilateral;
+import static less.lgeo.primitive.TriangleUtils.transformTriangle;
+
 import java.util.HashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
+import org.ejml.data.DMatrix4x4;
+import org.ejml.dense.fixed.CommonOps_DDF4;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ModelUtils {
+
+  public static final Matrix IDENTITY_MATRIX = Matrix.newBuilder()
+      .setA(1)
+      .setE(1)
+      .setI(1)
+      .setScale(1)
+      .build();
+
+  private static final Logger logger = LoggerFactory.getLogger(ModelUtils.class);
 
   /**
    * @param model gpb {@link Model}
@@ -96,5 +118,66 @@ public class ModelUtils {
     return optionalLines;
   }
 
+  public static Model transformModel(Model model) {
+    return transformModel(model, Optional.empty()
+    );
+  }
+
+  private static Model transformModel(Model model, Optional<Matrix> transformationMatrix) {
+    
+    List<Line> transformedLines =
+        model.getLineList().stream().map(line -> transformLine(line, transformationMatrix))
+            .toList();
+
+    List<Triangle> transformedTriangles =
+        model.getTriangleList().stream()
+            .map(triangle -> transformTriangle(triangle, transformationMatrix))
+            .toList();
+
+    List<Quadrilateral> transformedQuadrilaterals =
+        model.getQuadrilateralList().stream()
+            .map(quadrilateral -> transformQuadrilateral(quadrilateral, transformationMatrix))
+            .toList();
+
+    List<OptionalLine> transformedOptionalLines =
+        model.getOptionalLineList().stream()
+            .map(optionalLine -> transformOptionalLine(optionalLine, transformationMatrix))
+            .toList();
+
+    List<SubFileReference> transformedPieces =
+        model.getPieceList()
+            .stream()
+            .map(subFileReference -> {
+              // Prepare output matrix
+              Matrix resulted = subFileReference.getMatrix();
+
+              if (transformationMatrix.isPresent()) {
+                DMatrix4x4 result = new DMatrix4x4();
+                CommonOps_DDF4.mult(gpbToDMatrix(transformationMatrix.get()),
+                    gpbToDMatrix(subFileReference.getMatrix()),
+                    result);
+                resulted = dMatrixToGpb(result);
+              }
+
+              return SubFileReference.newBuilder()
+                  .setColor(subFileReference.getColor())
+                  .setMatrix(IDENTITY_MATRIX)
+                  .setSubModel(
+                      transformModel(subFileReference.getSubModel(),
+                          Optional.of(resulted)))
+                  .build();
+            })
+            .toList();
+
+    return Model.newBuilder()
+        .addAllComment(model.getCommentList())
+        .addAllCommand(model.getCommandList())
+        .addAllLine(transformedLines)
+        .addAllTriangle(transformedTriangles)
+        .addAllQuadrilateral(transformedQuadrilaterals)
+        .addAllOptionalLine(transformedOptionalLines)
+        .addAllPiece(transformedPieces)
+        .build();
+  }
 
 }
