@@ -2,8 +2,10 @@ syntax = "proto3";
 
 package modeling;
 
+import "primitive.proto";
+
 option java_multiple_files = true;
-option java_package = "less.lgeo.connection";
+option java_package = "less.lgeo.connectivity";
 option java_outer_classname = "Modeling";
 
 /**
@@ -25,5 +27,21 @@ Eight block:             3:1,0:4,3:1,0:4,10:4,0:4,3:1,0:4,3:1 (always the same; 
 its form from a disc to a ring. Some of the numbers fit roughly to the size of the connectivity element.
  */
 message Connection {
-  string command = 1;
+  LineType type = 1;
+  string command = 2;
+  string group_id = 3;
+  string element_id = 4;
+  Matrix matrix = 5;
+  Vertex position = 6;
+  SeventhBlock geometry_data = 7;
+  EighthBlock visual_geometry = 8;
+}
+
+message SeventhBlock {
+  string unknown = 1;
+  string unknown_2 = 2;
+}
+
+message EighthBlock {
+  string unknown = 1;
 }

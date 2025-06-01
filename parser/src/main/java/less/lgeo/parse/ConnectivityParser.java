@@ -2,7 +2,7 @@ package less.lgeo.parse;
 
 import java.io.File;
 import java.io.IOException;
-import less.lgeo.connection.Connection;
+import less.lgeo.connectivity.Connection;
 import org.springframework.stereotype.Service;
 
 @Service
