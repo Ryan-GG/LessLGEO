@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package geometry;
+package modeling;
 
 option java_multiple_files = true;
 option java_package = "less.lgeo.primitive";
-option java_outer_classname = "Geometry";
+option java_outer_classname = "Modeling";
 
 message Model {
   repeated Comment comment = 1;

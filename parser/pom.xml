@@ -24,7 +24,7 @@
       <version>17.0.0</version>
     </dependency>
     <dependency>
-      <artifactId>geometry</artifactId>
+      <artifactId>modeling</artifactId>
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>

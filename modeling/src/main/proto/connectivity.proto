@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package modeling;
+
+option java_multiple_files = true;
+option java_package = "less.lgeo.connection";
+option java_outer_classname = "Modeling";
+
+/**
+I’ve been playing around with these values and compared it with the other connectivity elements. What I’ve found out so far:
+
+First block:              0 (always the same)
+Second block:          PE_CONN (always the same, mostly likely a meta command; Part Editor Connectivity maybe)
+Third block:             ID1 (group ID see figure 1.2 below)
+Fourth block:           ID2 (element ID see figure 1.2 below)
+Fifth block:              1 0 0 0 1 0 0 0 1 (always the same, Transformation matrix)*
+Sixth block:              XYZ (Position of the element)
+Seventh block:         2 2 (always the same; geometry data aka visual representation of the element)**
+Eight block:             3:1,0:4,3:1,0:4,10:4,0:4,3:1,0:4,3:1 (always the same; geometry data aka visual representation of the element)***
+
+* For other elements not always the identity matrix; see figure 1.2
+** Lateral size. If you change it from 2 2 to 1 1 it has half the size. But any other value does not work
+*** Most complicated one. I guess it describes or are related the geometry of the connectivity element itself
+(squares in the corner, disc in the center and the connection lines). If you change 10:4 to 20:4 for example the disc changes
+its form from a disc to a ring. Some of the numbers fit roughly to the size of the connectivity element.
+ */
+message Connection {
+  string command = 1;
+}

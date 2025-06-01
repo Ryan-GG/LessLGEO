@@ -27,7 +27,7 @@
   </build>
   <dependencies>
     <dependency>
-      <artifactId>geometry</artifactId>
+      <artifactId>modeling</artifactId>
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
