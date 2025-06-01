@@ -38,3 +38,14 @@ replay_pid*
 
 # Local ldraw files
 ldraw/
+*.ldr
+*.dat
+
+# Connectivity files
+connectivity/
+*.conn
+*.part
+
+# Collision files
+collider/
+*.col
