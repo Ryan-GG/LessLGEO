@@ -32,7 +32,6 @@ message Connection {
   string group_id = 3;
   string element_id = 4;
   Matrix matrix = 5;
-  Vertex position = 6;
   SeventhBlock geometry_data = 7;
   EighthBlock visual_geometry = 8;
 }

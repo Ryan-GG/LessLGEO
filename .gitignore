@@ -42,9 +42,9 @@ ldraw/
 *.dat
 
 # Connectivity files
-connectivity/
+# connectivity/
 *.conn
-*.part
+# *.part
 
 # Collision files
 collider/

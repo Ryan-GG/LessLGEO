@@ -1,5 +1,6 @@
 package less.lgeo.parse;
 
+import static less.lgeo.ParseUtils.toDouble;
 import static less.lgeo.primitive.LineUtils.getLine;
 import static less.lgeo.primitive.ModelUtils.transformModel;
 import static less.lgeo.primitive.OptionalLineUtils.getOptionalLine;
@@ -50,10 +51,6 @@ public class LDrawParser implements Parser<Model> {
 
   public LDrawParser() {
     this.modelCache = new ConcurrentHashMap<>();
-  }
-
-  private static double toDouble( String string ) {
-    return Double.parseDouble( string );
   }
 
   public Model parse( File toParse ) throws IOException {
