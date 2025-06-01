@@ -1,7 +1,7 @@
 package less.lgeo;
 
 import java.io.File;
-import less.lgeo.parse.Parser;
+import less.lgeo.parse.LDrawParser;
 import less.lgeo.parser.ParserProducer;
 import less.lgeo.primitive.Model;
 import less.lgeo.rabbitmq.RabbitProperties;
@@ -14,37 +14,37 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-@EnableConfigurationProperties(value = RabbitProperties.class)
 @SpringBootApplication
+@EnableConfigurationProperties( value = RabbitProperties.class )
 public class ParserHandler implements ApplicationRunner {
 
-  private static final Logger logger = LoggerFactory.getLogger(ParserHandler.class);
+  private static final Logger logger = LoggerFactory.getLogger( ParserHandler.class );
 
   private final ParserProducer parserProducer;
 
-  public ParserHandler(ParserProducer parserProducer) {
+  public ParserHandler( ParserProducer parserProducer ) {
     this.parserProducer = parserProducer;
   }
 
-  public static void main(String[] args) {
+  public static void main( String[] args ) {
     new SpringApplicationBuilder()
-        .web(WebApplicationType.NONE)
-        .sources(ParserHandler.class)
+        .web( WebApplicationType.NONE )
+        .sources( ParserHandler.class )
         .build()
-        .run(args);
+        .run( args );
   }
 
   @Override
-  public void run(ApplicationArguments args) throws Exception {
+  public void run( ApplicationArguments args ) throws Exception {
 
-    Parser parser = new Parser();
-    File fileToParse = new File(args.getSourceArgs()[0]);
+    LDrawParser lDrawParser = new LDrawParser();
+    File fileToParse = new File( args.getSourceArgs()[0] );
 
-    Model model = parser.parse(fileToParse);
+    Model model = lDrawParser.parse( fileToParse );
 
-    logger.info("Model result: {}", model);
+    logger.info( "Model result: {}", model );
 
-    logger.info("Sending Model...");
-    parserProducer.sendMessage(model);
+    logger.info( "Sending Model..." );
+    parserProducer.sendMessage( model );
   }
 }
