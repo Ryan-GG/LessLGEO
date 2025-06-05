@@ -1,5 +1,8 @@
 package less.lgeo.parse;
 
+import static less.lgeo.ParseUtils.isMetaCommand;
+import static less.lgeo.ParseUtils.parseCommand;
+import static less.lgeo.ParseUtils.parseComment;
 import static less.lgeo.ParseUtils.toDouble;
 import static less.lgeo.primitive.LineUtils.getLine;
 import static less.lgeo.primitive.ModelUtils.transformModel;
@@ -25,11 +28,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import less.lgeo.primitive.Color;
-import less.lgeo.primitive.Comment;
 import less.lgeo.primitive.Line;
 import less.lgeo.primitive.LineType;
 import less.lgeo.primitive.Matrix;
-import less.lgeo.primitive.MetaCommand;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.OptionalLine;
 import less.lgeo.primitive.Quadrilateral;
@@ -105,48 +106,6 @@ public class LDrawParser implements Parser<Model> {
     }
   }
 
-  /**
-   * @return True, if line is marked as a comment containing '//' as '0 <comment>' format is
-   * deprecated
-   */
-  private boolean isComment( List<String> values ) {
-    return values.getFirst().equals( "//" );
-  }
-
-  /**
-   * @return If the next string is all Uppercase letters this is treated as a meta command
-   * @deprecated
-   */
-  private boolean isMetaCommand( List<String> values ) {
-    String command = values.getFirst();
-    return command.toUpperCase().equals( command );
-  }
-
-
-  /**
-   * @return Join line values as singular string 'comment'
-   */
-  private Comment parseComment( int lineNumber, List<String> values ) {
-    return Comment.newBuilder()
-        .setType( LineType.COMMENT_OR_META_CMD )
-        .setLineNumber( lineNumber )
-        // TODO, Not sure if this needs to be improved
-        .setComment( values.toString() )
-        .build();
-  }
-
-  /**
-   * @return MetaCommand, with command and additional parameters
-   */
-  private MetaCommand parseCommand( List<String> values ) {
-    String command = values.removeFirst();
-    return MetaCommand.newBuilder()
-        .setType( LineType.COMMENT_OR_META_CMD )
-        .setCommand( command )
-        // TODO, This needs to actually do something when parsed
-        .addAllAdditionalParams( values )
-        .build();
-  }
 
   /**
    * Converts a list of strings to a {@link SubFileReference}

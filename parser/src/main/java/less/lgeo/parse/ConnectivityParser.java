@@ -1,5 +1,8 @@
 package less.lgeo.parse;
 
+import static less.lgeo.ParseUtils.isMetaCommand;
+import static less.lgeo.ParseUtils.parseCommand;
+import static less.lgeo.ParseUtils.parseComment;
 import static less.lgeo.ParseUtils.toDouble;
 import static less.lgeo.primitive.PrimitiveUtils.getLineType;
 
@@ -9,10 +12,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import less.lgeo.connectivity.Connection;
 import less.lgeo.connectivity.EighthBlock;
+import less.lgeo.connectivity.PartConnection;
 import less.lgeo.connectivity.SeventhBlock;
 import less.lgeo.primitive.LineType;
 import less.lgeo.primitive.Matrix;
@@ -29,7 +34,7 @@ public class ConnectivityParser implements Parser<Connection> {
   public static void main( String[] args ) throws IOException {
     File toParse = new File( args[0] );
     ConnectivityParser connectivityParser = new ConnectivityParser();
-    logger.info( "Connection {}", connectivityParser.parse( toParse ) );
+    logger.info( "Connection: {}", connectivityParser.parse( toParse ) );
   }
 
   @Override
@@ -46,62 +51,67 @@ public class ConnectivityParser implements Parser<Connection> {
       bufferedReader.lines().filter( StringUtils::hasText ).forEach( line -> {
         List<String> values = new ArrayList<>( List.of( line.trim().split( " " ) ) );
 
+        logger.info( "Parsing line {} : {}", lineNumber, line );
         int commandValue = Integer.parseInt( values.removeFirst() );
         LineType lineType = getLineType( commandValue );
 
-        connectionBuilder.setType( lineType );
-        connectionBuilder.setCommand( values.removeFirst() );
-        connectionBuilder.setGroupId( values.removeFirst() );
-        connectionBuilder.setElementId( values.removeFirst() );
-
-        double a = toDouble( values.removeFirst() );
-        double b = toDouble( values.removeFirst() );
-        double c = toDouble( values.removeFirst() );
-        double d = toDouble( values.removeFirst() );
-        double e = toDouble( values.removeFirst() );
-        double f = toDouble( values.removeFirst() );
-        double g = toDouble( values.removeFirst() );
-        double h = toDouble( values.removeFirst() );
-        double i = toDouble( values.removeFirst() );
-        double x = toDouble( values.removeFirst() );
-        double y = toDouble( values.removeFirst() );
-        double z = toDouble( values.removeFirst() );
-
-        Matrix parsedMatrix = Matrix.newBuilder()
-            .setX( x )
-            .setY( y )
-            .setZ( z )
-            .setA( a )
-            .setB( b )
-            .setC( c )
-            .setD( d )
-            .setE( e )
-            .setF( f )
-            .setG( g )
-            .setH( h )
-            .setI( i )
-            .setScale( 1.0 )
-            .build();
-
-        connectionBuilder.setMatrix( parsedMatrix )
-            .setGeometryData( parseSeventhBlock( values ) )
-            .setVisualGeometry( parseEighthBlock( values ) );
+        if ( lineType == LineType.COMMENT_OR_META_CMD ) {
+          if ( values.isEmpty() ) {
+            logger.warn( "Found '0' line" );
+          } else if ( isMetaCommand( values ) ) {
+            connectionBuilder.addCommand( parseCommand( values ) );
+          } else {
+            connectionBuilder.addComment( parseComment( lineNumber.get(), values ) );
+          }
+        } else {
+          throw new IllegalStateException( "Unexpected Line Type" );
+        }
       } );
-    }
 
-    return connectionBuilder.build();
+      connectionBuilder.build().getCommandList().forEach( command ->
+      {
+        if ( command.getCommand().equals( "PE_CONN" ) ) {
+          Iterator<String> additionalParamsIter = command.getAdditionalParamsList().iterator();
+          connectionBuilder.addPartConnection(
+              PartConnection.newBuilder()
+                  .setGroupId( Integer.parseInt( additionalParamsIter.next() ) )
+                  .setElementId( Integer.parseInt( additionalParamsIter.next() ) )
+                  .setMatrix(
+                      Matrix.newBuilder()
+                          .setX( toDouble( additionalParamsIter.next() ) )
+                          .setY( toDouble( additionalParamsIter.next() ) )
+                          .setZ( toDouble( additionalParamsIter.next() ) )
+                          .setA( toDouble( additionalParamsIter.next() ) )
+                          .setB( toDouble( additionalParamsIter.next() ) )
+                          .setC( toDouble( additionalParamsIter.next() ) )
+                          .setD( toDouble( additionalParamsIter.next() ) )
+                          .setE( toDouble( additionalParamsIter.next() ) )
+                          .setF( toDouble( additionalParamsIter.next() ) )
+                          .setG( toDouble( additionalParamsIter.next() ) )
+                          .setH( toDouble( additionalParamsIter.next() ) )
+                          .setI( toDouble( additionalParamsIter.next() ) )
+                          .setScale( 1.0 )
+                  )
+                  .setGeometryData( parseSeventhBlock( additionalParamsIter ) )
+                  .setVisualGeometry( parseEighthBlock( additionalParamsIter ) )
+          );
+        }
+      } );
+      return connectionBuilder.build();
+    }
   }
 
-  private SeventhBlock parseSeventhBlock( List<String> values ) {
+
+  private SeventhBlock parseSeventhBlock( Iterator<String> values ) {
     return SeventhBlock.newBuilder()
-        .setUnknown( values.removeFirst() )
-        .setUnknown2( values.removeFirst() )
+        .setUnknown( values.next() )
+        .setUnknown2( values.next() )
         .build();
   }
 
-  private EighthBlock parseEighthBlock( List<String> values ) {
+  private EighthBlock parseEighthBlock( Iterator<String> values ) {
     return EighthBlock.newBuilder()
-        .setUnknown( values.removeFirst() )
+        .setUnknown( values.next() )
         .build();
   }
 

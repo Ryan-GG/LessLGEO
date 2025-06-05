@@ -27,10 +27,14 @@ Eight block:             3:1,0:4,3:1,0:4,10:4,0:4,3:1,0:4,3:1 (always the same; 
 its form from a disc to a ring. Some of the numbers fit roughly to the size of the connectivity element.
  */
 message Connection {
-  LineType type = 1;
-  string command = 2;
-  string group_id = 3;
-  string element_id = 4;
+  repeated Comment comment = 1;
+  repeated MetaCommand command = 2;
+  repeated PartConnection part_connection = 3;
+}
+
+message PartConnection {
+  int32 group_id = 3;
+  int32 element_id = 4;
   Matrix matrix = 5;
   SeventhBlock geometry_data = 7;
   EighthBlock visual_geometry = 8;
