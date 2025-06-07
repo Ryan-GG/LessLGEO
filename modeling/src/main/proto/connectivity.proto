@@ -62,10 +62,10 @@ message GroupOne {
 }
 
 message GroupStud {
-  // X Width
-  string width = 1;
-  // Z Length
-  string length = 2;
+  // X Width in half stud
+  int32 x_width_half_stud = 1;
+  // Z Width in half stud
+  int32 z_width_half_stud = 2;
   string unknown = 3;
 }
 
