@@ -4,6 +4,7 @@ import static less.lgeo.ParseUtils.isMetaCommand;
 import static less.lgeo.ParseUtils.parseCommand;
 import static less.lgeo.ParseUtils.parseComment;
 import static less.lgeo.ParseUtils.toDouble;
+import static less.lgeo.primitive.PrimitiveUtils.getGroupId;
 import static less.lgeo.primitive.PrimitiveUtils.getLineType;
 
 import java.io.BufferedReader;
@@ -16,9 +17,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 import less.lgeo.connectivity.Connection;
-import less.lgeo.connectivity.EighthBlock;
+import less.lgeo.connectivity.Connection.Builder;
+import less.lgeo.connectivity.GroupId;
+import less.lgeo.connectivity.GroupStud;
 import less.lgeo.connectivity.PartConnection;
-import less.lgeo.connectivity.SeventhBlock;
 import less.lgeo.primitive.LineType;
 import less.lgeo.primitive.Matrix;
 import org.slf4j.Logger;
@@ -40,7 +42,7 @@ public class ConnectivityParser implements Parser<Connection> {
   @Override
   public Connection parse( File fileToParse ) throws IOException {
 
-    Connection.Builder connectionBuilder = Connection.newBuilder();
+    Builder connectionBuilder = Connection.newBuilder();
 
     try ( BufferedReader bufferedReader = new BufferedReader(
         new FileReader( fileToParse, StandardCharsets.UTF_8 ) ) ) {
@@ -72,48 +74,65 @@ public class ConnectivityParser implements Parser<Connection> {
       {
         if ( command.getCommand().equals( "PE_CONN" ) ) {
           Iterator<String> additionalParamsIter = command.getAdditionalParamsList().iterator();
-          connectionBuilder.addPartConnection(
-              PartConnection.newBuilder()
-                  .setGroupId( Integer.parseInt( additionalParamsIter.next() ) )
-                  .setElementId( Integer.parseInt( additionalParamsIter.next() ) )
-                  .setMatrix(
-                      Matrix.newBuilder()
-                          .setX( toDouble( additionalParamsIter.next() ) )
-                          .setY( toDouble( additionalParamsIter.next() ) )
-                          .setZ( toDouble( additionalParamsIter.next() ) )
-                          .setA( toDouble( additionalParamsIter.next() ) )
-                          .setB( toDouble( additionalParamsIter.next() ) )
-                          .setC( toDouble( additionalParamsIter.next() ) )
-                          .setD( toDouble( additionalParamsIter.next() ) )
-                          .setE( toDouble( additionalParamsIter.next() ) )
-                          .setF( toDouble( additionalParamsIter.next() ) )
-                          .setG( toDouble( additionalParamsIter.next() ) )
-                          .setH( toDouble( additionalParamsIter.next() ) )
-                          .setI( toDouble( additionalParamsIter.next() ) )
-                          .setScale( 1.0 )
-                  )
-                  .setGeometryData( parseSeventhBlock( additionalParamsIter ) )
-                  .setVisualGeometry( parseEighthBlock( additionalParamsIter ) )
-          );
+
+          GroupId groupId = getGroupId( Integer.parseInt( additionalParamsIter.next() ) );
+
+          if ( groupId != null ) {
+            connectionBuilder.addPartConnection(
+                getPartConnection( groupId, additionalParamsIter ) );
+          }
         }
       } );
       return connectionBuilder.build();
     }
   }
 
+  private PartConnection getPartConnection( GroupId groupId, Iterator<String> iter ) {
 
-  private SeventhBlock parseSeventhBlock( Iterator<String> values ) {
-    return SeventhBlock.newBuilder()
-        .setUnknown( values.next() )
-        .setUnknown2( values.next() )
-        .build();
+    PartConnection.Builder builder = parseBody( groupId, iter );
+    return switch ( groupId ) {
+      case GROUP_ZERO -> null;
+      case GROUP_ONE -> null;
+      case GROUP_STUD -> parseGroupStud( builder, iter );
+      case GROUP_FOUR -> null;
+      case GROUP_SIX -> null;
+      default -> throw new IllegalArgumentException( "Unrecognized Group Id" );
+    };
   }
 
-  private EighthBlock parseEighthBlock( Iterator<String> values ) {
-    return EighthBlock.newBuilder()
-        .setUnknown( values.next() )
-        .build();
+  private PartConnection.Builder parseBody( GroupId groupId, Iterator<String> iterator ) {
+    return PartConnection.newBuilder()
+        .setGroupId( groupId )
+        .setElementId( Integer.parseInt( iterator.next() ) )
+        .setMatrix(
+            Matrix.newBuilder()
+                .setA( toDouble( iterator.next() ) )
+                .setB( toDouble( iterator.next() ) )
+                .setC( toDouble( iterator.next() ) )
+                .setD( toDouble( iterator.next() ) )
+                .setE( toDouble( iterator.next() ) )
+                .setF( toDouble( iterator.next() ) )
+                .setG( toDouble( iterator.next() ) )
+                .setH( toDouble( iterator.next() ) )
+                .setI( toDouble( iterator.next() ) )
+                .setX( toDouble( iterator.next() ) )
+                .setY( toDouble( iterator.next() ) )
+                .setZ( toDouble( iterator.next() ) )
+                .setScale( 1.0 )
+        );
   }
+
+
+  private PartConnection parseGroupStud( PartConnection.Builder builder,
+      Iterator<String> iterator ) {
+    return builder.setGroupStud(
+        GroupStud.newBuilder()
+            .setWidth( iterator.next() )
+            .setLength( iterator.next() )
+            .setUnknown( iterator.next() )
+    ).build();
+  }
+
 
   @Override
   public File writeToFile( Connection gpb, String fileName ) {

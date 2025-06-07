@@ -33,18 +33,46 @@ message Connection {
 }
 
 message PartConnection {
-  int32 group_id = 3;
-  int32 element_id = 4;
-  Matrix matrix = 5;
-  SeventhBlock geometry_data = 7;
-  EighthBlock visual_geometry = 8;
+  GroupId group_id = 1;
+  int32 element_id = 2;
+  Matrix matrix = 3;
+  oneof group_geometry {
+    GroupZero group_zero = 4;
+    GroupOne group_one = 5;
+    GroupStud group_stud = 6;
+    GroupFour group_four = 7;
+    GroupSix group_six = 8;
+  }
 }
 
-message SeventhBlock {
-  string unknown = 1;
-  string unknown_2 = 2;
+enum GroupId {
+  GROUP_ZERO = 0;
+  GROUP_ONE = 1;
+  GROUP_STUD = 2;
+  GROUP_FOUR = 3;
+  GROUP_SIX = 4;
 }
 
-message EighthBlock {
-  string unknown = 1;
+message GroupZero {
+
+}
+
+message GroupOne {
+
+}
+
+message GroupStud {
+  // X Width
+  string width = 1;
+  // Z Length
+  string length = 2;
+  string unknown = 3;
+}
+
+message GroupFour {
+
+}
+
+message GroupSix {
+
 }
