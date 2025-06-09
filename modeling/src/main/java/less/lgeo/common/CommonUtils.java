@@ -1,4 +1,4 @@
-package less.lgeo.primitive;
+package less.lgeo.common;
 
 import static less.lgeo.connectivity.GroupId.GROUP_FOUR;
 import static less.lgeo.connectivity.GroupId.GROUP_ONE;
@@ -10,8 +10,13 @@ import static less.lgeo.connectivity.GroupId.UNRECOGNIZED;
 import less.lgeo.connectivity.GroupId;
 import org.ejml.data.DMatrix4x4;
 
-public class PrimitiveUtils {
+public class CommonUtils {
 
+  public static String COL_EXT = ".col";
+  public static String DAT_EXT = ".dat";
+  // Part Extension defines connections via PE_CONN meta command
+  // This is because traditional .conn files are proprietary and cannot be parsed normally
+  public static String PART_EXT = ".part";
 
   /**
    * TODO: Come back and verify if this is need or the gpb can be modified
@@ -60,6 +65,11 @@ public class PrimitiveUtils {
       case 6 -> GROUP_SIX;
       default -> UNRECOGNIZED;
     };
+  }
+
+  public static String changeFileExtension( String subFileName, String extension ) {
+    String fileName = subFileName.substring( 0, subFileName.lastIndexOf( "." ) );
+    return fileName.concat( extension );
   }
 
   /**

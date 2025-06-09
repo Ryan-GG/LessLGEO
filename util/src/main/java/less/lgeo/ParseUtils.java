@@ -1,9 +1,9 @@
 package less.lgeo;
 
 import java.util.List;
-import less.lgeo.primitive.Comment;
-import less.lgeo.primitive.LineType;
-import less.lgeo.primitive.MetaCommand;
+import less.lgeo.common.Comment;
+import less.lgeo.common.LineType;
+import less.lgeo.common.MetaCommand;
 
 public class ParseUtils {
 

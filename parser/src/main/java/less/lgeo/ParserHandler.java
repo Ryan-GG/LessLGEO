@@ -1,6 +1,13 @@
 package less.lgeo;
 
+import static less.lgeo.common.CommonUtils.PART_EXT;
+import static less.lgeo.common.CommonUtils.changeFileExtension;
+
 import java.io.File;
+import java.io.IOException;
+import java.util.List;
+import less.lgeo.connectivity.Connection;
+import less.lgeo.parse.ConnectivityParser;
 import less.lgeo.parse.LDrawParser;
 import less.lgeo.parser.ParserProducer;
 import less.lgeo.primitive.Model;
@@ -37,14 +44,28 @@ public class ParserHandler implements ApplicationRunner {
   @Override
   public void run( ApplicationArguments args ) throws Exception {
 
+    // TODO, this needs to be moved out to a class
     LDrawParser lDrawParser = new LDrawParser();
+    ConnectivityParser connectivityParser = new ConnectivityParser();
     File fileToParse = new File( args.getSourceArgs()[0] );
 
-    Model model = lDrawParser.parse( fileToParse );
+    Model parentModel = lDrawParser.parse( fileToParse );
 
-    logger.info( "Model result: {}", model );
+    List<Connection> connectionFiles = parentModel.getPieceList().stream()
+        .map( piece -> changeFileExtension( piece.getFileName(), PART_EXT ) )
+        .map( fileName -> new File( "connectivity", fileName ) )
+        .map( file -> {
+          try {
+            return connectivityParser.parse( file );
+          } catch ( IOException e ) {
+            throw new RuntimeException( e );
+          }
+        } )
+        .toList();
+
+    logger.info( "Model result: {}", parentModel );
 
     logger.info( "Sending Model..." );
-    parserProducer.sendMessage( model );
+    parserProducer.sendMessage( parentModel );
   }
 }

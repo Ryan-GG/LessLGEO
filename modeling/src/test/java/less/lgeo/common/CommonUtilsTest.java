@@ -1,11 +1,11 @@
-package less.lgeo.primitive;
+package less.lgeo.common;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.ejml.data.DMatrix4x4;
 import org.junit.jupiter.api.Test;
 
-public class PrimitiveUtilsTest {
+public class CommonUtilsTest {
 
   @Test
   void testGpbToDMatrixAndBack() {
@@ -15,8 +15,8 @@ public class PrimitiveUtilsTest {
         .setC( 9 ).setF( 10 ).setI( 11 ).setZ( 12 )
         .setScale( 1.0 )
         .build();
-    DMatrix4x4 dMatrixFromGpb = PrimitiveUtils.gpbToDMatrix( m );
-    Matrix gpbFromDMatrix = PrimitiveUtils.dMatrixToGpb( dMatrixFromGpb );
+    DMatrix4x4 dMatrixFromGpb = CommonUtils.gpbToDMatrix( m );
+    Matrix gpbFromDMatrix = CommonUtils.dMatrixToGpb( dMatrixFromGpb );
     assertEquals( m.getA(), gpbFromDMatrix.getA() );
     assertEquals( m.getB(), gpbFromDMatrix.getB() );
     assertEquals( m.getC(), gpbFromDMatrix.getC() );

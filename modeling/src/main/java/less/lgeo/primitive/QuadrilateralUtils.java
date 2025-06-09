@@ -7,12 +7,12 @@ import less.lgeo.common.Matrix;
 import less.lgeo.common.Vertex;
 import less.lgeo.common.VertexUtils;
 
-public class OptionalLineUtils {
+public class QuadrilateralUtils {
 
 
-  public static OptionalLine getOptionalLine( Color color, Vertex p1, Vertex p2, Vertex p3,
+  public static Quadrilateral getQuadrilateral( Color color, Vertex p1, Vertex p2, Vertex p3,
       Vertex p4 ) {
-    return OptionalLine.newBuilder()
+    return Quadrilateral.newBuilder()
         .setColor( color )
         .setP1( p1 )
         .setP2( p2 )
@@ -21,27 +21,26 @@ public class OptionalLineUtils {
         .build();
   }
 
-  /**
-   * @return List of rendered line {@link Vertex}, disregard control points.
-   */
-  public static List<Vertex> getVertices( OptionalLine optionalLine ) {
-    return List.of(
-        optionalLine.getP1(),
-        optionalLine.getP2() );
+  public static List<Vertex> getVertices( Quadrilateral quadrilateral ) {
+    return List.of( quadrilateral.getP1(),
+        quadrilateral.getP2(),
+        quadrilateral.getP3(),
+        quadrilateral.getP4() );
   }
 
-  public static OptionalLine transformOptionalLine( OptionalLine optionalLine,
+  public static Quadrilateral transformQuadrilateral( Quadrilateral quadrilateral,
       Optional<Matrix> transformationMatrix ) {
-    Vertex p1 = optionalLine.getP1();
-    Vertex p2 = optionalLine.getP2();
-    Vertex p3 = optionalLine.getP1();
-    Vertex p4 = optionalLine.getP2();
-    return getOptionalLine(
-        optionalLine.getColor(),
+    Vertex p1 = quadrilateral.getP1();
+    Vertex p2 = quadrilateral.getP2();
+    Vertex p3 = quadrilateral.getP1();
+    Vertex p4 = quadrilateral.getP2();
+    return getQuadrilateral(
+        quadrilateral.getColor(),
         transformationMatrix.map( value -> VertexUtils.transform( p1, value ) ).orElse( p1 ),
         transformationMatrix.map( value -> VertexUtils.transform( p2, value ) ).orElse( p2 ),
         transformationMatrix.map( value -> VertexUtils.transform( p3, value ) ).orElse( p3 ),
         transformationMatrix.map( value -> VertexUtils.transform( p4, value ) ).orElse( p4 )
     );
   }
+
 }

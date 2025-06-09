@@ -20,3 +20,5 @@ whatever )<antiStud Type( normal, pin hole etc)
 The we can say for all parts in thee model, get all the part connections, for every connection
 intersecting, look up if the connections have
 matching stud and antistud, and matching stud type and anti stud type
+
+Going to use the rules design pattern to implement rules and filtering / matching

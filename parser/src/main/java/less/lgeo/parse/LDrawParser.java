@@ -4,13 +4,13 @@ import static less.lgeo.ParseUtils.isMetaCommand;
 import static less.lgeo.ParseUtils.parseCommand;
 import static less.lgeo.ParseUtils.parseComment;
 import static less.lgeo.ParseUtils.toDouble;
+import static less.lgeo.common.CommonUtils.getLineType;
+import static less.lgeo.common.VertexUtils.getPoint;
 import static less.lgeo.primitive.LineUtils.getLine;
 import static less.lgeo.primitive.ModelUtils.transformModel;
 import static less.lgeo.primitive.OptionalLineUtils.getOptionalLine;
-import static less.lgeo.primitive.PrimitiveUtils.getLineType;
-import static less.lgeo.primitive.QuaderilateralUtils.getQuadrilateral;
+import static less.lgeo.primitive.QuadrilateralUtils.getQuadrilateral;
 import static less.lgeo.primitive.TriangleUtils.getTriangle;
-import static less.lgeo.primitive.VertexUtils.getPoint;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -27,16 +27,16 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
-import less.lgeo.primitive.Color;
+import less.lgeo.common.Color;
+import less.lgeo.common.LineType;
+import less.lgeo.common.Matrix;
+import less.lgeo.common.Vertex;
 import less.lgeo.primitive.Line;
-import less.lgeo.primitive.LineType;
-import less.lgeo.primitive.Matrix;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.OptionalLine;
 import less.lgeo.primitive.Quadrilateral;
 import less.lgeo.primitive.SubFileReference;
 import less.lgeo.primitive.Triangle;
-import less.lgeo.primitive.Vertex;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -167,6 +167,7 @@ public class LDrawParser implements Parser<Model> {
         )
         .setMatrix( parsedMatrix )
         .setSubModel( parsedSubFileModel )
+        .setFileName( subFileName )
         .build();
   }
 
