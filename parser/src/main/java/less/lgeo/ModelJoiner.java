@@ -3,6 +3,7 @@ package less.lgeo;
 import static less.lgeo.common.CommonUtils.PART_EXT;
 import static less.lgeo.common.CommonUtils.changeFileExtension;
 
+import jakarta.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -11,11 +12,14 @@ import less.lgeo.parse.ConnectivityParser;
 import less.lgeo.parse.LDrawParser;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.SubFileReference;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ModelJoiner {
 
+  private static final Logger logger = LoggerFactory.getLogger( ModelJoiner.class );
   private final LDrawParser lDrawParser;
   private final ConnectivityParser connectivityParser;
 
@@ -27,37 +31,46 @@ public class ModelJoiner {
     this.connectivityParser = connectivityParser;
   }
 
-  public Model joinModel( File fileToParse ) throws IOException {
+  public Model joinModel( File fileToParse ) {
 
-    Model parentModel = lDrawParser.parse( fileToParse );
+    Model lDrawModel = getLDrawModel( fileToParse );
+    if ( lDrawModel != null ) {
+      List<SubFileReference> connectedPieces = lDrawModel.getPieceList().stream()
+          .map( this::getPieceWithConnection )
+          .toList();
 
-    List<SubFileReference> connectedPieces = parentModel.getPieceList()
-        .stream().map( piece -> {
-          try {
-            File connectionFile = new File( "connectivity",
-                changeFileExtension( piece.getFileName(), PART_EXT ) );
+      return lDrawModel.toBuilder()
+          .clearPiece()
+          .addAllPiece( connectedPieces )
+          .build();
+    }
 
-            Connection pieceConnection = connectivityParser.parse( connectionFile );
+    return lDrawModel;
+  }
 
-            return piece.toBuilder()
-                .setPieceConnection( pieceConnection )
-                .build();
+  private @Nullable Model getLDrawModel( File toParse ) {
+    try {
+      return lDrawParser.parse( toParse );
+    } catch ( IOException e ) {
+      logger.error( "Failed to parse LDraw File {}", toParse.getAbsolutePath() );
+    }
+    return null;
+  }
 
-          } catch ( IOException e ) {
-            throw new RuntimeException( e );
-          }
-        } ).toList();
+  private @Nullable SubFileReference getPieceWithConnection( SubFileReference piece ) {
+    File connectionFile = new File( "connectivity",
+        changeFileExtension( piece.getFileName(), PART_EXT ) );
 
-    Model connectedParentModel = Model.newBuilder()
-        .addAllComment( parentModel.getCommentList() )
-        .addAllCommand( parentModel.getCommandList() )
-        .addAllLine( parentModel.getLineList() )
-        .addAllTriangle( parentModel.getTriangleList() )
-        .addAllQuadrilateral( parentModel.getQuadrilateralList() )
-        .addAllOptionalLine( parentModel.getOptionalLineList() )
-        .addAllPiece( connectedPieces )
-        .build();
+    try {
+      Connection pieceConnection = connectivityParser.parse( connectionFile );
 
-    return connectedParentModel;
+      return piece.toBuilder()
+          .setPieceConnection( pieceConnection )
+          .build();
+    } catch ( IOException e ) {
+      logger.error( "Failed to join Connectivity File {}", connectionFile.getAbsolutePath() );
+    }
+    logger.warn( "Piece Connection is Null" );
+    return null;
   }
 }
