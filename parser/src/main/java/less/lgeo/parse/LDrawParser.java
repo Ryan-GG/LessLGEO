@@ -161,13 +161,13 @@ public class LDrawParser implements Parser<Model> {
     String subFileName = subFileParts.getLast();
     Model parsedSubFileModel = getParsedSubFileModel( subFileName );
     return SubFileReference.newBuilder()
+        .setFileName( subFileName )
         .setType( LineType.SUB_FILE_REF )
         .setColor(
             Color.getDefaultInstance()
         )
         .setMatrix( parsedMatrix )
         .setSubModel( parsedSubFileModel )
-        .setFileName( subFileName )
         .build();
   }
 
@@ -176,6 +176,8 @@ public class LDrawParser implements Parser<Model> {
     if ( this.modelCache.containsKey( subFileName ) ) {
       return this.modelCache.get( subFileName );
     }
+
+    logger.info( "Searching for subFile: {}", subFileName );
     try ( Stream<Path> ldrawDir = Files.walk( Path.of( "ldraw" ) ) ) {
 
       Optional<Path> subFilePath = ldrawDir.filter(

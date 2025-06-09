@@ -9,9 +9,12 @@ import static less.lgeo.connectivity.GroupId.UNRECOGNIZED;
 
 import less.lgeo.connectivity.GroupId;
 import org.ejml.data.DMatrix4x4;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CommonUtils {
 
+  private static final Logger logger = LoggerFactory.getLogger( CommonUtils.class );
   public static String COL_EXT = ".col";
   public static String DAT_EXT = ".dat";
   // Part Extension defines connections via PE_CONN meta command

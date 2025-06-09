@@ -164,6 +164,8 @@ public class ModelUtils {
               }
 
               return SubFileReference.newBuilder()
+                  .setFileName( subFileReference.getFileName() )
+                  .setPieceConnection( subFileReference.getPieceConnection() )
                   .setColor( subFileReference.getColor() )
                   .setMatrix( IDENTITY_MATRIX )
                   .setSubModel(
