@@ -25,10 +25,10 @@ import less.lgeo.connectivity.GroupStud;
 import less.lgeo.connectivity.PartConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-@Service
+@Component
 public class ConnectivityParser implements Parser<Connection> {
 
   private static final Logger logger = LoggerFactory.getLogger( ConnectivityParser.class );
