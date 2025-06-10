@@ -43,30 +43,26 @@ public class ConnectionUtils {
     double y = matrix.getY();
     double z = matrix.getZ();
 
-    // x, y, z
     Vertex topLeft = getPoint( x, y, z );
 
-    // x + (half stud * x_width), y , z
     Vertex topRight = getPoint(
-        x + ( ( double ) BRICK_X_TO_LDU / studGeometry.getXWidthHalfStud() ), y, z );
+        x + ( ( double ) ( BRICK_X_TO_LDU / 2 ) * studGeometry.getXWidthHalfStud() ), y, z );
 
-    // x + (half stud * x_width) / 2, y - STUD_HEIGHT , z - (half stud * z_width) / 2
     Vertex center = getPoint(
-        x + ( ( double ) ( BRICK_X_TO_LDU / studGeometry.getXWidthHalfStud() ) / 2 ),
+        x + ( ( double ) BRICK_X_TO_LDU / studGeometry.getXWidthHalfStud() ),
         y - STUD_HEIGHT,
-        z - ( ( double ) ( BRICK_Z_TO_LDU / studGeometry.getZWidthHalfStud() ) / 2 ) );
+        z - ( ( double ) BRICK_Z_TO_LDU / studGeometry.getZWidthHalfStud() ) );
 
-    // x, y , z - (half stud * z_width)
     Vertex bottomLeft = getPoint(
         x,
         y,
-        z - ( ( double ) BRICK_Z_TO_LDU / studGeometry.getZWidthHalfStud() ) );
+        z - ( ( double ) ( BRICK_Z_TO_LDU / 2 ) * studGeometry.getZWidthHalfStud() ) );
 
-    // x + (half stud * z_width), y , z - (half stud * z_width)
     Vertex bottomRight = getPoint(
-        x + ( ( double ) BRICK_X_TO_LDU / studGeometry.getXWidthHalfStud() ),
+        x + ( ( double ) ( BRICK_X_TO_LDU / 2 ) * studGeometry.getXWidthHalfStud() ),
         y,
-        z - ( ( double ) BRICK_Z_TO_LDU / studGeometry.getZWidthHalfStud() ) );
+        z - ( ( double ) ( BRICK_Z_TO_LDU / 2 ) * studGeometry.getZWidthHalfStud() ) );
+
     return Stream.of( topLeft, topRight, center, bottomLeft, bottomRight );
   }
 
