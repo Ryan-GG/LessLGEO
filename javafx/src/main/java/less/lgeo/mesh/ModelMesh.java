@@ -190,11 +190,11 @@ public class ModelMesh {
         .flatMap( connection -> getConnectionPoints( connection ).stream() )
         .collect( Collectors.toSet() );
 
-    for ( Vertex v : vertexSet ) {
+    for ( Vertex vertex : vertexSet ) {
       CubeMesh connectionPoint = new CubeMesh( CUBE_SIZE );
-      connectionPoint.setTranslateX( v.getX() );
-      connectionPoint.setTranslateY( v.getY() );
-      connectionPoint.setTranslateZ( v.getZ() );
+      connectionPoint.setTranslateX( vertex.getX() );
+      connectionPoint.setTranslateY( vertex.getY() );
+      connectionPoint.setTranslateZ( vertex.getZ() );
       connectionPoint.setMaterial( new PhongMaterial( CONN_COLOR ) );
       connectionGroup.getChildren().add( connectionPoint );
     }

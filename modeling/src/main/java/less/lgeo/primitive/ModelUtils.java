@@ -2,6 +2,7 @@ package less.lgeo.primitive;
 
 import static less.lgeo.common.CommonUtils.dMatrixToGpb;
 import static less.lgeo.common.CommonUtils.gpbToDMatrix;
+import static less.lgeo.connection.ConnectionUtils.transformConnection;
 import static less.lgeo.primitive.LineUtils.transformLine;
 import static less.lgeo.primitive.OptionalLineUtils.transformOptionalLine;
 import static less.lgeo.primitive.QuadrilateralUtils.transformQuadrilateral;
@@ -183,7 +184,8 @@ public class ModelUtils {
 
               return SubFileReference.newBuilder()
                   .setFileName( subFileReference.getFileName() )
-                  .setPieceConnection( subFileReference.getPieceConnection() )
+                  .setPieceConnection(
+                      transformConnection( subFileReference.getPieceConnection(), resulted ) )
                   .setColor( subFileReference.getColor() )
                   .setMatrix( IDENTITY_MATRIX )
                   .setSubModel(

@@ -4,6 +4,7 @@ import static less.lgeo.LDrawUnitsUtil.BRICK_X_TO_LDU;
 import static less.lgeo.LDrawUnitsUtil.BRICK_Z_TO_LDU;
 import static less.lgeo.LDrawUnitsUtil.STUD_HEIGHT;
 import static less.lgeo.common.VertexUtils.getPoint;
+import static less.lgeo.common.VertexUtils.transform;
 
 import java.util.List;
 import java.util.stream.Stream;
@@ -28,6 +29,11 @@ public class ConnectionUtils {
           case GROUP_SIX -> Stream.empty();
           default -> Stream.empty();
         } ).toList();
+  }
+
+  public static Vertex getPartConnectionOrigin( PartConnection partConnection ) {
+    Matrix matrix = partConnection.getMatrix();
+    return getPoint( matrix.getX(), matrix.getY(), matrix.getZ() );
   }
 
   public static Stream<Vertex> getGroupStudVertices( PartConnection partConnection ) {
@@ -62,6 +68,41 @@ public class ConnectionUtils {
         y,
         z - ( ( double ) BRICK_Z_TO_LDU / studGeometry.getZWidthHalfStud() ) );
     return Stream.of( topLeft, topRight, center, bottomLeft, bottomRight );
+  }
+
+  /**
+   * Transforms by the 'dat' transformation matrix, as each connection matrix is the identity
+   *
+   * @param connection           Model Connection
+   * @param transformationMatrix 'dat' / 'piece' matrix
+   * @return Transformed connected by 'piece' transformation matrix
+   */
+  public static Connection transformConnection( Connection connection,
+      Matrix transformationMatrix ) {
+    Connection.Builder builder = connection.toBuilder();
+
+    List<PartConnection> transformedPartConnections = connection.getPartConnectionList().stream()
+        .map( partConnection -> {
+
+          Vertex origin = getPartConnectionOrigin( partConnection );
+          Vertex newOrigin = transform( origin, transformationMatrix );
+
+          Matrix oldMatrix = partConnection.getMatrix();
+          Matrix newMatrix = oldMatrix.toBuilder()
+              .setX( newOrigin.getX() )
+              .setY( newOrigin.getY() )
+              .setZ( newOrigin.getZ() )
+              .build();
+
+          return partConnection.toBuilder()
+              .setMatrix( newMatrix )
+              .build();
+        } )
+        .toList();
+
+    return builder.clearPartConnection()
+        .addAllPartConnection( transformedPartConnections )
+        .build();
   }
 
 }
