@@ -1,4 +1,4 @@
-package less.lgeo;
+package less.lgeo.util;
 
 import java.util.List;
 import less.lgeo.common.Comment;

@@ -2,6 +2,7 @@ package less.lgeo;
 
 import static less.lgeo.common.CommonUtils.PART_EXT;
 import static less.lgeo.common.CommonUtils.changeFileExtension;
+import static less.lgeo.primitive.ModelUtils.transformModel;
 
 import jakarta.annotation.Nullable;
 import java.io.File;
@@ -31,21 +32,22 @@ public class ModelJoiner {
     this.connectivityParser = connectivityParser;
   }
 
-  public Model joinModel( File fileToParse ) {
+  public Model joinAndTransformModel( File fileToParse ) {
 
-    Model lDrawModel = getLDrawModel( fileToParse );
-    if ( lDrawModel != null ) {
-      List<SubFileReference> connectedPieces = lDrawModel.getPieceList().stream()
+    Model parentModel = getLDrawModel( fileToParse );
+    if ( parentModel != null ) {
+      List<SubFileReference> connectedPieces = parentModel.getPieceList().stream()
           .map( this::getPieceWithConnection )
           .toList();
 
-      return lDrawModel.toBuilder()
+      parentModel = parentModel.toBuilder()
           .clearPiece()
           .addAllPiece( connectedPieces )
           .build();
     }
 
-    return lDrawModel;
+    // FIXME, need to transform connections respective to piece
+    return transformModel( parentModel );
   }
 
   private @Nullable Model getLDrawModel( File toParse ) {

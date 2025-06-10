@@ -1,11 +1,11 @@
 package less.lgeo.parse;
 
-import static less.lgeo.ParseUtils.isMetaCommand;
-import static less.lgeo.ParseUtils.parseCommand;
-import static less.lgeo.ParseUtils.parseComment;
-import static less.lgeo.ParseUtils.toDouble;
 import static less.lgeo.common.CommonUtils.getGroupId;
 import static less.lgeo.common.CommonUtils.getLineType;
+import static less.lgeo.util.ParseUtils.isMetaCommand;
+import static less.lgeo.util.ParseUtils.parseCommand;
+import static less.lgeo.util.ParseUtils.parseComment;
+import static less.lgeo.util.ParseUtils.toDouble;
 
 import java.io.BufferedReader;
 import java.io.File;

@@ -13,10 +13,9 @@ import java.util.Optional;
 import java.util.Set;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.Vertex;
+import less.lgeo.connectivity.Connection;
 import org.ejml.data.DMatrix4x4;
 import org.ejml.dense.fixed.CommonOps_DDF4;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ModelUtils {
 
@@ -26,8 +25,6 @@ public class ModelUtils {
       .setI( 1 )
       .setScale( 1 )
       .build();
-
-  private static final Logger logger = LoggerFactory.getLogger( ModelUtils.class );
 
   /**
    * @param model gpb {@link Model}
@@ -121,6 +118,27 @@ public class ModelUtils {
 
     return optionalLines;
   }
+
+  /**
+   * @param model gpb {@link Model}
+   * @return All {@link Connection} from the Parent Model
+   */
+  public static Set<Connection> getConnections( Model model ) {
+
+    Set<Connection> connections = new HashSet<>(
+        model.getPieceList().stream().map(
+                SubFileReference::getPieceConnection )
+            .toList()
+    );
+
+    model.getPieceList()
+        .forEach(
+            subFileReference -> connections.addAll(
+                getConnections( subFileReference.getSubModel() ) ) );
+
+    return connections;
+  }
+
 
   public static Model transformModel( Model model ) {
     return transformModel( model, Optional.empty()

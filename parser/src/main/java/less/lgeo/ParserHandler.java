@@ -41,7 +41,7 @@ public class ParserHandler implements ApplicationRunner {
 
     File fileToParse = new File( args.getSourceArgs()[0] );
 
-    Model joinedModel = modelJoiner.joinModel( fileToParse );
+    Model joinedModel = modelJoiner.joinAndTransformModel( fileToParse );
 
     logger.info( "Model result: {}", joinedModel );
 

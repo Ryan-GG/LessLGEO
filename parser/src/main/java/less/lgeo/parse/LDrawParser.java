@@ -1,16 +1,15 @@
 package less.lgeo.parse;
 
-import static less.lgeo.ParseUtils.isMetaCommand;
-import static less.lgeo.ParseUtils.parseCommand;
-import static less.lgeo.ParseUtils.parseComment;
-import static less.lgeo.ParseUtils.toDouble;
 import static less.lgeo.common.CommonUtils.getLineType;
 import static less.lgeo.common.VertexUtils.getPoint;
 import static less.lgeo.primitive.LineUtils.getLine;
-import static less.lgeo.primitive.ModelUtils.transformModel;
 import static less.lgeo.primitive.OptionalLineUtils.getOptionalLine;
 import static less.lgeo.primitive.QuadrilateralUtils.getQuadrilateral;
 import static less.lgeo.primitive.TriangleUtils.getTriangle;
+import static less.lgeo.util.ParseUtils.isMetaCommand;
+import static less.lgeo.util.ParseUtils.parseCommand;
+import static less.lgeo.util.ParseUtils.parseComment;
+import static less.lgeo.util.ParseUtils.toDouble;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -54,19 +53,13 @@ public class LDrawParser implements Parser<Model> {
     this.modelCache = new ConcurrentHashMap<>();
   }
 
-  public Model parse( File toParse ) throws IOException {
-    Model parentModel = parseAllModels( toParse );
-    return transformModel( parentModel );
-  }
-
   @Override
   public File writeToFile( Model gpb, String fileName ) {
     // TODO, [Task] Add export back to .ldr format of a Model file #24
     return new File( fileName );
   }
 
-
-  private Model parseAllModels( File toParse ) throws IOException {
+  public Model parse( File toParse ) throws IOException {
     Model.Builder modelBuilder = Model.newBuilder();
 
     try ( BufferedReader bufferedReader = new BufferedReader(

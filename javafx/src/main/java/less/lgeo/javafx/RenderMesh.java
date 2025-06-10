@@ -1,7 +1,6 @@
 package less.lgeo.javafx;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Optional;
 import javafx.application.Application;
 import javafx.scene.AmbientLight;
@@ -11,8 +10,10 @@ import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import less.lgeo.ModelJoiner;
 import less.lgeo.camera.CameraController;
 import less.lgeo.mesh.ModelMesh;
+import less.lgeo.parse.ConnectivityParser;
 import less.lgeo.parse.LDrawParser;
 import less.lgeo.primitive.Model;
 import org.slf4j.Logger;
@@ -67,10 +68,8 @@ public class RenderMesh extends Application {
    * @return {@link Model} representations
    */
   private Optional<Model> getModel( File file ) {
-    try {
-      return Optional.of( new LDrawParser().parse( file ) );
-    } catch ( IOException e ) {
-      return Optional.empty();
-    }
+    return Optional.of(
+        new ModelJoiner( new LDrawParser(), new ConnectivityParser() ).joinAndTransformModel(
+            file ) );
   }
 } 

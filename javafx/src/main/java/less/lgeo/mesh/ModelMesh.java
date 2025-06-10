@@ -1,5 +1,7 @@
 package less.lgeo.mesh;
 
+import static less.lgeo.connection.ConnectionUtils.getConnectionPoints;
+import static less.lgeo.primitive.ModelUtils.getConnections;
 import static less.lgeo.primitive.ModelUtils.getLines;
 import static less.lgeo.primitive.ModelUtils.getOptionalLines;
 import static less.lgeo.primitive.ModelUtils.getQuadrilaterals;
@@ -24,12 +26,15 @@ import less.lgeo.primitive.TriangleUtils;
 import less.lgeo.utils.RenderUtils;
 import org.fxyz3d.geometry.Point3D;
 import org.fxyz3d.shapes.composites.PolyLine3D;
+import org.fxyz3d.shapes.primitives.CubeMesh;
 
 public class ModelMesh {
 
+  private static final Float CUBE_SIZE = 1.0f;
   private static final Float SPHERE_RADIUS = 0.5f;
   private static final Float LINE_WIDTH = 0.5f;
 
+  private static final Color CONN_COLOR = Color.DEEPPINK;
   private static final Color VERT_COLOR = Color.WHITE;
   private static final Color LINE_COLOR = Color.BLUE;
   private static final Color QUAD_COLOR = Color.GREEN;
@@ -53,6 +58,7 @@ public class ModelMesh {
     children.addAll( drawQuadrilaterals( model ) );
     children.addAll( drawTriangles( model ) );
     children.addAll( drawOptionalLines( model ) );
+    children.addAll( drawConnections( model ) );
     mesh = new Group( children );
   }
 
@@ -172,4 +178,28 @@ public class ModelMesh {
 
     return optionalLineGroup.getChildren();
   }
+
+  /**
+   * @param model gpb {@link Model}
+   * @return {@link less.lgeo.connectivity.Connection} as JavaFX {@link Node}
+   */
+  private List<Node> drawConnections( Model model ) {
+    Group connectionGroup = new Group();
+
+    Set<Vertex> vertexSet = getConnections( model ).stream()
+        .flatMap( connection -> getConnectionPoints( connection ).stream() )
+        .collect( Collectors.toSet() );
+
+    for ( Vertex v : vertexSet ) {
+      CubeMesh connectionPoint = new CubeMesh( CUBE_SIZE );
+      connectionPoint.setTranslateX( v.getX() );
+      connectionPoint.setTranslateY( v.getY() );
+      connectionPoint.setTranslateZ( v.getZ() );
+      connectionPoint.setMaterial( new PhongMaterial( CONN_COLOR ) );
+      connectionGroup.getChildren().add( connectionPoint );
+    }
+
+    return connectionGroup.getChildren();
+  }
+
 }

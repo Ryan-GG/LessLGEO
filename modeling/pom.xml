@@ -65,6 +65,11 @@
       <groupId>org.ejml</groupId>
       <version>0.44.0</version>
     </dependency>
+    <dependency>
+      <artifactId>util</artifactId>
+      <groupId>less.lgeo</groupId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
   <modelVersion>4.0.0</modelVersion>
