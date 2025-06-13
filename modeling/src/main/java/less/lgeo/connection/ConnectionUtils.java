@@ -1,7 +1,6 @@
 package less.lgeo.connection;
 
-import static less.lgeo.LDrawUnitsUtil.BRICK_X_TO_LDU;
-import static less.lgeo.LDrawUnitsUtil.BRICK_Z_TO_LDU;
+import static less.lgeo.LDrawUnitsUtil.HALF_BRICK_TO_LDU;
 import static less.lgeo.LDrawUnitsUtil.STUD_HEIGHT;
 import static less.lgeo.common.VertexUtils.getPoint;
 import static less.lgeo.common.VertexUtils.transform;
@@ -36,34 +35,50 @@ public class ConnectionUtils {
     return getPoint( matrix.getX(), matrix.getY(), matrix.getZ() );
   }
 
-  public static Stream<Vertex> getGroupStudVertices( PartConnection partConnection ) {
-    Matrix matrix = partConnection.getMatrix();
+  private static Stream<Vertex> getGroupStudVertices( PartConnection partConnection ) {
     GroupStud studGeometry = partConnection.getGroupStud();
-    double x = matrix.getX();
-    double y = matrix.getY();
-    double z = matrix.getZ();
 
-    Vertex topLeft = getPoint( x, y, z );
+    Vertex origin = getPartConnectionOrigin( partConnection );
 
-    Vertex topRight = getPoint(
-        x + ( ( double ) ( BRICK_X_TO_LDU / 2 ) * studGeometry.getXWidthHalfStud() ), y, z );
+    double x = origin.getX();
+    double y = origin.getY();
+    double z = origin.getZ();
 
-    Vertex center = getPoint(
-        x + ( ( double ) BRICK_X_TO_LDU / studGeometry.getXWidthHalfStud() ),
-        y - STUD_HEIGHT,
-        z - ( ( double ) BRICK_Z_TO_LDU / studGeometry.getZWidthHalfStud() ) );
+    Stream<Vertex> connectionVertices = Stream.empty();
 
-    Vertex bottomLeft = getPoint(
-        x,
-        y,
-        z - ( ( double ) ( BRICK_Z_TO_LDU / 2 ) * studGeometry.getZWidthHalfStud() ) );
+    for ( int row = 0; row < studGeometry.getZWidthHalfStud(); row++ ) {
+      for ( int col = 0; col < studGeometry.getXWidthHalfStud(); col++ ) {
+        double xTranslatedOrigin = x + ( HALF_BRICK_TO_LDU * col );
+        // Origin exists in top left thus, negative z value
+        double zTranslatedOrigin = z - ( HALF_BRICK_TO_LDU * row );
 
-    Vertex bottomRight = getPoint(
-        x + ( ( double ) ( BRICK_X_TO_LDU / 2 ) * studGeometry.getXWidthHalfStud() ),
-        y,
-        z - ( ( double ) ( BRICK_Z_TO_LDU / 2 ) * studGeometry.getZWidthHalfStud() ) );
+        Vertex topLeft = getPoint( xTranslatedOrigin, y, zTranslatedOrigin );
 
-    return Stream.of( topLeft, topRight, center, bottomLeft, bottomRight );
+        Vertex topRight = getPoint(
+            xTranslatedOrigin + HALF_BRICK_TO_LDU,
+            y, zTranslatedOrigin );
+
+        Vertex center = getPoint(
+            xTranslatedOrigin + HALF_BRICK_TO_LDU,
+            y - STUD_HEIGHT,
+            zTranslatedOrigin - HALF_BRICK_TO_LDU );
+
+        Vertex bottomLeft = getPoint(
+            xTranslatedOrigin,
+            y,
+            zTranslatedOrigin - HALF_BRICK_TO_LDU );
+
+        Vertex bottomRight = getPoint(
+            xTranslatedOrigin + HALF_BRICK_TO_LDU,
+            y,
+            zTranslatedOrigin - HALF_BRICK_TO_LDU );
+
+        Stream<Vertex> studPoints = Stream.of( topLeft, topRight, center, bottomLeft, bottomRight );
+
+        connectionVertices = Stream.concat( connectionVertices, studPoints );
+      }
+    }
+    return connectionVertices;
   }
 
   /**

@@ -127,7 +127,6 @@ public class ConnectivityParser implements Parser<Connection> {
       Iterator<String> iterator ) {
     return builder.setGroupStud(
         GroupStud.newBuilder()
-            // TODO this might need to be flipped
             .setZWidthHalfStud( Integer.parseInt( iterator.next() ) )
             .setXWidthHalfStud( Integer.parseInt( iterator.next() ) )
             .setUnknown( iterator.next() )
