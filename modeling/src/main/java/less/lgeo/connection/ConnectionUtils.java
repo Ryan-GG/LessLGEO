@@ -99,13 +99,15 @@ public class ConnectionUtils {
     List<PartConnection> transformedPartConnections = connection.getPartConnectionList().stream()
         .map( partConnection -> {
 
-          Vertex origin = getPartConnectionOrigin( partConnection );
-          Vertex newOrigin = transform( origin, transformationMatrix );
+          Matrix connectionMatrix = partConnection.getMatrix();
+          Vertex topLeft = getPoint( connectionMatrix.getX() + transformationMatrix.getX(),
+              connectionMatrix.getY() + transformationMatrix.getY(),
+              connectionMatrix.getZ() + transformationMatrix.getZ() );
 
           Matrix newMatrix = transformationMatrix.toBuilder()
-              .setX( newOrigin.getX() )
-              .setY( newOrigin.getY() )
-              .setZ( newOrigin.getZ() )
+              .setX( topLeft.getX() )
+              .setY( topLeft.getY() )
+              .setZ( topLeft.getZ() )
               .build();
 
           return partConnection.toBuilder()
