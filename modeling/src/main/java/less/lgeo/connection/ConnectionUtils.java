@@ -82,7 +82,8 @@ public class ConnectionUtils {
         connectionVertices = Stream.concat( connectionVertices, studPoints );
       }
     }
-    return connectionVertices.map( vertex -> transform( vertex, partConnection.getMatrix() ) );
+    return connectionVertices.map( vertex -> transform( vertex,
+        partConnection.getMatrix().toBuilder().setX( 0.0 ).setY( 0.0 ).setZ( 0.0 ).build() ) );
   }
 
   /**
@@ -102,7 +103,7 @@ public class ConnectionUtils {
           Matrix connectionMatrix = partConnection.getMatrix();
           Vertex topLeft = getPoint( connectionMatrix.getX() + transformationMatrix.getX(),
               connectionMatrix.getY() + transformationMatrix.getY(),
-              connectionMatrix.getZ() + transformationMatrix.getZ() );
+              connectionMatrix.getZ() - transformationMatrix.getZ() );
 
           Matrix newMatrix = transformationMatrix.toBuilder()
               .setX( topLeft.getX() )
