@@ -101,14 +101,24 @@ public class ConnectionUtils {
         .map( partConnection -> {
 
           Matrix connectionMatrix = partConnection.getMatrix();
-          Vertex topLeft = getPoint( connectionMatrix.getX() + transformationMatrix.getX(),
-              connectionMatrix.getY() + transformationMatrix.getY(),
-              connectionMatrix.getZ() - transformationMatrix.getZ() );
+
+          double dx = transformationMatrix.getX();
+          double dy = transformationMatrix.getY();
+          double dz = transformationMatrix.getZ();
+
+          double thetaRadians = Math.atan2( transformationMatrix.getC(),
+              transformationMatrix.getA() );
+          double rotatedX = dx * Math.cos( thetaRadians ) - dz * Math.sin( thetaRadians );
+          double rotatedZ = dx * Math.sin( thetaRadians ) + dz * Math.cos( thetaRadians );
+
+          double finalX = connectionMatrix.getX() + rotatedX;
+          double finalY = connectionMatrix.getY() + dy;
+          double finalZ = connectionMatrix.getZ() + rotatedZ;
 
           Matrix newMatrix = transformationMatrix.toBuilder()
-              .setX( topLeft.getX() )
-              .setY( topLeft.getY() )
-              .setZ( topLeft.getZ() )
+              .setX( finalX )
+              .setY( finalY )
+              .setZ( finalZ )
               .build();
 
           return partConnection.toBuilder()
