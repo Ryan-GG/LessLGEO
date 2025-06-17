@@ -1,10 +1,11 @@
 package less.lgeo.connection;
 
 import static less.lgeo.LDrawUnitsUtil.BRICK_TO_LDU;
-import static less.lgeo.LDrawUnitsUtil.HALF_BRICK_TO_LDU;
 import static less.lgeo.LDrawUnitsUtil.STUD_HEIGHT;
+import static less.lgeo.common.CommonUtils.dMatrixToGpb;
+import static less.lgeo.common.CommonUtils.gpbMatrixToString;
+import static less.lgeo.common.CommonUtils.gpbToDMatrix;
 import static less.lgeo.common.VertexUtils.getPoint;
-import static less.lgeo.common.VertexUtils.transform;
 
 import java.util.List;
 import java.util.Set;
@@ -15,75 +16,79 @@ import less.lgeo.common.Vertex;
 import less.lgeo.connectivity.Connection;
 import less.lgeo.connectivity.GroupStud;
 import less.lgeo.connectivity.PartConnection;
+import org.ejml.data.DMatrix4x4;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.fixed.CommonOps_DDF4;
+import org.ejml.dense.row.CommonOps_DDRM;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ConnectionUtils {
+
+  private static final Logger logger = LoggerFactory.getLogger(ConnectionUtils.class);
 
   /**
    * @return Set of rendered connection points as {@link Vertex}
    */
-  public static Set<Vertex> getConnectionPoints( Connection connection ) {
+  public static Set<Vertex> getConnectionPoints(Connection connection) {
     return connection.getPartConnectionList().stream()
-        .flatMap( partConnection -> switch ( partConnection.getGroupId() ) {
+        .flatMap(partConnection -> switch (partConnection.getGroupId()) {
           case GROUP_ZERO -> Stream.empty();
           case GROUP_ONE -> Stream.empty();
-          case GROUP_STUD -> getGroupStudVertices( partConnection );
+          case GROUP_STUD -> getGroupStudVertices(partConnection);
           case GROUP_FOUR -> Stream.empty();
           case GROUP_SIX -> Stream.empty();
           default -> Stream.empty();
-        } ).collect( Collectors.toSet() );
+        }).collect(Collectors.toSet());
   }
 
-  public static Vertex getPartConnectionOrigin( PartConnection partConnection ) {
+  public static Vertex getPartConnectionOrigin(PartConnection partConnection) {
     Matrix matrix = partConnection.getMatrix();
-    return getPoint( matrix.getX(), matrix.getY(), matrix.getZ() );
+    return getPoint(matrix.getX(), matrix.getY(), matrix.getZ());
   }
 
-  private static Stream<Vertex> getGroupStudVertices( PartConnection partConnection ) {
+  private static Stream<Vertex> getGroupStudVertices(PartConnection partConnection) {
     GroupStud studGeometry = partConnection.getGroupStud();
 
-    Vertex origin = getPartConnectionOrigin( partConnection );
+    DMatrix4x4 fullMatrix = gpbToDMatrix(partConnection.getMatrix());
+    DMatrixRMaj transform = new DMatrixRMaj(4, 4);
+    for (int row = 0; row < 4; row++) {
+      for (int col = 0; col < 4; col++) {
+        transform.set(row, col, fullMatrix.get(row, col));
+      }
+    }
 
-    double x = origin.getX();
-    double y = origin.getY();
-    double z = origin.getZ();
+    int zStuds = studGeometry.getZWidthHalfStud() / 2;  // 4 -> 2 studs
+    int xStuds = studGeometry.getXWidthHalfStud() / 2;  // 8 -> 4 studs
 
     Stream<Vertex> connectionVertices = Stream.empty();
 
-    for ( int row = 0; row < studGeometry.getZWidthHalfStud() / 2; row++ ) {
-      for ( int col = 0; col < studGeometry.getXWidthHalfStud() / 2; col++ ) {
-        double xTranslatedOrigin = x + ( BRICK_TO_LDU * col );
-        // Origin exists in top left thus, negative z value
-        double zTranslatedOrigin = z - ( BRICK_TO_LDU * row );
+    for (int z = 0; z < zStuds; z++) {
+      for (int x = 0; x < xStuds; x++) {
+        // center of each stud cell
+        double xOffset = (-xStuds / 2.0 + x + 0.5) * BRICK_TO_LDU;
+        double zOffset = (zStuds / 2.0 - z - 0.5) * BRICK_TO_LDU; // top to bottom
 
-        Vertex topLeft = getPoint( xTranslatedOrigin, y, zTranslatedOrigin );
+        // homogeneous input vector
+        DMatrixRMaj pointVector = new DMatrixRMaj(4, 1);
+        pointVector.set(0, 0, xOffset);
+        pointVector.set(1, 0, -STUD_HEIGHT);
+        pointVector.set(2, 0, zOffset);
+        pointVector.set(3, 0, 1.0);
 
-        Vertex topRight = getPoint(
-            xTranslatedOrigin + BRICK_TO_LDU,
-            y, zTranslatedOrigin );
+        DMatrixRMaj resultVector = new DMatrixRMaj(4, 1);
+        CommonOps_DDRM.mult(transform, pointVector, resultVector);
 
-        Vertex center = getPoint(
-            xTranslatedOrigin + HALF_BRICK_TO_LDU,
-            // LDraw uses a right-handed co-ordinate system where -Y is "up".
-            y - STUD_HEIGHT,
-            zTranslatedOrigin - HALF_BRICK_TO_LDU );
+        double worldX = resultVector.get(0, 0);
+        double worldY = resultVector.get(1, 0);
+        double worldZ = resultVector.get(2, 0);
 
-        Vertex bottomLeft = getPoint(
-            xTranslatedOrigin,
-            y,
-            zTranslatedOrigin - BRICK_TO_LDU );
-
-        Vertex bottomRight = getPoint(
-            xTranslatedOrigin + BRICK_TO_LDU,
-            y,
-            zTranslatedOrigin - BRICK_TO_LDU );
-
-        Stream<Vertex> studPoints = Stream.of( topLeft, topRight, center, bottomLeft, bottomRight );
-
-        connectionVertices = Stream.concat( connectionVertices, studPoints );
+        Vertex v = getPoint(worldX, worldY, worldZ);
+        connectionVertices = Stream.concat(connectionVertices, Stream.of(v));
       }
     }
-    return connectionVertices.map( vertex -> transform( vertex,
-        partConnection.getMatrix().toBuilder().setX( 0.0 ).setY( 0.0 ).setZ( 0.0 ).build() ) );
+
+    return connectionVertices;
   }
 
   /**
@@ -93,42 +98,29 @@ public class ConnectionUtils {
    * @param transformationMatrix 'dat' / 'piece' matrix
    * @return Transformed connected by 'piece' transformation matrix
    */
-  public static Connection transformConnection( Connection connection,
-      Matrix transformationMatrix ) {
+  public static Connection transformConnection(Connection connection,
+      Matrix transformationMatrix) {
     Connection.Builder builder = connection.toBuilder();
 
     List<PartConnection> transformedPartConnections = connection.getPartConnectionList().stream()
-        .map( partConnection -> {
+        .map(partConnection -> {
 
-          Matrix connectionMatrix = partConnection.getMatrix();
+          DMatrix4x4 result = new DMatrix4x4();
+          CommonOps_DDF4.mult(gpbToDMatrix(transformationMatrix),
+              gpbToDMatrix(partConnection.getMatrix()),
+              result);
+          Matrix resulted = dMatrixToGpb(result);
 
-          double dx = transformationMatrix.getX();
-          double dy = transformationMatrix.getY();
-          double dz = transformationMatrix.getZ();
-
-          double thetaRadians = Math.atan2( transformationMatrix.getC(),
-              transformationMatrix.getA() );
-          double rotatedX = dx * Math.cos( thetaRadians ) - dz * Math.sin( thetaRadians );
-          double rotatedZ = dx * Math.sin( thetaRadians ) + dz * Math.cos( thetaRadians );
-
-          double finalX = connectionMatrix.getX() + rotatedX;
-          double finalY = connectionMatrix.getY() + dy;
-          double finalZ = connectionMatrix.getZ() + rotatedZ;
-
-          Matrix newMatrix = transformationMatrix.toBuilder()
-              .setX( finalX )
-              .setY( finalY )
-              .setZ( finalZ )
-              .build();
+          logger.info(" part connection transformation matrix {}", gpbMatrixToString(resulted));
 
           return partConnection.toBuilder()
-              .setMatrix( newMatrix )
+              .setMatrix(resulted)
               .build();
-        } )
+        })
         .toList();
 
     return builder.clearPartConnection()
-        .addAllPartConnection( transformedPartConnections )
+        .addAllPartConnection(transformedPartConnections)
         .build();
   }
 
