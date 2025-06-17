@@ -20,13 +20,9 @@ import org.ejml.data.DMatrix4x4;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.fixed.CommonOps_DDF4;
 import org.ejml.dense.row.CommonOps_DDRM;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ConnectionUtils {
-
-  private static final Logger logger = LoggerFactory.getLogger( ConnectionUtils.class );
-
+  
   /**
    * @return Set of rendered connection points as {@link Vertex}
    */
@@ -42,6 +38,11 @@ public class ConnectionUtils {
         } ).collect( Collectors.toSet() );
   }
 
+  /**
+   * @param partConnection connection model
+   * @return Gets the stud vertices for a part connection. Creates points by the rotation and
+   * translation of the connection matrix
+   */
   private static Stream<Vertex> getGroupStudVertices( PartConnection partConnection ) {
     GroupStud studGeometry = partConnection.getGroupStud();
 
@@ -52,8 +53,16 @@ public class ConnectionUtils {
 
     for ( int z = 0; z < zStuds; z++ ) {
       for ( int x = 0; x < xStuds; x++ ) {
-        double xOffset = ( -xStuds / 2.0 + x + 0.5 ) * BRICK_TO_LDU;
-        double zOffset = ( zStuds / 2.0 - z - 0.5 ) * BRICK_TO_LDU;
+
+        double xStudOffset = -xStuds / 2.0;
+        double zStudOffset = zStuds / 2.0;
+
+        // This is to translate so that stud centers align
+        double xTranslation = x + 0.5;
+        double zTranslation = -z - 0.5;
+
+        double xOffset = ( xStudOffset + xTranslation ) * BRICK_TO_LDU;
+        double zOffset = ( zStudOffset + zTranslation ) * BRICK_TO_LDU;
 
         Vertex topLeft = transformConnectionVertex( xOffset - HALF_BRICK_TO_LDU, 0,
             zOffset + HALF_BRICK_TO_LDU,
@@ -101,8 +110,6 @@ public class ConnectionUtils {
   }
 
   /**
-   * Transforms by the 'dat' transformation matrix, as each connection matrix is the identity
-   *
    * @param connection           Model Connection
    * @param transformationMatrix 'dat' / 'piece' matrix
    * @return Transformed connected by 'piece' transformation matrix
