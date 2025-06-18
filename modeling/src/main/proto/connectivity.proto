@@ -66,7 +66,9 @@ message GroupStud {
   int32 x_width_half_stud = 1;
   // Z Width in half stud
   int32 z_width_half_stud = 2;
-  string unknown = 3;
+
+  // flat 2d array, representing if is a connection point
+  repeated bool stud_grid = 3;
 }
 
 message GroupFour {

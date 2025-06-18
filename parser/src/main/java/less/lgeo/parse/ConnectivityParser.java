@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -125,11 +126,21 @@ public class ConnectivityParser implements Parser<Connection> {
 
   private PartConnection parseGroupStud( PartConnection.Builder builder,
       Iterator<String> iterator ) {
+
+    int zWidthHalfStud = Integer.parseInt( iterator.next() );
+    int xWidthHalfStud = Integer.parseInt( iterator.next() );
+
+    List<Boolean> isConnectionPoint = Arrays.stream( iterator.next().split( "," ) ).map( s ->
+    {
+      String firstVal = s.split( ":" )[0];
+      return !firstVal.equals( "-1" ) && !firstVal.equals( "0" );
+    } ).toList();
+
     return builder.setGroupStud(
         GroupStud.newBuilder()
-            .setZWidthHalfStud( Integer.parseInt( iterator.next() ) )
-            .setXWidthHalfStud( Integer.parseInt( iterator.next() ) )
-            .setUnknown( iterator.next() )
+            .setZWidthHalfStud( zWidthHalfStud )
+            .setXWidthHalfStud( xWidthHalfStud )
+            .addAllStudGrid( isConnectionPoint )
     ).build();
   }
 

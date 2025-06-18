@@ -22,7 +22,7 @@ import org.ejml.dense.fixed.CommonOps_DDF4;
 import org.ejml.dense.row.CommonOps_DDRM;
 
 public class ConnectionUtils {
-  
+
   /**
    * @return Set of rendered connection points as {@link Vertex}
    */
@@ -53,6 +53,11 @@ public class ConnectionUtils {
 
     for ( int z = 0; z < zStuds; z++ ) {
       for ( int x = 0; x < xStuds; x++ ) {
+
+        int index = ( 2 * z + 1 ) * ( studGeometry.getXWidthHalfStud() + 1 ) + ( 2 * x + 1 );
+        if ( !studGeometry.getStudGrid( index ) ) {
+          continue;
+        }
 
         double xStudOffset = -xStuds / 2.0;
         double zStudOffset = zStuds / 2.0;
