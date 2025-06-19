@@ -17,6 +17,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * Provides parsing, transforming, and joining of .dat and .part Currently parses a file one by one
+ * but is possible to do in parallel if recognize files before GPB creation
+ */
 @Component
 public class ModelJoiner {
 
@@ -35,6 +39,7 @@ public class ModelJoiner {
   public Model joinAndTransformModel( File fileToParse ) {
 
     Model parentModel = getLDrawModel( fileToParse );
+
     if ( parentModel != null ) {
       List<SubFileReference> connectedPieces = parentModel.getPieceList().stream()
           .map( this::getPieceWithConnection )
@@ -46,7 +51,6 @@ public class ModelJoiner {
           .build();
     }
 
-    // FIXME, need to transform connections respective to piece
     return transformModel( parentModel );
   }
 
@@ -60,6 +64,7 @@ public class ModelJoiner {
   }
 
   private @Nullable SubFileReference getPieceWithConnection( SubFileReference piece ) {
+
     File connectionFile = new File( "connectivity",
         changeFileExtension( piece.getFileName(), PART_EXT ) );
 
@@ -67,6 +72,7 @@ public class ModelJoiner {
       Connection pieceConnection = connectivityParser.parse( connectionFile );
 
       return piece.toBuilder()
+          .clearPieceConnection()
           .setPieceConnection( pieceConnection )
           .build();
     } catch ( IOException e ) {
