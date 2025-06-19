@@ -1,7 +1,6 @@
 package less.lgeo.connection;
 
 import static less.lgeo.LDrawUnitsUtil.BRICK_TO_LDU;
-import static less.lgeo.LDrawUnitsUtil.HALF_BRICK_TO_LDU;
 import static less.lgeo.LDrawUnitsUtil.STUD_HEIGHT;
 import static less.lgeo.common.CommonUtils.dMatrixToGpb;
 import static less.lgeo.common.CommonUtils.gpbToDMatrix;
@@ -69,24 +68,12 @@ public class ConnectionUtils {
         double xOffset = ( xStudOffset + xTranslation ) * BRICK_TO_LDU;
         double zOffset = ( zStudOffset + zTranslation ) * BRICK_TO_LDU;
 
-        Vertex topLeft = transformConnectionVertex( xOffset - HALF_BRICK_TO_LDU, 0,
-            zOffset + HALF_BRICK_TO_LDU,
-            partConnection.getMatrix() );
-        Vertex topRight = transformConnectionVertex( xOffset + HALF_BRICK_TO_LDU, 0,
-            zOffset + HALF_BRICK_TO_LDU,
-            partConnection.getMatrix() );
         Vertex center = transformConnectionVertex( xOffset, -STUD_HEIGHT,
             zOffset,
             partConnection.getMatrix() );
-        Vertex bottomLeft = transformConnectionVertex( xOffset - HALF_BRICK_TO_LDU, 0,
-            zOffset - HALF_BRICK_TO_LDU,
-            partConnection.getMatrix() );
-        Vertex bottomRight = transformConnectionVertex( xOffset + HALF_BRICK_TO_LDU, 0,
-            zOffset - HALF_BRICK_TO_LDU,
-            partConnection.getMatrix() );
 
         connectionVertices = Stream.concat( connectionVertices,
-            Stream.of( topLeft, topRight, center, bottomLeft, bottomRight ) );
+            Stream.of( center ) );
       }
     }
 
