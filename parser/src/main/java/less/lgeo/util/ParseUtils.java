@@ -11,6 +11,11 @@ public class ParseUtils {
     return Double.parseDouble( string );
   }
 
+  public static int toInt( String string ) {
+    return Integer.parseInt( string );
+  }
+
+
   /**
    * @return True, if line is marked as a comment containing '//' as '0 <comment>' format is
    * deprecated

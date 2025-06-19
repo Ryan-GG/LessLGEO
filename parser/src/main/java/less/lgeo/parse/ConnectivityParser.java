@@ -6,6 +6,7 @@ import static less.lgeo.util.ParseUtils.isMetaCommand;
 import static less.lgeo.util.ParseUtils.parseCommand;
 import static less.lgeo.util.ParseUtils.parseComment;
 import static less.lgeo.util.ParseUtils.toDouble;
+import static less.lgeo.util.ParseUtils.toInt;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -120,21 +121,21 @@ public class ConnectivityParser implements Parser<Connection> {
   private PartConnection parseGroupStud( PartConnection.Builder builder,
       Iterator<String> iterator ) {
 
-    int zWidthHalfStud = Integer.parseInt( iterator.next() );
-    int xWidthHalfStud = Integer.parseInt( iterator.next() );
+    return builder.setGroupStud(
+        GroupStud.newBuilder()
+            .setZWidthHalfStud( toInt( iterator.next() ) )
+            .setXWidthHalfStud( toInt( iterator.next() ) )
+            .addAllStudGrid( getStudGrid( iterator.next() ) )
+    ).build();
+  }
 
-    List<Boolean> isConnectionPoint = Arrays.stream( iterator.next().split( "," ) ).map( s ->
+  private List<Boolean> getStudGrid( String studGroupGeometry ) {
+    String[] studGeometry = studGroupGeometry.split( "," );
+    return Arrays.stream( studGeometry ).map( s ->
     {
       String firstVal = s.split( ":" )[0];
       return !firstVal.equals( "-1" ) && !firstVal.equals( "0" );
     } ).toList();
-
-    return builder.setGroupStud(
-        GroupStud.newBuilder()
-            .setZWidthHalfStud( zWidthHalfStud )
-            .setXWidthHalfStud( xWidthHalfStud )
-            .addAllStudGrid( isConnectionPoint )
-    ).build();
   }
 
 
