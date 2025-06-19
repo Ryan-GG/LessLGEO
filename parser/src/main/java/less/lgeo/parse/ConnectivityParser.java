@@ -34,12 +34,6 @@ public class ConnectivityParser implements Parser<Connection> {
 
   private static final Logger logger = LoggerFactory.getLogger( ConnectivityParser.class );
 
-  public static void main( String[] args ) throws IOException {
-    File toParse = new File( args[0] );
-    ConnectivityParser connectivityParser = new ConnectivityParser();
-    logger.info( "Connection: {}", connectivityParser.parse( toParse ) );
-  }
-
   @Override
   public Connection parse( File fileToParse ) throws IOException {
 
@@ -78,10 +72,9 @@ public class ConnectivityParser implements Parser<Connection> {
 
           GroupId groupId = getGroupId( Integer.parseInt( additionalParamsIter.next() ) );
 
-          if ( groupId != null ) {
-            connectionBuilder.addPartConnection(
-                getPartConnection( groupId, additionalParamsIter ) );
-          }
+          connectionBuilder.addPartConnection(
+              getPartConnection( groupId, additionalParamsIter ) );
+
         }
       } );
       return connectionBuilder.build();

@@ -23,14 +23,13 @@ import less.lgeo.primitive.Model;
 import less.lgeo.primitive.ModelUtils;
 import less.lgeo.primitive.QuadrilateralUtils;
 import less.lgeo.primitive.TriangleUtils;
-import less.lgeo.utils.RenderUtils;
 import org.fxyz3d.geometry.Point3D;
 import org.fxyz3d.shapes.composites.PolyLine3D;
 import org.fxyz3d.shapes.primitives.CubeMesh;
 
 public class ModelMesh {
 
-  private static final Float CUBE_SIZE = 1.0f;
+  private static final Float CONN_SIZE = 1.0f;
   private static final Float SPHERE_RADIUS = 0.5f;
   private static final Float LINE_WIDTH = 0.5f;
 
@@ -45,6 +44,10 @@ public class ModelMesh {
 
   public ModelMesh( Model model ) {
     setMesh( model );
+  }
+
+  public static Point3D gpbToPoint3D( Vertex point ) {
+    return new Point3D( point.getX(), point.getY(), point.getZ() );
   }
 
   public Group getMesh() {
@@ -91,7 +94,7 @@ public class ModelMesh {
     lineGroup.getChildren().addAll( getLines( model ).stream()
         .map( line -> {
           List<Point3D> points = LineUtils.getVertices( line ).stream()
-              .map( RenderUtils::gpbToPoint3D )
+              .map( ModelMesh::gpbToPoint3D )
               .map( point -> new Point3D( point.x, point.y,
                   point.z ) )
               .toList();
@@ -112,7 +115,7 @@ public class ModelMesh {
         getQuadrilaterals( model ).stream()
             .map( quadrilateral -> {
               List<Point3D> points = QuadrilateralUtils.getVertices( quadrilateral ).stream()
-                  .map( RenderUtils::gpbToPoint3D )
+                  .map( ModelMesh::gpbToPoint3D )
                   .map( point -> new Point3D( point.x, point.y,
                       point.z ) )
                   .collect( Collectors.toList() );
@@ -138,7 +141,7 @@ public class ModelMesh {
         getTriangles( model ).stream()
             .map( triangle -> {
               List<Point3D> points = TriangleUtils.getVertices( triangle ).stream()
-                  .map( RenderUtils::gpbToPoint3D )
+                  .map( ModelMesh::gpbToPoint3D )
                   .map( point -> new Point3D( point.x, point.y,
                       point.z ) )
                   .collect( Collectors.toList() );
@@ -164,7 +167,7 @@ public class ModelMesh {
         getOptionalLines( model ).stream()
             .map( optionalLine -> {
               List<Point3D> points = getVertices( optionalLine ).stream()
-                  .map( RenderUtils::gpbToPoint3D )
+                  .map( ModelMesh::gpbToPoint3D )
                   .map( point -> new Point3D( point.x, point.y,
                       point.z ) )
                   .collect( Collectors.toList() );
@@ -191,7 +194,7 @@ public class ModelMesh {
         .collect( Collectors.toSet() );
 
     for ( Vertex vertex : vertexSet ) {
-      CubeMesh connectionPoint = new CubeMesh( CUBE_SIZE );
+      CubeMesh connectionPoint = new CubeMesh( CONN_SIZE );
       connectionPoint.setTranslateX( vertex.getX() );
       connectionPoint.setTranslateY( vertex.getY() );
       connectionPoint.setTranslateZ( vertex.getZ() );
