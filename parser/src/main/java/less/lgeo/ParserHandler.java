@@ -1,7 +1,6 @@
 package less.lgeo;
 
 import java.io.File;
-import java.io.IOException;
 import less.lgeo.parser.ParserProducer;
 import less.lgeo.primitive.Model;
 import less.lgeo.rabbitmq.RabbitProperties;
@@ -37,8 +36,8 @@ public class ParserHandler implements ApplicationRunner {
   }
 
   @Override
-  public void run( ApplicationArguments args ) throws IOException {
-
+  public void run( ApplicationArguments args ) {
+    
     File fileToParse = new File( args.getSourceArgs()[0] );
 
     Model joinedModel = modelJoiner.joinAndTransformModel( fileToParse );

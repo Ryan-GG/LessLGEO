@@ -67,7 +67,7 @@ message GroupStud {
   // Z Width in half stud
   int32 z_width_half_stud = 2;
 
-  // flat 2d array, representing if is a connection point
+  // flat 2d array, representing a Z by X grid where true means its a connection point for a stud
   repeated bool stud_grid = 3;
 }
 

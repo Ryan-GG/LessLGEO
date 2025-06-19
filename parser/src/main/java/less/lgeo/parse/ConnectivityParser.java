@@ -53,16 +53,17 @@ public class ConnectivityParser implements Parser<Connection> {
         int commandValue = Integer.parseInt( values.removeFirst() );
         LineType lineType = getLineType( commandValue );
 
-        if ( lineType == LineType.COMMENT_OR_META_CMD ) {
-          if ( values.isEmpty() ) {
-            logger.warn( "Found '0' line" );
-          } else if ( isMetaCommand( values ) ) {
-            connectionBuilder.addCommand( parseCommand( values ) );
-          } else {
-            connectionBuilder.addComment( parseComment( lineNumber.get(), values ) );
+        switch ( lineType ) {
+          case COMMENT_OR_META_CMD -> {
+            if ( values.isEmpty() ) {
+              logger.warn( "Found '0' line" );
+            } else if ( isMetaCommand( values ) ) {
+              connectionBuilder.addCommand( parseCommand( values ) );
+            } else {
+              connectionBuilder.addComment( parseComment( lineNumber.get(), values ) );
+            }
           }
-        } else {
-          throw new IllegalStateException( "Unexpected Line Type" );
+          default -> throw new IllegalStateException( "Unexpected Line Type" );
         }
       } );
 
