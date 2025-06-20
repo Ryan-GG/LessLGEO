@@ -10,6 +10,7 @@ import static less.lgeo.util.ParseUtils.isMetaCommand;
 import static less.lgeo.util.ParseUtils.parseCommand;
 import static less.lgeo.util.ParseUtils.parseComment;
 import static less.lgeo.util.ParseUtils.toDouble;
+import static less.lgeo.util.ParseUtils.toInt;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +41,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class LDrawParser implements Parser<Model> {
 
-  private static final Logger logger = LoggerFactory.getLogger( LDrawParser.class );
+  private static final Logger logger = LoggerFactory.getLogger(LDrawParser.class);
 
   private final Map<String, Model> modelCache;
 
@@ -49,44 +50,44 @@ public class LDrawParser implements Parser<Model> {
   }
 
   @Override
-  public File writeToFile( Model gpb, String fileName ) {
+  public File writeToFile(Model gpb, String fileName) {
     // TODO, [Task] Add export back to .ldr format of a Model file #24
-    return new File( fileName );
+    return new File(fileName);
   }
 
-  public Model parse( File file ) throws IOException {
+  public Model parse(File file) throws IOException {
     Model.Builder modelBuilder = Model.newBuilder();
 
-    logger.info( "Parsing file name: {}", file );
+    logger.info("Parsing file name: {}", file);
 
-    read( file ).forEach( line -> {
-      logger.info( "Parsing line, {}", line );
+    read(file).forEach(line -> {
+      logger.info("Parsing line, {}", line);
 
-      List<String> values = new ArrayList<>( List.of( line.trim().split( " " ) ) );
-      int commandValue = Integer.parseInt( values.removeFirst() );
+      List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
+      int commandValue = Integer.parseInt(values.removeFirst());
 
-      LineType lineType = getLineType( commandValue );
+      LineType lineType = getLineType(commandValue);
 
-      switch ( lineType ) {
+      switch (lineType) {
         case COMMENT_OR_META_CMD -> {
-          if ( values.isEmpty() ) {
-            logger.warn( "Found '0' line" );
-          } else if ( isMetaCommand( values ) ) {
-            modelBuilder.addCommand( parseCommand( values ) );
+          if (values.isEmpty()) {
+            logger.warn("Found '0' line");
+          } else if (isMetaCommand(values)) {
+            modelBuilder.addCommand(parseCommand(values));
           } else {
-            modelBuilder.addComment( parseComment( values ) );
+            modelBuilder.addComment(parseComment(values));
           }
         }
-        case SUB_FILE_REF -> modelBuilder.addPiece( parseSubFileReference( values ) );
-        case LINE -> modelBuilder.addLine( parseLine( values ) );
-        case TRIANGLE -> modelBuilder.addTriangle( parseTriangle( values ) );
-        case QUADRILATERAL -> modelBuilder.addQuadrilateral( parseQuadrilateral( values ) );
-        case OPTIONAL_LINE -> modelBuilder.addOptionalLine( parseOptionalLine( values ) );
+        case SUB_FILE_REF -> modelBuilder.addPiece(parseSubFileReference(values));
+        case LINE -> modelBuilder.addLine(parseLine(values));
+        case TRIANGLE -> modelBuilder.addTriangle(parseTriangle(values));
+        case QUADRILATERAL -> modelBuilder.addQuadrilateral(parseQuadrilateral(values));
+        case OPTIONAL_LINE -> modelBuilder.addOptionalLine(parseOptionalLine(values));
         default -> throw new IllegalStateException(
-            "Line Type has an Illegal type of " + lineType.getDescriptorForType().toString() );
+            "Line Type has an Illegal type of " + lineType.getDescriptorForType().toString());
       }
-    } );
-    logger.info( "Finished Parsing" );
+    });
+    logger.info("Finished Parsing");
     return modelBuilder.build();
 
   }
@@ -98,41 +99,41 @@ public class LDrawParser implements Parser<Model> {
    * @param values values to parse
    * @return parsed LDraw {@link SubFileReference}
    */
-  private SubFileReference parseSubFileReference( List<String> values ) {
-    if ( values.size() != 14 ) {
+  private SubFileReference parseSubFileReference(List<String> values) {
+    if (values.size() != 14) {
       throw new IllegalStateException(
-          "Remaining Sub File Reference files does not match format, size is " + values.size() );
+          "Remaining Sub File Reference files does not match format, size is " + values.size());
     }
 
-    Color color = parseColor( values.removeFirst() );
+    Color color = parseColor(toInt(values.removeFirst()));
 
-    double x = toDouble( values.removeFirst() );
-    double y = toDouble( values.removeFirst() );
-    double z = toDouble( values.removeFirst() );
-    double a = toDouble( values.removeFirst() );
-    double b = toDouble( values.removeFirst() );
-    double c = toDouble( values.removeFirst() );
-    double d = toDouble( values.removeFirst() );
-    double e = toDouble( values.removeFirst() );
-    double f = toDouble( values.removeFirst() );
-    double g = toDouble( values.removeFirst() );
-    double h = toDouble( values.removeFirst() );
-    double i = toDouble( values.removeFirst() );
+    double x = toDouble(values.removeFirst());
+    double y = toDouble(values.removeFirst());
+    double z = toDouble(values.removeFirst());
+    double a = toDouble(values.removeFirst());
+    double b = toDouble(values.removeFirst());
+    double c = toDouble(values.removeFirst());
+    double d = toDouble(values.removeFirst());
+    double e = toDouble(values.removeFirst());
+    double f = toDouble(values.removeFirst());
+    double g = toDouble(values.removeFirst());
+    double h = toDouble(values.removeFirst());
+    double i = toDouble(values.removeFirst());
 
     Matrix parsedMatrix = Matrix.newBuilder()
-        .setX( x )
-        .setY( y )
-        .setZ( z )
-        .setA( a )
-        .setB( b )
-        .setC( c )
-        .setD( d )
-        .setE( e )
-        .setF( f )
-        .setG( g )
-        .setH( h )
-        .setI( i )
-        .setScale( 1.0 )
+        .setX(x)
+        .setY(y)
+        .setZ(z)
+        .setA(a)
+        .setB(b)
+        .setC(c)
+        .setD(d)
+        .setE(e)
+        .setF(f)
+        .setG(g)
+        .setH(h)
+        .setI(i)
+        .setScale(1.0)
         .build();
 
 
@@ -142,66 +143,66 @@ public class LDrawParser implements Parser<Model> {
      * this recursive parsing is not good, as it will find the first instance of a matching file name,
      * possibly not find the correct directory one. Why there are multiple .dat files with the same name IDK
      */
-    List<String> subFileParts = Arrays.stream( values.getFirst().split( "\\\\" ) ).toList();
+    List<String> subFileParts = Arrays.stream(values.getFirst().split("\\\\")).toList();
     String subFileName = subFileParts.getLast();
-    Model parsedSubFileModel = getParsedSubFileModel( subFileName );
+    Model parsedSubFileModel = getParsedSubFileModel(subFileName);
     return SubFileReference.newBuilder()
-        .setFileName( subFileName )
-        .setType( LineType.SUB_FILE_REF )
+        .setFileName(subFileName)
+        .setType(LineType.SUB_FILE_REF)
         .setColor(
             Color.getDefaultInstance()
         )
-        .setMatrix( parsedMatrix )
-        .setSubModel( parsedSubFileModel )
+        .setMatrix(parsedMatrix)
+        .setSubModel(parsedSubFileModel)
         .build();
   }
 
-  private @NotNull Model getParsedSubFileModel( String subFileName ) {
+  private @NotNull Model getParsedSubFileModel(String subFileName) {
     // split on \, and use last as file name to search for
-    if ( this.modelCache.containsKey( subFileName ) ) {
-      return this.modelCache.get( subFileName );
+    if (this.modelCache.containsKey(subFileName)) {
+      return this.modelCache.get(subFileName);
     }
 
-    logger.info( "Searching for subFile: {}", subFileName );
-    try ( Stream<Path> ldrawDir = Files.walk( Path.of( "ldraw" ) ) ) {
+    logger.info("Searching for subFile: {}", subFileName);
+    try (Stream<Path> ldrawDir = Files.walk(Path.of("ldraw"))) {
 
       Optional<Path> subFilePath = ldrawDir.filter(
-              path -> path.getFileName().toString().equals( subFileName ) )
+              path -> path.getFileName().toString().equals(subFileName))
           .findFirst();
 
-      if ( subFilePath.isEmpty() ) {
+      if (subFilePath.isEmpty()) {
         throw new IOException();
       }
 
-      Model parsedSubModel = parse( subFilePath.get().toFile() );
-      this.modelCache.put( subFileName, parsedSubModel );
+      Model parsedSubModel = parse(subFilePath.get().toFile());
+      this.modelCache.put(subFileName, parsedSubModel);
       return parsedSubModel;
 
-    } catch ( IOException ex ) {
-      logger.error( "Sub file does not exist, {}", subFileName );
+    } catch (IOException ex) {
+      logger.error("Sub file does not exist, {}", subFileName);
       throw new IllegalStateException(
-          "Parsed Sub File Model is null, failed trying to parse " + subFileName );
+          "Parsed Sub File Model is null, failed trying to parse " + subFileName);
     }
   }
 
   /**
    * @return parsed LDraw {@link Line}
    */
-  private Line parseLine( List<String> values ) {
-    if ( values.size() != 7 ) {
+  private Line parseLine(List<String> values) {
+    if (values.size() != 7) {
       throw new IllegalStateException(
-          "Remaining Line does not match format, size is " + values.size() );
+          "Remaining Line does not match format, size is " + values.size());
     }
-    Color color = parseColor( values.removeFirst() );
-    double x1 = toDouble( values.removeFirst() );
-    double y1 = toDouble( values.removeFirst() );
-    double z1 = toDouble( values.removeFirst() );
-    double x2 = toDouble( values.removeFirst() );
-    double y2 = toDouble( values.removeFirst() );
-    double z2 = toDouble( values.removeFirst() );
+    Color color = parseColor(toInt(values.removeFirst()));
+    double x1 = toDouble(values.removeFirst());
+    double y1 = toDouble(values.removeFirst());
+    double z1 = toDouble(values.removeFirst());
+    double x2 = toDouble(values.removeFirst());
+    double y2 = toDouble(values.removeFirst());
+    double z2 = toDouble(values.removeFirst());
 
-    Vertex p1 = getPoint( x1, y1, z1 );
-    Vertex p2 = getPoint( x2, y2, z2 );
+    Vertex p1 = getPoint(x1, y1, z1);
+    Vertex p2 = getPoint(x2, y2, z2);
     return getLine(
         color,
         p1,
@@ -212,25 +213,25 @@ public class LDrawParser implements Parser<Model> {
   /**
    * @return parsed LDraw {@link Triangle}
    */
-  private Triangle parseTriangle( List<String> values ) {
-    if ( values.size() != 10 ) {
+  private Triangle parseTriangle(List<String> values) {
+    if (values.size() != 10) {
       throw new IllegalStateException(
-          "Remaining Triangle does not match format, size is " + values.size() );
+          "Remaining Triangle does not match format, size is " + values.size());
     }
-    Color color = parseColor( values.removeFirst() );
-    double x1 = toDouble( values.removeFirst() );
-    double y1 = toDouble( values.removeFirst() );
-    double z1 = toDouble( values.removeFirst() );
-    double x2 = toDouble( values.removeFirst() );
-    double y2 = toDouble( values.removeFirst() );
-    double z2 = toDouble( values.removeFirst() );
-    double x3 = toDouble( values.removeFirst() );
-    double y3 = toDouble( values.removeFirst() );
-    double z3 = toDouble( values.removeFirst() );
+    Color color = parseColor(toInt(values.removeFirst()));
+    double x1 = toDouble(values.removeFirst());
+    double y1 = toDouble(values.removeFirst());
+    double z1 = toDouble(values.removeFirst());
+    double x2 = toDouble(values.removeFirst());
+    double y2 = toDouble(values.removeFirst());
+    double z2 = toDouble(values.removeFirst());
+    double x3 = toDouble(values.removeFirst());
+    double y3 = toDouble(values.removeFirst());
+    double z3 = toDouble(values.removeFirst());
 
-    Vertex p1 = getPoint( x1, y1, z1 );
-    Vertex p2 = getPoint( x2, y2, z2 );
-    Vertex p3 = getPoint( x3, y3, z3 );
+    Vertex p1 = getPoint(x1, y1, z1);
+    Vertex p2 = getPoint(x2, y2, z2);
+    Vertex p3 = getPoint(x3, y3, z3);
     return getTriangle(
         color,
         p1,
@@ -242,29 +243,29 @@ public class LDrawParser implements Parser<Model> {
   /**
    * @return parsed LDraw {@link Quadrilateral}
    */
-  private Quadrilateral parseQuadrilateral( List<String> values ) {
-    if ( values.size() != 13 ) {
+  private Quadrilateral parseQuadrilateral(List<String> values) {
+    if (values.size() != 13) {
       throw new IllegalStateException(
-          "Remaining Quadrilateral does not match format, size is " + values.size() );
+          "Remaining Quadrilateral does not match format, size is " + values.size());
     }
-    Color color = parseColor( values.removeFirst() );
-    double x1 = toDouble( values.removeFirst() );
-    double y1 = toDouble( values.removeFirst() );
-    double z1 = toDouble( values.removeFirst() );
-    double x2 = toDouble( values.removeFirst() );
-    double y2 = toDouble( values.removeFirst() );
-    double z2 = toDouble( values.removeFirst() );
-    double x3 = toDouble( values.removeFirst() );
-    double y3 = toDouble( values.removeFirst() );
-    double z3 = toDouble( values.removeFirst() );
-    double x4 = toDouble( values.removeFirst() );
-    double y4 = toDouble( values.removeFirst() );
-    double z4 = toDouble( values.removeFirst() );
+    Color color = parseColor(toInt(values.removeFirst()));
+    double x1 = toDouble(values.removeFirst());
+    double y1 = toDouble(values.removeFirst());
+    double z1 = toDouble(values.removeFirst());
+    double x2 = toDouble(values.removeFirst());
+    double y2 = toDouble(values.removeFirst());
+    double z2 = toDouble(values.removeFirst());
+    double x3 = toDouble(values.removeFirst());
+    double y3 = toDouble(values.removeFirst());
+    double z3 = toDouble(values.removeFirst());
+    double x4 = toDouble(values.removeFirst());
+    double y4 = toDouble(values.removeFirst());
+    double z4 = toDouble(values.removeFirst());
 
-    Vertex p1 = getPoint( x1, y1, z1 );
-    Vertex p2 = getPoint( x2, y2, z2 );
-    Vertex p3 = getPoint( x3, y3, z3 );
-    Vertex p4 = getPoint( x4, y4, z4 );
+    Vertex p1 = getPoint(x1, y1, z1);
+    Vertex p2 = getPoint(x2, y2, z2);
+    Vertex p3 = getPoint(x3, y3, z3);
+    Vertex p4 = getPoint(x4, y4, z4);
     return getQuadrilateral(
         color,
         p1,
@@ -277,29 +278,29 @@ public class LDrawParser implements Parser<Model> {
   /**
    * @return parsed LDraw {@link OptionalLine}
    */
-  private OptionalLine parseOptionalLine( List<String> values ) {
-    if ( values.size() != 13 ) {
+  private OptionalLine parseOptionalLine(List<String> values) {
+    if (values.size() != 13) {
       throw new IllegalStateException(
-          "Remaining Optional Line does not match format, size is " + values.size() );
+          "Remaining Optional Line does not match format, size is " + values.size());
     }
-    Color color = parseColor( values.removeFirst() );
-    double x1 = toDouble( values.removeFirst() );
-    double y1 = toDouble( values.removeFirst() );
-    double z1 = toDouble( values.removeFirst() );
-    double x2 = toDouble( values.removeFirst() );
-    double y2 = toDouble( values.removeFirst() );
-    double z2 = toDouble( values.removeFirst() );
-    double x3 = toDouble( values.removeFirst() );
-    double y3 = toDouble( values.removeFirst() );
-    double z3 = toDouble( values.removeFirst() );
-    double x4 = toDouble( values.removeFirst() );
-    double y4 = toDouble( values.removeFirst() );
-    double z4 = toDouble( values.removeFirst() );
+    Color color = parseColor(toInt(values.removeFirst()));
+    double x1 = toDouble(values.removeFirst());
+    double y1 = toDouble(values.removeFirst());
+    double z1 = toDouble(values.removeFirst());
+    double x2 = toDouble(values.removeFirst());
+    double y2 = toDouble(values.removeFirst());
+    double z2 = toDouble(values.removeFirst());
+    double x3 = toDouble(values.removeFirst());
+    double y3 = toDouble(values.removeFirst());
+    double z3 = toDouble(values.removeFirst());
+    double x4 = toDouble(values.removeFirst());
+    double y4 = toDouble(values.removeFirst());
+    double z4 = toDouble(values.removeFirst());
 
-    Vertex p1 = getPoint( x1, y1, z1 );
-    Vertex p2 = getPoint( x2, y2, z2 );
-    Vertex p3 = getPoint( x3, y3, z3 );
-    Vertex p4 = getPoint( x4, y4, z4 );
+    Vertex p1 = getPoint(x1, y1, z1);
+    Vertex p2 = getPoint(x2, y2, z2);
+    Vertex p3 = getPoint(x3, y3, z3);
+    Vertex p4 = getPoint(x4, y4, z4);
     return getOptionalLine(
         color,
         p1,
@@ -310,9 +311,11 @@ public class LDrawParser implements Parser<Model> {
   }
 
   /**
+   * Takes in LDraw color code
+   *
    * @return parsed LDraw {@link Color}
    */
-  private Color parseColor( String color ) {
+  private Color parseColor(int color) {
     return Color.getDefaultInstance();
   }
 

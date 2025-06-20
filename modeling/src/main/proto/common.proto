@@ -46,6 +46,47 @@ message Vertex {
 }
 
 message Color {
+  string name = 1;
+  int32 code = 2;
+  string value = 3;
+  string edge = 4;
+  optional int32 alpha = 5;
+  optional int32 luminance = 6;
+  oneof finish {
+    bool chrome = 7;
+    bool pearlescent = 8;
+    bool rubber = 9;
+    bool matt_metallic = 10;
+    Material material = 11;
+  }
+}
+
+message Material {
+  /* TODO, Implement
+    MATERIAL
+    MATERIAL [name ...]- Some other surface finish requiring customized parameter(s).
+    Name is an identifier. MATERIAL is optional, and may not appear with other finish tags.
+    Since it may have complex parameters that don't follow the standard syntax of the !COLOUR statement, MATERIAL should be the last tag in the !COLOUR statement.
+
+    The following MATERIAL definitions are official:
+
+    GLITTER VALUE v [ALPHA a] [LUMINANCE l] FRACTION f VFRACTION vf SIZE s | MINSIZE min MAXSIZE max
+    SPECKLE VALUE v [ALPHA a] [LUMINANCE l] FRACTION f SIZE s | MINSIZE min MAXSIZE max
+    FABRIC [VELVET | CANVAS | STRING | FUR]
+
+    GLITTER is used to specify a color that includes glitter mixed into the transparent plastic. Individual glitter grains are assumed to be flat squares, with arbitrary orientation.
+    SPECKLE is used to specify a color that has a speckled pattern of an alternate color on its surface. Individual speckle grains are assumed to be roughly round.
+    FABRIC is used to specify a surface finish for fabric. Omitting the second qualifier assumes a finish similar to the fabric used in Minifig capes.
+
+    FRACTION f is the portion of the surface that uses the alternate color, expressed as a decimal number greater than 0.0 and less than 1.0.
+    VFRACTION vf is the portion of the volume that uses the alternate color, expressed as a decimal number greater than 0.0 and less than 1.0. Renderers that support volume rendering will use this value instead of the FRACTION value.
+    SIZE is the size of each speckle/glitter grain, in LDraw units. It must be greater than 0. This is mutually exclusive with MINSIZE and MAXSIZE.
+    MINSIZE and MAXSIZE provide a range of sizes for grains, in LDraw units. If either of these is specified, both must be specified, and they are mutually exclusive with SIZE.
+
+    Here is an example usage of SPECKLE:
+
+    0 !COLOUR Speckle_Black_Silver CODE 132 VALUE #000000 EDGE #595959 MATERIAL SPECKLE VALUE #595959 FRACTION 0.4 MINSIZE 1 MAXSIZE 3
+    */
 }
 
 enum LineType {
