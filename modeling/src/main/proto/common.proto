@@ -8,7 +8,6 @@ option java_outer_classname = "Modeling";
 
 message Comment {
   LineType type = 1;
-  int32 line_number = 2;
   string comment = 3;
 }
 

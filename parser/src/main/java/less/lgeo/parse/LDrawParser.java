@@ -11,11 +11,8 @@ import static less.lgeo.util.ParseUtils.parseCommand;
 import static less.lgeo.util.ParseUtils.parseComment;
 import static less.lgeo.util.ParseUtils.toDouble;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -24,7 +21,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Stream;
 import less.lgeo.common.Color;
 import less.lgeo.common.LineType;
@@ -40,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 @Component
 public class LDrawParser implements Parser<Model> {
@@ -59,44 +54,41 @@ public class LDrawParser implements Parser<Model> {
     return new File( fileName );
   }
 
-  public Model parse( File toParse ) throws IOException {
+  public Model parse( File file ) throws IOException {
     Model.Builder modelBuilder = Model.newBuilder();
 
-    try ( BufferedReader bufferedReader = new BufferedReader(
-        new FileReader( toParse, StandardCharsets.UTF_8 ) ) ) {
+    logger.info( "Parsing file name: {}", file );
 
-      logger.info( "Parsing file name: {}", toParse );
-      AtomicInteger lineNumber = new AtomicInteger();
+    read( file ).forEach( line -> {
+      logger.info( "Parsing line, {}", line );
 
-      bufferedReader.lines().filter( StringUtils::hasText ).forEach( line -> {
-        List<String> values = new ArrayList<>( List.of( line.trim().split( " " ) ) );
-        int commandValue = Integer.parseInt( values.removeFirst() );
+      List<String> values = new ArrayList<>( List.of( line.trim().split( " " ) ) );
+      int commandValue = Integer.parseInt( values.removeFirst() );
 
-        LineType lineType = getLineType( commandValue );
+      LineType lineType = getLineType( commandValue );
 
-        switch ( lineType ) {
-          case COMMENT_OR_META_CMD -> {
-            if ( values.isEmpty() ) {
-              logger.warn( "Found '0' line" );
-            } else if ( isMetaCommand( values ) ) {
-              modelBuilder.addCommand( parseCommand( values ) );
-            } else {
-              modelBuilder.addComment( parseComment( lineNumber.get(), values ) );
-            }
+      switch ( lineType ) {
+        case COMMENT_OR_META_CMD -> {
+          if ( values.isEmpty() ) {
+            logger.warn( "Found '0' line" );
+          } else if ( isMetaCommand( values ) ) {
+            modelBuilder.addCommand( parseCommand( values ) );
+          } else {
+            modelBuilder.addComment( parseComment( values ) );
           }
-          case SUB_FILE_REF -> modelBuilder.addPiece( parseSubFileReference( values ) );
-          case LINE -> modelBuilder.addLine( parseLine( values ) );
-          case TRIANGLE -> modelBuilder.addTriangle( parseTriangle( values ) );
-          case QUADRILATERAL -> modelBuilder.addQuadrilateral( parseQuadrilateral( values ) );
-          case OPTIONAL_LINE -> modelBuilder.addOptionalLine( parseOptionalLine( values ) );
-          default -> throw new IllegalStateException(
-              "Line Type has an Illegal type of " + lineType.getDescriptorForType().toString() );
         }
-        lineNumber.getAndIncrement();
-      } );
-      logger.info( "Finished Parsing" );
-      return modelBuilder.build();
-    }
+        case SUB_FILE_REF -> modelBuilder.addPiece( parseSubFileReference( values ) );
+        case LINE -> modelBuilder.addLine( parseLine( values ) );
+        case TRIANGLE -> modelBuilder.addTriangle( parseTriangle( values ) );
+        case QUADRILATERAL -> modelBuilder.addQuadrilateral( parseQuadrilateral( values ) );
+        case OPTIONAL_LINE -> modelBuilder.addOptionalLine( parseOptionalLine( values ) );
+        default -> throw new IllegalStateException(
+            "Line Type has an Illegal type of " + lineType.getDescriptorForType().toString() );
+      }
+    } );
+    logger.info( "Finished Parsing" );
+    return modelBuilder.build();
+
   }
 
 

@@ -37,11 +37,9 @@ public class ParseUtils {
   /**
    * @return Join line values as singular string 'comment'
    */
-  public static Comment parseComment( int lineNumber, List<String> values ) {
+  public static Comment parseComment( List<String> values ) {
     return Comment.newBuilder()
         .setType( LineType.COMMENT_OR_META_CMD )
-        .setLineNumber( lineNumber )
-        // TODO, Not sure if this needs to be improved
         .setComment( values.toString() )
         .build();
   }

@@ -8,16 +8,12 @@ import static less.lgeo.util.ParseUtils.parseComment;
 import static less.lgeo.util.ParseUtils.toDouble;
 import static less.lgeo.util.ParseUtils.toInt;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 import less.lgeo.common.LineType;
 import less.lgeo.common.Matrix;
 import less.lgeo.connectivity.Connection;
@@ -28,7 +24,6 @@ import less.lgeo.connectivity.PartConnection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 @Component
 public class ConnectivityParser implements Parser<Connection> {
@@ -36,51 +31,47 @@ public class ConnectivityParser implements Parser<Connection> {
   private static final Logger logger = LoggerFactory.getLogger( ConnectivityParser.class );
 
   @Override
-  public Connection parse( File fileToParse ) throws IOException {
+  public Connection parse( File file ) throws IOException {
 
     Builder connectionBuilder = Connection.newBuilder();
 
-    try ( BufferedReader bufferedReader = new BufferedReader(
-        new FileReader( fileToParse, StandardCharsets.UTF_8 ) ) ) {
+    logger.info( "Parsing file name: {}", file );
 
-      logger.info( "Parsing file name: {}", fileToParse );
-      AtomicInteger lineNumber = new AtomicInteger();
+    read( file ).forEach( line -> {
+      logger.info( "Parsing line, {}", line );
+      List<String> values = new ArrayList<>( List.of( line.trim().split( " " ) ) );
 
-      bufferedReader.lines().filter( StringUtils::hasText ).forEach( line -> {
-        List<String> values = new ArrayList<>( List.of( line.trim().split( " " ) ) );
+      int commandValue = Integer.parseInt( values.removeFirst() );
+      LineType lineType = getLineType( commandValue );
 
-        logger.info( "Parsing line {} : {}", lineNumber, line );
-        int commandValue = Integer.parseInt( values.removeFirst() );
-        LineType lineType = getLineType( commandValue );
-
-        switch ( lineType ) {
-          case COMMENT_OR_META_CMD -> {
-            if ( values.isEmpty() ) {
-              logger.warn( "Found '0' line" );
-            } else if ( isMetaCommand( values ) ) {
-              connectionBuilder.addCommand( parseCommand( values ) );
-            } else {
-              connectionBuilder.addComment( parseComment( lineNumber.get(), values ) );
-            }
+      switch ( lineType ) {
+        case COMMENT_OR_META_CMD -> {
+          if ( values.isEmpty() ) {
+            logger.warn( "Found '0' line" );
+          } else if ( isMetaCommand( values ) ) {
+            connectionBuilder.addCommand( parseCommand( values ) );
+          } else {
+            connectionBuilder.addComment( parseComment( values ) );
           }
-          default -> throw new IllegalStateException( "Unexpected Line Type" );
         }
-      } );
+        default -> throw new IllegalStateException( "Unexpected Line Type" );
+      }
+    } );
 
-      connectionBuilder.build().getCommandList().forEach( command ->
-      {
-        if ( command.getCommand().equals( "PE_CONN" ) ) {
-          Iterator<String> additionalParamsIter = command.getAdditionalParamsList().iterator();
+    connectionBuilder.build().getCommandList().forEach( command ->
+    {
+      if ( command.getCommand().equals( "PE_CONN" ) ) {
+        Iterator<String> additionalParamsIter = command.getAdditionalParamsList().iterator();
 
-          GroupId groupId = getGroupId( Integer.parseInt( additionalParamsIter.next() ) );
+        GroupId groupId = getGroupId( Integer.parseInt( additionalParamsIter.next() ) );
 
-          connectionBuilder.addPartConnection(
-              getPartConnection( groupId, additionalParamsIter ) );
+        connectionBuilder.addPartConnection(
+            getPartConnection( groupId, additionalParamsIter ) );
 
-        }
-      } );
-      return connectionBuilder.build();
-    }
+      }
+    } );
+    return connectionBuilder.build();
+
   }
 
   private PartConnection getPartConnection( GroupId groupId, Iterator<String> iter ) {
