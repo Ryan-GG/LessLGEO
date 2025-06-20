@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package modeling;
+
+option java_multiple_files = true;
+option java_package = "less.lgeo.common";
+option java_outer_classname = "Modeling";
+
+message Comment {
+  LineType type = 1;
+  string comment = 3;
+}
+
+message MetaCommand {
+  LineType type = 1;
+  string command = 2;
+  repeated string additional_params = 3;
+}
+
+/**
+  * / a b c x \
+  * | d e f y |
+  * | g h i z |
+  * \ 0 0 0 scale /
+ */
+message Matrix {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+  double a = 4;
+  double b = 5;
+  double c = 6;
+  double d = 7;
+  double e = 8;
+  double f = 9;
+  double g = 10;
+  double h = 11;
+  double i = 12;
+  double scale = 13;
+}
+
+message Vertex {
+  double x = 1;
+  double y = 2;
+  double z = 3;
+}
+
+message Color {
+}
+
+enum LineType {
+  // TODO, do not match directly to line parsing
+  LINE_TYPE_UNKNOWN = 0;
+  COMMENT_OR_META_CMD = 1;
+  SUB_FILE_REF = 2;
+  LINE = 3;
+  TRIANGLE = 4;
+  QUADRILATERAL = 5;
+  OPTIONAL_LINE = 6;
+}

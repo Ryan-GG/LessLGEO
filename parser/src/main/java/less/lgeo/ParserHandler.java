@@ -1,7 +1,6 @@
 package less.lgeo;
 
 import java.io.File;
-import less.lgeo.parse.Parser;
 import less.lgeo.parser.ParserProducer;
 import less.lgeo.primitive.Model;
 import less.lgeo.rabbitmq.RabbitProperties;
@@ -14,37 +13,38 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
-@EnableConfigurationProperties(value = RabbitProperties.class)
 @SpringBootApplication
+@EnableConfigurationProperties( value = RabbitProperties.class )
 public class ParserHandler implements ApplicationRunner {
 
-  private static final Logger logger = LoggerFactory.getLogger(ParserHandler.class);
+  private static final Logger logger = LoggerFactory.getLogger( ParserHandler.class );
 
   private final ParserProducer parserProducer;
+  private final ModelJoiner modelJoiner;
 
-  public ParserHandler(ParserProducer parserProducer) {
+  public ParserHandler( ParserProducer parserProducer, ModelJoiner modelJoiner ) {
     this.parserProducer = parserProducer;
+    this.modelJoiner = modelJoiner;
   }
 
-  public static void main(String[] args) {
+  public static void main( String[] args ) {
     new SpringApplicationBuilder()
-        .web(WebApplicationType.NONE)
-        .sources(ParserHandler.class)
+        .web( WebApplicationType.NONE )
+        .sources( ParserHandler.class )
         .build()
-        .run(args);
+        .run( args );
   }
 
   @Override
-  public void run(ApplicationArguments args) throws Exception {
+  public void run( ApplicationArguments args ) {
+    
+    File fileToParse = new File( args.getSourceArgs()[0] );
 
-    Parser parser = new Parser();
-    File fileToParse = new File(args.getSourceArgs()[0]);
+    Model joinedModel = modelJoiner.joinAndTransformModel( fileToParse );
 
-    Model model = parser.parse(fileToParse);
+    logger.info( "Model result: {}", joinedModel );
 
-    logger.info("Model result: {}", model);
-
-    logger.info("Sending Model...");
-    parserProducer.sendMessage(model);
+    logger.info( "Sending Model..." );
+    parserProducer.sendMessage( joinedModel );
   }
 }

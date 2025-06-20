@@ -20,7 +20,7 @@
       <version>3.2.4</version>
     </dependency>
     <dependency>
-      <artifactId>geometry</artifactId>
+      <artifactId>modeling</artifactId>
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>

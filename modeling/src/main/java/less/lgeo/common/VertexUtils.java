@@ -1,12 +1,12 @@
-package less.lgeo.primitive;
+package less.lgeo.common;
 
 public class VertexUtils {
 
-  public static Vertex getPoint(double x, double y, double z) {
+  public static Vertex getPoint( double x, double y, double z ) {
     return Vertex.newBuilder()
-        .setX(x)
-        .setY(y)
-        .setZ(z)
+        .setX( x )
+        .setY( y )
+        .setZ( z )
         .build();
   }
 
@@ -22,7 +22,7 @@ public class VertexUtils {
    * @return The resulting {@link Vertex} from the previous position with the transformation
    * applied.
    */
-  public static Vertex transform(Vertex oldVertex, Matrix matrix) {
+  public static Vertex transform( Vertex oldVertex, Matrix matrix ) {
     double newX = matrix.getA() * oldVertex.getX() + matrix.getB() * oldVertex.getY()
         + matrix.getC() * oldVertex.getZ() + matrix.getX();
     double newY = matrix.getD() * oldVertex.getX() + matrix.getE() * oldVertex.getY()
@@ -30,9 +30,9 @@ public class VertexUtils {
     double newZ = matrix.getG() * oldVertex.getX() + matrix.getH() * oldVertex.getY()
         + matrix.getI() * oldVertex.getZ() + matrix.getZ();
     return Vertex.newBuilder()
-        .setX(newX)
-        .setY(newY)
-        .setZ(newZ)
+        .setX( newX )
+        .setY( newY )
+        .setZ( newZ )
         .build();
   }
 }
