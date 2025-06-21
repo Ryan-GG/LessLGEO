@@ -1,0 +1,34 @@
+package less.lgeo.controller;
+
+import java.util.List;
+import less.lgeo.entity.ColorEntity;
+import less.lgeo.service.ColorService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+@Validated
+@RestController
+@RequestMapping(name = "/api/v1/color")
+public class ColorController {
+
+  private final ColorService colorService;
+
+  public ColorController(ColorService colorService) {
+    this.colorService = colorService;
+  }
+
+  @GetMapping("/")
+  public ResponseEntity<List<ColorEntity>> getAllColors() {
+    return ResponseEntity.ok().body(colorService.getAllColors());
+  }
+
+  @GetMapping("/{code}")
+  public ResponseEntity<ColorEntity> getColor(@PathVariable Integer code) {
+    return ResponseEntity.ok().body(colorService.getColorByCode(code));
+  }
+
+}
