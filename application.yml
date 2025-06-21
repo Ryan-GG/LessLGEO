@@ -1,9 +1,22 @@
 spring:
+  application:
+    name: LessLGEO
   rabbitmq:
     host: localhost
     port: 5672
     username: ${RABBIT_USER}
     password: ${RABBIT_PASSWORD}
+  flyway:
+    locations: classpath:/db/migration
+    schemas: color
+    baselineOnMigrate: true
+    enabled: true
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/color?currentSchema=color
+    username: { DATABASE_USER }
+    password: { DATABASE_PASSWORD }
+
 
 rabbit:
   topicName: "parser-to-reducer-exchange"
