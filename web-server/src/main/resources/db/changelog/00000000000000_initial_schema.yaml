@@ -1,0 +1,44 @@
+databaseChangeLog:
+  - changeSet:
+      id: 00000000000000-0
+      author: gross
+      changes:
+        - createTable:
+            tableName: color
+            columns:
+              - column:
+                  name: code
+                  type: integer
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: main
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: edge
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: alpha
+                  type: integer
+                  constraints:
+                    nullable: true
+              - column:
+                  name: luminance
+                  type: integer
+                  constraints:
+                    nullable: true
+              - column:
+                  name: finish
+                  type: varchar(255)
+                  constraints:
+                    nullable: true

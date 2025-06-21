@@ -4,7 +4,7 @@ import less.lgeo.parse.ConnectivityParser;
 import less.lgeo.parse.LDrawParser;
 import org.springframework.context.annotation.Bean;
 
-public class ParserCreator {
+public class ParserBeanCreator {
 
 
   @Bean

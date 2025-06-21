@@ -6,7 +6,7 @@ import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.stereotype.Repository;
 
 /**
- * JPA Repository for @
+ * JPA Repository for {@link ColorEntity}
  */
 @Repository
 @RepositoryDefinition(domainClass = ColorEntity.class, idClass = Integer.class)
