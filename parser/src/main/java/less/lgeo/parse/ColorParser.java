@@ -130,7 +130,11 @@ public class ColorParser implements Parser<List<Color>> {
       switch (optionalValueType) {
         case "ALPHA" -> builder.setAlpha(toInt(colorIterator.next()));
         case "LUMINANCE" -> builder.setLuminance(toInt(colorIterator.next()));
-        default -> builder.setFinish(optionalValueType);
+        default -> {
+          String material = builder.hasFinish() ? builder.getFinish() : "";
+          String joinedMaterial = material + " " + optionalValueType;
+          builder.setFinish(joinedMaterial.trim());
+        }
       }
     }
     return builder.build();
