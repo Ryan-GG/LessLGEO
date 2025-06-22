@@ -18,7 +18,7 @@ public class ColorEntity {
   // TODO, Look for more annotations to include
   @Id
   @Column(unique = true)
-  private Integer code;
+  private Integer id;
 
   @Column(nullable = false)
   private String name;

@@ -1,13 +1,18 @@
 databaseChangeLog:
   - changeSet:
-      id: 00000000000000-0
+      id: 0
       author: gross
+      preConditions:
+        onFail: MARK_RAN
+                  - not:
+                  tableExists:
+                    tableName: color
       changes:
         - createTable:
             tableName: color
             columns:
               - column:
-                  name: code
+                  name: id
                   type: integer
                   constraints:
                     nullable: false
@@ -18,7 +23,8 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: main
+                  # FIXME, Possible bug changing name to `value`
+                  name: value
                   type: varchar(255)
                   constraints:
                     nullable: false
@@ -42,3 +48,18 @@ databaseChangeLog:
                   type: varchar(255)
                   constraints:
                     nullable: true
+  - changeSet:
+      id: 1
+      author: gross
+      preConditions:
+        onFail: MARK_RAN
+                  - not:
+                  tableExists:
+                    tableName: color
+      changes:
+        - loadData:
+            file: classpath:/db/changelog/data/colors.csv
+            tableName: color
+            separator: ","
+            encoding: UTF-8
+

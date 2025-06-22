@@ -46,8 +46,8 @@ message Vertex {
 }
 
 message Color {
-  string name = 1;
-  int32 code = 2;
+  int32  id = 1;
+  string name = 2;
   // TODO how to store hexcodes
   string value = 3;
   string edge = 4;
@@ -58,7 +58,8 @@ message Color {
     bool pearlescent = 8;
     bool rubber = 9;
     bool matt_metallic = 10;
-    Material material = 11;
+    bool metal = 11;
+    Material material = 12;
   }
 }
 

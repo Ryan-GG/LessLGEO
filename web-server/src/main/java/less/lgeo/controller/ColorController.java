@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
-@RequestMapping(name = "/api/v1/color")
+@RequestMapping(name = "/api/color/v1")
 public class ColorController {
 
   private final ColorService colorService;
