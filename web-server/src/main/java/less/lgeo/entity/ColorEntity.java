@@ -8,10 +8,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
 @Data
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "color")
 public class ColorEntity {
 

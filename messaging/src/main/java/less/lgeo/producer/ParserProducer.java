@@ -1,4 +1,4 @@
-package less.lgeo.parser;
+package less.lgeo.producer;
 
 import less.lgeo.primitive.Model;
 import less.lgeo.rabbitmq.AmqpProtobufMessageConverter;

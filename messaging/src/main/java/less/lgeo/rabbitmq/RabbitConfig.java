@@ -1,7 +1,7 @@
 package less.lgeo.rabbitmq;
 
+import less.lgeo.consumer.ReducerConsumer;
 import less.lgeo.primitive.Model;
-import less.lgeo.reducer.ReducerConsumer;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
