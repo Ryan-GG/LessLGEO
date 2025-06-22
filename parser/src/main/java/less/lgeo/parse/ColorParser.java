@@ -78,15 +78,19 @@ public class ColorParser implements Parser<List<Color>> {
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath.toFile()))
     ) {
 
+      // Header
+      writer.write("id,name,value,edge,alpha,luminance,finish");
+      writer.newLine();
+
       for (Color color : gpb) {
         writer.write(String.format("%d,%s,%s,%s,%s,%s,%s",
             color.getId(),
             color.getName(),
             color.getValue(),
             color.getEdge(),
-            color.hasAlpha() ? String.valueOf(color.getAlpha()) : "null",
-            color.hasLuminance() ? String.valueOf(color.getLuminance()) : "null",
-            color.hasFinish() ? color.getFinish() : "null"));
+            color.hasAlpha() ? String.valueOf(color.getAlpha()) : "",
+            color.hasLuminance() ? String.valueOf(color.getLuminance()) : "",
+            color.hasFinish() ? color.getFinish() : ""));
         writer.newLine();
       }
     } catch (IOException e) {

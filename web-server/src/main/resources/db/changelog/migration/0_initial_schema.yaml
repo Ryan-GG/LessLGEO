@@ -2,11 +2,6 @@ databaseChangeLog:
   - changeSet:
       id: 0
       author: gross
-      preConditions:
-        onFail: MARK_RAN
-                  - not:
-                  tableExists:
-                    tableName: color
       changes:
         - createTable:
             tableName: color
@@ -51,11 +46,6 @@ databaseChangeLog:
   - changeSet:
       id: 1
       author: gross
-      preConditions:
-        onFail: MARK_RAN
-                  - not:
-                  tableExists:
-                    tableName: color
       changes:
         - loadData:
             file: classpath:/db/changelog/data/colors.csv
