@@ -5,18 +5,16 @@
   <artifactId>reducer</artifactId>
   <dependencies>
     <dependency>
-      <artifactId>messaging</artifactId>
-      <groupId>less.lgeo</groupId>
-      <scope>compile</scope>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
       <artifactId>modeling</artifactId>
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <artifactId>messaging</artifactId>
+      <groupId>less.lgeo</groupId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
-  <groupId>less.lgeo</groupId>
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
 
