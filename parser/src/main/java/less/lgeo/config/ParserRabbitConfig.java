@@ -1,6 +1,6 @@
 package less.lgeo.config;
 
-import less.lgeo.consumer.ReducerConsumer;
+import less.lgeo.consumer.ParserConsumer;
 import less.lgeo.primitive.Model;
 import less.lgeo.rabbitmq.AmqpProtobufMessageConverter;
 import less.lgeo.rabbitmq.RabbitProperties;
@@ -15,23 +15,23 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ReducerRabbitConfig {
+public class ParserRabbitConfig {
 
   @Bean
   Queue queue(RabbitProperties rabbitProperties) {
-    return new Queue(rabbitProperties.parserToReducerQueue(), false);
+    return new Queue(rabbitProperties.webToParserQueue(), false);
   }
 
   @Bean
   TopicExchange exchange(RabbitProperties rabbitProperties) {
-    return new TopicExchange(rabbitProperties.parserToReducerTopic());
+    return new TopicExchange(rabbitProperties.webToParserTopic());
   }
 
   @Bean
   Binding binding(Queue queue, TopicExchange exchange, RabbitProperties rabbitProperties) {
     return BindingBuilder.bind(queue)
         .to(exchange)
-        .with(rabbitProperties.parserToReducerRoutingKey());
+        .with(rabbitProperties.webToParserRoutingKey());
   }
 
   @Bean
@@ -40,14 +40,14 @@ public class ReducerRabbitConfig {
       RabbitProperties rabbitProperties) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(rabbitProperties.parserToReducerQueue());
+    container.setQueueNames(rabbitProperties.webToParserQueue());
     container.setMessageListener(listenerAdapter);
     return container;
   }
 
   @Bean
-  MessageListenerAdapter listenerAdapter(ReducerConsumer reducerConsumer) {
-    return new MessageListenerAdapter(reducerConsumer,
+  MessageListenerAdapter listenerAdapter(ParserConsumer parserConsumer) {
+    return new MessageListenerAdapter(parserConsumer,
         new AmqpProtobufMessageConverter(Model.getDefaultInstance()));
   }
 }

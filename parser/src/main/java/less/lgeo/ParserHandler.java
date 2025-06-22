@@ -1,7 +1,5 @@
 package less.lgeo;
 
-import java.io.File;
-import less.lgeo.primitive.Model;
 import less.lgeo.producer.ParserProducer;
 import less.lgeo.rabbitmq.RabbitProperties;
 import org.slf4j.Logger;
@@ -38,11 +36,16 @@ public class ParserHandler implements ApplicationRunner {
   @Override
   public void run(ApplicationArguments args) {
 
-    File fileToParse = new File(args.getSourceArgs()[0]);
+    /*File fileToParse = new File(args.getSourceArgs()[0]);
 
     Model joinedModel = modelJoiner.joinAndTransformModel(fileToParse);
 
     logger.info("Sending Model...");
-    parserProducer.sendMessage(joinedModel);
+    parserProducer.sendMessage(joinedModel);*/
+  }
+
+  public void consume(String message) {
+    // TODO, working on wiring webserver to parser to reducer via REST API
+    logger.info(message);
   }
 }

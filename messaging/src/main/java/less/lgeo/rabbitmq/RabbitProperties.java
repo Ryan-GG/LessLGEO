@@ -5,8 +5,11 @@ import org.springframework.lang.NonNull;
 
 @ConfigurationProperties(prefix = "rabbit")
 public record RabbitProperties(
-    @NonNull String topicName,
-    @NonNull String queueName,
-    @NonNull String routingKey) {
+    @NonNull String parserToReducerTopic,
+    @NonNull String parserToReducerQueue,
+    @NonNull String parserToReducerRoutingKey,
+    @NonNull String webToParserTopic,
+    @NonNull String webToParserQueue,
+    @NonNull String webToParserRoutingKey) {
 
 }

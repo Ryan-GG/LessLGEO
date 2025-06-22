@@ -14,6 +14,9 @@ spring:
 
 
 rabbit:
-  topicName: "parser-to-reducer-exchange"
-  queueName: "parser-to-reducer-queue"
-  routingKey: "parser.reducer.#"
+  parserToReducerTopic: "parser-to-reducer-exchange"
+  parserToReducerQueue: "parser-to-reducer-queue"
+  parserToReducerRoutingKey: "parser.reducer.#"
+  webToParserTopic: "web-to-parser-exchange"
+  webToParserQueue: "web-to-parser-queue"
+  webToParserRoutingKey: "web.parser.#"

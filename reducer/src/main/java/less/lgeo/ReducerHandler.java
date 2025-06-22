@@ -15,18 +15,11 @@ public class ReducerHandler {
   private static final Logger logger = LoggerFactory.getLogger(ReducerHandler.class);
 
   public static void main(String[] args) {
-/*
-    new SpringApplicationBuilder()
-        .web(WebApplicationType.NONE)
-        .sources(ReducerHandler.class)
-        .build()
-        .run(args);
-*/
     SpringApplication.run(ReducerHandler.class);
   }
 
 
   public void consume(Model message) {
-    logger.info("foo {}", message);
+    logger.info("Consuming: {}", message);
   }
 }

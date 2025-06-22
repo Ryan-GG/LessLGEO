@@ -49,6 +49,16 @@
       <groupId>org.postgresql</groupId>
       <version>42.7.7</version>
     </dependency>
+    <dependency>
+      <artifactId>modeling</artifactId>
+      <groupId>less.lgeo</groupId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <artifactId>messaging</artifactId>
+      <groupId>less.lgeo</groupId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
 
   <modelVersion>4.0.0</modelVersion>

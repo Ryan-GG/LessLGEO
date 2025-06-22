@@ -21,7 +21,8 @@ public class ParserProducer {
   }
 
   public void sendMessage(Model message) {
-    rabbitTemplate.convertAndSend(rabbitProperties.topicName(), rabbitProperties.routingKey(),
+    rabbitTemplate.convertAndSend(rabbitProperties.parserToReducerTopic(),
+        rabbitProperties.parserToReducerRoutingKey(),
         message);
   }
 }
