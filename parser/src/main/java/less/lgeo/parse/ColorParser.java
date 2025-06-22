@@ -4,14 +4,16 @@ import static less.lgeo.common.CommonUtils.getLineType;
 import static less.lgeo.util.ParseUtils.isMetaCommand;
 import static less.lgeo.util.ParseUtils.toInt;
 
+import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import less.lgeo.common.Color;
 import less.lgeo.common.LineType;
-import less.lgeo.common.Material;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
@@ -27,7 +29,9 @@ public class ColorParser implements Parser<List<Color>> {
 
   public static void main(String[] args) throws IOException {
     File file = new File(args[0]);
-    new ColorParser().parse(file);
+
+    List<Color> colors = new ColorParser().parse(file);
+    new ColorParser().writeToFile(colors, Path.of("colors.csv"));
   }
 
   @Override
@@ -69,10 +73,26 @@ public class ColorParser implements Parser<List<Color>> {
   }
 
   @Override
-  public File writeToFile(List<Color> gpb, String fileName) {
-    return null;
-  }
+  public void writeToFile(List<Color> gpb, Path outputPath) {
+    try (
+        BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath.toFile()))
+    ) {
 
+      for (Color color : gpb) {
+        writer.write(String.format("%d,%s,%s,%s,%s,%s,%s",
+            color.getId(),
+            color.getName(),
+            color.getValue(),
+            color.getEdge(),
+            color.hasAlpha() ? String.valueOf(color.getAlpha()) : "null",
+            color.hasLuminance() ? String.valueOf(color.getLuminance()) : "null",
+            color.hasFinish() ? color.getFinish() : "null"));
+        writer.newLine();
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
+  }
 
   private Color buildColor(Iterator<String> colorIterator) {
 
@@ -106,17 +126,7 @@ public class ColorParser implements Parser<List<Color>> {
       switch (optionalValueType) {
         case "ALPHA" -> builder.setAlpha(toInt(colorIterator.next()));
         case "LUMINANCE" -> builder.setLuminance(toInt(colorIterator.next()));
-        default -> {
-          switch (optionalValueType) {
-            case "CHROME" -> builder.setChrome(true);
-            case "PEARLESCENT" -> builder.setPearlescent(true);
-            case "RUBBER" -> builder.setRubber(true);
-            case "MATTE_METALLIC" -> builder.setMattMetallic(true);
-            case "METAL" -> builder.setMetal(true);
-            // TODO, Material implementation
-            default -> builder.setMaterial(Material.getDefaultInstance());
-          }
-        }
+        default -> builder.setFinish(optionalValueType);
       }
     }
     return builder.build();

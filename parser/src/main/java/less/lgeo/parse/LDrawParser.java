@@ -50,9 +50,9 @@ public class LDrawParser implements Parser<Model> {
   }
 
   @Override
-  public File writeToFile(Model gpb, String fileName) {
+  public void writeToFile(Model gpb, Path outputPath) {
     // TODO, [Task] Add export back to .ldr format of a Model file #24
-    return new File(fileName);
+    // return new File("TODO");
   }
 
   public Model parse(File file) throws IOException {
