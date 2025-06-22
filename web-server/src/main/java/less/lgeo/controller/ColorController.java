@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
-@RequestMapping(name = "/api/color/v1")
+@RequestMapping(value = "/api/color/v1")
 public class ColorController {
 
   private final ColorService colorService;
@@ -26,9 +26,9 @@ public class ColorController {
     return ResponseEntity.ok().body(colorService.getAllColors());
   }
 
-  @GetMapping("/{code}")
-  public ResponseEntity<ColorEntity> getColor(@PathVariable Integer code) {
-    return ResponseEntity.ok().body(colorService.getColorByCode(code));
+  @GetMapping("/{id}")
+  public ResponseEntity<ColorEntity> getColor(@PathVariable Integer id) {
+    return ResponseEntity.ok().body(colorService.getColorByCode(id));
   }
 
 }

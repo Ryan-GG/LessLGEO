@@ -24,7 +24,7 @@ public class ColorEntity {
   private String name;
 
   @Column(nullable = false)
-  private String main;
+  private String value;
 
   @Column(nullable = false)
   private String edge;
