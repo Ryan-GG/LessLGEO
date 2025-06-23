@@ -4,14 +4,18 @@ import static less.lgeo.common.CommonUtils.getLineType;
 import static less.lgeo.util.ParseUtils.isMetaCommand;
 import static less.lgeo.util.ParseUtils.toInt;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
 import less.lgeo.common.Color;
 import less.lgeo.common.LineType;
 import org.slf4j.Logger;
@@ -27,15 +31,22 @@ public class ColorParser implements Parser<List<Color>> {
   public ColorParser() {
   }
 
-  public static void main(String[] args) throws IOException {
+  public static void main(String[] args) {
     File file = new File(args[0]);
 
-    List<Color> colors = new ColorParser().parse(file);
-    new ColorParser().writeToFile(colors, Path.of("colors.csv"));
+    try (
+        BufferedReader reader = new BufferedReader(
+            new FileReader(file, StandardCharsets.UTF_8))) {
+      String input = reader.lines().sequential().collect(Collectors.joining());
+      List<Color> colors = new ColorParser().parse(input);
+      new ColorParser().writeToFile(colors, Path.of("colors.csv"));
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    }
   }
 
   @Override
-  public List<Color> parse(File file) throws IOException {
+  public List<Color> parse(String file) {
 
     List<Color> colors = new ArrayList<>();
 

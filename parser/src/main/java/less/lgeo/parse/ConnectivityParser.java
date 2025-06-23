@@ -8,8 +8,6 @@ import static less.lgeo.util.ParseUtils.parseComment;
 import static less.lgeo.util.ParseUtils.toDouble;
 import static less.lgeo.util.ParseUtils.toInt;
 
-import java.io.File;
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,13 +30,13 @@ public class ConnectivityParser implements Parser<Connection> {
   private static final Logger logger = LoggerFactory.getLogger(ConnectivityParser.class);
 
   @Override
-  public Connection parse(File file) throws IOException {
+  public Connection parse(String toParse) {
 
     Builder connectionBuilder = Connection.newBuilder();
 
-    logger.info("Parsing file name: {}", file);
+    logger.info("Parsing file name: {}", toParse);
 
-    read(file).forEach(line -> {
+    read(toParse).forEach(line -> {
       logger.info("Parsing line, {}", line);
       List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
 

@@ -1,8 +1,6 @@
 package less.lgeo.config;
 
 import less.lgeo.consumer.ParserConsumer;
-import less.lgeo.primitive.Model;
-import less.lgeo.rabbitmq.AmqpProtobufMessageConverter;
 import less.lgeo.rabbitmq.RabbitProperties;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -47,7 +45,6 @@ public class ParserRabbitConfig {
 
   @Bean
   MessageListenerAdapter listenerAdapter(ParserConsumer parserConsumer) {
-    return new MessageListenerAdapter(parserConsumer,
-        new AmqpProtobufMessageConverter(Model.getDefaultInstance()));
+    return new MessageListenerAdapter(parserConsumer);
   }
 }

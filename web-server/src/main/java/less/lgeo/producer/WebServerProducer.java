@@ -15,18 +15,10 @@ public class WebServerProducer {
 
   public WebServerProducer(RabbitTemplate rabbitTemplate, RabbitProperties rabbitProperties) {
     this.rabbitTemplate = rabbitTemplate;
-    // TODO, convert from string body to file????
-/*
-    this.rabbitTemplate.setMessageConverter(
-        new AmqpProtobufMessageConverter(Model.getDefaultInstance()));
-*/
-
     this.rabbitProperties = rabbitProperties;
   }
-  
-  public void sendMessage(String message) {
 
-    logger.info("Sending in webserver");
+  public void sendMessage(String message) {
     rabbitTemplate.convertAndSend(rabbitProperties.webToParserTopic(),
         rabbitProperties.webToParserRoutingKey(),
         message);

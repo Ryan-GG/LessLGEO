@@ -19,6 +19,11 @@ public class ReducerHandler {
   }
 
 
+  /**
+   * See {@link less.lgeo.consumer.ReducerConsumer}
+   *
+   * @param message
+   */
   public void consume(Model message) {
     logger.info("Consuming: {}", message);
   }

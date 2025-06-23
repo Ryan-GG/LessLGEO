@@ -12,8 +12,10 @@ import static less.lgeo.util.ParseUtils.parseComment;
 import static less.lgeo.util.ParseUtils.toDouble;
 import static less.lgeo.util.ParseUtils.toInt;
 
-import java.io.File;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import less.lgeo.common.Color;
 import less.lgeo.common.LineType;
@@ -55,12 +58,12 @@ public class LDrawParser implements Parser<Model> {
     // return new File("TODO");
   }
 
-  public Model parse(File file) throws IOException {
+  public Model parse(String toParse) {
     Model.Builder modelBuilder = Model.newBuilder();
 
-    logger.info("Parsing file name: {}", file);
+    logger.info("Parsing file name: {}", toParse);
 
-    read(file).forEach(line -> {
+    read(toParse).forEach(line -> {
       logger.info("Parsing line, {}", line);
 
       List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
@@ -174,7 +177,12 @@ public class LDrawParser implements Parser<Model> {
         throw new IOException();
       }
 
-      Model parsedSubModel = parse(subFilePath.get().toFile());
+      BufferedReader reader = new BufferedReader(
+          new FileReader(subFilePath.get().toFile(), StandardCharsets.UTF_8));
+
+      String input = reader.lines().sequential().collect(Collectors.joining());
+
+      Model parsedSubModel = parse(input);
       this.modelCache.put(subFileName, parsedSubModel);
       return parsedSubModel;
 
