@@ -77,7 +77,7 @@ public class RenderMesh extends Application {
     try (BufferedReader reader = new BufferedReader(
         new FileReader(file, StandardCharsets.UTF_8))) {
 
-      String input = reader.lines().sequential().collect(Collectors.joining());
+      String input = reader.lines().sequential().collect(Collectors.joining("\n"));
 
       return Optional.of(
           new ModelJoiner(new LDrawParser(), new ConnectivityParser()).joinAndTransformModel(

@@ -37,7 +37,7 @@ public class ColorParser implements Parser<List<Color>> {
     try (
         BufferedReader reader = new BufferedReader(
             new FileReader(file, StandardCharsets.UTF_8))) {
-      String input = reader.lines().sequential().collect(Collectors.joining());
+      String input = reader.lines().sequential().collect(Collectors.joining("\n"));
       List<Color> colors = new ColorParser().parse(input);
       new ColorParser().writeToFile(colors, Path.of("colors.csv"));
     } catch (IOException e) {

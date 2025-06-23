@@ -180,7 +180,7 @@ public class LDrawParser implements Parser<Model> {
       BufferedReader reader = new BufferedReader(
           new FileReader(subFilePath.get().toFile(), StandardCharsets.UTF_8));
 
-      String input = reader.lines().sequential().collect(Collectors.joining());
+      String input = reader.lines().sequential().collect(Collectors.joining("\n"));
 
       Model parsedSubModel = parse(input);
       this.modelCache.put(subFileName, parsedSubModel);

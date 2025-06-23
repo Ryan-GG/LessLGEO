@@ -60,12 +60,12 @@ public class ModelMesh {
 
   private void setMesh(Model model) {
     List<Node> children = new ArrayList<>();
-    // children.addAll(drawVertices(model));
-    // children.addAll(drawLines(model));
+    children.addAll(drawVertices(model));
+    children.addAll(drawLines(model));
     children.addAll(drawQuadrilaterals(model));
     children.addAll(drawTriangles(model));
-    // children.addAll(drawOptionalLines(model));
-    // children.addAll(drawConnections(model));
+    children.addAll(drawOptionalLines(model));
+    children.addAll(drawConnections(model));
     mesh = new Group(children);
   }
 

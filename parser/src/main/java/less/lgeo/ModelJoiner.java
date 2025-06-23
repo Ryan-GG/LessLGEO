@@ -70,7 +70,7 @@ public class ModelJoiner {
     try (BufferedReader reader = new BufferedReader(
         new FileReader(connectionFile, StandardCharsets.UTF_8))) {
 
-      String input = reader.lines().sequential().collect(Collectors.joining());
+      String input = reader.lines().sequential().collect(Collectors.joining("\n"));
       Connection pieceConnection = connectivityParser.parse(input);
 
       return piece.toBuilder()
