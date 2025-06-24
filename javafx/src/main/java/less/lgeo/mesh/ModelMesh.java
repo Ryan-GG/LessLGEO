@@ -155,6 +155,7 @@ public class ModelMesh {
 
               return new PolyLine3D( points, LINE_WIDTH, TRIANGLE_COLOR );*/
 
+              // TODO, Need to actually parse the color and use here
               List<Float> trianglePoints = TriangleUtils.getVertices(triangle).stream()
                   .flatMap(vertex -> Stream.of(vertex.getX(), vertex.getY(), vertex.getZ()))
                   .map(Double::floatValue).toList();

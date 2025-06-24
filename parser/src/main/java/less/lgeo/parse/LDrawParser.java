@@ -2,6 +2,7 @@ package less.lgeo.parse;
 
 import static less.lgeo.common.CommonUtils.getLineType;
 import static less.lgeo.common.VertexUtils.getPoint;
+import static less.lgeo.entity.ColorEntity.toGpb;
 import static less.lgeo.primitive.LineUtils.getLine;
 import static less.lgeo.primitive.OptionalLineUtils.getOptionalLine;
 import static less.lgeo.primitive.QuadrilateralUtils.getQuadrilateral;
@@ -36,6 +37,7 @@ import less.lgeo.primitive.OptionalLine;
 import less.lgeo.primitive.Quadrilateral;
 import less.lgeo.primitive.SubFileReference;
 import less.lgeo.primitive.Triangle;
+import less.lgeo.service.ColorService;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,9 +49,11 @@ public class LDrawParser implements Parser<Model> {
   private static final Logger logger = LoggerFactory.getLogger(LDrawParser.class);
 
   private final Map<String, Model> modelCache;
+  private final ColorService colorService;
 
-  public LDrawParser() {
+  public LDrawParser(ColorService colorService) {
     this.modelCache = new ConcurrentHashMap<>();
+    this.colorService = colorService;
   }
 
   @Override
@@ -324,7 +328,7 @@ public class LDrawParser implements Parser<Model> {
    * @return parsed LDraw {@link Color}
    */
   private Color parseColor(int color) {
-    return Color.getDefaultInstance();
+    return toGpb(colorService.getColorByCode(color));
   }
 
 }

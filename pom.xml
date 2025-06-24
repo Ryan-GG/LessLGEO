@@ -63,6 +63,7 @@
     <module>messaging</module>
     <module>javafx</module>
     <module>web-server</module>
+    <module>database</module>
   </modules>
   <name>LessLGEO</name>
   <packaging>pom</packaging>

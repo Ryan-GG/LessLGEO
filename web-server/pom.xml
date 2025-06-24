@@ -25,31 +25,6 @@
       <version>3.5.1</version>
     </dependency>
     <dependency>
-      <artifactId>lombok</artifactId>
-      <groupId>org.projectlombok</groupId>
-      <version>1.18.38</version>
-    </dependency>
-    <dependency>
-      <artifactId>liquibase-core</artifactId>
-      <groupId>org.liquibase</groupId>
-      <version>4.32.0</version>
-    </dependency>
-    <dependency>
-      <artifactId>spring-boot-starter-data-jpa</artifactId>
-      <groupId>org.springframework.boot</groupId>
-      <version>3.5.1</version>
-    </dependency>
-    <dependency>
-      <artifactId>jakarta.persistence-api</artifactId>
-      <groupId>jakarta.persistence</groupId>
-      <version>3.1.0</version>
-    </dependency>
-    <dependency>
-      <artifactId>postgresql</artifactId>
-      <groupId>org.postgresql</groupId>
-      <version>42.7.7</version>
-    </dependency>
-    <dependency>
       <artifactId>modeling</artifactId>
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
@@ -57,6 +32,12 @@
     <dependency>
       <artifactId>messaging</artifactId>
       <groupId>less.lgeo</groupId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <artifactId>database</artifactId>
+      <groupId>less.lgeo</groupId>
+      <scope>compile</scope>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>

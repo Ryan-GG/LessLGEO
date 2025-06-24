@@ -19,8 +19,6 @@ message Model {
   repeated SubFileReference piece = 7;
 }
 
-
-
 message Line {
   LineType type = 1;
   Color color = 2;
