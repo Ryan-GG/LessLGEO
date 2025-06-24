@@ -1,5 +1,7 @@
 package less.lgeo;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import less.lgeo.primitive.Model;
 import less.lgeo.producer.ParserProducer;
 import less.lgeo.rabbitmq.RabbitProperties;
@@ -32,7 +34,17 @@ public class ParserHandler {
 
     Model joinedModel = modelJoiner.joinAndTransformModel(message);
 
+    writeToFile(joinedModel);
+    
     logger.info("Sending Model...");
     parserProducer.sendMessage(joinedModel);
+  }
+
+  private void writeToFile(Model model) {
+    try (FileOutputStream output = new FileOutputStream("model.gpb")) {
+      model.writeTo(output);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
   }
 }

@@ -1,12 +1,9 @@
 package less.lgeo.javafx;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
+import java.io.FileInputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import javafx.application.Application;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
@@ -15,11 +12,8 @@ import javafx.scene.Scene;
 import javafx.scene.SceneAntialiasing;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import less.lgeo.ModelJoiner;
 import less.lgeo.camera.CameraController;
 import less.lgeo.mesh.ModelMesh;
-import less.lgeo.parse.ConnectivityParser;
-import less.lgeo.parse.LDrawParser;
 import less.lgeo.primitive.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -74,16 +68,11 @@ public class RenderMesh extends Application {
    */
   private Optional<Model> getModel(File file) {
 
-    try (BufferedReader reader = new BufferedReader(
-        new FileReader(file, StandardCharsets.UTF_8))) {
-
-      String input = reader.lines().sequential().collect(Collectors.joining("\n"));
-
-      return Optional.of(
-          new ModelJoiner(new LDrawParser(), new ConnectivityParser()).joinAndTransformModel(
-              input));
+    try (FileInputStream input = new FileInputStream(file)) {
+      return Optional.of(Model.parseFrom(input));
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      e.printStackTrace();
     }
+    return Optional.empty();
   }
 } 

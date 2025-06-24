@@ -177,7 +177,12 @@ public class ModelMesh {
 
               MeshView triangleView = new MeshView(triangleMesh);
 
-              triangleView.setMaterial(new PhongMaterial(Color.RED));
+              java.awt.Color modelColor = java.awt.Color.decode(triangle.getColor().getValue());
+
+              Color javafxColor = Color.rgb(modelColor.getRed(), modelColor.getGreen(),
+                  modelColor.getBlue());
+
+              triangleView.setMaterial(new PhongMaterial(javafxColor));
 
               return triangleView;
             })
