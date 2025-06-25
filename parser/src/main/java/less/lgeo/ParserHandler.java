@@ -29,13 +29,18 @@ public class ParserHandler {
     SpringApplication.run(ParserHandler.class);
   }
 
-
+  /**
+   * See {@link less.lgeo.consumer.ParserConsumer}
+   *
+   * @param message
+   */
   public void consume(String message) {
 
     Model joinedModel = modelJoiner.joinAndTransformModel(message);
 
+    // TODO, this is for testing not prod, should remove, and 'writeFile'
     writeToFile(joinedModel);
-    
+
     logger.info("Sending Model...");
     parserProducer.sendMessage(joinedModel);
   }

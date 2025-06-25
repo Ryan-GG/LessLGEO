@@ -10,6 +10,7 @@ import static less.lgeo.primitive.ModelUtils.getTriangles;
 import static less.lgeo.primitive.OptionalLineUtils.getVertices;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -18,6 +19,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
@@ -30,9 +32,12 @@ import less.lgeo.primitive.TriangleUtils;
 import org.fxyz3d.geometry.Point3D;
 import org.fxyz3d.shapes.composites.PolyLine3D;
 import org.fxyz3d.shapes.primitives.CubeMesh;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ModelMesh {
 
+  private static final Logger logger = LoggerFactory.getLogger(ModelMesh.class);
   private static final Float CONN_SIZE = 1.0f;
   private static final Float SPHERE_RADIUS = 0.5f;
   private static final Float LINE_WIDTH = 0.5f;
@@ -118,16 +123,43 @@ public class ModelMesh {
     quadrilateralGroup.getChildren().addAll(
         getQuadrilaterals(model).stream()
             .map(quadrilateral -> {
-              List<Point3D> points = QuadrilateralUtils.getVertices(quadrilateral).stream()
-                  .map(ModelMesh::gpbToPoint3D)
-                  .map(point -> new Point3D(point.x, point.y,
-                      point.z))
-                  .collect(Collectors.toList());
 
-              // Add first point again to close loop
-              points.add(points.getFirst());
+              List<Float> quadrilateralPoints = QuadrilateralUtils.getVertices(quadrilateral)
+                  .stream()
+                  .flatMap(vertex -> Stream.of(vertex.getX(), vertex.getY(), vertex.getZ()))
+                  .map(Double::floatValue).toList();
 
-              return new PolyLine3D(points, LINE_WIDTH, QUAD_COLOR);
+              float[] array = new float[quadrilateralPoints.size()];
+              for (int i = 0; i < quadrilateralPoints.size(); i++) {
+
+                array[i] = quadrilateralPoints.get(i);
+              }
+
+              logger.info("quad points {}", Arrays.toString(array));
+
+              TriangleMesh quadMesh = new TriangleMesh();
+              quadMesh.getPoints().addAll(array);
+
+              quadMesh.getTexCoords().addAll(0, 0);
+
+              // One triangle face: uses point indices and texCoord indices
+              quadMesh.getFaces().addAll(
+                  0, 0, 1, 0, 3, 0, // Triangle 1: P0 → P1 → P3
+                  1, 0, 2, 0, 3, 0  // Triangle 2: P1 → P2 → P3
+              );
+
+              MeshView quadView = new MeshView(quadMesh);
+
+              java.awt.Color modelColor = java.awt.Color.decode(
+                  quadrilateral.getColor().getValue());
+
+              Color javafxColor = Color.rgb(modelColor.getRed(), modelColor.getGreen(),
+                  modelColor.getBlue());
+
+              quadView.setMaterial(new PhongMaterial(javafxColor));
+              quadView.setDrawMode(DrawMode.FILL);
+
+              return quadView;
             })
             .toList());
 
@@ -144,16 +176,6 @@ public class ModelMesh {
     triangleGroup.getChildren().addAll(
         getTriangles(model).stream()
             .map(triangle -> {
-              /*List<Point3D> points = TriangleUtils.getVertices( triangle ).stream()
-                  .map( ModelMesh::gpbToPoint3D )
-                  .map( point -> new Point3D( point.x, point.y,
-                      point.z ) )
-                  .collect( Collectors.toList() );
-
-              // Add first point again to close loop
-              points.add( points.getFirst() );
-
-              return new PolyLine3D( points, LINE_WIDTH, TRIANGLE_COLOR );*/
 
               // TODO, Need to actually parse the color and use here
               List<Float> trianglePoints = TriangleUtils.getVertices(triangle).stream()

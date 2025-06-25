@@ -31,6 +31,7 @@ import less.lgeo.common.Color;
 import less.lgeo.common.LineType;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.Vertex;
+import less.lgeo.entity.ColorEntity;
 import less.lgeo.primitive.Line;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.OptionalLine;
@@ -70,7 +71,7 @@ public class LDrawParser implements Parser<Model> {
     read(toParse).forEach(line -> {
       logger.info("Parsing line, {}", line);
 
-      List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
+      List<String> values = new ArrayList<>(List.of(line.trim().split("\\s+")));
       int commandValue = Integer.parseInt(values.removeFirst());
 
       LineType lineType = getLineType(commandValue);
@@ -156,9 +157,7 @@ public class LDrawParser implements Parser<Model> {
     return SubFileReference.newBuilder()
         .setFileName(subFileName)
         .setType(LineType.SUB_FILE_REF)
-        .setColor(
-            Color.getDefaultInstance()
-        )
+        .setColor(color)
         .setMatrix(parsedMatrix)
         .setSubModel(parsedSubFileModel)
         .build();
@@ -328,7 +327,13 @@ public class LDrawParser implements Parser<Model> {
    * @return parsed LDraw {@link Color}
    */
   private Color parseColor(int color) {
-    return toGpb(colorService.getColorByCode(color));
+
+    ColorEntity colorEntity = colorService.getColorByCode(color);
+    if (colorEntity == null) {
+      //TODO, This should be in the service
+      throw new IllegalStateException("Failed to receive color");
+    }
+    return toGpb(colorEntity);
   }
 
 }

@@ -6,6 +6,7 @@ import less.lgeo.entity.ColorEntity;
 import less.lgeo.repository.ColorRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,7 +24,7 @@ public class ColorService {
     return colorRepository.findAll();
   }
 
-  public ColorEntity getColorByCode(Integer colorCode) {
+  public @Nullable ColorEntity getColorByCode(Integer colorCode) {
     Optional<ColorEntity> optionalColor = colorRepository.findById(colorCode);
     if (optionalColor.isPresent()) {
       return optionalColor.get();
