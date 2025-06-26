@@ -39,10 +39,10 @@
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>less.lgeo</groupId>
       <artifactId>database</artifactId>
-      <version>0.0.1-SNAPSHOT</version>
+      <groupId>less.lgeo</groupId>
       <scope>compile</scope>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <modelVersion>4.0.0</modelVersion>

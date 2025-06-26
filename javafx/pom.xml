@@ -51,7 +51,6 @@
       <groupId>org.openjfx</groupId>
       <version>21.0.2</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.fxyz3d/fxyz3d -->
     <dependency>
       <artifactId>fxyz3d</artifactId>
       <groupId>org.fxyz3d</groupId>

@@ -51,16 +51,18 @@
   </dependencies>
 
   <modelVersion>4.0.0</modelVersion>
-
+  <packaging>jar</packaging>
   <parent>
     <artifactId>parent</artifactId>
     <groupId>less.lgeo</groupId>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
+
   <properties>
     <maven.compiler.source>23</maven.compiler.source>
     <maven.compiler.target>23</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
+  <version>0.0.1-SNAPSHOT</version>
 
 </project>
