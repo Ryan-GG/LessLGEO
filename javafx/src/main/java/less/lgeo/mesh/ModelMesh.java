@@ -120,52 +120,46 @@ public class ModelMesh {
    */
   private List<Node> drawQuadrilaterals( Model model ) {
     Group quadrilateralGroup = new Group();
-    quadrilateralGroup.getChildren().addAll(
-        getQuadrilaterals( model ).stream()
-            .map( quadrilateral -> {
 
-              List<Vertex> quadrilateralVertices = QuadrilateralUtils.getVertices( quadrilateral );
+    List<MeshView> quadMeshes = getQuadrilaterals( model )
+        .stream()
+        .map( quadrilateral -> {
 
-              List<Float> quadrilateralPoints = quadrilateralVertices.stream()
-                  .flatMap( vertex -> Stream.of( vertex.getX(), vertex.getY(), vertex.getZ() ) )
-                  .map( Double::floatValue )
-                  .toList();
+          List<Vertex> quadrilateralVertices = QuadrilateralUtils.getVertices( quadrilateral );
 
-              float[] array = new float[quadrilateralPoints.size()];
-              for ( int i = 0; i < quadrilateralPoints.size(); i++ ) {
+          float[] quadPointArray = new float[quadrilateralVertices.size() * 3];
 
-                array[i] = quadrilateralPoints.get( i );
-              }
+          for ( int i = 0; i < quadrilateralVertices.size(); i++ ) {
+            Vertex vertex = quadrilateralVertices.get( i );
+            quadPointArray[3 * i] = Double.valueOf( vertex.getX() ).floatValue();
+            quadPointArray[( 3 * i ) + 1] = Double.valueOf( vertex.getY() ).floatValue();
+            quadPointArray[( 3 * i ) + 2] = Double.valueOf( vertex.getZ() ).floatValue();
+          }
 
-              TriangleMesh quadMesh = new TriangleMesh( POINT_TEXCOORD );
-              quadMesh.getPoints().addAll( array );
-              quadMesh.getTexCoords().addAll( 0, 0 );
+          TriangleMesh quadMesh = new TriangleMesh( POINT_TEXCOORD );
+          quadMesh.getPoints().addAll( quadPointArray );
+          quadMesh.getTexCoords().addAll( 0, 0 );
 
-              // TODO, [Task] Implement BFC(Back Face Culling) Meta command #29
-              quadMesh.getFaces().addAll(
-                  0, 0,
-                  1, 0,
-                  2, 0,
-                  2, 0,
-                  3, 0,
-                  0, 0
-              );
+          // TODO, [Task] Implement BFC(Back Face Culling) Meta command #29
+          quadMesh.getFaces().addAll(
+              0, 0,
+              1, 0,
+              2, 0,
+              2, 0,
+              3, 0,
+              0, 0
+          );
 
-              MeshView quadView = new MeshView( quadMesh );
+          MeshView quadView = new MeshView( quadMesh );
+          quadView.setMaterial( new PhongMaterial( toJFXColor( quadrilateral.getColor() ) ) );
+          quadView.setDrawMode( DrawMode.FILL );
+          quadView.setCullFace( CullFace.NONE );
 
-              java.awt.Color modelColor = java.awt.Color.decode(
-                  quadrilateral.getColor().getValue() );
+          return quadView;
+        } )
+        .toList();
 
-              Color javafxColor = Color.rgb( modelColor.getRed(), modelColor.getGreen(),
-                  modelColor.getBlue() );
-
-              quadView.setMaterial( new PhongMaterial( javafxColor ) );
-              quadView.setDrawMode( DrawMode.FILL );
-              quadView.setCullFace( CullFace.NONE );
-
-              return quadView;
-            } )
-            .toList() );
+    quadrilateralGroup.getChildren().addAll( quadMeshes );
 
     return quadrilateralGroup.getChildren();
   }
@@ -266,6 +260,15 @@ public class ModelMesh {
     }
 
     return connectionGroup.getChildren();
+  }
+
+
+  private Color toJFXColor( less.lgeo.common.Color color ) {
+    java.awt.Color modelColor = java.awt.Color.decode(
+        color.getValue() );
+
+    return Color.rgb( modelColor.getRed(), modelColor.getGreen(),
+        modelColor.getBlue() );
   }
 
 }
