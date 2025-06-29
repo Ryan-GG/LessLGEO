@@ -9,7 +9,7 @@ import less.lgeo.common.VertexUtils;
 
 public class LineUtils {
 
-  public static Line getLine( Color color, Vertex p1, Vertex p2 ) {
+  public static Line toLine( Color color, Vertex p1, Vertex p2 ) {
     return Line.newBuilder()
         .setColor( color )
         .setP1( p1 )
@@ -24,7 +24,7 @@ public class LineUtils {
   public static Line transformLine( Line line, Optional<Matrix> transformationMatrix ) {
     Vertex p1 = line.getP1();
     Vertex p2 = line.getP2();
-    return getLine(
+    return toLine(
         line.getColor(),
         transformationMatrix.map( value -> VertexUtils.transform( p1, value ) ).orElse( p1 ),
         transformationMatrix.map( value -> VertexUtils.transform( p2, value ) ).orElse( p2 )

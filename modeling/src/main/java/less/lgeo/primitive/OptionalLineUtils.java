@@ -10,7 +10,7 @@ import less.lgeo.common.VertexUtils;
 public class OptionalLineUtils {
 
 
-  public static OptionalLine getOptionalLine( Color color, Vertex p1, Vertex p2, Vertex p3,
+  public static OptionalLine toOptionalLine( Color color, Vertex p1, Vertex p2, Vertex p3,
       Vertex p4 ) {
     return OptionalLine.newBuilder()
         .setColor( color )
@@ -36,7 +36,7 @@ public class OptionalLineUtils {
     Vertex p2 = optionalLine.getP2();
     Vertex p3 = optionalLine.getP1();
     Vertex p4 = optionalLine.getP2();
-    return getOptionalLine(
+    return toOptionalLine(
         optionalLine.getColor(),
         transformationMatrix.map( value -> VertexUtils.transform( p1, value ) ).orElse( p1 ),
         transformationMatrix.map( value -> VertexUtils.transform( p2, value ) ).orElse( p2 ),

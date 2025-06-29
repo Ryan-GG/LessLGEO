@@ -10,7 +10,6 @@ import static less.lgeo.primitive.ModelUtils.getTriangles;
 import static less.lgeo.primitive.OptionalLineUtils.getVertices;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -19,6 +18,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
+import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.Sphere;
@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
 
 public class ModelMesh {
 
-  private static final Logger logger = LoggerFactory.getLogger(ModelMesh.class);
+  private static final Logger logger = LoggerFactory.getLogger( ModelMesh.class );
   private static final Float CONN_SIZE = 1.0f;
   private static final Float SPHERE_RADIUS = 0.5f;
   private static final Float LINE_WIDTH = 0.5f;
@@ -51,44 +51,44 @@ public class ModelMesh {
 
   private Group mesh;
 
-  public ModelMesh(Model model) {
-    setMesh(model);
+  public ModelMesh( Model model ) {
+    setMesh( model );
   }
 
-  public static Point3D gpbToPoint3D(Vertex point) {
-    return new Point3D(point.getX(), point.getY(), point.getZ());
+  public static Point3D gpbToPoint3D( Vertex point ) {
+    return new Point3D( point.getX(), point.getY(), point.getZ() );
   }
 
   public Group getMesh() {
     return this.mesh;
   }
 
-  private void setMesh(Model model) {
+  private void setMesh( Model model ) {
     List<Node> children = new ArrayList<>();
-    children.addAll(drawVertices(model));
-    children.addAll(drawLines(model));
-    children.addAll(drawQuadrilaterals(model));
-    children.addAll(drawTriangles(model));
-    children.addAll(drawOptionalLines(model));
-    children.addAll(drawConnections(model));
-    mesh = new Group(children);
+    children.addAll( drawVertices( model ) );
+    children.addAll( drawLines( model ) );
+    children.addAll( drawQuadrilaterals( model ) );
+    children.addAll( drawTriangles( model ) );
+    children.addAll( drawOptionalLines( model ) );
+    children.addAll( drawConnections( model ) );
+    mesh = new Group( children );
   }
 
   /**
    * @param model gpb {@link Model}
    * @return {@link Vertex} as JavaFx {@link Node}
    */
-  private List<Node> drawVertices(Model model) {
+  private List<Node> drawVertices( Model model ) {
     Group verticesGroup = new Group();
-    Set<Vertex> vertexSet = ModelUtils.getVertices(model);
+    Set<Vertex> vertexSet = ModelUtils.getVertices( model );
 
-    for (Vertex v : vertexSet) {
-      Sphere point = new Sphere(SPHERE_RADIUS);
-      point.setTranslateX(v.getX());
-      point.setTranslateY(v.getY());
-      point.setTranslateZ(v.getZ());
-      point.setMaterial(new PhongMaterial(VERT_COLOR));
-      verticesGroup.getChildren().add(point);
+    for ( Vertex v : vertexSet ) {
+      Sphere point = new Sphere( SPHERE_RADIUS );
+      point.setTranslateX( v.getX() );
+      point.setTranslateY( v.getY() );
+      point.setTranslateZ( v.getZ() );
+      point.setMaterial( new PhongMaterial( VERT_COLOR ) );
+      verticesGroup.getChildren().add( point );
     }
 
     return verticesGroup.getChildren();
@@ -98,18 +98,18 @@ public class ModelMesh {
    * @param model gpb {@link Model}
    * @return {@link less.lgeo.primitive.Line} as JavaFX {@link Node}
    */
-  private List<Node> drawLines(Model model) {
+  private List<Node> drawLines( Model model ) {
     Group lineGroup = new Group();
-    lineGroup.getChildren().addAll(getLines(model).stream()
-        .map(line -> {
-          List<Point3D> points = LineUtils.getVertices(line).stream()
-              .map(ModelMesh::gpbToPoint3D)
-              .map(point -> new Point3D(point.x, point.y,
-                  point.z))
+    lineGroup.getChildren().addAll( getLines( model ).stream()
+        .map( line -> {
+          List<Point3D> points = LineUtils.getVertices( line ).stream()
+              .map( ModelMesh::gpbToPoint3D )
+              .map( point -> new Point3D( point.x, point.y,
+                  point.z ) )
               .toList();
-          return new PolyLine3D(points, LINE_WIDTH, LINE_COLOR);
-        })
-        .toList());
+          return new PolyLine3D( points, LINE_WIDTH, LINE_COLOR );
+        } )
+        .toList() );
 
     return lineGroup.getChildren();
   }
@@ -118,50 +118,54 @@ public class ModelMesh {
    * @param model gpb {@link Model}
    * @return {@link less.lgeo.primitive.Quadrilateral} as JavaFX {@link Node}
    */
-  private List<Node> drawQuadrilaterals(Model model) {
+  private List<Node> drawQuadrilaterals( Model model ) {
     Group quadrilateralGroup = new Group();
     quadrilateralGroup.getChildren().addAll(
-        getQuadrilaterals(model).stream()
-            .map(quadrilateral -> {
+        getQuadrilaterals( model ).stream()
+            .map( quadrilateral -> {
 
-              List<Float> quadrilateralPoints = QuadrilateralUtils.getVertices(quadrilateral)
-                  .stream()
-                  .flatMap(vertex -> Stream.of(vertex.getX(), vertex.getY(), vertex.getZ()))
-                  .map(Double::floatValue).toList();
+              List<Vertex> quadrilateralVertices = QuadrilateralUtils.getVertices( quadrilateral );
+
+              List<Float> quadrilateralPoints = quadrilateralVertices.stream()
+                  .flatMap( vertex -> Stream.of( vertex.getX(), vertex.getY(), vertex.getZ() ) )
+                  .map( Double::floatValue )
+                  .toList();
 
               float[] array = new float[quadrilateralPoints.size()];
-              for (int i = 0; i < quadrilateralPoints.size(); i++) {
+              for ( int i = 0; i < quadrilateralPoints.size(); i++ ) {
 
-                array[i] = quadrilateralPoints.get(i);
+                array[i] = quadrilateralPoints.get( i );
               }
 
-              logger.info("quad points {}", Arrays.toString(array));
+              TriangleMesh quadMesh = new TriangleMesh( POINT_TEXCOORD );
+              quadMesh.getPoints().addAll( array );
+              quadMesh.getTexCoords().addAll( 0, 0 );
 
-              TriangleMesh quadMesh = new TriangleMesh();
-              quadMesh.getPoints().addAll(array);
-
-              quadMesh.getTexCoords().addAll(0, 0);
-
-              // One triangle face: uses point indices and texCoord indices
+              // TODO, [Task] Implement BFC(Back Face Culling) Meta command #29
               quadMesh.getFaces().addAll(
-                  0, 0, 1, 0, 3, 0, // Triangle 1: P0 → P1 → P3
-                  1, 0, 2, 0, 3, 0  // Triangle 2: P1 → P2 → P3
+                  0, 0,
+                  1, 0,
+                  2, 0,
+                  2, 0,
+                  3, 0,
+                  0, 0
               );
 
-              MeshView quadView = new MeshView(quadMesh);
+              MeshView quadView = new MeshView( quadMesh );
 
               java.awt.Color modelColor = java.awt.Color.decode(
-                  quadrilateral.getColor().getValue());
+                  quadrilateral.getColor().getValue() );
 
-              Color javafxColor = Color.rgb(modelColor.getRed(), modelColor.getGreen(),
-                  modelColor.getBlue());
+              Color javafxColor = Color.rgb( modelColor.getRed(), modelColor.getGreen(),
+                  modelColor.getBlue() );
 
-              quadView.setMaterial(new PhongMaterial(javafxColor));
-              quadView.setDrawMode(DrawMode.FILL);
+              quadView.setMaterial( new PhongMaterial( javafxColor ) );
+              quadView.setDrawMode( DrawMode.FILL );
+              quadView.setCullFace( CullFace.NONE );
 
               return quadView;
-            })
-            .toList());
+            } )
+            .toList() );
 
     return quadrilateralGroup.getChildren();
   }
@@ -170,45 +174,47 @@ public class ModelMesh {
    * @param model gpb {@link Model}
    * @return {@link less.lgeo.primitive.Triangle} as JavaFX {@link Node}
    */
-  private List<Node> drawTriangles(Model model) {
+  private List<Node> drawTriangles( Model model ) {
     Group triangleGroup = new Group();
 
     triangleGroup.getChildren().addAll(
-        getTriangles(model).stream()
-            .map(triangle -> {
+        getTriangles( model ).stream()
+            .map( triangle -> {
 
               // TODO, Need to actually parse the color and use here
-              List<Float> trianglePoints = TriangleUtils.getVertices(triangle).stream()
-                  .flatMap(vertex -> Stream.of(vertex.getX(), vertex.getY(), vertex.getZ()))
-                  .map(Double::floatValue).toList();
+              List<Float> trianglePoints = TriangleUtils.getVertices( triangle ).stream()
+                  .flatMap( vertex -> Stream.of( vertex.getX(), vertex.getY(), vertex.getZ() ) )
+                  .map( Double::floatValue ).toList();
 
               float[] array = new float[trianglePoints.size()];
-              for (int i = 0; i < trianglePoints.size(); i++) {
-                array[i] = trianglePoints.get(i);
+              for ( int i = 0; i < trianglePoints.size(); i++ ) {
+                array[i] = trianglePoints.get( i );
               }
 
-              TriangleMesh triangleMesh = new TriangleMesh(POINT_TEXCOORD);
-              triangleMesh.getPoints().addAll(array);
+              TriangleMesh triangleMesh = new TriangleMesh( POINT_TEXCOORD );
+              triangleMesh.getPoints().addAll( array );
 
-              triangleMesh.getTexCoords().addAll(0, 0);
+              triangleMesh.getTexCoords().addAll( 0, 0 );
 
               // One triangle face: uses point indices and texCoord indices
               triangleMesh.getFaces().addAll(
                   0, 0, 1, 0, 2, 0
               );
 
-              MeshView triangleView = new MeshView(triangleMesh);
+              MeshView triangleView = new MeshView( triangleMesh );
 
-              java.awt.Color modelColor = java.awt.Color.decode(triangle.getColor().getValue());
+              java.awt.Color modelColor = java.awt.Color.decode( triangle.getColor().getValue() );
 
-              Color javafxColor = Color.rgb(modelColor.getRed(), modelColor.getGreen(),
-                  modelColor.getBlue());
+              Color javafxColor = Color.rgb( modelColor.getRed(), modelColor.getGreen(),
+                  modelColor.getBlue() );
 
-              triangleView.setMaterial(new PhongMaterial(javafxColor));
+              triangleView.setMaterial( new PhongMaterial( javafxColor ) );
+              triangleView.setDrawMode( DrawMode.FILL );
+              triangleView.setCullFace( CullFace.NONE );
 
               return triangleView;
-            })
-            .toList());
+            } )
+            .toList() );
 
     return triangleGroup.getChildren();
   }
@@ -217,24 +223,24 @@ public class ModelMesh {
    * @param model gpb {@link Model}
    * @return {@link less.lgeo.primitive.OptionalLine} as JavaFX {@link Node}
    */
-  private List<Node> drawOptionalLines(Model model) {
+  private List<Node> drawOptionalLines( Model model ) {
     Group optionalLineGroup = new Group();
 
     optionalLineGroup.getChildren().addAll(
-        getOptionalLines(model).stream()
-            .map(optionalLine -> {
-              List<Point3D> points = getVertices(optionalLine).stream()
-                  .map(ModelMesh::gpbToPoint3D)
-                  .map(point -> new Point3D(point.x, point.y,
-                      point.z))
-                  .collect(Collectors.toList());
+        getOptionalLines( model ).stream()
+            .map( optionalLine -> {
+              List<Point3D> points = getVertices( optionalLine ).stream()
+                  .map( ModelMesh::gpbToPoint3D )
+                  .map( point -> new Point3D( point.x, point.y,
+                      point.z ) )
+                  .collect( Collectors.toList() );
 
               // Add first point again to close loop
-              points.add(points.getFirst());
+              points.add( points.getFirst() );
 
-              return new PolyLine3D(points, LINE_WIDTH, OPTIONAL_LINE_COLOR);
-            })
-            .toList());
+              return new PolyLine3D( points, LINE_WIDTH, OPTIONAL_LINE_COLOR );
+            } )
+            .toList() );
 
     return optionalLineGroup.getChildren();
   }
@@ -243,20 +249,20 @@ public class ModelMesh {
    * @param model gpb {@link Model}
    * @return {@link less.lgeo.connectivity.Connection} as JavaFX {@link Node}
    */
-  private List<Node> drawConnections(Model model) {
+  private List<Node> drawConnections( Model model ) {
     Group connectionGroup = new Group();
 
-    Set<Vertex> vertexSet = getConnections(model).stream()
-        .flatMap(connection -> getConnectionPoints(connection).stream())
-        .collect(Collectors.toSet());
+    Set<Vertex> vertexSet = getConnections( model ).stream()
+        .flatMap( connection -> getConnectionPoints( connection ).stream() )
+        .collect( Collectors.toSet() );
 
-    for (Vertex vertex : vertexSet) {
-      CubeMesh connectionPoint = new CubeMesh(CONN_SIZE);
-      connectionPoint.setTranslateX(vertex.getX());
-      connectionPoint.setTranslateY(vertex.getY());
-      connectionPoint.setTranslateZ(vertex.getZ());
-      connectionPoint.setMaterial(new PhongMaterial(CONN_COLOR));
-      connectionGroup.getChildren().add(connectionPoint);
+    for ( Vertex vertex : vertexSet ) {
+      CubeMesh connectionPoint = new CubeMesh( CONN_SIZE );
+      connectionPoint.setTranslateX( vertex.getX() );
+      connectionPoint.setTranslateY( vertex.getY() );
+      connectionPoint.setTranslateZ( vertex.getZ() );
+      connectionPoint.setMaterial( new PhongMaterial( CONN_COLOR ) );
+      connectionGroup.getChildren().add( connectionPoint );
     }
 
     return connectionGroup.getChildren();
