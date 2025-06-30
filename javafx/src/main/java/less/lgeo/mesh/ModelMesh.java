@@ -36,14 +36,10 @@ public class ModelMesh {
 
   private static final Logger logger = LoggerFactory.getLogger( ModelMesh.class );
   private static final Float CONN_SIZE = 1.0f;
-  private static final Float SPHERE_RADIUS = 0.5f;
   private static final Float LINE_WIDTH = 0.5f;
 
   private static final Color CONN_COLOR = Color.DEEPPINK;
-  private static final Color VERT_COLOR = Color.WHITE;
-  private static final Color LINE_COLOR = Color.BLUE;
-  private static final Color QUAD_COLOR = Color.GREEN;
-  private static final Color TRIANGLE_COLOR = Color.YELLOW;
+  private static final Color LINE_COLOR = Color.BLACK;
   private static final Color OPTIONAL_LINE_COLOR = Color.PURPLE;
 
   private Group mesh;
@@ -126,6 +122,7 @@ public class ModelMesh {
               0, 0
           );
 
+          logger.info( "Color: {}", quadrilateral.getColor() );
           MeshView quadView = new MeshView( quadMesh );
           quadView.setMaterial( new PhongMaterial( toJFXColor( quadrilateral.getColor() ) ) );
           quadView.setDrawMode( DrawMode.FILL );

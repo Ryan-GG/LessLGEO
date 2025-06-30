@@ -1,5 +1,7 @@
 package less.lgeo.primitive;
 
+import static less.lgeo.common.CommonUtils.getColor;
+
 import java.util.List;
 import java.util.Optional;
 import less.lgeo.common.Color;
@@ -21,11 +23,12 @@ public class LineUtils {
     return List.of( line.getP1(), line.getP2() );
   }
 
-  public static Line transformLine( Line line, Optional<Matrix> transformationMatrix ) {
+  public static Line transformLine( Line line, Optional<Matrix> transformationMatrix,
+      Optional<Color> inheritedColor ) {
     Vertex p1 = line.getP1();
     Vertex p2 = line.getP2();
     return toLine(
-        line.getColor(),
+        getColor( inheritedColor, line.getColor() ),
         transformationMatrix.map( value -> VertexUtils.transform( p1, value ) ).orElse( p1 ),
         transformationMatrix.map( value -> VertexUtils.transform( p2, value ) ).orElse( p2 )
     );

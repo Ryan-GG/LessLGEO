@@ -7,6 +7,7 @@ import static less.lgeo.connectivity.GroupId.GROUP_STUD;
 import static less.lgeo.connectivity.GroupId.GROUP_ZERO;
 import static less.lgeo.connectivity.GroupId.UNRECOGNIZED;
 
+import java.util.Optional;
 import less.lgeo.connectivity.GroupId;
 import org.ejml.data.DMatrix4x4;
 
@@ -131,5 +132,21 @@ public class CommonUtils {
         m.getD(), m.getE(), m.getF(), m.getY(),
         m.getG(), m.getH(), m.getI(), m.getZ(), m.getScale()
     );
+  }
+
+  public static Color getColor( Optional<Color> inheritedColor, Color subPartColor ) {
+
+    return inheritedColor.map( color -> switch ( subPartColor.getId() ) {
+          case 16 -> subPartColor.toBuilder()
+              .setValue( color.getValue() )
+              .build();
+          case 24 -> subPartColor.toBuilder()
+              .setEdge( color.getEdge() )
+              .build();
+          default -> subPartColor;
+        } )
+        .orElse( subPartColor );
+
+
   }
 }

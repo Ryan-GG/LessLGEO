@@ -1,5 +1,7 @@
 package less.lgeo.primitive;
 
+import static less.lgeo.common.CommonUtils.getColor;
+
 import java.util.List;
 import java.util.Optional;
 import less.lgeo.common.Color;
@@ -23,12 +25,13 @@ public class TriangleUtils {
   }
 
   public static Triangle transformTriangle( Triangle triangle,
-      Optional<Matrix> transformationMatrix ) {
+      Optional<Matrix> transformationMatrix,
+      Optional<Color> inheritedColor ) {
     Vertex p1 = triangle.getP1();
     Vertex p2 = triangle.getP2();
     Vertex p3 = triangle.getP3();
     return toTriangle(
-        triangle.getColor(),
+        getColor( inheritedColor, triangle.getColor() ),
         transformationMatrix.map( value -> VertexUtils.transform( p1, value ) ).orElse( p1 ),
         transformationMatrix.map( value -> VertexUtils.transform( p2, value ) ).orElse( p2 ),
         transformationMatrix.map( value -> VertexUtils.transform( p3, value ) ).orElse( p3 )
