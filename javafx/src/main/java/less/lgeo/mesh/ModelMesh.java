@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.paint.Color;
@@ -21,12 +20,10 @@ import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.CullFace;
 import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
-import javafx.scene.shape.Sphere;
 import javafx.scene.shape.TriangleMesh;
 import less.lgeo.common.Vertex;
 import less.lgeo.primitive.LineUtils;
 import less.lgeo.primitive.Model;
-import less.lgeo.primitive.ModelUtils;
 import less.lgeo.primitive.QuadrilateralUtils;
 import less.lgeo.primitive.TriangleUtils;
 import org.fxyz3d.geometry.Point3D;
@@ -65,33 +62,12 @@ public class ModelMesh {
 
   private void setMesh( Model model ) {
     List<Node> children = new ArrayList<>();
-    children.addAll( drawVertices( model ) );
     children.addAll( drawLines( model ) );
     children.addAll( drawQuadrilaterals( model ) );
     children.addAll( drawTriangles( model ) );
     children.addAll( drawOptionalLines( model ) );
     children.addAll( drawConnections( model ) );
     mesh = new Group( children );
-  }
-
-  /**
-   * @param model gpb {@link Model}
-   * @return {@link Vertex} as JavaFx {@link Node}
-   */
-  private List<Node> drawVertices( Model model ) {
-    Group verticesGroup = new Group();
-    Set<Vertex> vertexSet = ModelUtils.getVertices( model );
-
-    for ( Vertex v : vertexSet ) {
-      Sphere point = new Sphere( SPHERE_RADIUS );
-      point.setTranslateX( v.getX() );
-      point.setTranslateY( v.getY() );
-      point.setTranslateZ( v.getZ() );
-      point.setMaterial( new PhongMaterial( VERT_COLOR ) );
-      verticesGroup.getChildren().add( point );
-    }
-
-    return verticesGroup.getChildren();
   }
 
   /**
@@ -121,23 +97,23 @@ public class ModelMesh {
   private List<Node> drawQuadrilaterals( Model model ) {
     Group quadrilateralGroup = new Group();
 
-    List<MeshView> quadMeshes = getQuadrilaterals( model )
+    List<MeshView> quadMeshViews = getQuadrilaterals( model )
         .stream()
         .map( quadrilateral -> {
 
           List<Vertex> quadrilateralVertices = QuadrilateralUtils.getVertices( quadrilateral );
 
-          float[] quadPointArray = new float[quadrilateralVertices.size() * 3];
+          float[] quadPointsArray = new float[quadrilateralVertices.size() * 3];
 
           for ( int i = 0; i < quadrilateralVertices.size(); i++ ) {
             Vertex vertex = quadrilateralVertices.get( i );
-            quadPointArray[3 * i] = Double.valueOf( vertex.getX() ).floatValue();
-            quadPointArray[( 3 * i ) + 1] = Double.valueOf( vertex.getY() ).floatValue();
-            quadPointArray[( 3 * i ) + 2] = Double.valueOf( vertex.getZ() ).floatValue();
+            quadPointsArray[3 * i] = Double.valueOf( vertex.getX() ).floatValue();
+            quadPointsArray[( 3 * i ) + 1] = Double.valueOf( vertex.getY() ).floatValue();
+            quadPointsArray[( 3 * i ) + 2] = Double.valueOf( vertex.getZ() ).floatValue();
           }
 
           TriangleMesh quadMesh = new TriangleMesh( POINT_TEXCOORD );
-          quadMesh.getPoints().addAll( quadPointArray );
+          quadMesh.getPoints().addAll( quadPointsArray );
           quadMesh.getTexCoords().addAll( 0, 0 );
 
           // TODO, [Task] Implement BFC(Back Face Culling) Meta command #29
@@ -159,7 +135,7 @@ public class ModelMesh {
         } )
         .toList();
 
-    quadrilateralGroup.getChildren().addAll( quadMeshes );
+    quadrilateralGroup.getChildren().addAll( quadMeshViews );
 
     return quadrilateralGroup.getChildren();
   }
@@ -171,45 +147,37 @@ public class ModelMesh {
   private List<Node> drawTriangles( Model model ) {
     Group triangleGroup = new Group();
 
-    triangleGroup.getChildren().addAll(
-        getTriangles( model ).stream()
-            .map( triangle -> {
+    List<MeshView> triangleMeshViews = getTriangles( model ).stream()
+        .map( triangle -> {
 
-              // TODO, Need to actually parse the color and use here
-              List<Float> trianglePoints = TriangleUtils.getVertices( triangle ).stream()
-                  .flatMap( vertex -> Stream.of( vertex.getX(), vertex.getY(), vertex.getZ() ) )
-                  .map( Double::floatValue ).toList();
+          List<Vertex> triangleVertices = TriangleUtils.getVertices( triangle );
 
-              float[] array = new float[trianglePoints.size()];
-              for ( int i = 0; i < trianglePoints.size(); i++ ) {
-                array[i] = trianglePoints.get( i );
-              }
+          float[] trianglePointsArray = new float[triangleVertices.size() * 3];
 
-              TriangleMesh triangleMesh = new TriangleMesh( POINT_TEXCOORD );
-              triangleMesh.getPoints().addAll( array );
+          for ( int i = 0; i < triangleVertices.size(); i++ ) {
+            Vertex vertex = triangleVertices.get( i );
+            trianglePointsArray[3 * i] = Double.valueOf( vertex.getX() ).floatValue();
+            trianglePointsArray[( 3 * i ) + 1] = Double.valueOf( vertex.getY() ).floatValue();
+            trianglePointsArray[( 3 * i ) + 2] = Double.valueOf( vertex.getZ() ).floatValue();
+          }
 
-              triangleMesh.getTexCoords().addAll( 0, 0 );
+          TriangleMesh triangleMesh = new TriangleMesh( POINT_TEXCOORD );
+          triangleMesh.getPoints().addAll( trianglePointsArray );
+          triangleMesh.getTexCoords().addAll( 0, 0 );
+          triangleMesh.getFaces().addAll(
+              0, 0, 1, 0, 2, 0
+          );
 
-              // One triangle face: uses point indices and texCoord indices
-              triangleMesh.getFaces().addAll(
-                  0, 0, 1, 0, 2, 0
-              );
+          MeshView triangleView = new MeshView( triangleMesh );
+          triangleView.setMaterial( new PhongMaterial( toJFXColor( triangle.getColor() ) ) );
+          triangleView.setDrawMode( DrawMode.FILL );
+          triangleView.setCullFace( CullFace.NONE );
 
-              MeshView triangleView = new MeshView( triangleMesh );
+          return triangleView;
+        } )
+        .toList();
 
-              java.awt.Color modelColor = java.awt.Color.decode( triangle.getColor().getValue() );
-
-              Color javafxColor = Color.rgb( modelColor.getRed(), modelColor.getGreen(),
-                  modelColor.getBlue() );
-
-              triangleView.setMaterial( new PhongMaterial( javafxColor ) );
-              triangleView.setDrawMode( DrawMode.FILL );
-              triangleView.setCullFace( CullFace.NONE );
-
-              return triangleView;
-            } )
-            .toList() );
-
+    triangleGroup.getChildren().addAll( triangleMeshViews );
     return triangleGroup.getChildren();
   }
 
@@ -264,11 +232,8 @@ public class ModelMesh {
 
 
   private Color toJFXColor( less.lgeo.common.Color color ) {
-    java.awt.Color modelColor = java.awt.Color.decode(
-        color.getValue() );
-
-    return Color.rgb( modelColor.getRed(), modelColor.getGreen(),
-        modelColor.getBlue() );
+    java.awt.Color modelColor = java.awt.Color.decode( color.getValue() );
+    return Color.rgb( modelColor.getRed(), modelColor.getGreen(), modelColor.getBlue() );
   }
 
 }
