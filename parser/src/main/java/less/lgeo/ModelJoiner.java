@@ -11,6 +11,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import less.lgeo.connectivity.Connection;
 import less.lgeo.parse.ConnectivityParser;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ModelJoiner {
 
-  private static final Logger logger = LoggerFactory.getLogger(ModelJoiner.class);
+  private static final Logger logger = LoggerFactory.getLogger( ModelJoiner.class );
   private final LDrawParser lDrawParser;
   private final ConnectivityParser connectivityParser;
 
@@ -40,48 +41,51 @@ public class ModelJoiner {
     this.connectivityParser = connectivityParser;
   }
 
-  public Model joinAndTransformModel(String toParse) {
+  public Model joinAndTransformModel( String toParse ) {
 
-    Model parentModel = getLDrawModel(toParse);
+    Model parentModel = getLDrawModel( toParse );
 
-    if (parentModel != null) {
+    if ( parentModel != null ) {
       List<SubFileReference> connectedPieces = parentModel.getPieceList().stream()
-          .map(this::getPieceWithConnection)
+          .map( this::getPieceWithConnection )
+          .filter( Objects::nonNull )
           .toList();
 
-      parentModel = parentModel.toBuilder()
-          .clearPiece()
-          .addAllPiece(connectedPieces)
-          .build();
+      if ( !connectedPieces.isEmpty() ) {
+        parentModel = parentModel.toBuilder()
+            .clearPiece()
+            .addAllPiece( connectedPieces )
+            .build();
+      }
     }
 
-    return transformModel(parentModel);
+    return transformModel( parentModel );
   }
 
-  private @Nullable Model getLDrawModel(String toParse) {
-    return lDrawParser.parse(toParse);
+  private @Nullable Model getLDrawModel( String toParse ) {
+    return lDrawParser.parse( toParse );
   }
 
-  private @Nullable SubFileReference getPieceWithConnection(SubFileReference piece) {
+  private @Nullable SubFileReference getPieceWithConnection( SubFileReference piece ) {
 
-    File connectionFile = new File("connectivity",
-        changeFileExtension(piece.getFileName(), PART_EXT));
+    File connectionFile = new File( "connectivity",
+        changeFileExtension( piece.getFileName(), PART_EXT ) );
 
-    try (BufferedReader reader = new BufferedReader(
-        new FileReader(connectionFile, StandardCharsets.UTF_8))) {
+    try ( BufferedReader reader = new BufferedReader(
+        new FileReader( connectionFile, StandardCharsets.UTF_8 ) ) ) {
 
-      String input = reader.lines().sequential().collect(Collectors.joining("\n"));
-      Connection pieceConnection = connectivityParser.parse(input);
+      String input = reader.lines().sequential().collect( Collectors.joining( "\n" ) );
+      Connection pieceConnection = connectivityParser.parse( input );
 
       return piece.toBuilder()
           .clearPieceConnection()
-          .setPieceConnection(pieceConnection)
+          .setPieceConnection( pieceConnection )
           .build();
-    } catch (IOException e) {
-      logger.info("Failed to open connectivity file {}", connectionFile.getAbsolutePath());
+    } catch ( IOException e ) {
+      logger.info( "Failed to open connectivity file {}", connectionFile.getAbsolutePath() );
     }
 
-    logger.warn("Piece Connection is Null");
+    logger.warn( "Piece Connection is Null" );
     return null;
   }
 }

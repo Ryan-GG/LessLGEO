@@ -326,12 +326,13 @@ public class LDrawParser implements Parser<Model> {
    *
    * @return parsed LDraw {@link Color}
    */
-  private Color parseColor( int color ) {
+  private Color parseColor( int colorCode ) {
 
-    ColorEntity colorEntity = colorService.getColorByCode( color );
+    ColorEntity colorEntity = colorService.getColorByCode( colorCode );
     if ( colorEntity == null ) {
       //TODO, This should be in the service
-      throw new IllegalStateException( "Failed to receive color" );
+      logger.error( "Failed to find color, {}", colorCode );
+      return Color.getDefaultInstance();
     }
     return toGpb( colorEntity );
   }

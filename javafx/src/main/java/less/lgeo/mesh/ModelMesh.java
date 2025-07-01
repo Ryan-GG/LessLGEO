@@ -29,12 +29,9 @@ import less.lgeo.primitive.TriangleUtils;
 import org.fxyz3d.geometry.Point3D;
 import org.fxyz3d.shapes.composites.PolyLine3D;
 import org.fxyz3d.shapes.primitives.CubeMesh;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class ModelMesh {
 
-  private static final Logger logger = LoggerFactory.getLogger( ModelMesh.class );
   private static final Float CONN_SIZE = 1.0f;
   private static final Float LINE_WIDTH = 0.5f;
 
@@ -122,7 +119,6 @@ public class ModelMesh {
               0, 0
           );
 
-          logger.info( "Color: {}", quadrilateral.getColor() );
           MeshView quadView = new MeshView( quadMesh );
           quadView.setMaterial( new PhongMaterial( toJFXColor( quadrilateral.getColor() ) ) );
           quadView.setDrawMode( DrawMode.FILL );
