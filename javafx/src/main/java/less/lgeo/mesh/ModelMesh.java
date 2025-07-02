@@ -69,17 +69,19 @@ public class ModelMesh {
    */
   private List<Node> drawLines( Model model ) {
     Group lineGroup = new Group();
-    lineGroup.getChildren().addAll( getLines( model ).stream()
+
+    List<PolyLine3D> lines = getLines( model ).stream()
         .map( line -> {
           List<Point3D> points = LineUtils.getVertices( line ).stream()
               .map( ModelMesh::gpbToPoint3D )
               .map( point -> new Point3D( point.x, point.y,
                   point.z ) )
               .toList();
-          return new PolyLine3D( points, LINE_WIDTH, LINE_COLOR );
+          return new PolyLine3D( points, LINE_WIDTH, getEdgeColor( line.getColor() ) );
         } )
-        .toList() );
+        .toList();
 
+    lineGroup.getChildren().addAll( lines );
     return lineGroup.getChildren();
   }
 
@@ -120,7 +122,7 @@ public class ModelMesh {
           );
 
           MeshView quadView = new MeshView( quadMesh );
-          quadView.setMaterial( new PhongMaterial( toJFXColor( quadrilateral.getColor() ) ) );
+          quadView.setMaterial( new PhongMaterial( getPartColor( quadrilateral.getColor() ) ) );
           quadView.setDrawMode( DrawMode.FILL );
           quadView.setCullFace( CullFace.NONE );
 
@@ -162,7 +164,7 @@ public class ModelMesh {
           );
 
           MeshView triangleView = new MeshView( triangleMesh );
-          triangleView.setMaterial( new PhongMaterial( toJFXColor( triangle.getColor() ) ) );
+          triangleView.setMaterial( new PhongMaterial( getPartColor( triangle.getColor() ) ) );
           triangleView.setDrawMode( DrawMode.FILL );
           triangleView.setCullFace( CullFace.NONE );
 
@@ -181,21 +183,22 @@ public class ModelMesh {
   private List<Node> drawOptionalLines( Model model ) {
     Group optionalLineGroup = new Group();
 
-    optionalLineGroup.getChildren().addAll(
-        getOptionalLines( model ).stream()
-            .map( optionalLine -> {
-              List<Point3D> points = getVertices( optionalLine ).stream()
-                  .map( ModelMesh::gpbToPoint3D )
-                  .map( point -> new Point3D( point.x, point.y,
-                      point.z ) )
-                  .collect( Collectors.toList() );
+    List<PolyLine3D> optionalLines = getOptionalLines( model ).stream()
+        .map( optionalLine -> {
+          List<Point3D> points = getVertices( optionalLine ).stream()
+              .map( ModelMesh::gpbToPoint3D )
+              .map( point -> new Point3D( point.x, point.y,
+                  point.z ) )
+              .collect( Collectors.toList() );
 
-              // Add first point again to close loop
-              points.add( points.getFirst() );
+          // Add first point again to close loop
+          points.add( points.getFirst() );
 
-              return new PolyLine3D( points, LINE_WIDTH, OPTIONAL_LINE_COLOR );
-            } )
-            .toList() );
+          return new PolyLine3D( points, LINE_WIDTH, getEdgeColor( optionalLine.getColor() ) );
+        } )
+        .toList();
+
+    optionalLineGroup.getChildren().addAll( optionalLines );
 
     return optionalLineGroup.getChildren();
   }
@@ -224,9 +227,22 @@ public class ModelMesh {
   }
 
 
-  private Color toJFXColor( less.lgeo.common.Color color ) {
+  private Color getEdgeColor( less.lgeo.common.Color color ) {
+    java.awt.Color edgeColor = java.awt.Color.decode( color.getEdge() );
+
+    double opacity = color.getAlpha() != 128 ? color.getAlpha() / 255.0 : 0;
+
+    return Color.rgb( edgeColor.getRed(), edgeColor.getGreen(), edgeColor.getBlue(),
+        opacity );
+  }
+
+  private Color getPartColor( less.lgeo.common.Color color ) {
     java.awt.Color modelColor = java.awt.Color.decode( color.getValue() );
-    return Color.rgb( modelColor.getRed(), modelColor.getGreen(), modelColor.getBlue() );
+
+    double opacity = color.getAlpha() != 128 ? color.getAlpha() / 255.0 : 0;
+
+    return Color.rgb( modelColor.getRed(), modelColor.getGreen(), modelColor.getBlue(),
+        opacity );
   }
 
 }
