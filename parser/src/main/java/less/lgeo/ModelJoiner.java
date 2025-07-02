@@ -4,15 +4,10 @@ import static less.lgeo.common.CommonUtils.PART_EXT;
 import static less.lgeo.common.CommonUtils.changeFileExtension;
 import static less.lgeo.primitive.ModelUtils.transformModel;
 
-import jakarta.annotation.Nullable;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 import less.lgeo.connectivity.Connection;
 import less.lgeo.parse.ConnectivityParser;
 import less.lgeo.parse.LDrawParser;
@@ -20,6 +15,7 @@ import less.lgeo.primitive.Model;
 import less.lgeo.primitive.SubFileReference;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 /**
@@ -45,36 +41,31 @@ public class ModelJoiner {
 
     Model parentModel = getLDrawModel( toParse );
 
-    if ( parentModel != null ) {
-      List<SubFileReference> connectedPieces = parentModel.getPieceList().stream()
-          .map( this::getPieceWithConnection )
-          .filter( Objects::nonNull )
-          .toList();
+    List<SubFileReference> connectedPieces = parentModel.getPieceList().stream()
+        .map( this::joinPieceWithConnection )
+        .toList();
 
-      if ( !connectedPieces.isEmpty() ) {
-        parentModel = parentModel.toBuilder()
-            .clearPiece()
-            .addAllPiece( connectedPieces )
-            .build();
-      }
+    if ( !connectedPieces.isEmpty() ) {
+      parentModel = parentModel.toBuilder()
+          .clearPiece()
+          .addAllPiece( connectedPieces )
+          .build();
     }
 
     return transformModel( parentModel );
   }
 
-  private @Nullable Model getLDrawModel( String toParse ) {
+  private @NonNull Model getLDrawModel( String toParse ) {
     return lDrawParser.parse( toParse );
   }
 
-  private @Nullable SubFileReference getPieceWithConnection( SubFileReference piece ) {
+  private @NonNull SubFileReference joinPieceWithConnection( SubFileReference piece ) {
 
     File connectionFile = new File( "connectivity",
         changeFileExtension( piece.getFileName(), PART_EXT ) );
 
-    try ( BufferedReader reader = new BufferedReader(
-        new FileReader( connectionFile, StandardCharsets.UTF_8 ) ) ) {
-
-      String input = reader.lines().sequential().collect( Collectors.joining( "\n" ) );
+    try {
+      String input = Files.readString( connectionFile.toPath() );
       Connection pieceConnection = connectivityParser.parse( input );
 
       return piece.toBuilder()
@@ -86,6 +77,6 @@ public class ModelJoiner {
     }
 
     logger.warn( "Piece Connection is Null" );
-    return null;
+    return piece;
   }
 }
