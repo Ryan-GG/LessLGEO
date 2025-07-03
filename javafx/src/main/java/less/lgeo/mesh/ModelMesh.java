@@ -227,10 +227,16 @@ public class ModelMesh {
   }
 
 
+  /**
+   * Alpha 128 is the transparent key mapped int, defaulting to .01, just to give an ooutline
+   *
+   * @param color
+   * @return
+   */
   private Color getEdgeColor( less.lgeo.common.Color color ) {
     java.awt.Color edgeColor = java.awt.Color.decode( color.getEdge() );
 
-    double opacity = color.getAlpha() != 128 ? color.getAlpha() / 255.0 : 0;
+    double opacity = color.getAlpha() != 128 ? color.getAlpha() / 255.0 : 0.01;
 
     return Color.rgb( edgeColor.getRed(), edgeColor.getGreen(), edgeColor.getBlue(),
         opacity );

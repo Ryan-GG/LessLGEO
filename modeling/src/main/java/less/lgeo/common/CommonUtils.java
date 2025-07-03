@@ -137,12 +137,44 @@ public class CommonUtils {
   public static Color getColor( Optional<Color> inheritedColor, Color subPartColor ) {
 
     return inheritedColor.map( color -> switch ( subPartColor.getId() ) {
-          case 16 -> subPartColor.toBuilder()
-              .setValue( color.getValue() )
-              .build();
-          case 24 -> subPartColor.toBuilder()
-              .setEdge( color.getEdge() )
-              .build();
+          case 16 -> {
+            Color.Builder builder = subPartColor.toBuilder();
+
+            builder.setValue( color.getValue() );
+
+            if ( builder.hasAlpha() ) {
+              builder.setAlpha( color.getAlpha() );
+            }
+
+            if ( builder.hasLuminance() ) {
+              builder.setLuminance( color.getLuminance() );
+            }
+
+            if ( builder.hasFinish() ) {
+              builder.setFinish( color.getFinish() );
+            }
+
+            yield builder.build();
+          }
+          case 24 -> {
+            Color.Builder builder = subPartColor.toBuilder();
+
+            builder.setEdge( color.getEdge() );
+
+            if ( builder.hasAlpha() ) {
+              builder.setAlpha( color.getAlpha() );
+            }
+
+            if ( builder.hasLuminance() ) {
+              builder.setLuminance( color.getLuminance() );
+            }
+
+            if ( builder.hasFinish() ) {
+              builder.setFinish( color.getFinish() );
+            }
+
+            yield builder.build();
+          }
           default -> subPartColor;
         } )
         .orElse( subPartColor );
