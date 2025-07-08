@@ -9,14 +9,17 @@ import org.slf4j.LoggerFactory;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
+/**
+ * Fetches {@link ColorEntity} from the database
+ */
 @Service
 public class ColorService {
 
-  private static final Logger logger = LoggerFactory.getLogger(ColorService.class);
+  private static final Logger logger = LoggerFactory.getLogger( ColorService.class );
 
   private final ColorRepository colorRepository;
 
-  public ColorService(ColorRepository colorRepository) {
+  public ColorService( ColorRepository colorRepository ) {
     this.colorRepository = colorRepository;
   }
 
@@ -24,12 +27,15 @@ public class ColorService {
     return colorRepository.findAll();
   }
 
-  public @Nullable ColorEntity getColorByCode(Integer colorCode) {
-    Optional<ColorEntity> optionalColor = colorRepository.findById(colorCode);
-    if (optionalColor.isPresent()) {
+  /**
+   * @return database entity by Color Code(Id), Null if no corresponding color is found
+   */
+  public @Nullable ColorEntity getColorByCode( Integer colorCode ) {
+    Optional<ColorEntity> optionalColor = colorRepository.findById( colorCode );
+    if ( optionalColor.isPresent() ) {
       return optionalColor.get();
     }
-    logger.info("Color with code: {} doesn't exist", colorCode);
+    logger.warn( "Color with code: {} doesn't exist", colorCode );
     return null;
   }
 }
