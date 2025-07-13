@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,10 +50,17 @@ public class ColorController {
   public ResponseEntity<Void> insertColor(@RequestBody String colorMessage) {
     Color recievedColor = webServerProducer.sendAndReceiveColor(colorMessage);
     if (recievedColor != null) {
+      logger.info("Inserting {}", recievedColor);
       colorService.insertColor(recievedColor);
       return ResponseEntity.ok().build();
     }
     return ResponseEntity.internalServerError().build();
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Void> deleteColor(@PathVariable Integer id) {
+    colorService.deleteColorById(id);
+    return ResponseEntity.ok().build();
   }
 
 }

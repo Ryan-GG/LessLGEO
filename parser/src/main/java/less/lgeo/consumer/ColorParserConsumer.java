@@ -26,8 +26,12 @@ public class ColorParserConsumer {
   }
 
   @RabbitListener(queues = "#{rabbitRequestReplyProperties.getQueue()}")
-  public @Nullable Color handleMessage(@Payload String message) {
-    return colorParserHandler.consume(message);
+  public @Nullable byte[] handleMessage(@Payload String message) {
+    Color receivedColor = colorParserHandler.consume(message);
+    if (receivedColor == null) {
+      return null;
+    }
+    return receivedColor.toByteArray();
   }
 
 }

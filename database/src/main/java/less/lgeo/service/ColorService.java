@@ -45,4 +45,8 @@ public class ColorService {
     ColorEntity entity = ColorEntity.fromGpb(toInsert);
     colorRepository.save(entity);
   }
+
+  public void deleteColorById(@NonNull Integer id) {
+    colorRepository.deleteById(id);
+  }
 }

@@ -10,7 +10,6 @@ import org.springframework.amqp.core.Message;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
-import org.springframework.messaging.converter.ProtobufMessageConverter;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -40,7 +39,6 @@ public class WebServerProducer {
   }
 
   public @Nullable Color sendAndReceiveColor(String message) {
-
     Message receivedMessage = rabbitTemplate.sendAndReceive(
         rabbitRequestReplyProperties.getExchange(),
         rabbitRequestReplyProperties.getRoutingKey(),
@@ -50,8 +48,6 @@ public class WebServerProducer {
       return null;
     }
     try {
-      receivedMessage.getMessageProperties()
-          .setContentType(ProtobufMessageConverter.PROTOBUF.toString());
       return Color.parseFrom(receivedMessage.getBody());
     } catch (InvalidProtocolBufferException e) {
       logger.error("Received Message: {}", receivedMessage);
