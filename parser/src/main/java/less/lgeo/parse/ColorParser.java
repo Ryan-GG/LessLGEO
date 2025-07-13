@@ -4,26 +4,22 @@ import static less.lgeo.common.CommonUtils.getLineType;
 import static less.lgeo.util.ParseUtils.isMetaCommand;
 import static less.lgeo.util.ParseUtils.toInt;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 import less.lgeo.common.Color;
 import less.lgeo.common.LineType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ColorParser implements Parser<List<Color>> {
+public class ColorParser implements Parser<Color> {
 
   public static final String COLOR_META_COMMAND = "!COLOUR";
   private static final Logger logger = LoggerFactory.getLogger(ColorParser.class);
@@ -31,60 +27,31 @@ public class ColorParser implements Parser<List<Color>> {
   public ColorParser() {
   }
 
-  public static void main(String[] args) {
-    File file = new File(args[0]);
+  @Override
+  public @Nullable Color parse(String colorMessage) {
 
-    try (
-        BufferedReader reader = new BufferedReader(
-            new FileReader(file, StandardCharsets.UTF_8))) {
-      String input = reader.lines().sequential().collect(Collectors.joining("\n"));
-      List<Color> colors = new ColorParser().parse(input);
-      new ColorParser().writeToFile(colors, Path.of("colors.csv"));
-    } catch (IOException e) {
-      throw new RuntimeException(e);
+    logger.info("Parsing message, {}", colorMessage);
+
+    Iterator<String> iterator = new ArrayList<>(
+        List.of(colorMessage.trim().split("\\s+"))).iterator();
+    int commandValue = Integer.parseInt(iterator.next());
+
+    if (getLineType(commandValue) != LineType.COMMENT_OR_META_CMD) {
+      return null;
     }
+
+    String next = iterator.next();
+    if (isMetaCommand(next, COLOR_META_COMMAND)) {
+      return buildColor(iterator);
+    } else {
+      logger.warn("Found different Meta-Command, {}", colorMessage);
+    }
+
+    return null;
   }
 
   @Override
-  public List<Color> parse(String file) {
-
-    List<Color> colors = new ArrayList<>();
-
-    logger.info("Parsing file name: {}", file);
-
-    read(file).forEach(line -> {
-      logger.info("Parsing line, {}", line);
-
-      logger.info(List.of(line.trim().split("\\s+")).toString());
-
-      Iterator<String> iterator = new ArrayList<>(List.of(line.trim().split("\\s+"))).iterator();
-      int commandValue = Integer.parseInt(iterator.next());
-
-      LineType lineType = getLineType(commandValue);
-
-      switch (lineType) {
-        case COMMENT_OR_META_CMD -> {
-          if (!iterator.hasNext()) {
-            logger.warn("Found '0' line");
-          } else {
-            String next = iterator.next();
-            if (isMetaCommand(next, COLOR_META_COMMAND)) {
-              colors.add(buildColor(iterator));
-            } else {
-              logger.info("Found different Meta-Command, {}", line);
-            }
-          }
-        }
-        default -> logger.info("Skipping {}", line);
-      }
-    });
-
-    logger.info("Parsed Colors {}", colors);
-    return colors;
-  }
-
-  @Override
-  public void writeToFile(List<Color> gpb, Path outputPath) {
+  public void writeToFile(Color gpb, Path outputPath) {
     try (
         BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath.toFile()))
     ) {
@@ -93,19 +60,17 @@ public class ColorParser implements Parser<List<Color>> {
       writer.write("id,name,value,edge,alpha,luminance,finish");
       writer.newLine();
 
-      for (Color color : gpb) {
-        writer.write(String.format("%d,%s,%s,%s,%s,%s,%s",
-            color.getId(),
-            color.getName(),
-            color.getValue(),
-            color.getEdge(),
-            color.hasAlpha() ? String.valueOf(color.getAlpha()) : "",
-            color.hasLuminance() ? String.valueOf(color.getLuminance()) : "",
-            color.hasFinish() ? color.getFinish() : ""));
-        writer.newLine();
-      }
+      writer.write(String.format("%d,%s,%s,%s,%s,%s,%s",
+          gpb.getId(),
+          gpb.getName(),
+          gpb.getValue(),
+          gpb.getEdge(),
+          gpb.hasAlpha() ? String.valueOf(gpb.getAlpha()) : "",
+          gpb.hasLuminance() ? String.valueOf(gpb.getLuminance()) : "",
+          gpb.hasFinish() ? gpb.getFinish() : ""));
+      writer.newLine();
     } catch (IOException e) {
-      throw new RuntimeException(e);
+      logger.error("Failed to write to {}", outputPath.toAbsolutePath());
     }
   }
 

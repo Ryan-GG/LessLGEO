@@ -2,7 +2,7 @@ package less.lgeo.consumer;
 
 import less.lgeo.ReducerHandler;
 import less.lgeo.primitive.Model;
-import less.lgeo.rabbitmq.RabbitQueueProperties;
+import less.lgeo.rabbitmq.RabbitWorkerQueueProperties;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,20 +10,20 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
-@RabbitListener(queues = "#{rabbitQueueProperties.getParserToReducer()}")
+@RabbitListener(queues = "#{rabbitWorkerQueueProperties.getParserToReducer()}")
 public class ReducerConsumer {
 
   //Needed for Spring Expression Language(SpEL) to get queueName
   @Autowired
-  private final RabbitQueueProperties rabbitQueueProperties;
+  private final RabbitWorkerQueueProperties rabbitWorkerQueueProperties;
 
   @Autowired
   private final ReducerHandler reducerHandler;
 
   public ReducerConsumer(ReducerHandler reducerHandler,
-      RabbitQueueProperties rabbitQueueProperties) {
+      RabbitWorkerQueueProperties rabbitWorkerQueueProperties) {
     this.reducerHandler = reducerHandler;
-    this.rabbitQueueProperties = rabbitQueueProperties;
+    this.rabbitWorkerQueueProperties = rabbitWorkerQueueProperties;
   }
 
   @RabbitHandler

@@ -1,11 +1,12 @@
 services:
   rabbitmq:
-    image: 'rabbitmq:4'
+    image: 'rabbitmq:4-management'
     restart: always
     environment:
       RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
       RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
     ports:
+      - '15672:15672'
       - '5672:5672'
 
   database:

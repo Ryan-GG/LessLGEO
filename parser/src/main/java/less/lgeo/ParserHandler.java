@@ -23,7 +23,7 @@ public class ParserHandler {
   }
 
   public static void main(String[] args) {
-    SpringApplication.run(ParserHandler.class);
+    SpringApplication.run(ParserHandler.class, args);
   }
 
   /**

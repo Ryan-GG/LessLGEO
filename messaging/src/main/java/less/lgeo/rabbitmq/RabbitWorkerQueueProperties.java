@@ -5,10 +5,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ConfigurationProperties(prefix = "rabbit.worker-queues")
-public class RabbitQueueProperties {
+public class RabbitWorkerQueueProperties {
 
   private String webToParser;
-  private String webToColorParser;
   private String parserToReducer;
 
   public String getWebToParser() {
@@ -18,15 +17,7 @@ public class RabbitQueueProperties {
   public void setWebToParser(String webToParser) {
     this.webToParser = webToParser;
   }
-
-  public String getWebToColorParser() {
-    return webToColorParser;
-  }
-
-  public void setWebToColorParser(String webToColorParser) {
-    this.webToColorParser = webToColorParser;
-  }
-
+  
   public String getParserToReducer() {
     return parserToReducer;
   }
