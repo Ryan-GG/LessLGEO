@@ -81,6 +81,6 @@ class ColorEntityTest {
   void nullIdToGpb() {
 
     ColorEntity entity = new ColorEntity( null, name, value, edge, alpha, luminance, finish );
-    assertThrowsExactly( IllegalArgumentException.class, () -> ColorEntity.toGpb( entity ) );
+    assertThrowsExactly( EntityToGpbConversionException.class, () -> ColorEntity.toGpb( entity ) );
   }
 }
