@@ -1,11 +1,11 @@
 package less.lgeo.config;
 
 import less.lgeo.consumer.ParserConsumer;
-import less.lgeo.rabbitmq.RabbitProperties;
+import less.lgeo.rabbitmq.WebToParserProperties;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.TopicExchange;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
 import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
@@ -13,32 +13,33 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class ParserRabbitConfig {
+class ParserRabbitConfig {
 
   @Bean
-  Queue queue(RabbitProperties rabbitProperties) {
-    return new Queue(rabbitProperties.webToParserQueue(), false);
+  DirectExchange webExchangeToParser(WebToParserProperties webToParserProperties) {
+    return new DirectExchange(webToParserProperties.getExchange());
   }
 
   @Bean
-  TopicExchange exchange(RabbitProperties rabbitProperties) {
-    return new TopicExchange(rabbitProperties.webToParserTopic());
+  Queue webQueueToParser(WebToParserProperties webToParserProperties) {
+    return new Queue(webToParserProperties.getQueue(), false);
   }
 
   @Bean
-  Binding binding(Queue queue, TopicExchange exchange, RabbitProperties rabbitProperties) {
+  Binding binding(Queue queue, DirectExchange exchange,
+      WebToParserProperties webToParserProperties) {
     return BindingBuilder.bind(queue)
         .to(exchange)
-        .with(rabbitProperties.webToParserRoutingKey());
+        .with(webToParserProperties.getRoutingKey());
   }
 
   @Bean
   SimpleMessageListenerContainer container(ConnectionFactory connectionFactory,
       MessageListenerAdapter listenerAdapter,
-      RabbitProperties rabbitProperties) {
+      WebToParserProperties webToParserProperties) {
     SimpleMessageListenerContainer container = new SimpleMessageListenerContainer();
     container.setConnectionFactory(connectionFactory);
-    container.setQueueNames(rabbitProperties.webToParserQueue());
+    container.setQueueNames(webToParserProperties.getQueue());
     container.setMessageListener(listenerAdapter);
     return container;
   }
