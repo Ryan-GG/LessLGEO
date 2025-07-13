@@ -1,6 +1,6 @@
 package less.lgeo.producer;
 
-import less.lgeo.rabbitmq.WebToParserProperties;
+import less.lgeo.rabbitmq.RabbitQueueProperties;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -9,17 +9,16 @@ import org.springframework.stereotype.Component;
 public class WebServerProducer {
 
   private final RabbitTemplate rabbitTemplate;
-  private final WebToParserProperties webToParserProperties;
+  private final RabbitQueueProperties rabbitQueueProperties;
 
   public WebServerProducer(@Autowired RabbitTemplate rabbitTemplate,
-      @Autowired WebToParserProperties webToParserProperties) {
+      @Autowired RabbitQueueProperties rabbitQueueProperties) {
     this.rabbitTemplate = rabbitTemplate;
-    this.webToParserProperties = webToParserProperties;
+    this.rabbitQueueProperties = rabbitQueueProperties;
   }
 
   public void sendMessage(String message) {
-    rabbitTemplate.convertAndSend(webToParserProperties.getExchange(),
-        webToParserProperties.getRoutingKey(),
+    rabbitTemplate.convertAndSend(rabbitQueueProperties.getWebToParser(),
         message);
   }
 }

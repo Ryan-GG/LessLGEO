@@ -2,25 +2,32 @@ package less.lgeo.consumer;
 
 import less.lgeo.ReducerHandler;
 import less.lgeo.primitive.Model;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import less.lgeo.rabbitmq.RabbitQueueProperties;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 @Component
+@RabbitListener(queues = "#{rabbitQueueProperties.getParserToReducer()}")
 public class ReducerConsumer {
 
-  private static final Logger logger = LoggerFactory.getLogger(ReducerConsumer.class);
+  //Needed for Spring Expression Language(SpEL) to get queueName
+  @Autowired
+  private final RabbitQueueProperties rabbitQueueProperties;
+
+  @Autowired
   private final ReducerHandler reducerHandler;
 
-  public ReducerConsumer(ReducerHandler reducerHandler) {
+  public ReducerConsumer(ReducerHandler reducerHandler,
+      RabbitQueueProperties rabbitQueueProperties) {
     this.reducerHandler = reducerHandler;
+    this.rabbitQueueProperties = rabbitQueueProperties;
   }
 
-  @RabbitListener(queues = "parser-to-reducer-queue")
+  @RabbitHandler
   public void handleMessage(@Payload Model message) {
     reducerHandler.consume(message);
   }
-
 }

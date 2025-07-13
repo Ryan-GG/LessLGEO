@@ -14,13 +14,7 @@ spring:
 
 
 rabbit:
-  bindings:
-    web-to-parser:
-      exchange: "web-to-parser-exchange"
-      queue: "web-to-parser-queue"
-      routingKey: "web.parser.#"
-    web-to-color:
-    parser-to-reducer:
-      exchange: "parser-to-reducer-exchange"
-      queue: "parser-to-reducer-queue"
-      routingKey: "parser.reducer.#"
+  worker-queues:
+    web-to-parser: "web-to-parser-queue"
+    web-to-color-parser: "web-to-color-parser-queue"
+    parser-to-reducer: "parser-to-reducer-queue"
