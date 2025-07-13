@@ -7,10 +7,12 @@ import jakarta.persistence.Table;
 import less.lgeo.common.Color;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 
 @Data
 @Entity
+@NoArgsConstructor
 @AllArgsConstructor
 @Table( name = "color" )
 public class ColorEntity {
