@@ -6,9 +6,9 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 @EnableWebMvc
 @SpringBootApplication
-public class WebHandler {
+public class WebServer {
 
   public static void main(String[] args) {
-    SpringApplication.run(WebHandler.class, args);
+    SpringApplication.run(WebServer.class, args);
   }
 }

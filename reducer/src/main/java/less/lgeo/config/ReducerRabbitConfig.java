@@ -12,6 +12,10 @@ import org.springframework.amqp.rabbit.listener.adapter.MessageListenerAdapter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+/**
+ * Configuration for Parser-to-Reducer work queue. Spring will automatically handle the queue
+ * creation and listener.
+ */
 @EnableRabbit
 @Configuration
 public class ReducerRabbitConfig {

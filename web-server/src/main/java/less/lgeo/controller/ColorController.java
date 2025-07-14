@@ -20,14 +20,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
-// TODO, Versioning put into application.yml
 @RequestMapping(value = "/api/color/v1")
 public class ColorController {
 
   private static final Logger logger = LoggerFactory.getLogger(ColorController.class);
+  
   @Autowired
   private final WebServerProducer webServerProducer;
-
   @Autowired
   private final ColorService colorService;
 

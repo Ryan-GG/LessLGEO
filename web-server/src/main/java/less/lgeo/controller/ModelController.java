@@ -10,17 +10,16 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
-@RequestMapping(value = "/api/parse/v1")
-public class ParseController {
+@RequestMapping(value = "/api/model/v1")
+public class ModelController {
 
   private final WebServerProducer webServerProducer;
 
   @Autowired
-  public ParseController(WebServerProducer webServerProducer) {
+  public ModelController(WebServerProducer webServerProducer) {
     this.webServerProducer = webServerProducer;
   }
-
-  // TODO figureout this mapping
+  
   @PostMapping("/lDraw")
   public void parseLDraw(@RequestBody String body) {
     webServerProducer.sendMessage(body);
