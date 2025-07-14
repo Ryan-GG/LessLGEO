@@ -1,11 +1,10 @@
 package less.lgeo;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
 import less.lgeo.primitive.Model;
 import less.lgeo.producer.ParserProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -14,7 +13,10 @@ public class ParserHandler {
 
   private static final Logger logger = LoggerFactory.getLogger(ParserHandler.class);
 
+  @Autowired
   private final ParserProducer parserProducer;
+
+  @Autowired
   private final ModelJoiner modelJoiner;
 
   public ParserHandler(ParserProducer parserProducer, ModelJoiner modelJoiner) {
@@ -35,18 +37,8 @@ public class ParserHandler {
 
     Model joinedModel = modelJoiner.joinAndTransformModel(message);
 
-    // TODO, this is for testing not prod, should remove, and 'writeFile'
-    writeToFile(joinedModel);
-
     logger.info("Sending Model...");
     parserProducer.sendMessage(joinedModel);
   }
 
-  private void writeToFile(Model model) {
-    try (FileOutputStream output = new FileOutputStream("model.gpb")) {
-      model.writeTo(output);
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-  }
 }

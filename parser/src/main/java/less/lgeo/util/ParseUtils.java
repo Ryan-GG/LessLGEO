@@ -33,6 +33,13 @@ public class ParseUtils {
     return command.toUpperCase().equals(command);
   }
 
+  /**
+   * Meta commands should start with ! and end with expected text
+   *
+   * @param actual   Parsed input
+   * @param expected expected command
+   * @return true, if input == expected, false otherwise
+   */
   public static boolean isMetaCommand(String actual, String expected) {
     return actual.startsWith("!") && actual.endsWith(expected);
   }
