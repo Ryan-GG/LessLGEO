@@ -30,8 +30,8 @@ public class CommonUtils {
    * @param commandValue Line's Command Value
    * @return Returns the corrected LineType Enum based on the scene line value
    */
-  public static LineType getLineType( int commandValue ) {
-    switch ( commandValue ) {
+  public static LineType getLineType(int commandValue) {
+    switch (commandValue) {
       case 0 -> {
         return LineType.COMMENT_OR_META_CMD;
       }
@@ -57,8 +57,8 @@ public class CommonUtils {
   }
 
 
-  public static GroupId getGroupId( int value ) {
-    return switch ( value ) {
+  public static GroupId getGroupId(int value) {
+    return switch (value) {
       case 0 -> GROUP_ZERO;
       case 1 -> GROUP_ONE;
       case 2, 3 -> GROUP_STUD;
@@ -68,9 +68,9 @@ public class CommonUtils {
     };
   }
 
-  public static String changeFileExtension( String subFileName, String extension ) {
-    String fileName = subFileName.substring( 0, subFileName.lastIndexOf( "." ) );
-    return fileName.concat( extension );
+  public static String changeFileExtension(String subFileName, String extension) {
+    String fileName = subFileName.substring(0, subFileName.lastIndexOf("."));
+    return fileName.concat(extension);
   }
 
   /**
@@ -81,7 +81,7 @@ public class CommonUtils {
    * \ 0 0 0 1 /
    * @formatter:on
    */
-  public static DMatrix4x4 gpbToDMatrix( Matrix matrix ) {
+  public static DMatrix4x4 gpbToDMatrix(Matrix matrix) {
     return new DMatrix4x4(
         matrix.getA(), matrix.getB(), matrix.getC(), matrix.getX(),
         matrix.getD(), matrix.getE(), matrix.getF(), matrix.getY(),
@@ -90,24 +90,24 @@ public class CommonUtils {
     );
   }
 
-  public static Matrix dMatrixToGpb( DMatrix4x4 matrix ) {
+  public static Matrix dMatrixToGpb(DMatrix4x4 matrix) {
     return Matrix.newBuilder()
-        .setA( matrix.a11 )
-        .setB( matrix.a12 )
-        .setC( matrix.a13 )
-        .setX( matrix.a14 )
+        .setA(matrix.a11)
+        .setB(matrix.a12)
+        .setC(matrix.a13)
+        .setX(matrix.a14)
 
-        .setD( matrix.a21 )
-        .setE( matrix.a22 )
-        .setF( matrix.a23 )
-        .setY( matrix.a24 )
+        .setD(matrix.a21)
+        .setE(matrix.a22)
+        .setF(matrix.a23)
+        .setY(matrix.a24)
 
-        .setG( matrix.a31 )
-        .setH( matrix.a32 )
-        .setI( matrix.a33 )
-        .setZ( matrix.a34 )
+        .setG(matrix.a31)
+        .setH(matrix.a32)
+        .setI(matrix.a33)
+        .setZ(matrix.a34)
 
-        .setScale( matrix.a44 )
+        .setScale(matrix.a44)
         .build();
   }
 
@@ -119,7 +119,7 @@ public class CommonUtils {
    * \ 0 0 0 1 /
    * @formatter:on
    */
-  public static String gpbMatrixToString( Matrix m ) {
+  public static String gpbMatrixToString(Matrix m) {
     return String.format(
         """
             \n
@@ -134,24 +134,30 @@ public class CommonUtils {
     );
   }
 
-  public static Color getColor( Optional<Color> inheritedColor, Color subPartColor ) {
+  /**
+   * @param inheritedColor Possibly inherit the color based on the subPartColor
+   * @param subPartColor   subPart's color dictates if inheritedColor is needed based on reserved
+   *                       color codes 16,24
+   * @return Color GPB
+   */
+  public static Color getColor(Optional<Color> inheritedColor, Color subPartColor) {
 
-    return inheritedColor.map( color -> switch ( subPartColor.getId() ) {
+    return inheritedColor.map(color -> switch (subPartColor.getId()) {
           case 16 -> {
             Color.Builder builder = subPartColor.toBuilder();
 
-            builder.setValue( color.getValue() );
+            builder.setValue(color.getValue());
 
-            if ( builder.hasAlpha() ) {
-              builder.setAlpha( color.getAlpha() );
+            if (builder.hasAlpha()) {
+              builder.setAlpha(color.getAlpha());
             }
 
-            if ( builder.hasLuminance() ) {
-              builder.setLuminance( color.getLuminance() );
+            if (builder.hasLuminance()) {
+              builder.setLuminance(color.getLuminance());
             }
 
-            if ( builder.hasFinish() ) {
-              builder.setFinish( color.getFinish() );
+            if (builder.hasFinish()) {
+              builder.setFinish(color.getFinish());
             }
 
             yield builder.build();
@@ -159,25 +165,25 @@ public class CommonUtils {
           case 24 -> {
             Color.Builder builder = subPartColor.toBuilder();
 
-            builder.setEdge( color.getEdge() );
+            builder.setEdge(color.getEdge());
 
-            if ( builder.hasAlpha() ) {
-              builder.setAlpha( color.getAlpha() );
+            if (builder.hasAlpha()) {
+              builder.setAlpha(color.getAlpha());
             }
 
-            if ( builder.hasLuminance() ) {
-              builder.setLuminance( color.getLuminance() );
+            if (builder.hasLuminance()) {
+              builder.setLuminance(color.getLuminance());
             }
 
-            if ( builder.hasFinish() ) {
-              builder.setFinish( color.getFinish() );
+            if (builder.hasFinish()) {
+              builder.setFinish(color.getFinish());
             }
 
             yield builder.build();
           }
           default -> subPartColor;
-        } )
-        .orElse( subPartColor );
+        })
+        .orElse(subPartColor);
 
 
   }

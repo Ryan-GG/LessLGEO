@@ -24,9 +24,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * A connectivity Parser will parse a .dat file converted to a .part file and create a respective
+ * GPB object from it. This can later be used and joined with the {@link less.lgeo.primitive.Model}
+ * GPB object that will be sent to the ReducerHandler.
+ */
 @Component
 public class ConnectivityParser implements Parser<Connection> {
 
+  private static final String PE_CONN_META_CMD = "PE_CONN";
   private static final Logger logger = LoggerFactory.getLogger(ConnectivityParser.class);
 
   @Override
@@ -59,7 +65,7 @@ public class ConnectivityParser implements Parser<Connection> {
 
     connectionBuilder.build().getCommandList().forEach(command ->
     {
-      if (command.getCommand().equals("PE_CONN")) {
+      if (PE_CONN_META_CMD.equals(command.getCommand())) {
         Iterator<String> additionalParamsIter = command.getAdditionalParamsList().iterator();
 
         GroupId groupId = getGroupId(Integer.parseInt(additionalParamsIter.next()));
@@ -132,6 +138,6 @@ public class ConnectivityParser implements Parser<Connection> {
 
   @Override
   public void writeToFile(Connection gpb, Path outputPath) {
-    // TODO
+    // TODO [Task] Add export back to .ldr format of a Model file #24
   }
 }
