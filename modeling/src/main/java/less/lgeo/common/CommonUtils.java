@@ -18,6 +18,8 @@ public class CommonUtils {
   // Part Extension defines connections via PE_CONN meta command
   // This is because traditional .conn files are proprietary and cannot be parsed normally
   public static String PART_EXT = ".part";
+  
+  public static int RESERVED_TRANSPARENCY_CODE = 128;
 
   /**
    * TODO: Come back and verify if this is need or the gpb can be modified

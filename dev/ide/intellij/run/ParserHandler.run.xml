@@ -2,7 +2,6 @@
   <configuration default="false" name="ParserHandler" type="Application" factoryName="Application" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="less.lgeo.ParserHandler" />
     <module name="parser" />
-    <option name="PROGRAM_PARAMETERS" value="parser/src/test/resources/2x4_brick_connected.ldr" />
     <option name="VM_PARAMETERS" value="-Dspring.profiles.active=lDrawParser" />
     <extension name="coverage">
       <pattern>

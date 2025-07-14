@@ -37,7 +37,6 @@
     <dependency>
       <artifactId>database</artifactId>
       <groupId>less.lgeo</groupId>
-      <scope>compile</scope>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>

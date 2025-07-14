@@ -322,7 +322,6 @@ public class LDrawParser implements Parser<Model> {
    * @return parsed LDraw {@link Color}
    */
   private Color parseColor(int colorCode) {
-
     ColorEntity colorEntity = colorService.getColorByCode(colorCode);
     return toGpb(colorEntity);
   }
