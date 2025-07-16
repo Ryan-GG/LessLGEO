@@ -1,5 +1,7 @@
 package less.lgeo.primitive;
 
+import static less.lgeo.common.CommonUtils.getColor;
+
 import java.util.List;
 import java.util.Optional;
 import less.lgeo.common.Color;
@@ -10,7 +12,7 @@ import less.lgeo.common.VertexUtils;
 public class OptionalLineUtils {
 
 
-  public static OptionalLine getOptionalLine( Color color, Vertex p1, Vertex p2, Vertex p3,
+  public static OptionalLine toOptionalLine( Color color, Vertex p1, Vertex p2, Vertex p3,
       Vertex p4 ) {
     return OptionalLine.newBuilder()
         .setColor( color )
@@ -31,13 +33,14 @@ public class OptionalLineUtils {
   }
 
   public static OptionalLine transformOptionalLine( OptionalLine optionalLine,
-      Optional<Matrix> transformationMatrix ) {
+      Optional<Matrix> transformationMatrix,
+      Optional<Color> inheritedColor ) {
     Vertex p1 = optionalLine.getP1();
     Vertex p2 = optionalLine.getP2();
     Vertex p3 = optionalLine.getP1();
     Vertex p4 = optionalLine.getP2();
-    return getOptionalLine(
-        optionalLine.getColor(),
+    return toOptionalLine(
+        getColor( inheritedColor, optionalLine.getColor() ),
         transformationMatrix.map( value -> VertexUtils.transform( p1, value ) ).orElse( p1 ),
         transformationMatrix.map( value -> VertexUtils.transform( p2, value ) ).orElse( p2 ),
         transformationMatrix.map( value -> VertexUtils.transform( p3, value ) ).orElse( p3 ),

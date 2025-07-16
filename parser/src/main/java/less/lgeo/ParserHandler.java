@@ -1,50 +1,44 @@
 package less.lgeo;
 
-import java.io.File;
-import less.lgeo.parser.ParserProducer;
 import less.lgeo.primitive.Model;
-import less.lgeo.rabbitmq.RabbitProperties;
+import less.lgeo.producer.ParserProducer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.boot.ApplicationArguments;
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.boot.WebApplicationType;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.builder.SpringApplicationBuilder;
-import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@EnableConfigurationProperties( value = RabbitProperties.class )
-public class ParserHandler implements ApplicationRunner {
+public class ParserHandler {
 
-  private static final Logger logger = LoggerFactory.getLogger( ParserHandler.class );
+  private static final Logger logger = LoggerFactory.getLogger(ParserHandler.class);
 
+  @Autowired
   private final ParserProducer parserProducer;
+
+  @Autowired
   private final ModelJoiner modelJoiner;
 
-  public ParserHandler( ParserProducer parserProducer, ModelJoiner modelJoiner ) {
+  public ParserHandler(ParserProducer parserProducer, ModelJoiner modelJoiner) {
     this.parserProducer = parserProducer;
     this.modelJoiner = modelJoiner;
   }
 
-  public static void main( String[] args ) {
-    new SpringApplicationBuilder()
-        .web( WebApplicationType.NONE )
-        .sources( ParserHandler.class )
-        .build()
-        .run( args );
+  public static void main(String[] args) {
+    SpringApplication.run(ParserHandler.class, args);
   }
 
-  @Override
-  public void run( ApplicationArguments args ) {
-    
-    File fileToParse = new File( args.getSourceArgs()[0] );
+  /**
+   * See {@link less.lgeo.consumer.ParserConsumer}
+   *
+   * @param message
+   */
+  public void consume(String message) {
 
-    Model joinedModel = modelJoiner.joinAndTransformModel( fileToParse );
+    Model joinedModel = modelJoiner.joinAndTransformModel(message);
 
-    logger.info( "Model result: {}", joinedModel );
-
-    logger.info( "Sending Model..." );
-    parserProducer.sendMessage( joinedModel );
+    logger.info("Sending Model...");
+    parserProducer.sendMessage(joinedModel);
   }
+
 }

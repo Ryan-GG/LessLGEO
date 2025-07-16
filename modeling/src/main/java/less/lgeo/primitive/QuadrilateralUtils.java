@@ -1,5 +1,7 @@
 package less.lgeo.primitive;
 
+import static less.lgeo.common.CommonUtils.getColor;
+
 import java.util.List;
 import java.util.Optional;
 import less.lgeo.common.Color;
@@ -10,7 +12,7 @@ import less.lgeo.common.VertexUtils;
 public class QuadrilateralUtils {
 
 
-  public static Quadrilateral getQuadrilateral( Color color, Vertex p1, Vertex p2, Vertex p3,
+  public static Quadrilateral toQuadrilateral( Color color, Vertex p1, Vertex p2, Vertex p3,
       Vertex p4 ) {
     return Quadrilateral.newBuilder()
         .setColor( color )
@@ -29,13 +31,15 @@ public class QuadrilateralUtils {
   }
 
   public static Quadrilateral transformQuadrilateral( Quadrilateral quadrilateral,
-      Optional<Matrix> transformationMatrix ) {
+      Optional<Matrix> transformationMatrix,
+      Optional<Color> inheritedColor ) {
     Vertex p1 = quadrilateral.getP1();
     Vertex p2 = quadrilateral.getP2();
-    Vertex p3 = quadrilateral.getP1();
-    Vertex p4 = quadrilateral.getP2();
-    return getQuadrilateral(
-        quadrilateral.getColor(),
+    Vertex p3 = quadrilateral.getP3();
+    Vertex p4 = quadrilateral.getP4();
+    
+    return toQuadrilateral(
+        getColor( inheritedColor, quadrilateral.getColor() ),
         transformationMatrix.map( value -> VertexUtils.transform( p1, value ) ).orElse( p1 ),
         transformationMatrix.map( value -> VertexUtils.transform( p2, value ) ).orElse( p2 ),
         transformationMatrix.map( value -> VertexUtils.transform( p3, value ) ).orElse( p3 ),

@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - changeSet:
+      id: 0
+      author: gross
+      changes:
+        - createTable:
+            tableName: color
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: value
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: edge
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: alpha
+                  type: integer
+                  constraints:
+                    nullable: true
+              - column:
+                  name: luminance
+                  type: integer
+                  constraints:
+                    nullable: true
+              - column:
+                  name: finish
+                  type: varchar(255)
+                  constraints:
+                    nullable: true
+  - changeSet:
+      id: 1
+      author: gross
+      changes:
+        - loadData:
+            file: classpath:/db/changelog/data/colors.csv
+            tableName: color
+            separator: ","
+            encoding: UTF-8
+

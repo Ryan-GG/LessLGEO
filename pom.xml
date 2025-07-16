@@ -62,6 +62,8 @@
     <module>reducer</module>
     <module>messaging</module>
     <module>javafx</module>
+    <module>web-server</module>
+    <module>database</module>
   </modules>
   <name>LessLGEO</name>
   <packaging>pom</packaging>
@@ -69,7 +71,7 @@
     <artifactId>spring-boot-starter-parent</artifactId>
     <groupId>org.springframework.boot</groupId>
     <relativePath/>
-    <version>3.4.4</version>
+    <version>3.5.1</version>
   </parent>
   <properties>
     <java.version>23</java.version>

@@ -8,8 +8,7 @@ import static less.lgeo.util.ParseUtils.parseComment;
 import static less.lgeo.util.ParseUtils.toDouble;
 import static less.lgeo.util.ParseUtils.toInt;
 
-import java.io.File;
-import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -25,115 +24,120 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
+/**
+ * A connectivity Parser will parse a .dat file converted to a .part file and create a respective
+ * GPB object from it. This can later be used and joined with the {@link less.lgeo.primitive.Model}
+ * GPB object that will be sent to the ReducerHandler.
+ */
 @Component
 public class ConnectivityParser implements Parser<Connection> {
 
-  private static final Logger logger = LoggerFactory.getLogger( ConnectivityParser.class );
+  private static final String PE_CONN_META_CMD = "PE_CONN";
+  private static final Logger logger = LoggerFactory.getLogger(ConnectivityParser.class);
 
   @Override
-  public Connection parse( File file ) throws IOException {
+  public Connection parse(String toParse) {
 
     Builder connectionBuilder = Connection.newBuilder();
 
-    logger.info( "Parsing file name: {}", file );
+    logger.info("Parsing file name: {}", toParse);
 
-    read( file ).forEach( line -> {
-      logger.info( "Parsing line, {}", line );
-      List<String> values = new ArrayList<>( List.of( line.trim().split( " " ) ) );
+    read(toParse).forEach(line -> {
+      logger.info("Parsing line, {}", line);
+      List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
 
-      int commandValue = Integer.parseInt( values.removeFirst() );
-      LineType lineType = getLineType( commandValue );
+      int commandValue = Integer.parseInt(values.removeFirst());
+      LineType lineType = getLineType(commandValue);
 
-      switch ( lineType ) {
+      switch (lineType) {
         case COMMENT_OR_META_CMD -> {
-          if ( values.isEmpty() ) {
-            logger.warn( "Found '0' line" );
-          } else if ( isMetaCommand( values ) ) {
-            connectionBuilder.addCommand( parseCommand( values ) );
+          if (values.isEmpty()) {
+            logger.warn("Found '0' line");
+          } else if (isMetaCommand(values)) {
+            connectionBuilder.addCommand(parseCommand(values));
           } else {
-            connectionBuilder.addComment( parseComment( values ) );
+            connectionBuilder.addComment(parseComment(values));
           }
         }
-        default -> throw new IllegalStateException( "Unexpected Line Type" );
+        default -> throw new IllegalStateException("Unexpected Line Type");
       }
-    } );
+    });
 
-    connectionBuilder.build().getCommandList().forEach( command ->
+    connectionBuilder.build().getCommandList().forEach(command ->
     {
-      if ( command.getCommand().equals( "PE_CONN" ) ) {
+      if (PE_CONN_META_CMD.equals(command.getCommand())) {
         Iterator<String> additionalParamsIter = command.getAdditionalParamsList().iterator();
 
-        GroupId groupId = getGroupId( Integer.parseInt( additionalParamsIter.next() ) );
+        GroupId groupId = getGroupId(Integer.parseInt(additionalParamsIter.next()));
 
         connectionBuilder.addPartConnection(
-            getPartConnection( groupId, additionalParamsIter ) );
+            getPartConnection(groupId, additionalParamsIter));
 
       }
-    } );
+    });
     return connectionBuilder.build();
 
   }
 
-  private PartConnection getPartConnection( GroupId groupId, Iterator<String> iter ) {
+  private PartConnection getPartConnection(GroupId groupId, Iterator<String> iter) {
 
-    PartConnection.Builder builder = parseBody( groupId, iter );
-    return switch ( groupId ) {
+    PartConnection.Builder builder = parseBody(groupId, iter);
+    return switch (groupId) {
       case GROUP_ZERO -> null;
       case GROUP_ONE -> null;
-      case GROUP_STUD -> parseGroupStud( builder, iter );
+      case GROUP_STUD -> parseGroupStud(builder, iter);
       case GROUP_FOUR -> null;
       case GROUP_SIX -> null;
-      default -> throw new IllegalArgumentException( "Unrecognized Group Id" );
+      default -> throw new IllegalArgumentException("Unrecognized Group Id");
     };
   }
 
-  private PartConnection.Builder parseBody( GroupId groupId, Iterator<String> iterator ) {
+  private PartConnection.Builder parseBody(GroupId groupId, Iterator<String> iterator) {
     return PartConnection.newBuilder()
-        .setGroupId( groupId )
-        .setElementId( Integer.parseInt( iterator.next() ) )
+        .setGroupId(groupId)
+        .setElementId(Integer.parseInt(iterator.next()))
         .setMatrix(
             Matrix.newBuilder()
-                .setA( toDouble( iterator.next() ) )
-                .setB( toDouble( iterator.next() ) )
-                .setC( toDouble( iterator.next() ) )
-                .setD( toDouble( iterator.next() ) )
-                .setE( toDouble( iterator.next() ) )
-                .setF( toDouble( iterator.next() ) )
-                .setG( toDouble( iterator.next() ) )
-                .setH( toDouble( iterator.next() ) )
-                .setI( toDouble( iterator.next() ) )
-                .setX( toDouble( iterator.next() ) )
-                .setY( toDouble( iterator.next() ) )
-                .setZ( toDouble( iterator.next() ) )
-                .setScale( 1.0 )
+                .setA(toDouble(iterator.next()))
+                .setB(toDouble(iterator.next()))
+                .setC(toDouble(iterator.next()))
+                .setD(toDouble(iterator.next()))
+                .setE(toDouble(iterator.next()))
+                .setF(toDouble(iterator.next()))
+                .setG(toDouble(iterator.next()))
+                .setH(toDouble(iterator.next()))
+                .setI(toDouble(iterator.next()))
+                .setX(toDouble(iterator.next()))
+                .setY(toDouble(iterator.next()))
+                .setZ(toDouble(iterator.next()))
+                .setScale(1.0)
         );
   }
 
 
-  private PartConnection parseGroupStud( PartConnection.Builder builder,
-      Iterator<String> iterator ) {
+  private PartConnection parseGroupStud(PartConnection.Builder builder,
+      Iterator<String> iterator) {
 
     return builder.setGroupStud(
         GroupStud.newBuilder()
-            .setZWidthHalfStud( toInt( iterator.next() ) )
-            .setXWidthHalfStud( toInt( iterator.next() ) )
-            .addAllStudGrid( getStudGrid( iterator.next() ) )
+            .setZWidthHalfStud(toInt(iterator.next()))
+            .setXWidthHalfStud(toInt(iterator.next()))
+            .addAllStudGrid(getStudGrid(iterator.next()))
     ).build();
   }
 
-  private List<Boolean> getStudGrid( String studGroupGeometry ) {
-    String[] studGeometry = studGroupGeometry.split( "," );
-    return Arrays.stream( studGeometry ).map( s ->
+  private List<Boolean> getStudGrid(String studGroupGeometry) {
+    String[] studGeometry = studGroupGeometry.split(",");
+    return Arrays.stream(studGeometry).map(s ->
     {
-      String firstVal = s.split( ":" )[0];
-      return !firstVal.equals( "-1" ) && !firstVal.equals( "0" );
-    } ).toList();
+      String firstVal = s.split(":")[0];
+      return !firstVal.equals("-1") && !firstVal.equals("0");
+    }).toList();
   }
 
 
   @Override
-  public File writeToFile( Connection gpb, String fileName ) {
-    // TODO
-    return null;
+  public void writeToFile(Connection gpb, Path outputPath) {
+    // TODO [Task] Add export back to .ldr format of a Model file #24
   }
 }

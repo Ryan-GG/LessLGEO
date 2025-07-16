@@ -46,6 +46,13 @@ message Vertex {
 }
 
 message Color {
+  int32 id = 1;
+  string name = 2;
+  string value = 3;
+  string edge = 4;
+  optional int32 alpha = 5;
+  optional int32 luminance = 6;
+  optional string finish = 7;
 }
 
 enum LineType {
