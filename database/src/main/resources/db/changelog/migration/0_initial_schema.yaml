@@ -14,7 +14,7 @@ databaseChangeLog:
                     primaryKey: true
               - column:
                   name: name
-                  type: varchar(40)
+                  type: varchar(50)
                   constraints:
                     nullable: false
               - column:
@@ -52,7 +52,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: img_url
-                  type: int
+                  type: varchar(256)
                   constraints:
                     nullable: true
         - createTable:
@@ -60,7 +60,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: part_num
-                  type: int
+                  type: varchar(20)
                   constraints:
                     nullable: false
                     primaryKey: true
@@ -297,61 +297,62 @@ databaseChangeLog:
       changes:
         - loadData:
             file: classpath:/db/changelog/data/themes.csv
-            tableName: color
+            tableName: themes
             separator: ","
             encoding: UTF-8
         - loadData:
             file: classpath:/db/changelog/data/sets.csv
-            tableName: color
+            tableName: sets
             separator: ","
             encoding: UTF-8
         - loadData:
             file: classpath:/db/changelog/data/parts.csv
-            tableName: color
+            tableName: parts
             separator: ","
+            quotchar: '"'
             encoding: UTF-8
         - loadData:
             file: classpath:/db/changelog/data/part_relationships.csv
-            tableName: color
+            tableName: part_relationships
             separator: ","
             encoding: UTF-8
         - loadData:
             file: classpath:/db/changelog/data/part_categories.csv
-            tableName: color
+            tableName: part_categories
             separator: ","
             encoding: UTF-8
         - loadData:
             file: classpath:/db/changelog/data/minifigs.csv
-            tableName: color
+            tableName: minifigs
             separator: ","
             encoding: UTF-8
         - loadData:
             file: classpath:/db/changelog/data/inventory_sets.csv
-            tableName: color
+            tableName: inventory_sets
             separator: ","
             encoding: UTF-8
         - loadData:
             file: classpath:/db/changelog/data/inventory_parts.csv
-            tableName: color
+            tableName: inventory_parts
             separator: ","
             encoding: UTF-8
         - loadData:
             file: classpath:/db/changelog/data/inventory_minifigs.csv
-            tableName: color
+            tableName: inventory_minifigs
             separator: ","
             encoding: UTF-8
         - loadData:
             file: classpath:/db/changelog/data/inventories.csv
-            tableName: color
+            tableName: inventories
             separator: ","
             encoding: UTF-8
         - loadData:
             file: classpath:/db/changelog/data/elements.csv
-            tableName: color
+            tableName: elements
             separator: ","
             encoding: UTF-8
         - loadData:
             file: classpath:/db/changelog/data/colors.csv
-            tableName: color
+            tableName: colors
             separator: ","
             encoding: UTF-8
