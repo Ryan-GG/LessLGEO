@@ -18,9 +18,7 @@ public class CommonUtils {
   // Part Extension defines connections via PE_CONN meta command
   // This is because traditional .conn files are proprietary and cannot be parsed normally
   public static String PART_EXT = ".part";
-
-  public static int RESERVED_TRANSPARENCY_CODE = 128;
-
+  
   /**
    * TODO: Come back and verify if this is need or the gpb can be modified
    *
@@ -137,18 +135,18 @@ public class CommonUtils {
   }
 
   /**
-   * @param inheritedColorId Possibly inherit the color based on the subPartColor
-   * @param subPartColor     subPart's color dictates if inheritedColor is needed based on reserved
+   * @param inheritedColorId Possibly inherit the color based on the subPartColorId
+   * @param subPartColorId   subPart's color dictates if inheritedColor is needed based on reserved
    *                         color codes 16,24
    * @return Color GPB
    */
-  public static int getColor(Optional<Integer> inheritedColorId, int subPartColor) {
+  public static int getColor(Optional<Integer> inheritedColorId, int subPartColorId) {
 
-    return inheritedColorId.map(color -> switch (subPartColor) {
+    return inheritedColorId.map(color -> switch (subPartColorId) {
           case 16, 24 -> color;
-          default -> subPartColor;
+          default -> subPartColorId;
         })
-        .orElse(subPartColor);
+        .orElse(subPartColorId);
 
   }
 }

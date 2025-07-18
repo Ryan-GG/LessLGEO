@@ -20,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication(scanBasePackages = "less.lgeo")
 public class RenderMesh extends Application {
@@ -37,7 +36,7 @@ public class RenderMesh extends Application {
   }
 
   @Override
-  public void init() throws Exception {
+  public void init() {
     applicationContext = SpringApplication.run(RenderMesh.class);
   }
 
@@ -51,7 +50,8 @@ public class RenderMesh extends Application {
     AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
 
     // Use ModelMeshFactory from Spring context
-    less.lgeo.mesh.ModelMeshFactory modelMeshFactory = applicationContext.getBean(less.lgeo.mesh.ModelMeshFactory.class);
+    less.lgeo.mesh.ModelMeshFactory modelMeshFactory = applicationContext.getBean(
+        less.lgeo.mesh.ModelMeshFactory.class);
     ModelMesh modelMesh = modelMeshFactory.create(model);
     Group world = new Group(ambientLight, modelMesh.getMesh());
 
@@ -59,6 +59,7 @@ public class RenderMesh extends Application {
     attachCamera(scene);
 
     setUpStage(stage, scene);
+    logger.info("Showing Mesh");
   }
 
   private void setUpStage(Stage stage, Scene scene) {
@@ -89,7 +90,7 @@ public class RenderMesh extends Application {
   }
 
   @Override
-  public void stop() throws Exception {
+  public void stop() {
     applicationContext.close();
   }
 } 

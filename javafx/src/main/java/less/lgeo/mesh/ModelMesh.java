@@ -11,7 +11,9 @@ import static less.lgeo.primitive.OptionalLineUtils.getVertices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -40,11 +42,13 @@ public class ModelMesh {
   private static final Color CONN_COLOR = Color.DEEPPINK;
   private final Model model;
   private final ColorService colorService;
+  private final Map<Integer, Color> colorCache;
   private Group mesh;
 
   public ModelMesh(Model model, ColorService colorService) {
     this.model = model;
     this.colorService = colorService;
+    this.colorCache = new ConcurrentHashMap<>();
   }
 
   public static Point3D gpbToPoint3D(Vertex point) {
@@ -231,22 +235,21 @@ public class ModelMesh {
 
 
   /**
-   * <p>
-   * Alpha 128 is a reserved code, indicating transparency.
-   *
    * @param colorId Part Color id
    * @return Updated Color to include possible opacity
    */
   private Color getColor(int colorId) {
 
-    ColorEntity colorEntity = colorService.getColorByCode(colorId);
-    less.lgeo.common.Color gpbColor = ColorEntity.toGpb(colorEntity);
-    java.awt.Color modelColor = java.awt.Color.decode("#".concat(gpbColor.getRgb()));
+    return colorCache.computeIfAbsent(colorId, key ->
+    {
+      ColorEntity colorEntity = colorService.getColorByCode(key);
+      less.lgeo.common.Color gpbColor = ColorEntity.toGpb(colorEntity);
+      java.awt.Color modelColor = java.awt.Color.decode("#".concat(gpbColor.getRgb()));
+      double opacity = gpbColor.getIsTrans() ? 0.1 : 1.0;
+      return Color.rgb(modelColor.getRed(), modelColor.getGreen(), modelColor.getBlue(),
+          opacity);
+    });
 
-    double opacity = gpbColor.getIsTrans() ? 0.1 : 1.0;
-
-    return Color.rgb(modelColor.getRed(), modelColor.getGreen(), modelColor.getBlue(),
-        opacity);
   }
 
 }
