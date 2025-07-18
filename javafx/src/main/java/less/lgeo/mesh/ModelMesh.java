@@ -31,10 +31,7 @@ import less.lgeo.service.ColorService;
 import org.fxyz3d.geometry.Point3D;
 import org.fxyz3d.shapes.composites.PolyLine3D;
 import org.fxyz3d.shapes.primitives.CubeMesh;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-@Component
 public class ModelMesh {
 
   private static final Float CONN_SIZE = 1.0f;
@@ -42,13 +39,12 @@ public class ModelMesh {
 
   private static final Color CONN_COLOR = Color.DEEPPINK;
   private final Model model;
+  private final ColorService colorService;
   private Group mesh;
 
-  @Autowired
-  private ColorService colorService;
-
-  public ModelMesh(Model model) {
+  public ModelMesh(Model model, ColorService colorService) {
     this.model = model;
+    this.colorService = colorService;
   }
 
   public static Point3D gpbToPoint3D(Vertex point) {
@@ -84,7 +80,7 @@ public class ModelMesh {
               .map(point -> new Point3D(point.x, point.y,
                   point.z))
               .toList();
-          return new PolyLine3D(points, LINE_WIDTH, getPartColor(line.getColorId()));
+          return new PolyLine3D(points, LINE_WIDTH, getColor(line.getColorId()));
         })
         .toList();
 
@@ -129,7 +125,7 @@ public class ModelMesh {
           );
 
           MeshView quadView = new MeshView(quadMesh);
-          quadView.setMaterial(new PhongMaterial(getPartColor(quadrilateral.getColorId())));
+          quadView.setMaterial(new PhongMaterial(getColor(quadrilateral.getColorId())));
           quadView.setDrawMode(DrawMode.FILL);
           quadView.setCullFace(CullFace.NONE);
 
@@ -171,7 +167,7 @@ public class ModelMesh {
           );
 
           MeshView triangleView = new MeshView(triangleMesh);
-          triangleView.setMaterial(new PhongMaterial(getPartColor(triangle.getColorId())));
+          triangleView.setMaterial(new PhongMaterial(getColor(triangle.getColorId())));
           triangleView.setDrawMode(DrawMode.FILL);
           triangleView.setCullFace(CullFace.NONE);
 
@@ -201,7 +197,7 @@ public class ModelMesh {
           // Add first point again to close loop
           points.add(points.getFirst());
 
-          return new PolyLine3D(points, LINE_WIDTH, getPartColor(optionalLine.getColorId()));
+          return new PolyLine3D(points, LINE_WIDTH, getColor(optionalLine.getColorId()));
         })
         .toList();
 
@@ -241,13 +237,13 @@ public class ModelMesh {
    * @param colorId Part Color id
    * @return Updated Color to include possible opacity
    */
-  private Color getPartColor(int colorId) {
+  private Color getColor(int colorId) {
 
     ColorEntity colorEntity = colorService.getColorByCode(colorId);
     less.lgeo.common.Color gpbColor = ColorEntity.toGpb(colorEntity);
-    java.awt.Color modelColor = java.awt.Color.decode(gpbColor.getRgb());
+    java.awt.Color modelColor = java.awt.Color.decode("#".concat(gpbColor.getRgb()));
 
-    double opacity = gpbColor.getIsTrans() ? 0 : 255.0;
+    double opacity = gpbColor.getIsTrans() ? 0.1 : 1.0;
 
     return Color.rgb(modelColor.getRed(), modelColor.getGreen(), modelColor.getBlue(),
         opacity);

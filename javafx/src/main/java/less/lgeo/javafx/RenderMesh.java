@@ -20,8 +20,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.ComponentScan;
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = "less.lgeo")
 public class RenderMesh extends Application {
 
   private static final String TITLE = "Less LGEO RenderMesh";
@@ -49,7 +50,9 @@ public class RenderMesh extends Application {
 
     AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
 
-    ModelMesh modelMesh = new ModelMesh(model);
+    // Use ModelMeshFactory from Spring context
+    less.lgeo.mesh.ModelMeshFactory modelMeshFactory = applicationContext.getBean(less.lgeo.mesh.ModelMeshFactory.class);
+    ModelMesh modelMesh = modelMeshFactory.create(model);
     Group world = new Group(ambientLight, modelMesh.getMesh());
 
     Scene scene = new Scene(world, 800, 600, true, SceneAntialiasing.BALANCED);
