@@ -1,5 +1,7 @@
 package less.lgeo;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import less.lgeo.primitive.Model;
 import less.lgeo.producer.ParserProducer;
 import org.slf4j.Logger;
@@ -36,6 +38,12 @@ public class ParserHandler {
   public void consume(String message) {
 
     Model joinedModel = modelJoiner.joinAndTransformModel(message);
+
+    try (FileOutputStream fos = new FileOutputStream("model.gpb")) {
+      joinedModel.writeTo(fos);
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
 
     logger.info("Sending Model...");
     parserProducer.sendMessage(joinedModel);

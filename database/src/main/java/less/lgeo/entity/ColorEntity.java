@@ -8,76 +8,57 @@ import less.lgeo.common.Color;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "color")
+@Table(name = "colors")
 public class ColorEntity {
 
   @Id
-  @Column(unique = true)
-  private Integer id;
+  @Column(unique = true, nullable = false)
+  private int id;
 
   @Column(nullable = false)
   private String name;
 
   @Column(nullable = false)
-  private String value;
+  private String rgb;
 
   @Column(nullable = false)
-  private String edge;
+  private boolean isTrans;
 
-  @Column(nullable = true)
-  private Integer alpha;
+  @Column(nullable = false)
+  private int numParts;
 
-  @Column(nullable = true)
-  private Integer luminance;
+  @Column(nullable = false)
+  private int numSets;
 
-  @Column(nullable = true)
-  private String finish;
+  @Column(name = "y1")
+  private Integer startYear;
+
+  @Column(name = "y2")
+  private Integer endYear;
 
   /**
    * @param entity Fields pulled from postgres
    * @return postgres to GPB {@link less.lgeo.common.Color}
    * @throws IllegalArgumentException if entity or required field are null
    */
-  public static Color toGpb(@Nullable ColorEntity entity) {
-
-    if (entity == null
-        || entity.id == null
-        || entity.name == null
-        || entity.value == null
-        || entity.edge == null
-    ) {
-      throw new EntityToGpbConversionException(
-          String.format("Required ColorEntity field(s) are null, Received: \n%s",
-              entity));
+  public static @NonNull Color toGpb(@Nullable ColorEntity entity)
+      throws EntityToGpbConversionException {
+    if (entity == null) {
+      throw new EntityToGpbConversionException("ColorEntity was null");
     }
-    Color.Builder builder = Color.newBuilder()
+    return Color.newBuilder()
         .setId(entity.id)
         .setName(entity.name)
-        .setValue(entity.value)
-        .setEdge(entity.edge);
-
-    if (entity.alpha != null) {
-      builder.setAlpha(entity.alpha);
-    }
-    if (entity.luminance != null) {
-      builder.setLuminance(entity.luminance);
-    }
-    if (entity.finish != null) {
-      builder.setFinish(entity.finish);
-    }
-
-    return builder.build();
-  }
-
-  public static ColorEntity fromGpb(Color toInsert) {
-    return new ColorEntity(toInsert.getId(), toInsert.getName(), toInsert.getValue(),
-        toInsert.getEdge(), toInsert.getAlpha(), toInsert.getLuminance(), toInsert.getFinish());
+        .setRgb(entity.rgb)
+        .setIsTrans(entity.isTrans)
+        .build();
   }
 
   @Override

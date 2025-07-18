@@ -17,9 +17,4 @@ rabbit:
   worker-queues:
     web-to-parser: "web-to-parser-queue"
     parser-to-reducer: "parser-to-reducer-queue"
-  request-reply:
-    web-to-color-parser:
-      exchange: "web-to-parser"
-      queue: "web-to-color-parser-rr"
-      routingKey: "web.color.parser.#"
 

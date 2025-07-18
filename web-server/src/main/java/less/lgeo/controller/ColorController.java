@@ -1,9 +1,7 @@
 package less.lgeo.controller;
 
 import java.util.List;
-import less.lgeo.common.Color;
 import less.lgeo.entity.ColorEntity;
-import less.lgeo.producer.WebServerProducer;
 import less.lgeo.service.ColorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,14 +22,11 @@ import org.springframework.web.bind.annotation.RestController;
 public class ColorController {
 
   private static final Logger logger = LoggerFactory.getLogger(ColorController.class);
-  
-  @Autowired
-  private final WebServerProducer webServerProducer;
+
   @Autowired
   private final ColorService colorService;
 
-  public ColorController(WebServerProducer webServerProducer, ColorService colorService) {
-    this.webServerProducer = webServerProducer;
+  public ColorController(ColorService colorService) {
     this.colorService = colorService;
   }
 
@@ -47,13 +42,8 @@ public class ColorController {
 
   @PostMapping("/insert")
   public ResponseEntity<Void> insertColor(@RequestBody String colorMessage) {
-    Color recievedColor = webServerProducer.sendAndReceiveColor(colorMessage);
-    if (recievedColor != null) {
-      logger.info("Inserting {}", recievedColor);
-      colorService.insertColor(recievedColor);
-      return ResponseEntity.ok().build();
-    }
-    return ResponseEntity.internalServerError().build();
+    //TODO, RDG
+    return ResponseEntity.ok().build();
   }
 
   @DeleteMapping("/{id}")

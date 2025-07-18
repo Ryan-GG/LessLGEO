@@ -2,7 +2,6 @@ package less.lgeo.service;
 
 import java.util.List;
 import java.util.Optional;
-import less.lgeo.common.Color;
 import less.lgeo.entity.ColorEntity;
 import less.lgeo.repository.ColorRepository;
 import org.slf4j.Logger;
@@ -39,11 +38,6 @@ public class ColorService {
     }
     logger.warn("Color with code: {} doesn't exist", colorCode);
     return null;
-  }
-
-  public void insertColor(@NonNull Color toInsert) {
-    ColorEntity entity = ColorEntity.fromGpb(toInsert);
-    colorRepository.save(entity);
   }
 
   public void deleteColorById(@NonNull Integer id) {

@@ -17,17 +17,27 @@ import less.lgeo.mesh.ModelMesh;
 import less.lgeo.primitive.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 
+@SpringBootApplication
 public class RenderMesh extends Application {
 
   private static final String TITLE = "Less LGEO RenderMesh";
   private static final Logger logger = LoggerFactory.getLogger(RenderMesh.class);
+  private ConfigurableApplicationContext applicationContext;
 
   public static void main(String[] args) {
     if (args.length < 1) {
       logger.error("Usage: RenderMesh <LDraw file path>", new IllegalStateException());
     }
-    launch(args);
+    Application.launch(args);
+  }
+
+  @Override
+  public void init() throws Exception {
+    applicationContext = SpringApplication.run(RenderMesh.class);
   }
 
   @Override
@@ -73,5 +83,10 @@ public class RenderMesh extends Application {
       logger.error("Failed to get model", e);
       return Optional.empty();
     }
+  }
+
+  @Override
+  public void stop() throws Exception {
+    applicationContext.close();
   }
 } 

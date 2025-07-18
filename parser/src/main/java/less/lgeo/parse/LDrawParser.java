@@ -2,7 +2,6 @@ package less.lgeo.parse;
 
 import static less.lgeo.common.CommonUtils.getLineType;
 import static less.lgeo.common.VertexUtils.getPoint;
-import static less.lgeo.entity.ColorEntity.toGpb;
 import static less.lgeo.primitive.LineUtils.toLine;
 import static less.lgeo.primitive.OptionalLineUtils.toOptionalLine;
 import static less.lgeo.primitive.QuadrilateralUtils.toQuadrilateral;
@@ -23,11 +22,9 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
-import less.lgeo.common.Color;
 import less.lgeo.common.LineType;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.Vertex;
-import less.lgeo.entity.ColorEntity;
 import less.lgeo.primitive.Line;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.OptionalLine;
@@ -111,7 +108,7 @@ public class LDrawParser implements Parser<Model> {
           "Remaining Sub File Reference files does not match format, size is " + values.size());
     }
 
-    Color color = parseColor(toInt(values.removeFirst()));
+    int colorId = toInt(values.removeFirst());
 
     double x = toDouble(values.removeFirst());
     double y = toDouble(values.removeFirst());
@@ -155,7 +152,7 @@ public class LDrawParser implements Parser<Model> {
     return SubFileReference.newBuilder()
         .setFileName(subFileName)
         .setType(LineType.SUB_FILE_REF)
-        .setColor(color)
+        .setColorId(colorId)
         .setMatrix(parsedMatrix)
         .setSubModel(parsedSubFileModel)
         .build();
@@ -199,7 +196,7 @@ public class LDrawParser implements Parser<Model> {
       throw new IllegalStateException(
           "Remaining Line does not match format, size is " + values.size());
     }
-    Color color = parseColor(toInt(values.removeFirst()));
+    int colorId = toInt(values.removeFirst());
     double x1 = toDouble(values.removeFirst());
     double y1 = toDouble(values.removeFirst());
     double z1 = toDouble(values.removeFirst());
@@ -210,7 +207,7 @@ public class LDrawParser implements Parser<Model> {
     Vertex p1 = getPoint(x1, y1, z1);
     Vertex p2 = getPoint(x2, y2, z2);
     return toLine(
-        color,
+        colorId,
         p1,
         p2
     );
@@ -224,7 +221,7 @@ public class LDrawParser implements Parser<Model> {
       throw new IllegalStateException(
           "Remaining Triangle does not match format, size is " + values.size());
     }
-    Color color = parseColor(toInt(values.removeFirst()));
+    int colorId = toInt(values.removeFirst());
     double x1 = toDouble(values.removeFirst());
     double y1 = toDouble(values.removeFirst());
     double z1 = toDouble(values.removeFirst());
@@ -239,7 +236,7 @@ public class LDrawParser implements Parser<Model> {
     Vertex p2 = getPoint(x2, y2, z2);
     Vertex p3 = getPoint(x3, y3, z3);
     return toTriangle(
-        color,
+        colorId,
         p1,
         p2,
         p3
@@ -254,7 +251,7 @@ public class LDrawParser implements Parser<Model> {
       throw new IllegalStateException(
           "Remaining Quadrilateral does not match format, size is " + values.size());
     }
-    Color color = parseColor(toInt(values.removeFirst()));
+    int colorId = toInt(values.removeFirst());
     double x1 = toDouble(values.removeFirst());
     double y1 = toDouble(values.removeFirst());
     double z1 = toDouble(values.removeFirst());
@@ -273,7 +270,7 @@ public class LDrawParser implements Parser<Model> {
     Vertex p3 = getPoint(x3, y3, z3);
     Vertex p4 = getPoint(x4, y4, z4);
     return toQuadrilateral(
-        color,
+        colorId,
         p1,
         p2,
         p3,
@@ -289,7 +286,7 @@ public class LDrawParser implements Parser<Model> {
       throw new IllegalStateException(
           "Remaining Optional Line does not match format, size is " + values.size());
     }
-    Color color = parseColor(toInt(values.removeFirst()));
+    int colorId = toInt(values.removeFirst());
     double x1 = toDouble(values.removeFirst());
     double y1 = toDouble(values.removeFirst());
     double z1 = toDouble(values.removeFirst());
@@ -308,22 +305,12 @@ public class LDrawParser implements Parser<Model> {
     Vertex p3 = getPoint(x3, y3, z3);
     Vertex p4 = getPoint(x4, y4, z4);
     return toOptionalLine(
-        color,
+        colorId,
         p1,
         p2,
         p3,
         p4
     );
-  }
-
-  /**
-   * Takes in LDraw color code
-   *
-   * @return parsed LDraw {@link Color}
-   */
-  private Color parseColor(int colorCode) {
-    ColorEntity colorEntity = colorService.getColorByCode(colorCode);
-    return toGpb(colorEntity);
   }
 
 }

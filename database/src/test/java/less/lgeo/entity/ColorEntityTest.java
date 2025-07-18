@@ -1,7 +1,6 @@
 package less.lgeo.entity;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import less.lgeo.common.Color;
@@ -11,76 +10,60 @@ class ColorEntityTest {
 
   private static final Integer id = 1;
   private static final String name = "name";
-  private static final String value = "#FFFFFF";
-  private static final String edge = "#FFFFFF";
-  private static final Integer alpha = 255;
-  private static final Integer luminance = 200;
-  private static final String finish = "CHROME";
+  private static final String rgb = "FFFFFF";
+  private static final boolean isTrans = false;
+  private static final int numParts = 1;
+  private static final int numSets = 1;
+  private static final int y1 = 1;
+  private static final int y2 = 1;
+
 
   @Test
   void completeEntityToGpb() {
 
-    ColorEntity entity = new ColorEntity( id, name, value, edge, alpha, luminance, finish );
+    ColorEntity entity = new ColorEntity(id, name, rgb, isTrans, numParts, numSets, y1, y2);
 
-    Color gpbColor = ColorEntity.toGpb( entity );
+    Color gpbColor = ColorEntity.toGpb(entity);
 
-    assertEquals( entity.getId(), gpbColor.getId() );
-    assertEquals( entity.getName(), gpbColor.getName() );
-    assertEquals( entity.getValue(), gpbColor.getValue() );
-    assertEquals( entity.getAlpha(), gpbColor.getAlpha() );
-    assertEquals( entity.getLuminance(), gpbColor.getLuminance() );
-    assertEquals( entity.getFinish(), gpbColor.getFinish() );
+    assertEquals(entity.getId(), gpbColor.getId());
+    assertEquals(entity.getName(), gpbColor.getName());
+    assertEquals(entity.getRgb(), gpbColor.getRgb());
+    assertEquals(entity.isTrans(), gpbColor.getIsTrans());
   }
 
   @Test
-  void nullAlphaToGpb() {
+  void nullStartYearToGpb() {
 
-    ColorEntity entity = new ColorEntity( id, name, value, edge, null, luminance, finish );
+    ColorEntity entity = new ColorEntity(id, name, rgb, isTrans, numParts, numSets, null, y2);
 
-    Color gpbColor = ColorEntity.toGpb( entity );
+    Color gpbColor = ColorEntity.toGpb(entity);
 
-    assertEquals( entity.getId(), gpbColor.getId() );
-    assertEquals( entity.getName(), gpbColor.getName() );
-    assertEquals( entity.getValue(), gpbColor.getValue() );
-    assertNull( entity.getAlpha() );
-    assertEquals( entity.getLuminance(), gpbColor.getLuminance() );
-    assertEquals( entity.getFinish(), gpbColor.getFinish() );
+    assertEquals(entity.getId(), gpbColor.getId());
+    assertEquals(entity.getName(), gpbColor.getName());
+    assertEquals(entity.getRgb(), gpbColor.getRgb());
+    assertEquals(entity.isTrans(), gpbColor.getIsTrans());
   }
 
   @Test
-  void nullLuminanceToGpb() {
+  void nullEndYearToGpb() {
 
-    ColorEntity entity = new ColorEntity( id, name, value, edge, alpha, null, finish );
+    ColorEntity entity = new ColorEntity(id, name, rgb, isTrans, numParts, numSets, y1, null);
 
-    Color gpbColor = ColorEntity.toGpb( entity );
+    Color gpbColor = ColorEntity.toGpb(entity);
 
-    assertEquals( entity.getId(), gpbColor.getId() );
-    assertEquals( entity.getName(), gpbColor.getName() );
-    assertEquals( entity.getValue(), gpbColor.getValue() );
-    assertEquals( entity.getAlpha(), gpbColor.getAlpha() );
-    assertNull( entity.getLuminance() );
-    assertEquals( entity.getFinish(), gpbColor.getFinish() );
+    assertEquals(entity.getId(), gpbColor.getId());
+    assertEquals(entity.getName(), gpbColor.getName());
+    assertEquals(entity.getRgb(), gpbColor.getRgb());
+    assertEquals(entity.isTrans(), gpbColor.getIsTrans());
   }
 
   @Test
-  void nullFinishToGpb() {
+  void nullEntityToGpb() {
 
-    ColorEntity entity = new ColorEntity( id, name, value, edge, alpha, luminance, null );
+    ColorEntity entity = null;
 
-    Color gpbColor = ColorEntity.toGpb( entity );
-
-    assertEquals( entity.getId(), gpbColor.getId() );
-    assertEquals( entity.getName(), gpbColor.getName() );
-    assertEquals( entity.getValue(), gpbColor.getValue() );
-    assertEquals( entity.getAlpha(), gpbColor.getAlpha() );
-    assertEquals( entity.getLuminance(), gpbColor.getLuminance() );
-    assertNull( entity.getFinish() );
+    assertThrowsExactly(EntityToGpbConversionException.class, () -> ColorEntity.toGpb(entity),
+        "ColorEntity was null");
   }
 
-  @Test
-  void nullIdToGpb() {
-
-    ColorEntity entity = new ColorEntity( null, name, value, edge, alpha, luminance, finish );
-    assertThrowsExactly( EntityToGpbConversionException.class, () -> ColorEntity.toGpb( entity ) );
-  }
 }
