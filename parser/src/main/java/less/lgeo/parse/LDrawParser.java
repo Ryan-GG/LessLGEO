@@ -31,11 +31,9 @@ import less.lgeo.primitive.OptionalLine;
 import less.lgeo.primitive.Quadrilateral;
 import less.lgeo.primitive.SubFileReference;
 import less.lgeo.primitive.Triangle;
-import less.lgeo.service.ColorService;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -45,12 +43,8 @@ public class LDrawParser implements Parser<Model> {
 
   private final Map<String, Model> modelCache;
 
-  @Autowired
-  private final ColorService colorService;
-
-  public LDrawParser(ColorService colorService) {
+  public LDrawParser() {
     this.modelCache = new ConcurrentHashMap<>();
-    this.colorService = colorService;
   }
 
   @Override
