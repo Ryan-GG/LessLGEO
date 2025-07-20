@@ -64,6 +64,24 @@ public class ColorEntity {
 
   @Override
   public String toString() {
-    return null;
+    return
+        String.format("""
+                id: %d,
+                name: %s,
+                rgb: %s,
+                isTrans: %b,
+                numParts: %d,
+                numSets: %d,
+                startYear: %d,
+                endYear: %d,
+                """,
+            getId(),
+            getName(),
+            getRgb(),
+            isTrans(),
+            getNumParts(),
+            getNumSets(),
+            getStartYear(),
+            getEndYear());
   }
 }
