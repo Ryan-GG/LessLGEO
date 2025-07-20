@@ -21,14 +21,14 @@ message Model {
 
 message Line {
   LineType type = 1;
-  Color color = 2;
+  int32 color_id = 2;
   Vertex p1 = 3;
   Vertex p2 = 4;
 }
 
 message Triangle {
   LineType type = 1;
-  Color color = 2;
+  int32 color_id = 2;
   Vertex p1 = 3;
   Vertex p2 = 4;
   Vertex p3 = 5;
@@ -36,7 +36,7 @@ message Triangle {
 
 message Quadrilateral {
   LineType type = 1;
-  Color color = 2;
+  int32 color_id = 2;
   Vertex p1 = 3;
   Vertex p2 = 4;
   Vertex p3 = 5;
@@ -44,7 +44,7 @@ message Quadrilateral {
 }
 message OptionalLine {
   LineType type = 1;
-  Color color = 2;
+  int32 color_id = 2;
   Vertex p1 = 3;
   Vertex p2 = 4;
   Vertex p3 = 5;
@@ -53,7 +53,7 @@ message OptionalLine {
 
 message SubFileReference {
   LineType type = 1;
-  Color color = 2;
+  int32 color_id = 2;
   Matrix matrix = 3;
   Model sub_model = 4;
   string file_name = 5;

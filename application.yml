@@ -8,7 +8,7 @@ spring:
     password: ${RABBIT_PASSWORD}
   datasource:
     driverClassName: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/color?currentSchema=color
+    url: jdbc:postgresql://localhost:5432/
     username: { DATABASE_USER }
     password: { DATABASE_PASSWORD }
 
@@ -17,9 +17,4 @@ rabbit:
   worker-queues:
     web-to-parser: "web-to-parser-queue"
     parser-to-reducer: "parser-to-reducer-queue"
-  request-reply:
-    web-to-color-parser:
-      exchange: "web-to-parser"
-      queue: "web-to-color-parser-rr"
-      routingKey: "web.color.parser.#"
 

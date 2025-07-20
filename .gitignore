@@ -49,3 +49,6 @@ connectivity/
 # Collision files
 collider/
 *.col
+
+# GPB files
+*.gpb

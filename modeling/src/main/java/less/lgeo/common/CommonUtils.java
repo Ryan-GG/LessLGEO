@@ -19,8 +19,6 @@ public class CommonUtils {
   // This is because traditional .conn files are proprietary and cannot be parsed normally
   public static String PART_EXT = ".part";
   
-  public static int RESERVED_TRANSPARENCY_CODE = 128;
-
   /**
    * TODO: Come back and verify if this is need or the gpb can be modified
    *
@@ -137,56 +135,18 @@ public class CommonUtils {
   }
 
   /**
-   * @param inheritedColor Possibly inherit the color based on the subPartColor
-   * @param subPartColor   subPart's color dictates if inheritedColor is needed based on reserved
-   *                       color codes 16,24
+   * @param inheritedColorId Possibly inherit the color based on the subPartColorId
+   * @param subPartColorId   subPart's color dictates if inheritedColor is needed based on reserved
+   *                         color codes 16,24
    * @return Color GPB
    */
-  public static Color getColor(Optional<Color> inheritedColor, Color subPartColor) {
+  public static int getColor(Optional<Integer> inheritedColorId, int subPartColorId) {
 
-    return inheritedColor.map(color -> switch (subPartColor.getId()) {
-          case 16 -> {
-            Color.Builder builder = subPartColor.toBuilder();
-
-            builder.setValue(color.getValue());
-
-            if (builder.hasAlpha()) {
-              builder.setAlpha(color.getAlpha());
-            }
-
-            if (builder.hasLuminance()) {
-              builder.setLuminance(color.getLuminance());
-            }
-
-            if (builder.hasFinish()) {
-              builder.setFinish(color.getFinish());
-            }
-
-            yield builder.build();
-          }
-          case 24 -> {
-            Color.Builder builder = subPartColor.toBuilder();
-
-            builder.setEdge(color.getEdge());
-
-            if (builder.hasAlpha()) {
-              builder.setAlpha(color.getAlpha());
-            }
-
-            if (builder.hasLuminance()) {
-              builder.setLuminance(color.getLuminance());
-            }
-
-            if (builder.hasFinish()) {
-              builder.setFinish(color.getFinish());
-            }
-
-            yield builder.build();
-          }
-          default -> subPartColor;
+    return inheritedColorId.map(color -> switch (subPartColorId) {
+          case 16, 24 -> color;
+          default -> subPartColorId;
         })
-        .orElse(subPartColor);
-
+        .orElse(subPartColorId);
 
   }
 }

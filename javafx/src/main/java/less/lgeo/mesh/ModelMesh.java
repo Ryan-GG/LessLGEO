@@ -1,7 +1,6 @@
 package less.lgeo.mesh;
 
 import static javafx.scene.shape.VertexFormat.POINT_TEXCOORD;
-import static less.lgeo.common.CommonUtils.RESERVED_TRANSPARENCY_CODE;
 import static less.lgeo.connection.ConnectionUtils.getConnectionPoints;
 import static less.lgeo.primitive.ModelUtils.getConnections;
 import static less.lgeo.primitive.ModelUtils.getLines;
@@ -12,7 +11,9 @@ import static less.lgeo.primitive.OptionalLineUtils.getVertices;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import javafx.scene.Group;
 import javafx.scene.Node;
@@ -23,10 +24,12 @@ import javafx.scene.shape.DrawMode;
 import javafx.scene.shape.MeshView;
 import javafx.scene.shape.TriangleMesh;
 import less.lgeo.common.Vertex;
+import less.lgeo.entity.ColorEntity;
 import less.lgeo.primitive.LineUtils;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.QuadrilateralUtils;
 import less.lgeo.primitive.TriangleUtils;
+import less.lgeo.service.ColorService;
 import org.fxyz3d.geometry.Point3D;
 import org.fxyz3d.shapes.composites.PolyLine3D;
 import org.fxyz3d.shapes.primitives.CubeMesh;
@@ -37,13 +40,15 @@ public class ModelMesh {
   private static final Float LINE_WIDTH = 0.5f;
 
   private static final Color CONN_COLOR = Color.DEEPPINK;
-  private static final Color LINE_COLOR = Color.BLACK;
-  private static final Color OPTIONAL_LINE_COLOR = Color.PURPLE;
-
+  private final Model model;
+  private final ColorService colorService;
+  private final Map<Integer, Color> colorCache;
   private Group mesh;
 
-  public ModelMesh(Model model) {
-    setMesh(model);
+  public ModelMesh(Model model, ColorService colorService) {
+    this.model = model;
+    this.colorService = colorService;
+    this.colorCache = new ConcurrentHashMap<>();
   }
 
   public static Point3D gpbToPoint3D(Vertex point) {
@@ -51,6 +56,7 @@ public class ModelMesh {
   }
 
   public Group getMesh() {
+    setMesh(this.model);
     return this.mesh;
   }
 
@@ -78,7 +84,7 @@ public class ModelMesh {
               .map(point -> new Point3D(point.x, point.y,
                   point.z))
               .toList();
-          return new PolyLine3D(points, LINE_WIDTH, getEdgeColor(line.getColor()));
+          return new PolyLine3D(points, LINE_WIDTH, getColor(line.getColorId()));
         })
         .toList();
 
@@ -123,7 +129,7 @@ public class ModelMesh {
           );
 
           MeshView quadView = new MeshView(quadMesh);
-          quadView.setMaterial(new PhongMaterial(getPartColor(quadrilateral.getColor())));
+          quadView.setMaterial(new PhongMaterial(getColor(quadrilateral.getColorId())));
           quadView.setDrawMode(DrawMode.FILL);
           quadView.setCullFace(CullFace.NONE);
 
@@ -165,7 +171,7 @@ public class ModelMesh {
           );
 
           MeshView triangleView = new MeshView(triangleMesh);
-          triangleView.setMaterial(new PhongMaterial(getPartColor(triangle.getColor())));
+          triangleView.setMaterial(new PhongMaterial(getColor(triangle.getColorId())));
           triangleView.setDrawMode(DrawMode.FILL);
           triangleView.setCullFace(CullFace.NONE);
 
@@ -195,7 +201,7 @@ public class ModelMesh {
           // Add first point again to close loop
           points.add(points.getFirst());
 
-          return new PolyLine3D(points, LINE_WIDTH, getEdgeColor(optionalLine.getColor()));
+          return new PolyLine3D(points, LINE_WIDTH, getColor(optionalLine.getColorId()));
         })
         .toList();
 
@@ -229,37 +235,21 @@ public class ModelMesh {
 
 
   /**
-   * <p>
-   * Alpha 128 is a reserved code, indicating transparency. Default to .01 to just give an outline
-   * for the model mesh
-   *
-   * @param color Edge Color
+   * @param colorId Part Color id
    * @return Updated Color to include possible opacity
    */
-  private Color getEdgeColor(less.lgeo.common.Color color) {
-    java.awt.Color edgeColor = java.awt.Color.decode(color.getEdge());
+  private Color getColor(int colorId) {
 
-    double opacity =
-        color.getAlpha() != RESERVED_TRANSPARENCY_CODE ? color.getAlpha() / 255.0 : 0.01;
+    return colorCache.computeIfAbsent(colorId, key ->
+    {
+      ColorEntity colorEntity = colorService.getColorByCode(key);
+      less.lgeo.common.Color gpbColor = ColorEntity.toGpb(colorEntity);
+      java.awt.Color modelColor = java.awt.Color.decode("#".concat(gpbColor.getRgb()));
+      double opacity = gpbColor.getIsTrans() ? 0.1 : 1.0;
+      return Color.rgb(modelColor.getRed(), modelColor.getGreen(), modelColor.getBlue(),
+          opacity);
+    });
 
-    return Color.rgb(edgeColor.getRed(), edgeColor.getGreen(), edgeColor.getBlue(),
-        opacity);
-  }
-
-  /**
-   * <p>
-   * Alpha 128 is a reserved code, indicating transparency.
-   *
-   * @param color Part Color
-   * @return Updated Color to include possible opacity
-   */
-  private Color getPartColor(less.lgeo.common.Color color) {
-    java.awt.Color modelColor = java.awt.Color.decode(color.getValue());
-
-    double opacity = color.getAlpha() != RESERVED_TRANSPARENCY_CODE ? color.getAlpha() / 255.0 : 0;
-
-    return Color.rgb(modelColor.getRed(), modelColor.getGreen(), modelColor.getBlue(),
-        opacity);
   }
 
 }

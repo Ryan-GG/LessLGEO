@@ -4,51 +4,355 @@ databaseChangeLog:
       author: gross
       changes:
         - createTable:
-            tableName: color
+            tableName: themes
             columns:
               - column:
                   name: id
-                  type: integer
+                  type: int
                   constraints:
                     nullable: false
                     primaryKey: true
               - column:
                   name: name
-                  type: varchar(255)
+                  type: varchar(50)
                   constraints:
                     nullable: false
               - column:
-                  name: value
-                  type: varchar(255)
+                  name: parent_id
+                  type: int
+                  constraints:
+                    nullable: true
+        - createTable:
+            tableName: sets
+            columns:
+              - column:
+                  name: set_num
+                  type: varchar(20)
                   constraints:
                     nullable: false
               - column:
-                  name: edge
-                  type: varchar(255)
+                  name: name
+                  type: varchar(256)
                   constraints:
                     nullable: false
               - column:
-                  name: alpha
-                  type: integer
+                  name: year
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: theme_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: num_parts
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: img_url
+                  type: varchar(256)
+                  constraints:
+                    nullable: true
+        - createTable:
+            tableName: parts
+            columns:
+              - column:
+                  name: part_num
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(250)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: part_cat_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: part_material
+                  type: varchar(256)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: part_relationships
+            columns:
+              - column:
+                  name: rel_type
+                  type: varchar(1)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: child_part_num
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: parent_part_num
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: part_categories
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: minifigs
+            columns:
+              - column:
+                  name: fig_num
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: num_parts
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: img_url
+                  type: varchar(256)
+                  constraints:
+                    nullable: true
+        - createTable:
+            tableName: inventory_sets
+            columns:
+              - column:
+                  name: inventory_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: set_num
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: int
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: inventory_parts
+            columns:
+              - column:
+                  name: inventory_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: part_num
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_spare
+                  type: bool
+                  constraints:
+                    nullable: false
+              - column:
+                  name: img_url
+                  type: varchar(256)
+                  constraints:
+                    nullable: true
+        - createTable:
+            tableName: inventory_minifigs
+            columns:
+              - column:
+                  name: inventory_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fig_num
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: quantity
+                  type: int
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: inventories
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: version
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: set_num
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: elements
+            columns:
+              - column:
+                  name: element_id
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: part_num
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: design_id
+                  type: varchar(10)
+                  constraints:
+                    nullable: true
+        - createTable:
+            tableName: colors
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(200)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: rgb
+                  type: varchar(6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_trans
+                  type: bool
+                  constraints:
+                    nullable: false
+              - column:
+                  name: num_parts
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: num_sets
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: y1
+                  type: int
                   constraints:
                     nullable: true
               - column:
-                  name: luminance
-                  type: integer
+                  name: y2
+                  type: int
                   constraints:
                     nullable: true
-              - column:
-                  name: finish
-                  type: varchar(255)
-                  constraints:
-                    nullable: true
+
   - changeSet:
       id: 1
       author: gross
       changes:
         - loadData:
-            file: classpath:/db/changelog/data/colors.csv
-            tableName: color
+            file: classpath:/db/changelog/data/themes.csv
+            tableName: themes
             separator: ","
             encoding: UTF-8
-
+        - loadData:
+            file: classpath:/db/changelog/data/sets.csv
+            tableName: sets
+            separator: ","
+            encoding: UTF-8
+        - loadData:
+            file: classpath:/db/changelog/data/parts.csv
+            tableName: parts
+            separator: ","
+            quotchar: '"'
+            encoding: UTF-8
+        - loadData:
+            file: classpath:/db/changelog/data/part_relationships.csv
+            tableName: part_relationships
+            separator: ","
+            encoding: UTF-8
+        - loadData:
+            file: classpath:/db/changelog/data/part_categories.csv
+            tableName: part_categories
+            separator: ","
+            encoding: UTF-8
+        - loadData:
+            file: classpath:/db/changelog/data/minifigs.csv
+            tableName: minifigs
+            separator: ","
+            encoding: UTF-8
+        - loadData:
+            file: classpath:/db/changelog/data/inventory_sets.csv
+            tableName: inventory_sets
+            separator: ","
+            encoding: UTF-8
+        - loadData:
+            file: classpath:/db/changelog/data/inventory_parts.csv
+            tableName: inventory_parts
+            separator: ","
+            encoding: UTF-8
+        - loadData:
+            file: classpath:/db/changelog/data/inventory_minifigs.csv
+            tableName: inventory_minifigs
+            separator: ","
+            encoding: UTF-8
+        - loadData:
+            file: classpath:/db/changelog/data/inventories.csv
+            tableName: inventories
+            separator: ","
+            encoding: UTF-8
+        - loadData:
+            file: classpath:/db/changelog/data/elements.csv
+            tableName: elements
+            separator: ","
+            encoding: UTF-8
+        - loadData:
+            file: classpath:/db/changelog/data/colors.csv
+            tableName: colors
+            separator: ","
+            encoding: UTF-8
