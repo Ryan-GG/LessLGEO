@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 import less.lgeo.common.Color;
+import less.lgeo.exception.EntityToGpbConversionException;
 import org.junit.jupiter.api.Test;
 
 class ColorEntityTest {

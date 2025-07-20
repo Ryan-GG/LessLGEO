@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import less.lgeo.common.Color;
+import less.lgeo.exception.EntityToGpbConversionException;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
