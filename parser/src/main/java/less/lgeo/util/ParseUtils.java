@@ -1,5 +1,6 @@
 package less.lgeo.util;
 
+import java.util.Iterator;
 import java.util.List;
 import less.lgeo.common.Comment;
 import less.lgeo.common.LineType;
@@ -26,11 +27,10 @@ public class ParseUtils {
 
   /**
    * @return If the next string is all Uppercase letters this is treated as a meta command
-   * @deprecated
    */
-  public static boolean isMetaCommand(List<String> values) {
-    String command = values.getFirst();
-    return command.toUpperCase().equals(command);
+  public static boolean isMetaCommand(String metaCommand) {
+    String copyCommand = String.copyValueOf(metaCommand.toCharArray());
+    return copyCommand.toUpperCase().equals(metaCommand);
   }
 
   /**
@@ -48,23 +48,24 @@ public class ParseUtils {
   /**
    * @return Join line values as singular string 'comment'
    */
-  public static Comment parseComment(List<String> values) {
+  public static Comment parseComment(String commentLine) {
     return Comment.newBuilder()
         .setType(LineType.COMMENT_OR_META_CMD)
-        .setComment(values.toString())
+        .setComment(commentLine)
         .build();
   }
 
   /**
    * @return MetaCommand, with command and additional parameters
    */
-  public static MetaCommand parseCommand(List<String> values) {
-    String command = values.removeFirst();
-    return MetaCommand.newBuilder()
+  public static MetaCommand parseCommand(String command, Iterator<String> iterator) {
+
+    MetaCommand.Builder builder = MetaCommand.newBuilder()
         .setType(LineType.COMMENT_OR_META_CMD)
-        .setCommand(command)
-        // TODO, This needs to actually do something when parsed
-        .addAllAdditionalParams(values)
-        .build();
+        .setCommand(command);
+
+    iterator.forEachRemaining(builder::addAdditionalParams);
+
+    return builder.build();
   }
 }

@@ -9,7 +9,6 @@ import static less.lgeo.util.ParseUtils.toDouble;
 import static less.lgeo.util.ParseUtils.toInt;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
@@ -44,22 +43,24 @@ public class ConnectivityParser implements Parser<Connection> {
 
     read(toParse).forEach(line -> {
       logger.info("Parsing line, {}", line);
-      List<String> values = new ArrayList<>(List.of(line.trim().split(" ")));
+      Iterator<String> iterator = List.of(line.split("\\s+")).iterator();
 
-      int commandValue = Integer.parseInt(values.removeFirst());
+      int commandValue = toInt(iterator.next());
       LineType lineType = getLineType(commandValue);
 
-      switch (lineType) {
-        case COMMENT_OR_META_CMD -> {
-          if (values.isEmpty()) {
-            logger.warn("Found '0' line");
-          } else if (isMetaCommand(values)) {
-            connectionBuilder.addCommand(parseCommand(values));
-          } else {
-            connectionBuilder.addComment(parseComment(values));
-          }
+      if (lineType != LineType.COMMENT_OR_META_CMD) {
+        throw new IllegalStateException("Unexpected Line Type");
+      }
+
+      if (!iterator.hasNext()) {
+        logger.warn("Found '0' line");
+      } else {
+        String command = iterator.next();
+        if (isMetaCommand(command)) {
+          connectionBuilder.addCommand(parseCommand(command, iterator));
+        } else {
+          connectionBuilder.addComment(parseComment(line));
         }
-        default -> throw new IllegalStateException("Unexpected Line Type");
       }
     });
 
@@ -68,7 +69,7 @@ public class ConnectivityParser implements Parser<Connection> {
       if (PE_CONN_META_CMD.equals(command.getCommand())) {
         Iterator<String> additionalParamsIter = command.getAdditionalParamsList().iterator();
 
-        GroupId groupId = getGroupId(Integer.parseInt(additionalParamsIter.next()));
+        GroupId groupId = getGroupId(toInt(additionalParamsIter.next()));
 
         connectionBuilder.addPartConnection(
             getPartConnection(groupId, additionalParamsIter));
@@ -95,7 +96,7 @@ public class ConnectivityParser implements Parser<Connection> {
   private PartConnection.Builder parseBody(GroupId groupId, Iterator<String> iterator) {
     return PartConnection.newBuilder()
         .setGroupId(groupId)
-        .setElementId(Integer.parseInt(iterator.next()))
+        .setElementId(toInt(iterator.next()))
         .setMatrix(
             Matrix.newBuilder()
                 .setA(toDouble(iterator.next()))
