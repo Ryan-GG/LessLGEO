@@ -15,8 +15,8 @@ import static less.lgeo.util.ParseUtils.toInt;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -54,6 +54,7 @@ public class LDrawParser implements Parser<Model> {
   }
 
   public Model parse(String toParse) {
+
     Model.Builder modelBuilder = Model.newBuilder();
 
     logger.info("Parsing file name: {}", toParse);
@@ -61,26 +62,30 @@ public class LDrawParser implements Parser<Model> {
     read(toParse).forEach(line -> {
       logger.info("Parsing line, {}", line);
 
-      List<String> values = new ArrayList<>(List.of(line.trim().split("\\s+")));
-      int commandValue = Integer.parseInt(values.removeFirst());
+      Iterator<String> lineIterator = List.of(line.split("\\s+")).iterator();
+
+      int commandValue = toInt(lineIterator.next());
 
       LineType lineType = getLineType(commandValue);
 
       switch (lineType) {
         case COMMENT_OR_META_CMD -> {
-          if (values.isEmpty()) {
+          if (!lineIterator.hasNext()) {
             logger.warn("Found '0' line");
-          } else if (isMetaCommand(values)) {
-            modelBuilder.addCommand(parseCommand(values));
           } else {
-            modelBuilder.addComment(parseComment(values));
+            String command = lineIterator.next();
+            if (isMetaCommand(command)) {
+              modelBuilder.addCommand(parseCommand(command, lineIterator));
+            } else {
+              modelBuilder.addComment(parseComment(line));
+            }
           }
         }
-        case SUB_FILE_REF -> modelBuilder.addPiece(parseSubFileReference(values));
-        case LINE -> modelBuilder.addLine(parseLine(values));
-        case TRIANGLE -> modelBuilder.addTriangle(parseTriangle(values));
-        case QUADRILATERAL -> modelBuilder.addQuadrilateral(parseQuadrilateral(values));
-        case OPTIONAL_LINE -> modelBuilder.addOptionalLine(parseOptionalLine(values));
+        case SUB_FILE_REF -> modelBuilder.addPiece(parseSubFileReference(lineIterator));
+        case LINE -> modelBuilder.addLine(parseLine(lineIterator));
+        case TRIANGLE -> modelBuilder.addTriangle(parseTriangle(lineIterator));
+        case QUADRILATERAL -> modelBuilder.addQuadrilateral(parseQuadrilateral(lineIterator));
+        case OPTIONAL_LINE -> modelBuilder.addOptionalLine(parseOptionalLine(lineIterator));
         default -> throw new IllegalStateException(
             "Line Type has an Illegal type of " + lineType.getDescriptorForType().toString());
       }
@@ -93,29 +98,24 @@ public class LDrawParser implements Parser<Model> {
   /**
    * Converts a list of strings to a {@link SubFileReference}
    *
-   * @param values values to parse
+   * @param iterator iterator to parse
    * @return parsed LDraw {@link SubFileReference}
    */
-  private SubFileReference parseSubFileReference(List<String> values) {
-    if (values.size() != 14) {
-      throw new IllegalStateException(
-          "Remaining Sub File Reference files does not match format, size is " + values.size());
-    }
+  private SubFileReference parseSubFileReference(Iterator<String> iterator) {
+    int colorId = toInt(iterator.next());
 
-    int colorId = toInt(values.removeFirst());
-
-    double x = toDouble(values.removeFirst());
-    double y = toDouble(values.removeFirst());
-    double z = toDouble(values.removeFirst());
-    double a = toDouble(values.removeFirst());
-    double b = toDouble(values.removeFirst());
-    double c = toDouble(values.removeFirst());
-    double d = toDouble(values.removeFirst());
-    double e = toDouble(values.removeFirst());
-    double f = toDouble(values.removeFirst());
-    double g = toDouble(values.removeFirst());
-    double h = toDouble(values.removeFirst());
-    double i = toDouble(values.removeFirst());
+    double x = toDouble(iterator.next());
+    double y = toDouble(iterator.next());
+    double z = toDouble(iterator.next());
+    double a = toDouble(iterator.next());
+    double b = toDouble(iterator.next());
+    double c = toDouble(iterator.next());
+    double d = toDouble(iterator.next());
+    double e = toDouble(iterator.next());
+    double f = toDouble(iterator.next());
+    double g = toDouble(iterator.next());
+    double h = toDouble(iterator.next());
+    double i = toDouble(iterator.next());
 
     Matrix parsedMatrix = Matrix.newBuilder()
         .setX(x)
@@ -140,7 +140,7 @@ public class LDrawParser implements Parser<Model> {
      * this recursive parsing is not good, as it will find the first instance of a matching file name,
      * possibly not find the correct directory one. Why there are multiple .dat files with the same name IDK
      */
-    List<String> subFileParts = Arrays.stream(values.getFirst().split("\\\\")).toList();
+    List<String> subFileParts = Arrays.stream(iterator.next().split("\\\\")).toList();
     String subFileName = subFileParts.getLast();
     Model parsedSubFileModel = getParsedSubFileModel(subFileName);
     return SubFileReference.newBuilder()
@@ -185,18 +185,14 @@ public class LDrawParser implements Parser<Model> {
   /**
    * @return parsed LDraw {@link Line}
    */
-  private Line parseLine(List<String> values) {
-    if (values.size() != 7) {
-      throw new IllegalStateException(
-          "Remaining Line does not match format, size is " + values.size());
-    }
-    int colorId = toInt(values.removeFirst());
-    double x1 = toDouble(values.removeFirst());
-    double y1 = toDouble(values.removeFirst());
-    double z1 = toDouble(values.removeFirst());
-    double x2 = toDouble(values.removeFirst());
-    double y2 = toDouble(values.removeFirst());
-    double z2 = toDouble(values.removeFirst());
+  private Line parseLine(Iterator<String> iterator) {
+    int colorId = toInt(iterator.next());
+    double x1 = toDouble(iterator.next());
+    double y1 = toDouble(iterator.next());
+    double z1 = toDouble(iterator.next());
+    double x2 = toDouble(iterator.next());
+    double y2 = toDouble(iterator.next());
+    double z2 = toDouble(iterator.next());
 
     Vertex p1 = getPoint(x1, y1, z1);
     Vertex p2 = getPoint(x2, y2, z2);
@@ -210,21 +206,17 @@ public class LDrawParser implements Parser<Model> {
   /**
    * @return parsed LDraw {@link Triangle}
    */
-  private Triangle parseTriangle(List<String> values) {
-    if (values.size() != 10) {
-      throw new IllegalStateException(
-          "Remaining Triangle does not match format, size is " + values.size());
-    }
-    int colorId = toInt(values.removeFirst());
-    double x1 = toDouble(values.removeFirst());
-    double y1 = toDouble(values.removeFirst());
-    double z1 = toDouble(values.removeFirst());
-    double x2 = toDouble(values.removeFirst());
-    double y2 = toDouble(values.removeFirst());
-    double z2 = toDouble(values.removeFirst());
-    double x3 = toDouble(values.removeFirst());
-    double y3 = toDouble(values.removeFirst());
-    double z3 = toDouble(values.removeFirst());
+  private Triangle parseTriangle(Iterator<String> iterator) {
+    int colorId = toInt(iterator.next());
+    double x1 = toDouble(iterator.next());
+    double y1 = toDouble(iterator.next());
+    double z1 = toDouble(iterator.next());
+    double x2 = toDouble(iterator.next());
+    double y2 = toDouble(iterator.next());
+    double z2 = toDouble(iterator.next());
+    double x3 = toDouble(iterator.next());
+    double y3 = toDouble(iterator.next());
+    double z3 = toDouble(iterator.next());
 
     Vertex p1 = getPoint(x1, y1, z1);
     Vertex p2 = getPoint(x2, y2, z2);
@@ -240,24 +232,20 @@ public class LDrawParser implements Parser<Model> {
   /**
    * @return parsed LDraw {@link Quadrilateral}
    */
-  private Quadrilateral parseQuadrilateral(List<String> values) {
-    if (values.size() != 13) {
-      throw new IllegalStateException(
-          "Remaining Quadrilateral does not match format, size is " + values.size());
-    }
-    int colorId = toInt(values.removeFirst());
-    double x1 = toDouble(values.removeFirst());
-    double y1 = toDouble(values.removeFirst());
-    double z1 = toDouble(values.removeFirst());
-    double x2 = toDouble(values.removeFirst());
-    double y2 = toDouble(values.removeFirst());
-    double z2 = toDouble(values.removeFirst());
-    double x3 = toDouble(values.removeFirst());
-    double y3 = toDouble(values.removeFirst());
-    double z3 = toDouble(values.removeFirst());
-    double x4 = toDouble(values.removeFirst());
-    double y4 = toDouble(values.removeFirst());
-    double z4 = toDouble(values.removeFirst());
+  private Quadrilateral parseQuadrilateral(Iterator<String> iterator) {
+    int colorId = toInt(iterator.next());
+    double x1 = toDouble(iterator.next());
+    double y1 = toDouble(iterator.next());
+    double z1 = toDouble(iterator.next());
+    double x2 = toDouble(iterator.next());
+    double y2 = toDouble(iterator.next());
+    double z2 = toDouble(iterator.next());
+    double x3 = toDouble(iterator.next());
+    double y3 = toDouble(iterator.next());
+    double z3 = toDouble(iterator.next());
+    double x4 = toDouble(iterator.next());
+    double y4 = toDouble(iterator.next());
+    double z4 = toDouble(iterator.next());
 
     Vertex p1 = getPoint(x1, y1, z1);
     Vertex p2 = getPoint(x2, y2, z2);
@@ -275,24 +263,20 @@ public class LDrawParser implements Parser<Model> {
   /**
    * @return parsed LDraw {@link OptionalLine}
    */
-  private OptionalLine parseOptionalLine(List<String> values) {
-    if (values.size() != 13) {
-      throw new IllegalStateException(
-          "Remaining Optional Line does not match format, size is " + values.size());
-    }
-    int colorId = toInt(values.removeFirst());
-    double x1 = toDouble(values.removeFirst());
-    double y1 = toDouble(values.removeFirst());
-    double z1 = toDouble(values.removeFirst());
-    double x2 = toDouble(values.removeFirst());
-    double y2 = toDouble(values.removeFirst());
-    double z2 = toDouble(values.removeFirst());
-    double x3 = toDouble(values.removeFirst());
-    double y3 = toDouble(values.removeFirst());
-    double z3 = toDouble(values.removeFirst());
-    double x4 = toDouble(values.removeFirst());
-    double y4 = toDouble(values.removeFirst());
-    double z4 = toDouble(values.removeFirst());
+  private OptionalLine parseOptionalLine(Iterator<String> iterator) {
+    int colorId = toInt(iterator.next());
+    double x1 = toDouble(iterator.next());
+    double y1 = toDouble(iterator.next());
+    double z1 = toDouble(iterator.next());
+    double x2 = toDouble(iterator.next());
+    double y2 = toDouble(iterator.next());
+    double z2 = toDouble(iterator.next());
+    double x3 = toDouble(iterator.next());
+    double y3 = toDouble(iterator.next());
+    double z3 = toDouble(iterator.next());
+    double x4 = toDouble(iterator.next());
+    double y4 = toDouble(iterator.next());
+    double z4 = toDouble(iterator.next());
 
     Vertex p1 = getPoint(x1, y1, z1);
     Vertex p2 = getPoint(x2, y2, z2);
