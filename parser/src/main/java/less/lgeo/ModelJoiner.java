@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
 import less.lgeo.connectivity.Connection;
+import less.lgeo.messaging.ModelJobRequest;
 import less.lgeo.parse.ConnectivityParser;
 import less.lgeo.parse.LDrawParser;
 import less.lgeo.primitive.Model;
@@ -25,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ModelJoiner {
 
-  private static final Logger logger = LoggerFactory.getLogger(ModelJoiner.class);
+  private static final Logger logger = LoggerFactory.getLogger( ModelJoiner.class );
   private final LDrawParser lDrawParser;
   private final ConnectivityParser connectivityParser;
 
@@ -37,46 +38,48 @@ public class ModelJoiner {
     this.connectivityParser = connectivityParser;
   }
 
-  public Model joinAndTransformModel(String toParse) {
+  public Model joinAndTransformModel( ModelJobRequest modelJobRequest ) {
 
-    Model parentModel = getLDrawModel(toParse);
+    Model parentModel = getLDrawModel( modelJobRequest );
 
     List<SubFileReference> connectedPieces = parentModel.getPieceList().stream()
-        .map(this::joinPieceWithConnection)
+        .map( this::joinPieceWithConnection )
         .toList();
 
-    if (!connectedPieces.isEmpty()) {
+    if ( !connectedPieces.isEmpty() ) {
       parentModel = parentModel.toBuilder()
           .clearPiece()
-          .addAllPiece(connectedPieces)
+          .addAllPiece( connectedPieces )
           .build();
     }
 
-    return transformModel(parentModel);
+    return transformModel( parentModel );
   }
 
-  private @NonNull Model getLDrawModel(String toParse) {
-    return lDrawParser.parse(toParse);
+  private @NonNull Model getLDrawModel( ModelJobRequest modelJobRequest ) {
+    return lDrawParser.parse( modelJobRequest.getModelString() ).toBuilder()
+        .setUUID( modelJobRequest.getUUID() )
+        .build();
   }
 
-  private @NonNull SubFileReference joinPieceWithConnection(SubFileReference piece) {
+  private @NonNull SubFileReference joinPieceWithConnection( SubFileReference piece ) {
 
-    File connectionFile = new File("connectivity",
-        changeFileExtension(piece.getFileName(), PART_EXT));
+    File connectionFile = new File( "connectivity",
+        changeFileExtension( piece.getFileName(), PART_EXT ) );
 
     try {
-      String input = Files.readString(connectionFile.toPath());
-      Connection pieceConnection = connectivityParser.parse(input);
+      String input = Files.readString( connectionFile.toPath() );
+      Connection pieceConnection = connectivityParser.parse( input );
 
       return piece.toBuilder()
           .clearPieceConnection()
-          .setPieceConnection(pieceConnection)
+          .setPieceConnection( pieceConnection )
           .build();
-    } catch (IOException e) {
-      logger.error("Failed to open connectivity file {}", connectionFile.getAbsolutePath());
+    } catch ( IOException e ) {
+      logger.error( "Failed to open connectivity file {}", connectionFile.getAbsolutePath() );
     }
 
-    logger.warn("Piece Connection is Null");
+    logger.warn( "Piece Connection is Null" );
     return piece;
   }
 }

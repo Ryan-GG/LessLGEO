@@ -56,6 +56,11 @@
       <groupId>org.fxyz3d</groupId>
       <version>0.6.0</version>
     </dependency>
+    <dependency>
+      <artifactId>database</artifactId>
+      <groupId>less.lgeo</groupId>
+      <version>0.0.1-SNAPSHOT</version>
+    </dependency>
   </dependencies>
   <modelVersion>4.0.0</modelVersion>
   <name>javafx</name>

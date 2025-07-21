@@ -16,11 +16,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ColorService {
 
-  private static final Logger logger = LoggerFactory.getLogger(ColorService.class);
+  private static final Logger logger = LoggerFactory.getLogger( ColorService.class );
 
   private final ColorRepository colorRepository;
 
-  public ColorService(ColorRepository colorRepository) {
+  public ColorService( ColorRepository colorRepository ) {
     this.colorRepository = colorRepository;
   }
 
@@ -31,16 +31,16 @@ public class ColorService {
   /**
    * @return database entity by Color Code(Id), Null if no corresponding color is found
    */
-  public @Nullable ColorEntity getColorByCode(Integer colorCode) {
-    Optional<ColorEntity> optionalColor = colorRepository.findById(colorCode);
-    if (optionalColor.isPresent()) {
+  public @Nullable ColorEntity getColorByCode( Integer colorCode ) {
+    Optional<ColorEntity> optionalColor = colorRepository.findById( colorCode );
+    if ( optionalColor.isPresent() ) {
       return optionalColor.get();
     }
-    logger.warn("Color with code: {} doesn't exist", colorCode);
+    logger.warn( "Color with id: {} doesn't exist", colorCode );
     return null;
   }
 
-  public void deleteColorById(@NonNull Integer id) {
-    colorRepository.deleteById(id);
+  public void deleteColorById( @NonNull Integer id ) {
+    colorRepository.deleteById( id );
   }
 }

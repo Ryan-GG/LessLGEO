@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: gross
+      changes:
+        - createTable:
+            tableName: models
+            columns:
+              - column:
+                  name: uuid
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: model_data
+                  type: BYTEA
+                  constraints:
+                    nullable: false
