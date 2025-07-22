@@ -16,56 +16,57 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootApplication( scanBasePackages = "less.lgeo" )
+@SpringBootApplication(scanBasePackages = "less.lgeo")
 public class RenderMesh extends Application {
 
   private static final String TITLE = "Less LGEO RenderMesh";
-  private static final Logger logger = LoggerFactory.getLogger( RenderMesh.class );
+  private static final Logger logger = LoggerFactory.getLogger(RenderMesh.class);
   private ConfigurableApplicationContext applicationContext;
 
-  public static void main( String[] args ) {
-    if ( args.length < 1 ) {
-      logger.error( "Usage: RenderMesh <LDraw file path>", new IllegalStateException() );
-    }
-    Application.launch( args );
+  public static void main(String[] args) {
+    Application.launch(args);
   }
 
   @Override
   public void init() {
-    applicationContext = SpringApplication.run( RenderMesh.class );
+    applicationContext = SpringApplication.run(RenderMesh.class);
   }
 
   @Override
-  public void start( Stage stage ) {
+  public void start(Stage stage) {
 
-    logger.info( "Rendering Mesh" );
+    Parameters parameters = getParameters();
+    if (parameters == null || parameters.getRaw().isEmpty()) {
+      throw new IllegalArgumentException("Usage: RenderMesh <Model UUID>");
+    }
+    logger.info("Rendering Mesh");
 
-    AmbientLight ambientLight = new AmbientLight( Color.color( 1, 1, 1 ) );
+    AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
 
     // Use ModelMeshFactory from Spring context
     less.lgeo.mesh.ModelMeshFactory modelMeshFactory = applicationContext.getBean(
-        less.lgeo.mesh.ModelMeshFactory.class );
-    ModelMesh modelMesh = modelMeshFactory.create( getParameters().getRaw().getFirst() );
-    Group world = new Group( ambientLight, modelMesh.getMesh() );
+        less.lgeo.mesh.ModelMeshFactory.class);
+    ModelMesh modelMesh = modelMeshFactory.create(parameters.getRaw().getFirst());
+    Group world = new Group(ambientLight, modelMesh.getMesh());
 
-    Scene scene = new Scene( world, 800, 600, true, SceneAntialiasing.BALANCED );
-    attachCamera( scene );
+    Scene scene = new Scene(world, 800, 600, true, SceneAntialiasing.BALANCED);
+    attachCamera(scene);
 
-    setUpStage( stage, scene );
-    logger.info( "Showing Mesh" );
+    setUpStage(stage, scene);
+    logger.info("Showing Mesh");
   }
 
-  private void setUpStage( Stage stage, Scene scene ) {
-    stage.setTitle( TITLE );
-    stage.setScene( scene );
+  private void setUpStage(Stage stage, Scene scene) {
+    stage.setTitle(TITLE);
+    stage.setScene(scene);
     stage.show();
   }
-  
-  private void attachCamera( Scene scene ) {
-    scene.setFill( Color.GRAY );
-    CameraController cameraController = new CameraController( scene );
+
+  private void attachCamera(Scene scene) {
+    scene.setFill(Color.GRAY);
+    CameraController cameraController = new CameraController(scene);
     Camera camera = cameraController.getCamera();
-    scene.setCamera( camera );
+    scene.setCamera(camera);
   }
 
   @Override

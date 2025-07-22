@@ -13,7 +13,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class ParserHandler {
 
-  private static final Logger logger = LoggerFactory.getLogger( ParserHandler.class );
+  private static final Logger logger = LoggerFactory.getLogger(ParserHandler.class);
 
   @Autowired
   private final ParserProducer parserProducer;
@@ -27,14 +27,14 @@ public class ParserHandler {
   public ParserHandler(
       ParserProducer parserProducer,
       ModelService modelService,
-      ModelJoiner modelJoiner ) {
+      ModelJoiner modelJoiner) {
     this.parserProducer = parserProducer;
     this.modelService = modelService;
     this.modelJoiner = modelJoiner;
   }
 
-  public static void main( String[] args ) {
-    SpringApplication.run( ParserHandler.class, args );
+  public static void main(String[] args) {
+    SpringApplication.run(ParserHandler.class, args);
   }
 
   /**
@@ -42,14 +42,14 @@ public class ParserHandler {
    *
    * @param modelJobRequest uuid with associated Model LDraw String
    */
-  public void consume( ModelJobRequest modelJobRequest ) {
+  public void consume(ModelJobRequest modelJobRequest) {
 
-    Model joinedModel = modelJoiner.joinAndTransformModel( modelJobRequest );
+    Model joinedModel = modelJoiner.joinAndTransformModel(modelJobRequest);
 
-    modelService.insertModel( joinedModel );
+    modelService.insertModel(joinedModel);
 
-    logger.info( "Sending Model..." );
-    parserProducer.sendMessage( joinedModel );
+    logger.info("Sending Model {}", joinedModel.getUUID());
+    parserProducer.sendMessage(joinedModel);
   }
 
 }
