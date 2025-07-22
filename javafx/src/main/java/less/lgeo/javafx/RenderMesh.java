@@ -1,9 +1,5 @@
 package less.lgeo.javafx;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Optional;
 import javafx.application.Application;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
@@ -14,79 +10,62 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import less.lgeo.camera.CameraController;
 import less.lgeo.mesh.ModelMesh;
-import less.lgeo.primitive.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ConfigurableApplicationContext;
 
-@SpringBootApplication(scanBasePackages = "less.lgeo")
+@SpringBootApplication( scanBasePackages = "less.lgeo" )
 public class RenderMesh extends Application {
 
   private static final String TITLE = "Less LGEO RenderMesh";
-  private static final Logger logger = LoggerFactory.getLogger(RenderMesh.class);
+  private static final Logger logger = LoggerFactory.getLogger( RenderMesh.class );
   private ConfigurableApplicationContext applicationContext;
 
-  public static void main(String[] args) {
-    if (args.length < 1) {
-      logger.error("Usage: RenderMesh <LDraw file path>", new IllegalStateException());
+  public static void main( String[] args ) {
+    if ( args.length < 1 ) {
+      logger.error( "Usage: RenderMesh <LDraw file path>", new IllegalStateException() );
     }
-    Application.launch(args);
+    Application.launch( args );
   }
 
   @Override
   public void init() {
-    applicationContext = SpringApplication.run(RenderMesh.class);
+    applicationContext = SpringApplication.run( RenderMesh.class );
   }
 
   @Override
-  public void start(Stage stage) {
-    File fileToParse = new File(getParameters().getRaw().getFirst());
-    Model model = getModel(fileToParse).orElseThrow();
+  public void start( Stage stage ) {
 
-    logger.info("Rendering Mesh");
+    logger.info( "Rendering Mesh" );
 
-    AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
+    AmbientLight ambientLight = new AmbientLight( Color.color( 1, 1, 1 ) );
 
     // Use ModelMeshFactory from Spring context
     less.lgeo.mesh.ModelMeshFactory modelMeshFactory = applicationContext.getBean(
-        less.lgeo.mesh.ModelMeshFactory.class);
-    ModelMesh modelMesh = modelMeshFactory.create(model);
-    Group world = new Group(ambientLight, modelMesh.getMesh());
+        less.lgeo.mesh.ModelMeshFactory.class );
+    ModelMesh modelMesh = modelMeshFactory.create( getParameters().getRaw().getFirst() );
+    Group world = new Group( ambientLight, modelMesh.getMesh() );
 
-    Scene scene = new Scene(world, 800, 600, true, SceneAntialiasing.BALANCED);
-    attachCamera(scene);
+    Scene scene = new Scene( world, 800, 600, true, SceneAntialiasing.BALANCED );
+    attachCamera( scene );
 
-    setUpStage(stage, scene);
-    logger.info("Showing Mesh");
+    setUpStage( stage, scene );
+    logger.info( "Showing Mesh" );
   }
 
-  private void setUpStage(Stage stage, Scene scene) {
-    stage.setTitle(TITLE);
-    stage.setScene(scene);
+  private void setUpStage( Stage stage, Scene scene ) {
+    stage.setTitle( TITLE );
+    stage.setScene( scene );
     stage.show();
   }
-
-
-  private void attachCamera(Scene scene) {
-    scene.setFill(Color.GRAY);
-    CameraController cameraController = new CameraController(scene);
+  
+  private void attachCamera( Scene scene ) {
+    scene.setFill( Color.GRAY );
+    CameraController cameraController = new CameraController( scene );
     Camera camera = cameraController.getCamera();
-    scene.setCamera(camera);
-  }
-
-  /**
-   * @param file LDraw File to Parse
-   * @return {@link Model} representations
-   */
-  private Optional<Model> getModel(File file) {
-    try (FileInputStream input = new FileInputStream(file)) {
-      return Optional.of(Model.parseFrom(input));
-    } catch (IOException e) {
-      logger.error("Failed to get model", e);
-      return Optional.empty();
-    }
+    scene.setCamera( camera );
   }
 
   @Override
