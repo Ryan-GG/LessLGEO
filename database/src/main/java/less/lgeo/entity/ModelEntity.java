@@ -1,5 +1,6 @@
 package less.lgeo.entity;
 
+import com.google.protobuf.InvalidProtocolBufferException;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
@@ -25,5 +26,9 @@ public class ModelEntity {
 
   public static ModelEntity toEntity( Model gpb ) {
     return new ModelEntity( gpb.getUUID(), gpb.toByteArray() );
+  }
+
+  public static Model toGpb( ModelEntity modelEntity ) throws InvalidProtocolBufferException {
+    return Model.parseFrom( modelEntity.getModelData() );
   }
 }
