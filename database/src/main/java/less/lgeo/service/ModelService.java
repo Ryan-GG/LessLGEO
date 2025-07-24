@@ -20,11 +20,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ModelService {
 
-  private static final Logger logger = LoggerFactory.getLogger( ModelService.class );
+  private static final Logger logger = LoggerFactory.getLogger(ModelService.class);
 
   private final ModelRepository modelRepository;
 
-  public ModelService( ModelRepository modelRepository ) {
+  public ModelService(ModelRepository modelRepository) {
     this.modelRepository = modelRepository;
   }
 
@@ -32,22 +32,25 @@ public class ModelService {
   /**
    * @return database entity by Model UUID, Null if no corresponding Model is found
    */
-  public @Nullable Model getModelById( UUID uuid ) {
-    Optional<ModelEntity> optionalModel = modelRepository.findById( uuid.toString() );
-    try {
-      if ( optionalModel.isPresent() ) {
-        return toGpb( optionalModel.get() );
-      }
-    } catch ( InvalidProtocolBufferException e ) {
-      logger.error( "Failed to Model Id {} from entity, received: {}", uuid,
-          e.toString() );
+  public @Nullable Model getModelById(UUID uuid) {
+    Optional<ModelEntity> optionalModel = modelRepository.findById(uuid);
+
+    if (optionalModel.isEmpty()) {
+      logger.warn("Model with id: {} doesn't exist", uuid);
+      return null;
     }
-    logger.warn( "Model with id: {} doesn't exist", uuid );
-    return null;
+
+    try {
+      return toGpb(optionalModel.get());
+    } catch (InvalidProtocolBufferException e) {
+      logger.error("Failed to Model Id {} from entity, received: {}", uuid,
+          e.toString());
+      return null;
+    }
   }
 
-  public void insertModel( Model model ) {
-    modelRepository.save( toEntity( model ) );
+  public void insertModel(Model model) {
+    modelRepository.save(toEntity(model));
   }
 
 }
