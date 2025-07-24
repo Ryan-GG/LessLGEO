@@ -1,9 +1,5 @@
 package less.lgeo.javafx;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.util.Optional;
 import javafx.application.Application;
 import javafx.scene.AmbientLight;
 import javafx.scene.Camera;
@@ -14,7 +10,6 @@ import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import less.lgeo.camera.CameraController;
 import less.lgeo.mesh.ModelMesh;
-import less.lgeo.primitive.Model;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -29,9 +24,6 @@ public class RenderMesh extends Application {
   private ConfigurableApplicationContext applicationContext;
 
   public static void main(String[] args) {
-    if (args.length < 1) {
-      logger.error("Usage: RenderMesh <LDraw file path>", new IllegalStateException());
-    }
     Application.launch(args);
   }
 
@@ -42,9 +34,11 @@ public class RenderMesh extends Application {
 
   @Override
   public void start(Stage stage) {
-    File fileToParse = new File(getParameters().getRaw().getFirst());
-    Model model = getModel(fileToParse).orElseThrow();
 
+    Parameters parameters = getParameters();
+    if (parameters == null || parameters.getRaw().isEmpty()) {
+      throw new IllegalArgumentException("Usage: RenderMesh <Model UUID>");
+    }
     logger.info("Rendering Mesh");
 
     AmbientLight ambientLight = new AmbientLight(Color.color(1, 1, 1));
@@ -52,7 +46,7 @@ public class RenderMesh extends Application {
     // Use ModelMeshFactory from Spring context
     less.lgeo.mesh.ModelMeshFactory modelMeshFactory = applicationContext.getBean(
         less.lgeo.mesh.ModelMeshFactory.class);
-    ModelMesh modelMesh = modelMeshFactory.create(model);
+    ModelMesh modelMesh = modelMeshFactory.create(parameters.getRaw().getFirst());
     Group world = new Group(ambientLight, modelMesh.getMesh());
 
     Scene scene = new Scene(world, 800, 600, true, SceneAntialiasing.BALANCED);
@@ -68,25 +62,11 @@ public class RenderMesh extends Application {
     stage.show();
   }
 
-
   private void attachCamera(Scene scene) {
     scene.setFill(Color.GRAY);
     CameraController cameraController = new CameraController(scene);
     Camera camera = cameraController.getCamera();
     scene.setCamera(camera);
-  }
-
-  /**
-   * @param file LDraw File to Parse
-   * @return {@link Model} representations
-   */
-  private Optional<Model> getModel(File file) {
-    try (FileInputStream input = new FileInputStream(file)) {
-      return Optional.of(Model.parseFrom(input));
-    } catch (IOException e) {
-      logger.error("Failed to get model", e);
-      return Optional.empty();
-    }
   }
 
   @Override

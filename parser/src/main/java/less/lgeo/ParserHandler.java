@@ -1,7 +1,9 @@
 package less.lgeo;
 
+import less.lgeo.messaging.ModelJobRequest;
 import less.lgeo.primitive.Model;
 import less.lgeo.producer.ParserProducer;
+import less.lgeo.service.ModelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +19,17 @@ public class ParserHandler {
   private final ParserProducer parserProducer;
 
   @Autowired
+  private final ModelService modelService;
+
+  @Autowired
   private final ModelJoiner modelJoiner;
 
-  public ParserHandler(ParserProducer parserProducer, ModelJoiner modelJoiner) {
+  public ParserHandler(
+      ParserProducer parserProducer,
+      ModelService modelService,
+      ModelJoiner modelJoiner) {
     this.parserProducer = parserProducer;
+    this.modelService = modelService;
     this.modelJoiner = modelJoiner;
   }
 
@@ -31,13 +40,15 @@ public class ParserHandler {
   /**
    * See {@link less.lgeo.consumer.ParserConsumer}
    *
-   * @param message
+   * @param modelJobRequest uuid with associated Model LDraw String
    */
-  public void consume(String message) {
+  public void consume(ModelJobRequest modelJobRequest) {
 
-    Model joinedModel = modelJoiner.joinAndTransformModel(message);
+    Model joinedModel = modelJoiner.joinAndTransformModel(modelJobRequest);
 
-    logger.info("Sending Model...");
+    modelService.insertModel(joinedModel);
+
+    logger.info("Sending Model {}", joinedModel.getUUID());
     parserProducer.sendMessage(joinedModel);
   }
 

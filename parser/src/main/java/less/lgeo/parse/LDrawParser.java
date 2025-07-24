@@ -1,7 +1,7 @@
 package less.lgeo.parse;
 
 import static less.lgeo.common.CommonUtils.getLineType;
-import static less.lgeo.common.VertexUtils.getPoint;
+import static less.lgeo.common.VertexUtils.toVertex;
 import static less.lgeo.primitive.LineUtils.toLine;
 import static less.lgeo.primitive.OptionalLineUtils.toOptionalLine;
 import static less.lgeo.primitive.QuadrilateralUtils.toQuadrilateral;
@@ -31,9 +31,9 @@ import less.lgeo.primitive.OptionalLine;
 import less.lgeo.primitive.Quadrilateral;
 import less.lgeo.primitive.SubFileReference;
 import less.lgeo.primitive.Triangle;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -152,7 +152,7 @@ public class LDrawParser implements Parser<Model> {
         .build();
   }
 
-  private @NotNull Model getParsedSubFileModel(String subFileName) {
+  private @NonNull Model getParsedSubFileModel(String subFileName) {
     // split on \, and use last as file name to search for
     if (this.modelCache.containsKey(subFileName)) {
       return this.modelCache.get(subFileName);
@@ -194,8 +194,8 @@ public class LDrawParser implements Parser<Model> {
     double y2 = toDouble(iterator.next());
     double z2 = toDouble(iterator.next());
 
-    Vertex p1 = getPoint(x1, y1, z1);
-    Vertex p2 = getPoint(x2, y2, z2);
+    Vertex p1 = toVertex(x1, y1, z1);
+    Vertex p2 = toVertex(x2, y2, z2);
     return toLine(
         colorId,
         p1,
@@ -218,9 +218,9 @@ public class LDrawParser implements Parser<Model> {
     double y3 = toDouble(iterator.next());
     double z3 = toDouble(iterator.next());
 
-    Vertex p1 = getPoint(x1, y1, z1);
-    Vertex p2 = getPoint(x2, y2, z2);
-    Vertex p3 = getPoint(x3, y3, z3);
+    Vertex p1 = toVertex(x1, y1, z1);
+    Vertex p2 = toVertex(x2, y2, z2);
+    Vertex p3 = toVertex(x3, y3, z3);
     return toTriangle(
         colorId,
         p1,
@@ -247,10 +247,10 @@ public class LDrawParser implements Parser<Model> {
     double y4 = toDouble(iterator.next());
     double z4 = toDouble(iterator.next());
 
-    Vertex p1 = getPoint(x1, y1, z1);
-    Vertex p2 = getPoint(x2, y2, z2);
-    Vertex p3 = getPoint(x3, y3, z3);
-    Vertex p4 = getPoint(x4, y4, z4);
+    Vertex p1 = toVertex(x1, y1, z1);
+    Vertex p2 = toVertex(x2, y2, z2);
+    Vertex p3 = toVertex(x3, y3, z3);
+    Vertex p4 = toVertex(x4, y4, z4);
     return toQuadrilateral(
         colorId,
         p1,
@@ -278,10 +278,10 @@ public class LDrawParser implements Parser<Model> {
     double y4 = toDouble(iterator.next());
     double z4 = toDouble(iterator.next());
 
-    Vertex p1 = getPoint(x1, y1, z1);
-    Vertex p2 = getPoint(x2, y2, z2);
-    Vertex p3 = getPoint(x3, y3, z3);
-    Vertex p4 = getPoint(x4, y4, z4);
+    Vertex p1 = toVertex(x1, y1, z1);
+    Vertex p2 = toVertex(x2, y2, z2);
+    Vertex p3 = toVertex(x3, y3, z3);
+    Vertex p4 = toVertex(x4, y4, z4);
     return toOptionalLine(
         colorId,
         p1,

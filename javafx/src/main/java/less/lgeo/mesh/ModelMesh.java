@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import javafx.scene.Group;
@@ -30,23 +31,30 @@ import less.lgeo.primitive.Model;
 import less.lgeo.primitive.QuadrilateralUtils;
 import less.lgeo.primitive.TriangleUtils;
 import less.lgeo.service.ColorService;
+import less.lgeo.service.ModelService;
 import org.fxyz3d.geometry.Point3D;
 import org.fxyz3d.shapes.composites.PolyLine3D;
 import org.fxyz3d.shapes.primitives.CubeMesh;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ModelMesh {
 
+  private static final Logger logger = LoggerFactory.getLogger(ModelMesh.class);
   private static final Float CONN_SIZE = 1.0f;
   private static final Float LINE_WIDTH = 0.5f;
-
   private static final Color CONN_COLOR = Color.DEEPPINK;
-  private final Model model;
-  private final ColorService colorService;
-  private final Map<Integer, Color> colorCache;
-  private Group mesh;
 
-  public ModelMesh(Model model, ColorService colorService) {
-    this.model = model;
+  private final String modelId;
+  private final ColorService colorService;
+  private final ModelService modelService;
+  private final Map<Integer, Color> colorCache;
+
+  private Group mesh = new Group();
+
+  public ModelMesh(String modelId, ModelService modelService, ColorService colorService) {
+    this.modelId = modelId;
+    this.modelService = modelService;
     this.colorService = colorService;
     this.colorCache = new ConcurrentHashMap<>();
   }
@@ -56,7 +64,12 @@ public class ModelMesh {
   }
 
   public Group getMesh() {
-    setMesh(this.model);
+    Model fetchedModel = modelService.getModelById(UUID.fromString(modelId));
+    if (fetchedModel == null) {
+      logger.warn("Model is NULL");
+    } else {
+      setMesh(fetchedModel);
+    }
     return this.mesh;
   }
 

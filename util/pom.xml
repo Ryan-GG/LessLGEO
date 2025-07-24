@@ -5,6 +5,7 @@
   <artifactId>util</artifactId>
 
   <groupId>less.lgeo</groupId>
+
   <modelVersion>4.0.0</modelVersion>
   <properties>
     <maven.compiler.source>23</maven.compiler.source>

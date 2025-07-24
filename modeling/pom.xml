@@ -51,7 +51,7 @@
     <dependency>
       <artifactId>protobuf-java</artifactId>
       <groupId>com.google.protobuf</groupId>
-      <version>4.31.0</version>
+      <version>${protobuf.version}</version>
     </dependency>
     <!-- https://mvnrepository.com/artifact/org.ejml/ejml-core -->
     <dependency>
@@ -86,7 +86,6 @@
     <maven.compiler.source>23</maven.compiler.source>
     <maven.compiler.target>23</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <protobuf.version>4.31.0</protobuf.version>
   </properties>
 
   <version>0.0.1-SNAPSHOT</version>

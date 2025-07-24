@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package messaging;
+
+option java_multiple_files = true;
+option java_package = "less.lgeo.messaging";
+option java_outer_classname = "Messaging";
+
+message ModelJobRequest {
+  string UUID = 1;
+  // String format that represents a Model, such as LDR format
+  string model_string = 2;
+}

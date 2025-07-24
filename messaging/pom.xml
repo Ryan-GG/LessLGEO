@@ -3,7 +3,56 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>messaging</artifactId>
+
+  <build>
+    <extensions>
+      <extension>
+        <artifactId>os-maven-plugin</artifactId>
+        <groupId>kr.motd.maven</groupId>
+        <version>1.7.1</version>
+      </extension>
+    </extensions>
+
+    <plugins>
+      <!-- Protobuf plugin to generate Java sources from .proto files -->
+      <plugin>
+        <artifactId>protobuf-maven-plugin</artifactId>
+        <configuration>
+          <!-- OS-maven-plugin: no goals, just adds os.detected.classifier -->
+          <protocArtifact>
+            com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+          </protocArtifact>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+          </execution>
+        </executions>
+        <groupId>org.xolstice.maven.plugins</groupId>
+        <version>0.6.1</version>
+      </plugin>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>repackage</id>
+            <phase>none</phase>
+          </execution>
+        </executions>
+        <groupId>org.springframework.boot</groupId>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
+    <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
+    <dependency>
+      <artifactId>protobuf-java</artifactId>
+      <groupId>com.google.protobuf</groupId>
+      <version>${protobuf.version}</version>
+    </dependency>
     <dependency>
       <artifactId>spring-amqp</artifactId>
       <groupId>org.springframework.amqp</groupId>
@@ -30,9 +79,14 @@
       <version>2.4</version>
     </dependency>
   </dependencies>
-  <groupId>less.lgeo</groupId>
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>
+  <parent>
+    <artifactId>parent</artifactId>
+    <groupId>less.lgeo</groupId>
+    <relativePath>../pom.xml</relativePath>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
   <properties>
     <maven.compiler.source>23</maven.compiler.source>
     <maven.compiler.target>23</maven.compiler.target>

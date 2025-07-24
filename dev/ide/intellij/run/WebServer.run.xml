@@ -5,7 +5,7 @@
     <option name="VM_PARAMETERS" value="-Xms2g -Xmx4g" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="less.lgeo.*" />
+        <option name="PATTERN" value="less.lgeo.test.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

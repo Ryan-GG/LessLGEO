@@ -12,6 +12,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    unique: true
               - column:
                   name: name
                   type: varchar(50)
@@ -30,6 +31,8 @@ databaseChangeLog:
                   type: varchar(20)
                   constraints:
                     nullable: false
+                    primaryKey: true
+                    unique: true
               - column:
                   name: name
                   type: varchar(256)
@@ -64,6 +67,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    unique: true
               - column:
                   name: name
                   type: varchar(250)
@@ -106,6 +110,8 @@ databaseChangeLog:
                   autoIncrement: true
                   constraints:
                     nullable: false
+                    primaryKey: true
+                    unique: true
               - column:
                   name: name
                   type: varchar(200)
@@ -119,6 +125,8 @@ databaseChangeLog:
                   type: varchar(20)
                   constraints:
                     nullable: false
+                    primaryKey: true
+                    unique: true
               - column:
                   name: name
                   type: varchar(200)
@@ -212,6 +220,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    unique: true
               - column:
                   name: version
                   type: int
@@ -231,6 +240,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    unique: true
               - column:
                   name: part_num
                   type: varchar(20)
@@ -255,6 +265,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    unique: true
               - column:
                   name: name
                   type: varchar(200)

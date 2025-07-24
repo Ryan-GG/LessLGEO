@@ -75,6 +75,7 @@
   </parent>
   <properties>
     <java.version>23</java.version>
+    <protobuf.version>4.31.0</protobuf.version>
   </properties>
   <scm>
     <connection/>

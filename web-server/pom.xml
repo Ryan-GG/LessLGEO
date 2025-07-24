@@ -39,6 +39,11 @@
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
     </dependency>
+    <dependency>
+      <artifactId>protobuf-java-util</artifactId>
+      <groupId>com.google.protobuf</groupId>
+      <version>${protobuf.version}</version>
+    </dependency>
   </dependencies>
 
   <modelVersion>4.0.0</modelVersion>

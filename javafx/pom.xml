@@ -8,7 +8,8 @@
         <artifactId>exec-maven-plugin</artifactId>
         <configuration>
           <arguments>
-            <argument>parser/src/test/resources/model.gpb</argument>
+            <!-- Model UUID -->
+            <!-- <argument> </argument> -->
           </arguments>
           <mainClass>less.lgeo.javafx.RenderMesh</mainClass>
         </configuration>
@@ -55,6 +56,11 @@
       <artifactId>fxyz3d</artifactId>
       <groupId>org.fxyz3d</groupId>
       <version>0.6.0</version>
+    </dependency>
+    <dependency>
+      <artifactId>database</artifactId>
+      <groupId>less.lgeo</groupId>
+      <version>0.0.1-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <modelVersion>4.0.0</modelVersion>
