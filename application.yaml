@@ -1,0 +1,28 @@
+spring:
+  application:
+    name: "LessLGEO"
+  docker:
+    compose:
+      enabled: true
+      file: "compose.yaml"
+      profiles:
+        active: "production"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: ${RABBIT_USER}
+    password: ${RABBIT_PASSWORD}
+  datasource:
+    driverClassName: "org.postgresql.Driver"
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: ${POSTGRES_URL}
+
+  jpa:
+    showSql: true
+
+rabbit:
+  worker-queues:
+    web-to-parser: "web-to-parser-queue"
+    parser-to-reducer: "parser-to-reducer-queue"
+
