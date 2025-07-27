@@ -5,7 +5,7 @@ export default async function Page({
 }: {
   searchParams: Promise<{ error: string }>;
 }) {
-  const params = await searchParams;
+  const parameters = await searchParams;
 
   return (
     <div className="flex min-h-svh w-full items-center justify-center p-6 md:p-10">
@@ -18,9 +18,9 @@ export default async function Page({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              {params?.error ? (
+              {parameters?.error ? (
                 <p className="text-sm text-muted-foreground">
-                  Code error: {params.error}
+                  Code error: {parameters.error}
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground">
