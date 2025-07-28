@@ -1,6 +1,10 @@
 import { AppNavBar } from "@/components/home/app-nav-bar";
 import { Skeleton } from "@/components/ui/skeleton";
 
+/**
+ * Models Landing Page, where to view and add new Models
+ * TODO,
+ */
 export default function Models() {
   return (
     <div className="flex flex-col min-h-screen bg-black">
@@ -18,7 +22,7 @@ export default function Models() {
                 </div>
             </Skeleton>
       </main>
-      <footer className="p-8">
+      <footer className="px-8">
         <Skeleton className="h-8 w-full"/>
       </footer>
     </div>
