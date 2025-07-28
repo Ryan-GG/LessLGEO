@@ -3,11 +3,14 @@ import * as React from "react"
 import {
   NavigationMenu,
   NavigationMenuItem,
+  NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
+  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import Image from "next/image"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+import Link from "next/link"
 
 export function AppNavBar() {
   return (
@@ -25,18 +28,18 @@ export function AppNavBar() {
         <div className="flex-1 flex justify-center">
           <NavigationMenu className="bg-transparent shadow-none" viewport={false}>
             <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Home</NavigationMenuTrigger>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Models</NavigationMenuTrigger>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Editor</NavigationMenuTrigger>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Discover</NavigationMenuTrigger>
-              </NavigationMenuItem>
+                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                    <Link href="/">Home</Link>
+                </NavigationMenuLink>
+                <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+                    <Link href="/models">Models</Link>
+                </NavigationMenuLink>
+                <NavigationMenuItem>
+                    <NavigationMenuTrigger>Editor</NavigationMenuTrigger>
+                </NavigationMenuItem>
+                <NavigationMenuItem>
+                    <NavigationMenuTrigger>Discover</NavigationMenuTrigger>
+                </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>
         </div>

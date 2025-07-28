@@ -1,6 +1,5 @@
 import { AppNavBar } from "@/components/home/app-nav-bar";
 import { Skeleton } from "@/components/ui/skeleton";
-import Image from "next/image";
 
 export default function Home() {
   return (
@@ -10,6 +9,7 @@ export default function Home() {
         <AppNavBar/>
       </header>
       <main className="flex-1 pb-8 px-8 pt-2 flex flex-col gap-2">
+        {/* FIXME, Static heights cause problems */}
         <Skeleton className="h-full w-full p-8 ">
           <Skeleton className="h-150 w-xl bg-black"/>
         </Skeleton>
