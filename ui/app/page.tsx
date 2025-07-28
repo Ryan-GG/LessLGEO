@@ -4,18 +4,26 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 bg-black">
-      <header>
-        <Skeleton className="h-8 w-7xl"/>
+    <div className="flex flex-col min-h-screen bg-black">
+      <header className="px-8">
+        <Skeleton className="h-8 w-full mb-4"/>
         <AppNavBar/>
       </header>
-      <main>
-        <Skeleton className="h-150 w-7xl item-center justify-items-center z-0">
-          <Skeleton className="h-125 w-6xl z-1 bg-black"/>
+      <main className="flex-1 pb-8 px-8 pt-2 flex flex-col gap-2">
+        <Skeleton className="h-full w-full p-8 ">
+          <Skeleton className="h-150 w-xl bg-black"/>
+        </Skeleton>
+        <Skeleton className="h-full w-full p-8 grid grid-cols-6 gap-4">
+          <Skeleton className="h-50 w-50 bg-black"/>
+          <Skeleton className="h-50 w-50 bg-black"/>
+          <Skeleton className="h-50 w-50 bg-black"/>
+          <Skeleton className="h-50 w-50 bg-black"/>
+          <Skeleton className="h-50 w-50 bg-black"/>
+          <Skeleton className="h-50 w-50 bg-black"/>
         </Skeleton>
       </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <Skeleton className="h-8 w-7xl"/>
+      <footer className="p-8">
+        <Skeleton className="h-8 w-full"/>
       </footer>
     </div>
   );
