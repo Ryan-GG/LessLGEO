@@ -12,6 +12,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    primaryKeyName: pk_themes
                     unique: true
               - column:
                   name: name
@@ -32,6 +33,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    primaryKeyName: pk_sets
                     unique: true
               - column:
                   name: name
@@ -67,6 +69,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    primaryKeyName: pk_parts
                     unique: true
               - column:
                   name: name
@@ -111,6 +114,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    primaryKeyName: pk_part_categories
                     unique: true
               - column:
                   name: name
@@ -126,6 +130,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    primaryKeyName: pk_minifigs
                     unique: true
               - column:
                   name: name
@@ -220,6 +225,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    primaryKeyName: pk_inventories
                     unique: true
               - column:
                   name: version
@@ -240,6 +246,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    primaryKeyName: pk_elements
                     unique: true
               - column:
                   name: part_num
@@ -265,6 +272,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+                    primaryKeyName: pk_colors
                     unique: true
               - column:
                   name: name
@@ -367,3 +375,152 @@ databaseChangeLog:
             tableName: colors
             separator: ","
             encoding: UTF-8
+  - changeSet:
+      id: 2
+      author: gross
+      changes:
+        # Themes Foreign keys ( parent_id )
+        - addForeignKeyConstraint:
+            baseColumnNames: parent_id
+            baseTableName: themes
+            baseTableSchemaName: public
+            constraintName: fk_themes_themes
+            referencedColumnNames: id
+            referencedTableName: themes
+            referencedTableSchemaName: public
+            validate: true
+        # Sets Foreign Keys ( theme_id )
+        - addForeignKeyConstraint:
+            baseColumnNames: theme_id
+            baseTableName: sets
+            baseTableSchemaName: public
+            constraintName: fk_sets_themes
+            referencedColumnNames: id
+            referencedTableName: themes
+            referencedTableSchemaName: public
+            validate: true
+        # Inventory Sets Foreign Keys ( inventory_id, set_num )
+        - addForeignKeyConstraint:
+            baseColumnNames: inventory_id
+            baseTableName: inventory_sets
+            baseTableSchemaName: public
+            constraintName: fk_inventory_sets_inventories
+            referencedColumnNames: id
+            referencedTableName: inventories
+            referencedTableSchemaName: public
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: set_num
+            baseTableName: inventory_sets
+            baseTableSchemaName: public
+            constraintName: fk_inventory_sets_sets
+            referencedColumnNames: set_num
+            referencedTableName: sets
+            referencedTableSchemaName: public
+            validate: true
+        # Inventories Foreign Keys ( set_num )
+        - addForeignKeyConstraint:
+            baseColumnNames: set_num
+            baseTableName: inventories
+            baseTableSchemaName: public
+            constraintName: fk_inventories_sets
+            referencedColumnNames: set_num
+            referencedTableName: sets
+            referencedTableSchemaName: public
+            validate: true
+        # Inventory Minifigs Foreign Keys ( inventory_id, fig_num )
+        - addForeignKeyConstraint:
+            baseColumnNames: inventory_id
+            baseTableName: inventory_minifigs
+            baseTableSchemaName: public
+            constraintName: fk_inventory_minifigs_inventories
+            referencedColumnNames: id
+            referencedTableName: inventories
+            referencedTableSchemaName: public
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: fig_num
+            baseTableName: inventory_minifigs
+            baseTableSchemaName: public
+            constraintName: fk_inventory_minifigs_minifigs
+            referencedColumnNames: fig_num
+            referencedTableName: minifigs
+            referencedTableSchemaName: public
+            validate: true
+        # Inventory Parts Foreign Keys ( inventory_id, part_num, color_id )
+        - addForeignKeyConstraint:
+            baseColumnNames: inventory_id
+            baseTableName: inventory_parts
+            baseTableSchemaName: public
+            constraintName: fk_inventory_parts_inventories
+            referencedColumnNames: id
+            referencedTableName: inventories
+            referencedTableSchemaName: public
+            # FIXME, seems like a lot of bad data in this table
+            validate: false
+        - addForeignKeyConstraint:
+            baseColumnNames: part_num
+            baseTableName: inventory_parts
+            baseTableSchemaName: public
+            constraintName: fk_inventory_parts_parts
+            referencedColumnNames: part_num
+            referencedTableName: parts
+            referencedTableSchemaName: public
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: color_id
+            baseTableName: inventory_parts
+            baseTableSchemaName: public
+            constraintName: fk_inventory_parts_colors
+            referencedColumnNames: id
+            referencedTableName: colors
+            referencedTableSchemaName: public
+            validate: true
+        # Parts Foreign Keys ( part_cat_id )
+        - addForeignKeyConstraint:
+            baseColumnNames: part_cat_id
+            baseTableName: parts
+            baseTableSchemaName: public
+            constraintName: fk_parts_part_categories
+            referencedColumnNames: id
+            referencedTableName: part_categories
+            referencedTableSchemaName: public
+            validate: true
+        # Part Relationships Foreign Keys ( child_part_num, parent_part_num )
+        - addForeignKeyConstraint:
+            baseColumnNames: child_part_num
+            baseTableName: part_relationships
+            baseTableSchemaName: public
+            constraintName: fk_child_part_relationships_parts
+            referencedColumnNames: part_num
+            referencedTableName: parts
+            referencedTableSchemaName: public
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: parent_part_num
+            baseTableName: part_relationships
+            baseTableSchemaName: public
+            constraintName: fk_parent_part_relationships_parts
+            referencedColumnNames: part_num
+            referencedTableName: parts
+            referencedTableSchemaName: public
+            validate: true
+        # Elements Foreign Keys( part_num, color_id )
+        - addForeignKeyConstraint:
+            baseColumnNames: part_num
+            baseTableName: elements
+            baseTableSchemaName: public
+            constraintName: fk_elements_parts
+            referencedColumnNames: part_num
+            referencedTableName: parts
+            referencedTableSchemaName: public
+            validate: true
+        - addForeignKeyConstraint:
+            baseColumnNames: color_id
+            baseTableName: elements
+            baseTableSchemaName: public
+            constraintName: fk_elements_colors
+            referencedColumnNames: id
+            referencedTableName: colors
+            referencedTableSchemaName: public
+            validate: true

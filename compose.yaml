@@ -2,9 +2,12 @@ services:
   rabbitmq:
     image: 'rabbitmq:4-management'
     restart: always
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBIT_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBIT_PASSWORD}
+    profiles:
+      - "production"
+      - "local"
+    env_file:
+      - .env.production
+      - .env.local
     ports:
       - '15672:15672'
       - '5672:5672'
@@ -12,10 +15,10 @@ services:
   database:
     image: 'postgres:17.5'
     restart: always
-    environment:
-      POSTGRES_USER: ${DATABASE_USER}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      POSTGRES_DB: ${DATABASE}
+    profiles:
+      - "local"
+    env_file:
+      - .env.local
     ports:
       - "5432:5432"
     volumes:
@@ -25,9 +28,10 @@ services:
   database-viewer:
     image: 'dpage/pgadmin4:9.4'
     restart: always
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin123
+    profiles:
+      - "local"
+    env_file:
+      - .env.local
     ports:
       - "5050:80"
 

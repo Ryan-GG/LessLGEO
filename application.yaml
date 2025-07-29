@@ -1,0 +1,53 @@
+spring:
+  application:
+    name: "LessLGEO"
+  rabbitmq:
+    host: "localhost"
+    port: 5672
+    username: ${RABBIT_USER}
+    password: ${RABBIT_PASSWORD}
+  datasource:
+    driverClassName: "org.postgresql.Driver"
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: ${POSTGRES_URL}
+  jpa:
+    showSql: true
+
+rabbit:
+  worker-queues:
+    web-to-parser: "web-to-parser-queue"
+    parser-to-reducer: "parser-to-reducer-queue"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: "production"
+    # The [.properties] is a hint for spring which translates to
+    # “Use this file without an extension as a .properties file.”
+    import: "optional:file:.env.production[.properties]"
+  docker:
+    compose:
+      enabled: true
+      file: "compose.yaml"
+      profiles:
+        active: "production"
+
+---
+spring:
+  config:
+    activate:
+      on-profile: local
+    # The [.properties] is a hint for spring which translates to
+    # “Use this file without an extension as a .properties file.”
+    import: "optional:file:.env.local[.properties]"
+  docker:
+    compose:
+      enabled: true
+      file: "compose.yaml"
+      profiles:
+        active: "local"
+
+
+
