@@ -1,7 +1,7 @@
 "use client"
 import { AppNavBar } from "@/components/home/app-nav-bar";
+import { ModelCanvas } from "@/components/models/model-canvas";
 import { Skeleton } from "@/components/ui/skeleton";
-import { Canvas } from "@react-three/fiber";
 
 /**
  * Models Landing Page, where to view and add new Models
@@ -20,14 +20,7 @@ export default function Models() {
                 </div>
                 <div className="flex gap-4">
                     <div className="h-[70vh] w-2/3 border-2 border-gray-500 rounded-lg p-6" id="canvas-container">
-                      <Canvas>
-                        <mesh>
-                          <boxGeometry args={[2, 2, 2]} />
-                          <meshPhongMaterial />
-                        </mesh>
-                        <ambientLight intensity={0.1} />
-                        <directionalLight position={[0, 0, 5]} color="red" />
-                      </Canvas>
+                      <ModelCanvas/>
                     </div>
                     <Skeleton className="h-[70vh] w-1/3 bg-black"/>
                 </div>
