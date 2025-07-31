@@ -1,15 +1,16 @@
 "use client";
 import { CameraControls, PivotControls } from "@react-three/drei";
-import { Canvas, useFrame } from "@react-three/fiber";
-import { ReactNode, useRef } from "react";
-import { Mesh } from "three";
+import { Canvas } from "@react-three/fiber";
+import { ReactNode } from "react";
+import { Vector3 } from "three";
 
 export function ModelCanvas(): ReactNode
 {
 	return (
 		<Canvas>
 			<PivotControls anchor={[ -1.1, -1.1, -1.1 ]} scale={0.75} lineWidth={3.5}>
-				<Box/>
+				{/* <Box/> */}
+				<Boxes/>
 				<ambientLight intensity={0.1} />
 				<directionalLight position={[ 0, 0, 5 ]} color="red" />
 				<CameraControls makeDefault/>
@@ -18,23 +19,29 @@ export function ModelCanvas(): ReactNode
 	);
 }
 
-function Box(): ReactNode
+function Boxes(): ReadonlyArray<ReactNode>
 {
-	const meshReference = useRef<Mesh>( undefined );
+	const boxPositions: Array<Vector3> = [];
 
-	useFrame( ( { clock } ) => {
-		if( meshReference.current !== undefined )
-		{
-			meshReference.current.rotation.x = clock.elapsedTime;
-			meshReference.current.rotation.y = clock.elapsedTime;
-		}
+	for( let index = 0; index < 500; index++ )
+	{
+		const min = Math.ceil( 0 );
+		const max = Math.floor( 100 );
+		const value1 =  Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+		const value2 =  Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+		const value3 =  Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+		boxPositions.push( new Vector3( value1, value2, value3 ) );
+	}
+	return boxPositions.map( ( positions, index ) => {
+		return (
+			<mesh position={positions} key={index}>
+				<boxGeometry args={[ 2, 2, 2 ]}/>
+				<meshPhongMaterial color={getRandomHexColor()}/>
+			</mesh>
+		);
 	} );
+}
 
-    
-	return (
-		<mesh ref={meshReference}>
-			<boxGeometry args={[ 2, 2, 2 ]} />
-			<meshPhongMaterial />
-		</mesh>
-	);
+function getRandomHexColor() {
+	return "#" + Math.floor( Math.random() * 0xFF_FF_FF ).toString( 16 ).padStart( 6, "0" );
 }
