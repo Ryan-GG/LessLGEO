@@ -1,5 +1,5 @@
 "use client"
-import { CameraControls } from "@react-three/drei";
+import { CameraControls, PivotControls } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { ReactNode, useRef } from "react";
 import { Mesh } from "three";
@@ -8,10 +8,12 @@ export function ModelCanvas(): ReactNode
 {
     return (
         <Canvas>
-            <Box/>
-            <ambientLight intensity={0.1} />
-            <directionalLight position={[0, 0, 5]} color="red" />
-            <CameraControls makeDefault/>
+            <PivotControls anchor={[-1.1, -1.1, -1.1]} scale={0.75} lineWidth={3.5}>
+                <Box/>
+                <ambientLight intensity={0.1} />
+                <directionalLight position={[0, 0, 5]} color="red" />
+                <CameraControls makeDefault/>
+            </PivotControls>
         </Canvas>
     );
 }
