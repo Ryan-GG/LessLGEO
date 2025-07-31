@@ -1,5 +1,5 @@
 export default function Loading() {
-  return (
-    <div>TODO, loading...</div>
-  );
+	return (
+		<div>TODO, loading...</div>
+	);
 }
