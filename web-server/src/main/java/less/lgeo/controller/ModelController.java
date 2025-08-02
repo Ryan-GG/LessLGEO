@@ -2,6 +2,7 @@ package less.lgeo.controller;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 import com.google.protobuf.util.JsonFormat;
+import java.util.List;
 import java.util.UUID;
 import less.lgeo.primitive.Model;
 import less.lgeo.producer.WebServerProducer;
@@ -45,7 +46,7 @@ public class ModelController {
   @GetMapping( "/{id}" )
   public ResponseEntity<String> getModelAsJson( @PathVariable String id ) {
     Model model = modelService.getModelById( UUID.fromString( id ) );
-    
+
     if ( model == null ) {
       logger.error( "Model {} was NULL", id );
       return ResponseEntity.internalServerError().body( "Failed to get model id: " + id );
@@ -58,5 +59,10 @@ public class ModelController {
       return ResponseEntity.internalServerError()
           .body( "Failed to convert Model " + id + "to JSON" );
     }
+  }
+
+  @GetMapping( "/ids" )
+  public ResponseEntity<List<UUID>> getAllModelIds() {
+    return ResponseEntity.ok( modelService.getAllModelUUIDs() );
   }
 }
