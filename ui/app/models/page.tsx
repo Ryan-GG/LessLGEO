@@ -9,15 +9,15 @@ import { useEffect, useState } from "react";
  */
 export default function Models() {
 
-	const [data, setData] = useState<Array<String>>(["foop"]);  
+	const [ data, setData ] = useState<Array<string>>( [ "foop" ] );  
 
-	useEffect(() => {
-	  fetch('http://localhost:8080/api/model/v1/ids')
-		.then((response) => response.json())
-		.then((data) => {
-		  setData(data);
-		});
-	}, []);
+	useEffect( () => {
+	  fetch( 'http://localhost:8080/api/model/v1/ids' )
+			.then( ( response ) => response.json() )
+			.then( ( data ) => {
+		  setData( data );
+			} );
+	}, [] );
 
 	return (
 		<div className="flex flex-col min-h-screen bg-black">
@@ -30,11 +30,11 @@ export default function Models() {
 						<div className="h-[10vh] w-1/3">
 							{data.map( id => {
 								return ( 
-								<p key={`id-${id}`}>
-									{`ID: ${id}`}
-								</p> 
+									<p key={`id-${id}`}>
+										{`ID: ${id}`}
+									</p> 
 								);
-							})}
+							} )}
 						</div>
 					</div>
 					<div className="flex gap-4">

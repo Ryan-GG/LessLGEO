@@ -2,7 +2,7 @@
 import { modeling } from "@/proto-bundle";
 import { ReactElement } from "react";
 
-export function Model( { gpb }: { gpb: modeling.IModel } ): ReactElement | null
+export function Model( { gpb }: { gpb: modeling.IModel } ): ReactElement | undefined
 {
-    return null;
+	return undefined;
 }
