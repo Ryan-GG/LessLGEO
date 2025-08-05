@@ -9,7 +9,7 @@ export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNod
 {
 	if( gpb === undefined ) return [];
 	return (
-		<PivotControls anchor={[ -1.1, -1.1, -1.1 ]} scale={0.75} lineWidth={3.5}>
+		<PivotControls rotation={[ Math.PI, -Math.PI / 2, 2 * Math.PI ] }anchor={[ 1.4, 1, 1.4 ]} scale={0.25} lineWidth={3.5}>
 			{extractMeshes( gpb )}
 		</PivotControls>
 	);
