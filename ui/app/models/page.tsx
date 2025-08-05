@@ -2,16 +2,19 @@
 import { fetchAllModelIds } from "@/api/model/modelApi";
 import { AppNavBar } from "@/components/home/app-nav-bar";
 import { ModelCanvas } from "@/components/models/model-canvas";
+import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { ReactElement, useEffect, useState } from "react";
 
 /**
  * Models Landing Page, where to view and add new Models
  */
 export default function Models() {
 
-	const { data, error, isPending } = useQuery({ queryKey: ["modelIds"], queryFn: fetchAllModelIds });
+	const [modelId, setModelId ] = useState<string | undefined>(undefined);
+	const { data: modelIds } = useQuery({ queryKey: ["modelIds"], queryFn: fetchAllModelIds } );
 	
 	return (
 		<div className="flex flex-col min-h-screen bg-black">
@@ -22,18 +25,13 @@ export default function Models() {
 				<div className="h-full w-full p-8 flex flex-col gap-4 bg-gray-200">
 					<div className="flex gap-4">
 						<div className="h-[10vh] w-1/3">
-							{data?.map( id => {
-								return ( 
-									<p key={`id-${id}`}>
-										{`ID: ${id}`}
-									</p> 
-								);
-							} )}
+							<ModelIdDropDown modelIds={modelIds} setModelId={setModelId}/>
+							<p>{`Current id: ${modelId}`}</p>
 						</div>
 					</div>
 					<div className="flex gap-4">
 						<div className="h-[70vh] w-2/3 border-2 border-gray-500 rounded-lg p-6" id="canvas-container">
-							<ModelCanvas/>
+							<ModelCanvas modelId={modelId}/>
 						</div>
 						<Skeleton className="h-[70vh] w-1/3 bg-black"/>
 					</div>
@@ -44,4 +42,25 @@ export default function Models() {
 			</footer>
 		</div>
 	);
+}
+
+function ModelIdDropDown( { modelIds, setModelId }: { modelIds: string[] | undefined, setModelId: ( id: string ) => void } ): ReactElement
+{
+		return (
+		  <DropdownMenu>
+			<DropdownMenuTrigger asChild>
+			  <Button variant="outline">Model Ids</Button>
+			</DropdownMenuTrigger>
+			<DropdownMenuContent className="w-56" align="start">
+			{modelIds?.map( id => {
+								return ( 
+									<DropdownMenuItem key={`id-${id}`} onClick={() => setModelId(id)}>
+									{`ID: ${id}`}
+								  </DropdownMenuItem>
+									
+								);
+							} )}
+			</DropdownMenuContent>
+		  </DropdownMenu>
+		)
 }

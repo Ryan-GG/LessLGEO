@@ -3,8 +3,9 @@ import { CameraControls, PivotControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { ReactNode } from "react";
 
-export function ModelCanvas(): ReactNode
+export function ModelCanvas( {modelId}: {modelId: string | undefined}): ReactNode
 {
+	console.log("model id: ", modelId )
 	return (
 		<Canvas>
 			<PivotControls anchor={[ -1.1, -1.1, -1.1 ]} scale={0.75} lineWidth={3.5}>
