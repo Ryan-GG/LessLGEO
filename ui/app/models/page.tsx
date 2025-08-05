@@ -1,7 +1,9 @@
 "use client";
+import { fetchAllModelIds } from "@/api/model/modelApi";
 import { AppNavBar } from "@/components/home/app-nav-bar";
 import { ModelCanvas } from "@/components/models/model-canvas";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 
 /**
@@ -9,16 +11,8 @@ import { useEffect, useState } from "react";
  */
 export default function Models() {
 
-	const [ data, setData ] = useState<Array<string>>( [ "foop" ] );  
-
-	useEffect( () => {
-	  fetch( 'http://localhost:8080/api/model/v1/ids' )
-			.then( ( response ) => response.json() )
-			.then( ( data ) => {
-		  setData( data );
-			} );
-	}, [] );
-
+	const { data, error, isPending } = useQuery({ queryKey: ["modelIds"], queryFn: fetchAllModelIds });
+	
 	return (
 		<div className="flex flex-col min-h-screen bg-black">
 			<header className="px-8">
@@ -28,7 +22,7 @@ export default function Models() {
 				<div className="h-full w-full p-8 flex flex-col gap-4 bg-gray-200">
 					<div className="flex gap-4">
 						<div className="h-[10vh] w-1/3">
-							{data.map( id => {
+							{data?.map( id => {
 								return ( 
 									<p key={`id-${id}`}>
 										{`ID: ${id}`}

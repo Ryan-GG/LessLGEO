@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Analytics } from "@vercel/analytics/next";
+import QueryProviders from "@/components/QueryProvider";
 
 export const metadata: Metadata = {
 	title: "Create Next App",
@@ -16,7 +17,7 @@ export default function RootLayout( {
 		<html lang="en">
 			<body>
 				<Analytics/>
-				{children}
+				<QueryProviders>{children}</QueryProviders>
 			</body>
 		</html>
 	);

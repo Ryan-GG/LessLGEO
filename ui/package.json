@@ -20,6 +20,7 @@
     "@react-three/drei": "^10.6.1",
     "@react-three/fiber": "^9.3.0",
     "@supabase/ssr": "^0.6.1",
+    "@tanstack/react-query": "^5.84.1",
     "@types/three": "^0.178.1",
     "@vercel/analytics": "^1.5.0",
     "class-variance-authority": "^0.7.1",
