@@ -8,7 +8,7 @@ export async function fetchAllModelIds(): Promise<string[]> {
     return response.json();
 }
 
-export async function fetchModelById(modelId: string): Promise<modeling.Model> {
+export async function fetchModelById(modelId: string ): Promise<modeling.Model> {
     const response = await fetch(`http://localhost:8080/api/model/v1/${modelId}`);
 
     if (!response.ok) {
@@ -17,7 +17,13 @@ export async function fetchModelById(modelId: string): Promise<modeling.Model> {
 
     const buffer = await response.arrayBuffer();
     const uint8Array = new Uint8Array(buffer);
+    try {
     const decodedModel = modeling.Model.decode(uint8Array);
-
     return decodedModel;
+    }
+    catch( err: unknown)
+    {
+        console.log( err );
+    }
+    return modeling.Model.create();
 }
