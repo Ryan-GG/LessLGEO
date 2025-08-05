@@ -1,36 +1,40 @@
 "use client";
 import { modeling } from "@/proto-bundle";
-import { ReactElement, ReactNode } from "react";
+import { ReactNode } from "react";
 import { Quadrilateral } from "./quadrilateral";
 import { Triangle } from "./triangle";
+import { PivotControls } from "@react-three/drei";
 
-export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNode[] 
+export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNode 
 {
 	if( gpb === undefined ) return [];
-	return extractMeshes(gpb);
+	return (
+		<PivotControls anchor={[ -1.1, -1.1, -1.1 ]} scale={0.75} lineWidth={3.5}>
+			{extractMeshes( gpb )}
+		</PivotControls>
+	);
 }
 
-function extractMeshes(model: modeling.IModel | null | undefined): ReactNode[] {
-	if (!model) return [];
+function extractMeshes( model: modeling.IModel | null | undefined ): ReactNode[] {
+	if ( !model ) return [];
   
 	const meshes: ReactNode[] = [];
   
-	const quadMeshes = model.quadrilateral?.map((quad) => (
+	const quadMeshes = model.quadrilateral?.map( ( quad ) => (
 	  <Quadrilateral key={`quad-${crypto.randomUUID()}`} gpb={quad} />
-	)) ?? [];
+	) ) ?? [];
   
-	const triangleMeshes = model.triangle?.map((triangle) => (
+	const triangleMeshes = model.triangle?.map( ( triangle ) => (
 	  <Triangle key={`tri-${crypto.randomUUID()}`} gpb={triangle} />
-	)) ?? [];
+	) ) ?? [];
   
-	meshes.push(...quadMeshes, ...triangleMeshes);
+	meshes.push( ...quadMeshes, ...triangleMeshes );
   
-	const childMeshes = model.piece?.flatMap((child) =>
-	  extractMeshes(child.subModel)
-	) ?? [];
+	const childMeshes = model.piece?.flatMap( ( child ) =>
+	  extractMeshes( child.subModel ) ) ?? [];
   
-	meshes.push(...childMeshes);
+	meshes.push( ...childMeshes );
   
 	return meshes;
-  }
+}
   
