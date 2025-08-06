@@ -17,8 +17,6 @@ export function ModelCanvas( { modelId }: {modelId: string | undefined} ): React
 		enabled: modelId !== undefined,
 		queryFn: () => fetchModelById( modelId! ) } );
 
-	console.log( model?.toJSON() );
-
 	Object3D.DEFAULT_UP = DEFAULT_UP;
 
 	return (
