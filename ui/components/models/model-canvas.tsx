@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 import { Model } from "./primitive/model";
 import { fetchModelById } from "@/api/model/modelApi";
 import { useQuery } from "@tanstack/react-query";
-import { Euler, Object3D, Vector3 } from "three";
+import { Object3D, Vector3 } from "three";
 import { GridHelper } from "./grid-helper";
 
 // LDraw uses a right-handed co-ordinate system where -Y is "up".
@@ -20,7 +20,7 @@ export function ModelCanvas( { modelId }: {modelId: string | undefined} ): React
 	Object3D.DEFAULT_UP = DEFAULT_UP;
 
 	return (
-		<Canvas camera={{ position: [0, -500, -500] }}>
+		<Canvas camera={{ position: [ 0, -500, -500 ], far: 5000 }}>
 			<Model gpb={model}/>
 			<GridHelper/>
 			<ambientLight intensity={0.1} />

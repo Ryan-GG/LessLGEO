@@ -6,15 +6,15 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
-import { ReactElement, useEffect, useState } from "react";
+import { ReactElement, useState } from "react";
 
 /**
  * Models Landing Page, where to view and add new Models
  */
 export default function Models() {
 
-	const [modelId, setModelId ] = useState<string | undefined>(undefined);
-	const { data: modelIds } = useQuery({ queryKey: ["modelIds"], queryFn: fetchAllModelIds } );
+	const [ modelId, setModelId ] = useState<string | undefined>(  );
+	const { data: modelIds } = useQuery( { queryKey: [ "modelIds" ], queryFn: fetchAllModelIds } );
 	
 	return (
 		<div className="flex flex-col min-h-screen bg-black">
@@ -46,21 +46,20 @@ export default function Models() {
 
 function ModelIdDropDown( { modelIds, setModelId }: { modelIds: string[] | undefined, setModelId: ( id: string ) => void } ): ReactElement
 {
-		return (
+	return (
 		  <DropdownMenu>
 			<DropdownMenuTrigger asChild>
 			  <Button variant="outline">Model Ids</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent className="w-56" align="start">
-			{modelIds?.map( id => {
-								return ( 
-									<DropdownMenuItem key={`id-${id}`} onClick={() => setModelId(id)}>
-									{`ID: ${id}`}
-								  </DropdownMenuItem>
-									
-								);
-							} )}
+				{modelIds?.map( id => {
+					return ( 
+						<DropdownMenuItem key={`id-${id}`} onClick={() => setModelId( id )}>
+							{`ID: ${id}`}
+						</DropdownMenuItem>			
+					);
+				} )}
 			</DropdownMenuContent>
 		  </DropdownMenu>
-		)
+	);
 }
