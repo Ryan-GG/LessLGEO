@@ -7,4 +7,4 @@ export const BRICK_Y_TO_LDU = 24 as const;
 export const STUD_HEIGHT = 4 as const;
 export const STUD_DIAMETER = 12 as const;
 
-export const LDU_TO_THREE_SCALAR_VECTOR = new Vector3( 1 / BRICK_TO_LDU, 1 / BRICK_Y_TO_LDU, 1 / BRICK_TO_LDU );
+export const THREE_LDU_SCALAR_VECTOR = new Vector3( BRICK_TO_LDU, 0, BRICK_TO_LDU );

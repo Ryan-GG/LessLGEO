@@ -4,12 +4,13 @@ import { ReactNode } from "react";
 import { Quadrilateral } from "./quadrilateral";
 import { Triangle } from "./triangle";
 import { PivotControls } from "@react-three/drei";
+import { THREE_LDU_SCALAR_VECTOR } from "@/utils/units-utilities";
 
 export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNode 
 {
 	if( gpb === undefined ) return [];
 	return (
-		<PivotControls rotation={[ Math.PI, -Math.PI / 2, 2 * Math.PI ] }anchor={[ 1.4, 1, 1.4 ]} scale={0.25} lineWidth={3.5}>
+		<PivotControls rotation={[ Math.PI, Math.PI / 2, 2 * Math.PI ] } anchor={[ -1.4, 1, -1.4 ]} scale={THREE_LDU_SCALAR_VECTOR.x} lineWidth={3.5}>
 			{extractMeshes( gpb )}
 		</PivotControls>
 	);

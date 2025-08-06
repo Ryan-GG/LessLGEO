@@ -1,6 +1,5 @@
 "use client";
 import { modeling } from "@/proto-bundle";
-import { LDU_TO_THREE_SCALAR_VECTOR } from "@/utils/units-utilities";
 import { verticesToFloat32Array } from "@/utils/vertex-utilities";
 import { ReactElement } from "react";
 import { BufferAttribute, BufferGeometry, MeshBasicMaterial } from "three";
@@ -33,6 +32,6 @@ export function Quadrilateral( { gpb }: { gpb: modeling.IQuadrilateral } ): Reac
         
 	const material = new MeshBasicMaterial( { color: 0xFF_F0_00 } );
 	return (
-		<mesh geometry={geometry} material={material} scale={LDU_TO_THREE_SCALAR_VECTOR}/>
+		<mesh geometry={geometry} material={material}/>
 	);
 }
