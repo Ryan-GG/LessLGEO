@@ -3,7 +3,7 @@ import { CameraControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { ReactNode } from "react";
 import { Model } from "./primitive/model";
-import { fetchModelById } from "@/api/model/modelApi";
+import { fetchModelById } from "@/api/modelApi";
 import { useQuery } from "@tanstack/react-query";
 import { Object3D, Vector3 } from "three";
 import { GridHelper } from "./grid-helper";

@@ -1,5 +1,5 @@
 "use client";
-import { fetchColorById } from "@/api/model/colorApi";
+import { fetchColorById } from "@/api/colorApi";
 import { modeling } from "@/proto-bundle";
 import { verticesToFloat32Array } from "@/utils/vertex-utilities";
 import { useQuery } from "@tanstack/react-query";

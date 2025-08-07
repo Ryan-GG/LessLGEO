@@ -1,5 +1,5 @@
 "use client";
-import { fetchAllModelIds } from "@/api/model/modelApi";
+import { fetchAllModelIds } from "@/api/modelApi";
 import { AppNavBar } from "@/components/home/app-nav-bar";
 import { ModelCanvas } from "@/components/models/model-canvas";
 import { Button } from "@/components/ui/button";

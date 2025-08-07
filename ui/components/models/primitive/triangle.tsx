@@ -1,5 +1,5 @@
 "use client";
-import { fetchColorById } from "@/api/model/colorApi";
+import { fetchColorById } from "@/api/colorApi";
 import { modeling } from "@/proto-bundle";
 import { verticesToFloat32Array } from "@/utils/vertex-utilities";
 import { useQuery } from "@tanstack/react-query";
@@ -8,20 +8,20 @@ import { BufferAttribute, BufferGeometry, Color, MeshBasicMaterial } from "three
 
 export function Triangle( { gpb }: { gpb: modeling.ITriangle } ): ReactElement | undefined
 {
-	if( !gpb.p1 ||
-        !gpb.p2 ||
-        !gpb.p3 )
+	const { p1,p2,p3, colorId } = gpb;
+
+	const { data: color } = useQuery( { queryKey: [ "color" ], 
+		enabled: colorId !== undefined,
+		queryFn: () => fetchColorById( colorId! ) } );
+
+	if( !p1 ||
+        !p2 ||
+        !p3 )
 	{
 		console.warn( "Vertex is undefined" );
 		return undefined;
 	}
 
-	const { p1,p2,p3, colorId } = gpb;
-
-	const { data: color } = useQuery( { queryKey: [ "color" ], 
-	enabled: colorId !== undefined,
-	queryFn: () => fetchColorById( colorId! ) } );
-        
 	const geometry = new BufferGeometry();
 
         
