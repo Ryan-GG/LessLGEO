@@ -1,5 +1,6 @@
 "use client";
 import { fetchAllModelIds } from "@/api/modelApi";
+import { FileUploader } from "@/components/filie-uploader";
 import { AppNavBar } from "@/components/home/app-nav-bar";
 import { ModelCanvas } from "@/components/models/model-canvas";
 import { Button } from "@/components/ui/button";
@@ -33,7 +34,9 @@ export default function Models() {
 						<div className="h-[70vh] w-2/3 border-2 border-gray-500 rounded-lg p-6" id="canvas-container">
 							<ModelCanvas modelId={modelId}/>
 						</div>
-						<Skeleton className="h-[70vh] w-1/3 bg-black"/>
+						<div className="h-[70vh] w-1/3 border-2 border-gray-500 rounded-lg p-6" id="file-uploader">
+							<FileUploader/>
+						</div>
 					</div>
 				</div>
 			</main>
