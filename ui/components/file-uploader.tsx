@@ -1,6 +1,7 @@
 import React, { useState, ChangeEvent, ReactElement, Suspense } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { insertModel } from "@/api/modelApi";
 
 export function FileUploader(): ReactElement {
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -17,11 +18,7 @@ export function FileUploader(): ReactElement {
 		const formData = new FormData();
 		formData.append("myFile", selectedFile, selectedFile.name);
 
-		try {
-			console.log("File uploaded successfully");
-		} catch (error) {
-			console.error("Error uploading file", error);
-		}
+		insertModel( selectedFile );
 	};
 
 	return (

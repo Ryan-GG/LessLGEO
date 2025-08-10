@@ -1,4 +1,5 @@
 import { modeling } from "@/proto-bundle";
+import { API_VERSION } from "./versionApi";
 
 const MODEL_API = "models";
 
@@ -28,4 +29,19 @@ export async function fetchModelById(modelId: string ): Promise<modeling.Model> 
         console.log( err );
     }
     return modeling.Model.create();
+}
+
+export async function insertModel( lDrawFile: File ): Promise<string> {
+    const body: string =  await lDrawFile.text();
+    const response = await fetch(`http://localhost:8080/${API_VERSION}/${MODEL_API}/insert`,
+    { 
+        method: "POST",
+        body: body
+    });
+
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+
+    return response.json();
 }

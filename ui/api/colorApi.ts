@@ -1,3 +1,4 @@
+import { API_VERSION } from "./versionApi";
 
 export interface Color {
     readonly id: string,
