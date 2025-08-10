@@ -42,7 +42,7 @@ public class ModelController {
   }
 
   @GetMapping( value = "/{id}", produces = "application/x-protobuf" )
-  public ResponseEntity<byte[]> getModelAsJson( @PathVariable String id ) {
+  public ResponseEntity<byte[]> getModel( @PathVariable String id ) {
     Model model = modelService.getModelById( UUID.fromString( id ) );
 
     if ( model == null ) {

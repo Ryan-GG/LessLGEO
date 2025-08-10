@@ -1,7 +1,9 @@
 import { modeling } from "@/proto-bundle";
 
+const MODEL_API = "models";
+
 export async function fetchAllModelIds(): Promise<string[]> {
-    const response = await fetch('http://localhost:8080/api/model/v1/ids');
+    const response = await fetch(`http://localhost:8080/${API_VERSION}/${MODEL_API}/ids`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
@@ -9,7 +11,7 @@ export async function fetchAllModelIds(): Promise<string[]> {
 }
 
 export async function fetchModelById(modelId: string ): Promise<modeling.Model> {
-    const response = await fetch(`http://localhost:8080/api/model/v1/${modelId}`);
+    const response = await fetch(`http://localhost:8080/${API_VERSION}/${MODEL_API}/${modelId}`);
 
     if (!response.ok) {
         throw new Error(`Failed to fetch model: ${response.status}`);

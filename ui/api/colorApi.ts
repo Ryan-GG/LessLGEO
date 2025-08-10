@@ -10,8 +10,11 @@ export interface Color {
     readonly endYear?: number
 }
 
+
+const COLOR_API = "colors";
+
 export async function fetchColorById(colorId: number): Promise<Color> {
-    const response = await fetch(`http://localhost:8080/api/color/v1/${colorId}`);
+    const response = await fetch(`http://localhost:8080/${API_VERSION}/${COLOR_API}/${colorId}`);
     if (!response.ok) {
       throw new Error('Network response was not ok');
     }
