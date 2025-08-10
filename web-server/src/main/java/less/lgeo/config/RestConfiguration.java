@@ -13,7 +13,7 @@ public class RestConfiguration implements WebMvcConfigurer {
 
   @Override
   public void addCorsMappings( CorsRegistry registry ) {
-    registry.addMapping( "/api/**" )
+    registry.addMapping( "/v1/**" )
         .allowedOrigins( "http://localhost:3000" );
   }
   

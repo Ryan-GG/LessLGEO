@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @Validated
 @RestController
-@RequestMapping( value = "/api/model/v1" )
+@RequestMapping( value = "/v1/models" )
 public class ModelController {
 
   private static final Logger logger = LoggerFactory.getLogger( ModelController.class );
