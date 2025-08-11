@@ -11,7 +11,9 @@ export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNod
 	if( gpb === undefined ) return [];
 	return (
 		<PivotControls rotation={[ Math.PI, Math.PI / 2, 2 * Math.PI ] } anchor={[ -1.4, 1, -1.4 ]} scale={THREE_LDU_SCALAR_VECTOR.x} lineWidth={3.5}>
-			{extractMeshes( gpb )}
+			<object3D>
+				{extractMeshes( gpb )}
+			</object3D>
 		</PivotControls>
 	);
 }
