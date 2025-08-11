@@ -20,7 +20,7 @@ export function ModelCanvas( { modelId }: {modelId: string | undefined} ): React
 	Object3D.DEFAULT_UP = DEFAULT_UP;
 
 	return (
-		<Canvas camera={{ position: [ 0, -500, -500 ], far: 5000 }}>
+		<Canvas camera={{ position: [ 0, -500, -500 ], far: 5000 }} gl={{}}>
 			<Model gpb={model}/>
 			<GridHelper/>
 			<ambientLight intensity={0.1} />

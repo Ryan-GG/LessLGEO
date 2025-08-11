@@ -4,13 +4,13 @@ import { modeling } from "@/proto-bundle";
 import { verticesToFloat32Array } from "@/utils/vertex-utilities";
 import { useQuery } from "@tanstack/react-query";
 import { ReactElement } from "react";
-import { BufferAttribute, BufferGeometry, Color, MeshBasicMaterial } from "three";
+import { BufferAttribute, BufferGeometry, Color, DoubleSide, MeshBasicMaterial } from "three";
 
 export function Triangle( { gpb }: { gpb: modeling.ITriangle } ): ReactElement | undefined
 {
 	const { p1,p2,p3, colorId } = gpb;
 
-	const { data: color } = useQuery( { queryKey: [ "color" ], 
+	const { data: colorEntity } = useQuery( { queryKey: [ "color" ], 
 		enabled: colorId !== undefined,
 		queryFn: () => fetchColorById( colorId! ) } );
 
@@ -34,8 +34,18 @@ export function Triangle( { gpb }: { gpb: modeling.ITriangle } ): ReactElement |
 	geometry.setIndex( indices );
 	geometry.setAttribute( 'position', new BufferAttribute( vertices, 3, false ) );
         
-	const material = new MeshBasicMaterial( { color: new Color(`#${color?.rgb}`) });
+	const color: Color = new Color(`#${colorEntity?.rgb}`);
+
 	return (
-		<mesh geometry={geometry} material={material}/>
+		<group>
+			<mesh geometry={geometry}>
+				{ /* TODO, [Task] Implement BFC(Back Face Culling) Meta command #29 */}
+				<meshBasicMaterial color={color} side={DoubleSide}/>
+			</mesh>
+			<lineSegments>
+				<edgesGeometry args={[geometry]} />
+				<lineBasicMaterial color={"black"} linewidth={1} />
+			</lineSegments>
+		</group>
 	);
 }
