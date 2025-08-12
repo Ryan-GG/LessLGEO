@@ -1,5 +1,5 @@
 "use client";
-import { CameraControls } from "@react-three/drei";
+import { CameraControls, GizmoHelper, GizmoViewport, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import { ReactNode, useEffect } from "react";
 import { Model } from "./primitive/model";
@@ -27,7 +27,10 @@ export function ModelCanvas( { modelId }: {modelId: string | undefined} ): React
 			</scene>
 			<GridHelper/>
 			<ambientLight intensity={0.1} />
-			<directionalLight position={[ 0, -500, 0 ]} color="red" />
+			<directionalLight position={[ 0, -500, 0 ]} color="white" />
+			<GizmoHelper alignment="top-right" margin={[50, 50]}>
+				<GizmoViewport labelColor="black" axisHeadScale={1} />
+			</GizmoHelper>
 			<CameraControls makeDefault/>
 		</Canvas>
 	);
