@@ -1,6 +1,6 @@
 "use client";
 import { modeling } from "@/proto-bundle";
-import { ReactNode, useRef, useState } from "react";
+import { ReactNode, useState } from "react";
 import { Quadrilateral } from "./quadrilateral";
 import { Triangle } from "./triangle";
 import { PivotControls } from "@react-three/drei";
@@ -11,29 +11,21 @@ export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNod
 	if( gpb === undefined ) return [];
 
 	return ( gpb.piece?.map( piece => extractMeshes( piece.subModel ) ) ?? [] )
-			.map( ( mesh, index ) => <ModelWithControls subMeshes={mesh} key={`model-with-control-${index}`}/> );
+			.map( ( mesh, index ) => 
+				<ModelWithControls 
+					subMeshes={mesh} 
+					key={`model-with-control-${index}`}
+				/> 
+			);
 }
 
 function ModelWithControls( { subMeshes }: { subMeshes: ReactNode } ): ReactNode {
 
-	const [enabled, setEnabled] = useState<boolean>(false);
 	return (
 		<group>
-			<PivotControls
-			rotation={[ Math.PI, Math.PI / 2, 2 * Math.PI ] } 
-			anchor={[ -1.4, 1, -1.4 ]} 
-			scale={THREE_LDU_SCALAR_VECTOR.x} 
-			lineWidth={3.5}
-			enabled={enabled}
-			onDragEnd={() => setEnabled(false)}
-			>
-				<mesh onClick={(event) => {
-					event.stopPropagation();
-					setEnabled( true );
-				}}>
-					{subMeshes}
-				</mesh>	
-			</PivotControls>
+			<mesh>
+				{subMeshes}
+			</mesh>	
 		</group>
 		
 	);
