@@ -6,12 +6,6 @@ import { getTriangle } from "./triangle";
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { BufferGeometry, DoubleSide } from "three";
 
-/**
- * i can create a single geometry and material for each piece / Color
- * then create a new mesh referecing those geometries/materials
- * ( this still have the problem of how to merge geometries / applying the rotation / translation to it )
- */
-
 export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNode
 {
 	if( gpb === undefined ) return [];
@@ -28,14 +22,14 @@ export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNod
 			<mesh geometry={quad}>
 				<meshBasicMaterial color={"black"} side={DoubleSide}/>
 				<lineSegments>
-					<edgesGeometry args={[quad]} />
+					<edgesGeometry args={[ quad ]} />
 					<lineBasicMaterial color={"white"} linewidth={1}/>
 				</lineSegments>
 			</mesh>	
 			<mesh geometry={triangle}>
 				<meshBasicMaterial color={"black"} side={DoubleSide}/>
 				<lineSegments>
-					<edgesGeometry args={[triangle]} />
+					<edgesGeometry args={[ triangle ]} />
 					<lineBasicMaterial color={"white"} linewidth={1}/>
 				</lineSegments>
 			</mesh>	
@@ -87,13 +81,13 @@ function extractQuadrilaterals( model: modeling.IModel | null | undefined ): Buf
 {
 	if( !model ) return [];
 
-	return model.quadrilateral?.map( quad => getQuadrilateral( quad )).filter( geometry => geometry != null ) ?? [];
+	return model.quadrilateral?.map( quad => getQuadrilateral( quad ) ).filter( geometry => geometry != undefined ) ?? [];
 }
 
 function extractTriangles( model: modeling.IModel | null | undefined ): BufferGeometry[]
 {
 	if( !model ) return [];
 
-	return model.triangle?.map( triangle => getTriangle( triangle )).filter( geometry => geometry != null ) ?? [];
+	return model.triangle?.map( triangle => getTriangle( triangle ) ).filter( geometry => geometry != undefined ) ?? [];
 }
   
