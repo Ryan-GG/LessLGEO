@@ -1,9 +1,10 @@
 "use client";
 import { modeling } from "@/proto-bundle";
-import { verticesToFloat32Array } from "@/utils/vertex-utilities";
-import { BufferAttribute, BufferGeometry } from "three";
+import { colorToFloat32Array, verticesToFloat32Array } from "@/utils/common-utilities";
+import { BufferAttribute, BufferGeometry, Color } from "three";
+import { ColorMap } from "./model";
 
-export function getQuadrilateral( gpb: modeling.IQuadrilateral ): BufferGeometry | undefined
+export function getQuadrilateral( gpb: modeling.IQuadrilateral, colorMap: ColorMap ): BufferGeometry | undefined
 {
 	const { p1,p2,p3,p4, colorId } = gpb;
 
@@ -25,6 +26,11 @@ export function getQuadrilateral( gpb: modeling.IQuadrilateral ): BufferGeometry
 	geometry.setAttribute( "position", new BufferAttribute( vertices, 3, false ) );
 
 	geometry.computeVertexNormals();
+
+	// Defaults to black
+	const color: Color = new Color( `#${colorMap[colorId ?? 0]?.rgb}` );
+
+	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( color, 4 ), 3 ) );
 
 	return geometry;
 }

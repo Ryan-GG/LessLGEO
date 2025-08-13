@@ -1,5 +1,5 @@
 "use client";
-import { fetchAllModelIds } from "@/api/modelApi";
+import { fetchAllModelIds } from "@/api/model-api";
 import { FileUploader } from "@/components/file-uploader";
 import { AppNavBar } from "@/components/home/app-nav-bar";
 import { ModelCanvas } from "@/components/models/model-canvas";

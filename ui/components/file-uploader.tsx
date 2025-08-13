@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, ReactElement, Suspense } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { insertModel } from "@/api/modelApi";
+import { insertModel } from "@/api/model-api";
 
 export function FileUploader(): ReactElement {
 	const [selectedFile, setSelectedFile] = useState<File | null>(null);

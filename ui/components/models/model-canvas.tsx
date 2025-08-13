@@ -3,7 +3,7 @@ import { CameraControls, GizmoHelper, GizmoViewport, OrbitControls } from "@reac
 import { Canvas } from "@react-three/fiber";
 import { ReactNode, useEffect } from "react";
 import { Model } from "./primitive/model";
-import { fetchModelById } from "@/api/modelApi";
+import { fetchModelById } from "@/api/model-api";
 import { useQuery } from "@tanstack/react-query";
 import { Object3D, Scene, Vector3 } from "three";
 import { GridHelper } from "./grid-helper";

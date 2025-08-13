@@ -5,13 +5,24 @@ import { getQuadrilateral } from "./quadrilateral";
 import { getTriangle } from "./triangle";
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { BufferGeometry, DoubleSide } from "three";
+import { ColorEntity, fetchAllColors } from "@/api/color-api";
+import { useQuery } from "@tanstack/react-query";
+
+export type ColorMap = Record<string, ColorEntity>;
 
 export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNode
 {
+	const { data: colors } = useQuery( { queryKey: [ "colors" ], queryFn: fetchAllColors } );
+	
 	if( gpb === undefined ) return [];
 
-	const quadGeometries: BufferGeometry[] = extractQuadGeometries( gpb );
-	const triangleGeometries: BufferGeometry[] = extractTriangleGeometries( gpb );
+	const colorMap: ColorMap = colors?.reduce( ( map, colorEntity ) => {
+		map[colorEntity.id] = colorEntity;
+		return map;
+	}, {} as ColorMap ) ?? {};
+
+	const quadGeometries: BufferGeometry[] = extractQuadGeometries( gpb, colorMap );
+	const triangleGeometries: BufferGeometry[] = extractTriangleGeometries( gpb, colorMap );
 
 
 	const quad: BufferGeometry = BufferGeometryUtils.mergeGeometries( quadGeometries, false );
@@ -20,17 +31,17 @@ export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNod
 	return (
 		<group>
 			<mesh geometry={quad}>
-				<meshBasicMaterial color={"black"} side={DoubleSide}/>
+				<meshBasicMaterial vertexColors side={DoubleSide}/>
 				<lineSegments>
 					<edgesGeometry args={[ quad ]} />
-					<lineBasicMaterial color={"white"} linewidth={1}/>
+					<lineBasicMaterial color={"black"} linewidth={1}/>
 				</lineSegments>
 			</mesh>	
 			<mesh geometry={triangle}>
-				<meshBasicMaterial color={"black"} side={DoubleSide}/>
+				<meshBasicMaterial vertexColors side={DoubleSide}/>
 				<lineSegments>
 					<edgesGeometry args={[ triangle ]} />
-					<lineBasicMaterial color={"white"} linewidth={1}/>
+					<lineBasicMaterial color={"black"} linewidth={1}/>
 				</lineSegments>
 			</mesh>	
 		</group>
@@ -39,55 +50,37 @@ export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNod
 }
 
 
-function extractTriangleGeometries( model: modeling.IModel | null | undefined ): BufferGeometry[] {
+function extractTriangleGeometries( model: modeling.IModel | null | undefined, colorMap: ColorMap ): BufferGeometry[] {
 	if ( !model ) return [];
   
 	const meshes: BufferGeometry[] = [];
   
-	// TODO, add line / optional line
 	
-	const triangles = extractTriangles( model );
+	const triangles = model.triangle?.map( triangle => getTriangle( triangle, colorMap ) ).filter( geometry => geometry != undefined ) ?? [];
     
 	meshes.push( ...triangles );
   
 	const childMeshes = model.piece?.flatMap( ( child ) =>
-		extractTriangleGeometries( child.subModel ) ) ?? [];
+		extractTriangleGeometries( child.subModel, colorMap ) ) ?? [];
   
 	meshes.push( ...childMeshes );
 		
 	return meshes;
 }
 
-function extractQuadGeometries( model: modeling.IModel | null | undefined ): BufferGeometry[] {
+function extractQuadGeometries( model: modeling.IModel | null | undefined, colorMap: ColorMap ): BufferGeometry[] {
 	if ( !model ) return [];
   
 	const meshes: BufferGeometry[] = [];
   
-	// TODO, add line / optional line
-	
-	const quads = extractQuadrilaterals( model );
+	const quads = model.quadrilateral?.map( quad => getQuadrilateral( quad, colorMap ) ).filter( geometry => geometry != undefined ) ?? [];
     
 	meshes.push( ...quads );
 		
 	const childMeshes = model.piece?.flatMap( ( child ) =>
-		extractQuadGeometries( child.subModel ) ) ?? [];
+		extractQuadGeometries( child.subModel, colorMap ) ) ?? [];
   
 	meshes.push( ...childMeshes );
 		
 	return meshes;
-}
-
-function extractQuadrilaterals( model: modeling.IModel | null | undefined ): BufferGeometry[]
-{
-	if( !model ) return [];
-
-	return model.quadrilateral?.map( quad => getQuadrilateral( quad ) ).filter( geometry => geometry != undefined ) ?? [];
-}
-
-function extractTriangles( model: modeling.IModel | null | undefined ): BufferGeometry[]
-{
-	if( !model ) return [];
-
-	return model.triangle?.map( triangle => getTriangle( triangle ) ).filter( geometry => geometry != undefined ) ?? [];
-}
-  
+}  

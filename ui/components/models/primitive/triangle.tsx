@@ -1,9 +1,10 @@
 "use client";
 import { modeling } from "@/proto-bundle";
-import { verticesToFloat32Array } from "@/utils/vertex-utilities";
-import { BufferAttribute, BufferGeometry } from "three";
+import { colorToFloat32Array, verticesToFloat32Array } from "@/utils/common-utilities";
+import { BufferAttribute, BufferGeometry, Color } from "three";
+import { ColorMap } from "./model";
 
-export function getTriangle( gpb: modeling.ITriangle ): BufferGeometry | undefined
+export function getTriangle( gpb: modeling.ITriangle, colorMap: ColorMap ): BufferGeometry | undefined
 {
 	const { p1,p2,p3, colorId } = gpb;
 
@@ -26,6 +27,11 @@ export function getTriangle( gpb: modeling.ITriangle ): BufferGeometry | undefin
 	geometry.setAttribute( 'position', new BufferAttribute( vertices, 3, false ) );
 	
 	geometry.computeVertexNormals();
+
+	// Defaults to black
+	const color: Color = new Color( `#${colorMap[colorId ?? 0]?.rgb}` );
+
+	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( color, 3 ), 3 ) );
         
 	return geometry;
 }
