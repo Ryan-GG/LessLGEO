@@ -1,71 +1,99 @@
 "use client";
 import { modeling } from "@/proto-bundle";
-import { ReactNode, useState } from "react";
-import { Quadrilateral } from "./quadrilateral";
-import { Triangle } from "./triangle";
-import { PivotControls } from "@react-three/drei";
-import { THREE_LDU_SCALAR_VECTOR } from "@/utils/units-utilities";
+import { ReactNode } from "react";
+import { getQuadrilateral } from "./quadrilateral";
+import { getTriangle } from "./triangle";
+import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
+import { BufferGeometry, DoubleSide } from "three";
 
-export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNode[]
+/**
+ * i can create a single geometry and material for each piece / Color
+ * then create a new mesh referecing those geometries/materials
+ * ( this still have the problem of how to merge geometries / applying the rotation / translation to it )
+ */
+
+export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNode
 {
 	if( gpb === undefined ) return [];
 
-	return ( gpb.piece?.map( piece => extractMeshes( piece.subModel ) ) ?? [] )
-			.map( ( mesh, index ) => 
-				<ModelWithControls 
-					subMeshes={mesh} 
-					key={`model-with-control-${index}`}
-				/> 
-			);
-}
+	const quadGeometries: BufferGeometry[] = extractQuadGeometries( gpb );
+	const triangleGeometries: BufferGeometry[] = extractTriangleGeometries( gpb );
 
-function ModelWithControls( { subMeshes }: { subMeshes: ReactNode } ): ReactNode {
+
+	const quad: BufferGeometry = BufferGeometryUtils.mergeGeometries( quadGeometries, false );
+	const triangle: BufferGeometry = BufferGeometryUtils.mergeGeometries( triangleGeometries, false );
 
 	return (
 		<group>
-			<mesh>
-				{subMeshes}
+			<mesh geometry={quad}>
+				<meshBasicMaterial color={"black"} side={DoubleSide}/>
+				<lineSegments>
+					<edgesGeometry args={[quad]} />
+					<lineBasicMaterial color={"white"} linewidth={1}/>
+				</lineSegments>
+			</mesh>	
+			<mesh geometry={triangle}>
+				<meshBasicMaterial color={"black"} side={DoubleSide}/>
+				<lineSegments>
+					<edgesGeometry args={[triangle]} />
+					<lineBasicMaterial color={"white"} linewidth={1}/>
+				</lineSegments>
 			</mesh>	
 		</group>
 		
 	);
 }
 
-function extractMeshes( model: modeling.IModel | null | undefined ): ReactNode[] {
+
+function extractTriangleGeometries( model: modeling.IModel | null | undefined ): BufferGeometry[] {
 	if ( !model ) return [];
   
-	const meshes: ReactNode[] = [];
+	const meshes: BufferGeometry[] = [];
+  
+	// TODO, add line / optional line
+	
+	const triangles = extractTriangles( model );
+    
+	meshes.push( ...triangles );
+  
+	const childMeshes = model.piece?.flatMap( ( child ) =>
+		extractTriangleGeometries( child.subModel ) ) ?? [];
+  
+	meshes.push( ...childMeshes );
+		
+	return meshes;
+}
+
+function extractQuadGeometries( model: modeling.IModel | null | undefined ): BufferGeometry[] {
+	if ( !model ) return [];
+  
+	const meshes: BufferGeometry[] = [];
   
 	// TODO, add line / optional line
 	
 	const quads = extractQuadrilaterals( model );
-	const triangles = extractTriangles( model );
     
-	meshes.push( ...quads, ...triangles );
-  
+	meshes.push( ...quads );
+		
 	const childMeshes = model.piece?.flatMap( ( child ) =>
-	  extractMeshes( child.subModel ) ) ?? [];
+		extractQuadGeometries( child.subModel ) ) ?? [];
   
 	meshes.push( ...childMeshes );
-  
+		
 	return meshes;
 }
 
-function extractQuadrilaterals( model: modeling.IModel | null | undefined ): ReactNode[]
+function extractQuadrilaterals( model: modeling.IModel | null | undefined ): BufferGeometry[]
 {
 	if( !model ) return [];
 
-	return model.quadrilateral?.map( ( quad ) => (
-		<Quadrilateral key={`quad-${crypto.randomUUID()}`} gpb={quad} />
-	  ) ) ?? [];
+	return model.quadrilateral?.map( quad => getQuadrilateral( quad )).filter( geometry => geometry != null ) ?? [];
 }
 
-function extractTriangles( model: modeling.IModel | null | undefined ): ReactNode[]
+function extractTriangles( model: modeling.IModel | null | undefined ): BufferGeometry[]
 {
 	if( !model ) return [];
 
-	return model.triangle?.map( ( triangle ) => (
-		<Triangle key={`triangle-${crypto.randomUUID()}`} gpb={triangle} />
-	  ) ) ?? [];
+	return model.triangle?.map( triangle => getTriangle( triangle )).filter( geometry => geometry != null ) ?? [];
 }
   

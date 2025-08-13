@@ -1,18 +1,11 @@
 "use client";
-import { fetchColorById } from "@/api/colorApi";
 import { modeling } from "@/proto-bundle";
 import { verticesToFloat32Array } from "@/utils/vertex-utilities";
-import { useQuery } from "@tanstack/react-query";
-import { ReactElement } from "react";
-import { BufferAttribute, BufferGeometry, Color, DoubleSide } from "three";
+import { BufferAttribute, BufferGeometry, Color } from "three";
 
-export function Quadrilateral( { gpb }: { gpb: modeling.IQuadrilateral } ): ReactElement | undefined
+export function getQuadrilateral( gpb: modeling.IQuadrilateral, colorEntity?: any ): BufferGeometry | undefined
 {
 	const { p1,p2,p3,p4, colorId } = gpb;
-	const { data: colorEntity } = useQuery( { 
-		queryKey: [ "color", colorId ], 
-		enabled: colorId !== undefined,
-		queryFn: () => fetchColorById( colorId! ) } );		
 
 	if( !p1 ||
         !p2 ||
@@ -31,16 +24,15 @@ export function Quadrilateral( { gpb }: { gpb: modeling.IQuadrilateral } ): Reac
 	geometry.setIndex( indices );
 	geometry.setAttribute( "position", new BufferAttribute( vertices, 3, false ) );
 
-	const color: Color = new Color(`#${colorEntity?.rgb}`);
+	// Calculate normals for proper lighting
+	geometry.computeVertexNormals();
+
+	// Use the passed color entity if available
+	if (colorEntity?.rgb) {
+		const color = new Color(`#${colorEntity.rgb}`);
+		// You could store this color in the geometry userData for later use
+		geometry.userData = { color };
+	}
         
-	return (
-		<mesh geometry={geometry}>
-			{ /* TODO, [Task] Implement BFC(Back Face Culling) Meta command #29 */}
-			<meshBasicMaterial color={color} side={DoubleSide}/>
-			<lineSegments>
-				<edgesGeometry args={[geometry]} />
-				<lineBasicMaterial color={"black"} linewidth={1}/>
-			</lineSegments>
-		</mesh>
-	);
+	return geometry;
 }
