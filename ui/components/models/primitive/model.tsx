@@ -21,8 +21,10 @@ export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNod
 		return map;
 	}, {} as ColorMap ) ?? {};
 
-	const quadGeometries: BufferGeometry[] = extractQuadGeometries( gpb, colorMap );
-	const triangleGeometries: BufferGeometry[] = extractTriangleGeometries( gpb, colorMap );
+	console.log( gpb );
+
+	const quadGeometries: BufferGeometry[] = getQuadrilaterals( gpb ).map( quad => getQuadrilateral( quad, colorMap ) ).filter( quadGeometry => quadGeometry != undefined );
+	const triangleGeometries: BufferGeometry[] = getTriangles( gpb ).map( triangle => getTriangle( triangle, colorMap ) ).filter( triangleGeometry => triangleGeometry != undefined );
 
 
 	const quad: BufferGeometry = BufferGeometryUtils.mergeGeometries( quadGeometries, false );
@@ -50,37 +52,19 @@ export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNod
 }
 
 
-function extractTriangleGeometries( model: modeling.IModel | null | undefined, colorMap: ColorMap ): BufferGeometry[] {
-	if ( !model ) return [];
-  
-	const meshes: BufferGeometry[] = [];
-  
-	
-	const triangles = model.triangle?.map( triangle => getTriangle( triangle, colorMap ) ).filter( geometry => geometry != undefined ) ?? [];
+function getTriangles( model: modeling.IModel): modeling.ITriangle[] {
+
+	const triangles: modeling.ITriangle[] = model.triangle ?? [];
     
-	meshes.push( ...triangles );
-  
-	const childMeshes = model.piece?.flatMap( ( child ) =>
-		extractTriangleGeometries( child.subModel, colorMap ) ) ?? [];
-  
-	meshes.push( ...childMeshes );
-		
-	return meshes;
+	model.piece?.filter( subFileRef => subFileRef.subModel != undefined ).forEach( subFileReference => triangles.push( ...getTriangles( subFileReference.subModel ) ) )
+
+	return triangles;
 }
 
-function extractQuadGeometries( model: modeling.IModel | null | undefined, colorMap: ColorMap ): BufferGeometry[] {
-	if ( !model ) return [];
-  
-	const meshes: BufferGeometry[] = [];
-  
-	const quads = model.quadrilateral?.map( quad => getQuadrilateral( quad, colorMap ) ).filter( geometry => geometry != undefined ) ?? [];
+function getQuadrilaterals( model: modeling.IModel ): modeling.IQuadrilateral [] {
+	const quads: modeling.IQuadrilateral[] = model.quadrilateral ?? [];
     
-	meshes.push( ...quads );
-		
-	const childMeshes = model.piece?.flatMap( ( child ) =>
-		extractQuadGeometries( child.subModel, colorMap ) ) ?? [];
-  
-	meshes.push( ...childMeshes );
-		
-	return meshes;
+	model.piece?.filter( subFileRef => subFileRef.subModel != undefined ).forEach( subFileReference => quads.push( ...getQuadrilaterals( subFileReference.subModel ) ) )
+
+	return quads;
 }  
