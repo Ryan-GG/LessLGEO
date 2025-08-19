@@ -22,12 +22,10 @@ export function ModelCanvas( { modelId }: {modelId: string | undefined} ): React
 	
 	return (
 		<Canvas camera={{ position: [ 0, -500, -500 ], far: 5000 }}>
-			<scene>
-				<Model gpb={model}/>
-			</scene>
+			<Model gpb={model}/>
 			<GridHelper/>
-			<ambientLight intensity={0.1} />
-			<directionalLight position={[ 0, -500, 0 ]} color="white" />
+			<ambientLight intensity={1} />
+			<directionalLight position={[ 0, -500, 0 ]} color="white" intensity={1}/>
 			<GizmoHelper alignment="top-right" margin={[50, 50]}>
 				<GizmoViewport labelColor="black" axisHeadScale={1} />
 			</GizmoHelper>

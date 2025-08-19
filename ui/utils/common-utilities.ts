@@ -1,3 +1,4 @@
+import { ColorEntity } from "@/api/color-api";
 import { modeling } from "@/proto-bundle";
 import { Color, Vector3 } from "three";
 
@@ -26,13 +27,22 @@ export function verticesToFloat32Array( vertices: ReadonlyArray<modeling.IVertex
 	);
 }
 
-export function colorToFloat32Array( color: Color, numberOfVertices: number ): Float32Array
-{
-	const colorArray = new Float32Array( numberOfVertices * 3 );
-
-	for ( let index = 0; index < 4; index++ ) {
-		color.toArray( colorArray, index * 3 );
+export function colorToFloat32Array(
+	colorEntity: ColorEntity,
+	numberOfVertices: number
+  ): Float32Array {
+	const color = new Color(`#${colorEntity.rgb}`);
+	const alpha = colorEntity.isTrans ? 0.0 : 1.0;
+  
+	const colorArray = new Float32Array(numberOfVertices * 4);
+  
+	for (let i = 0; i < numberOfVertices; i++) {
+	  const offset = i * 4;
+	  colorArray[offset] = color.r;
+	  colorArray[offset + 1] = color.g;
+	  colorArray[offset + 2] = color.b;
+	  colorArray[offset + 3] = alpha;
 	}
-
+	
 	return colorArray;
-}
+  }
