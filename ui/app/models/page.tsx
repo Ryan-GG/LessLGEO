@@ -5,7 +5,7 @@ import { AppNavBar } from "@/components/home/app-nav-bar";
 import { ModelCanvas } from "@/components/models/model-canvas";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
 import { ReactElement, useState } from "react";
 
@@ -54,7 +54,7 @@ function ModelIdDropDown( { modelIds, setModelId }: { modelIds: string[] | undef
 			<DropdownMenuTrigger asChild>
 			  <Button variant="outline">Model Ids</Button>
 			</DropdownMenuTrigger>
-			<DropdownMenuContent className="w-56" align="start">
+			<DropdownMenuContent className="w-56 z-[1]" align="start">
 				{modelIds?.map( id => {
 					return ( 
 						<DropdownMenuItem key={`id-${id}`} onClick={() => setModelId( id )}>
