@@ -1,7 +1,7 @@
 "use client";
-import { CameraControls, GizmoHelper, GizmoViewport, OrbitControls } from "@react-three/drei";
+import { CameraControls, Environment, GizmoHelper, GizmoViewport, Html, Loader, OrbitControls, useGLTF, useProgress } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { ReactNode, useEffect } from "react";
+import { ReactNode, Suspense, useEffect } from "react";
 import { Model } from "./primitive/model";
 import { fetchModelById } from "@/api/model-api";
 import { useQuery } from "@tanstack/react-query";

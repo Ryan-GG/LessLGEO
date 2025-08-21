@@ -48,19 +48,19 @@ export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNod
 }
 
 
-function getTriangles( model: modeling.IModel): modeling.ITriangle[] {
+function getTriangles( model: modeling.IModel | null | undefined ): modeling.ITriangle[] {
 
-	const triangles: modeling.ITriangle[] = model.triangle ?? [];
+	const triangles: modeling.ITriangle[] = model?.triangle ?? [];
     
-	model.piece?.filter( subFileRef => subFileRef.subModel != undefined ).forEach( subFileReference => triangles.push( ...getTriangles( subFileReference.subModel ) ) )
+	model?.piece?.forEach( subFileReference => triangles.push( ...getTriangles( subFileReference.subModel ) ) )
 
 	return triangles;
 }
 
-function getQuadrilaterals( model: modeling.IModel ): modeling.IQuadrilateral [] {
-	const quads: modeling.IQuadrilateral[] = model.quadrilateral ?? [];
+function getQuadrilaterals( model: modeling.IModel | null | undefined ): modeling.IQuadrilateral [] {
+	const quads: modeling.IQuadrilateral[] = model?.quadrilateral ?? [];
     
-	model.piece?.filter( subFileRef => subFileRef.subModel != undefined ).forEach( subFileReference => quads.push( ...getQuadrilaterals( subFileReference.subModel ) ) )
+	model?.piece?.forEach( subFileReference => quads.push( ...getQuadrilaterals( subFileReference.subModel ) ) )
 
 	return quads;
 } 
