@@ -5,8 +5,8 @@
   "scripts": {
     "dev": "dotenv -e ../.env.local next dev --turbopack",
     "type-check": "tsc --noEmit",
-    "build": "dotenv -e ../.env.production next build",
-    "start": "dotenv -e ../.env.production next start",
+    "build": "npm run generate-sources && dotenv -e ../.env.production next build",
+    "start": "npm run generate-sources && dotenv -e ../.env.production next start",
     "lint": "next lint",
     "generate-sources": "pbjs -t static-module -w commonjs -o proto-bundle.js ../modeling/src/main/proto/*.proto && pbts -o proto-bundle.d.ts proto-bundle.js"
   },
