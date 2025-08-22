@@ -2,7 +2,7 @@
 import { modeling } from "@/proto-bundle";
 import { ReactNode } from "react";
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
-import { BufferAttribute, BufferGeometry, Color, DoubleSide } from "three";
+import { BufferAttribute, BufferGeometry, DoubleSide } from "three";
 import { ColorEntity, fetchAllColors } from "@/api/color-api";
 import { useQuery } from "@tanstack/react-query";
 import { verticesToFloat32Array, colorToFloat32Array } from "@/utils/common-utilities";
@@ -52,7 +52,7 @@ function getTriangles( model: modeling.IModel | null | undefined ): modeling.ITr
 
 	const triangles: modeling.ITriangle[] = model?.triangle ?? [];
     
-	model?.piece?.forEach( subFileReference => triangles.push( ...getTriangles( subFileReference.subModel ) ) )
+	if ( model?.piece ) for ( const subFileReference of model?.piece ) triangles.push( ...getTriangles( subFileReference.subModel ) ); 
 
 	return triangles;
 }
@@ -60,7 +60,7 @@ function getTriangles( model: modeling.IModel | null | undefined ): modeling.ITr
 function getQuadrilaterals( model: modeling.IModel | null | undefined ): modeling.IQuadrilateral [] {
 	const quads: modeling.IQuadrilateral[] = model?.quadrilateral ?? [];
     
-	model?.piece?.forEach( subFileReference => quads.push( ...getQuadrilaterals( subFileReference.subModel ) ) )
+	if ( model?.piece ) for ( const subFileReference of model?.piece ) quads.push( ...getQuadrilaterals( subFileReference.subModel ) ); 
 
 	return quads;
 } 

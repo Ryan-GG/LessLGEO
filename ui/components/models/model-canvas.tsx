@@ -1,11 +1,11 @@
 "use client";
-import { CameraControls, Environment, GizmoHelper, GizmoViewport, Html, Loader, OrbitControls, useGLTF, useProgress } from "@react-three/drei";
+import { CameraControls, GizmoHelper, GizmoViewport } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { ReactNode, Suspense, useEffect } from "react";
+import { ReactNode } from "react";
 import { Model } from "./primitive/model";
 import { fetchModelById } from "@/api/model-api";
 import { useQuery } from "@tanstack/react-query";
-import { Object3D, Scene, Vector3 } from "three";
+import { Object3D, Vector3 } from "three";
 import { GridHelper } from "./grid-helper";
 
 // LDraw uses a right-handed co-ordinate system where -Y is "up".
@@ -15,8 +15,7 @@ export function ModelCanvas( { modelId }: {modelId: string | undefined} ): React
 {
 	Object3D.DEFAULT_UP = DEFAULT_UP;
 
-	const { data: model } = useQuery( { 
-		queryKey: ["model", modelId],
+	const { data: model } = useQuery( { queryKey: [ "model", modelId ],
 		enabled: modelId !== undefined,
 		queryFn: () => fetchModelById( modelId! ) } );
 	
@@ -26,7 +25,7 @@ export function ModelCanvas( { modelId }: {modelId: string | undefined} ): React
 			<GridHelper/>
 			<ambientLight intensity={1} />
 			<directionalLight position={[ 0, -500, 0 ]} color="white" intensity={1}/>
-			<GizmoHelper alignment="top-right" margin={[50, 50]}>
+			<GizmoHelper alignment="top-right" margin={[ 50, 50 ]}>
 				<GizmoViewport labelColor="black" axisHeadScale={1} />
 			</GizmoHelper>
 			<CameraControls makeDefault/>
