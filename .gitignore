@@ -5,6 +5,10 @@
 # Intellij
 .idea
 *.iml
+*.project
+*.factorypath
+*.settings/
+*.classpath
 
 # Vscode
 .vscode
