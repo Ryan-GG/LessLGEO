@@ -26,7 +26,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ModelJoiner {
 
-  private static final Logger logger = LoggerFactory.getLogger( ModelJoiner.class );
+  private static final Logger logger = LoggerFactory.getLogger(ModelJoiner.class);
   private final LDrawParser lDrawParser;
   private final ConnectivityParser connectivityParser;
 
@@ -38,48 +38,52 @@ public class ModelJoiner {
     this.connectivityParser = connectivityParser;
   }
 
-  public Model joinAndTransformModel( ModelJobRequest modelJobRequest ) {
+  public Model joinAndTransformModel(ModelJobRequest modelJobRequest) {
 
-    Model parentModel = getLDrawModel( modelJobRequest );
+    Model parentModel = getLDrawModel(modelJobRequest);
 
     List<SubFileReference> connectedPieces = parentModel.getPieceList().stream()
-        .map( this::joinPieceWithConnection )
+        .map(this::joinPieceWithConnection)
         .toList();
 
-    if ( !connectedPieces.isEmpty() ) {
+    if (!connectedPieces.isEmpty()) {
       parentModel = parentModel.toBuilder()
           .clearPiece()
-          .addAllPiece( connectedPieces )
+          .addAllPiece(connectedPieces)
           .build();
     }
 
-    return transformModel( parentModel );
+    return transformModel(parentModel);
   }
 
-  private @NonNull Model getLDrawModel( ModelJobRequest modelJobRequest ) {
-    return lDrawParser.parse( modelJobRequest.getModelString() ).toBuilder()
-        .setUUID( modelJobRequest.getUUID() )
+  private @NonNull Model getLDrawModel(ModelJobRequest modelJobRequest) {
+    return lDrawParser.parse(modelJobRequest.getModelString()).toBuilder()
+        .setUUID(modelJobRequest.getUUID())
         .build();
   }
 
-  private @NonNull SubFileReference joinPieceWithConnection( SubFileReference piece ) {
+  private @NonNull SubFileReference joinPieceWithConnection(SubFileReference piece) {
 
-    File connectionFile = new File( "connectivity",
-        changeFileExtension( piece.getFileName(), PART_EXT ) );
+    File connectionFile = new File("connectivity",
+        changeFileExtension(piece.getFileName(), PART_EXT));
 
-    try {
-      String input = Files.readString( connectionFile.toPath() );
-      Connection pieceConnection = connectivityParser.parse( input );
+    if (Files.exists(connectionFile.toPath())) {
+      try {
+        String input = Files.readString(connectionFile.toPath());
 
-      return piece.toBuilder()
-          .clearPieceConnection()
-          .setPieceConnection( pieceConnection )
-          .build();
-    } catch ( IOException e ) {
-      logger.error( "Failed to open connectivity file {}", connectionFile.getAbsolutePath() );
+        Connection pieceConnection = connectivityParser.parse(input);
+
+        return piece.toBuilder()
+            .clearPieceConnection()
+            .setPieceConnection(pieceConnection)
+            .build();
+      } catch (IOException e) {
+        logger.error("Failed to open connectivity file {}", connectionFile.getAbsolutePath());
+      }
     }
 
-    logger.warn( "Piece Connection is Null" );
+    logger.warn("Connection file does not exist at {}, connection is null",
+        connectionFile.getAbsolutePath());
     return piece;
   }
 }
