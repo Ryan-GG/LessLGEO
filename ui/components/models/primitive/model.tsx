@@ -3,9 +3,10 @@ import { modeling } from "@/proto-bundle";
 import { ReactNode } from "react";
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { BufferAttribute, BufferGeometry, DoubleSide } from "three";
-import { ColorEntity, fetchAllColors } from "@/api/color-api";
+import { fetchAllColors } from "@/api/color-api";
 import { useQuery } from "@tanstack/react-query";
 import { verticesToFloat32Array, colorToFloat32Array } from "@/utils/common-utilities";
+import { ColorEntity } from "@/api/schema";
 
 export type ColorMap = Record<string, ColorEntity>;
 

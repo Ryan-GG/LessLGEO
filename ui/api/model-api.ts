@@ -1,5 +1,5 @@
 import { modeling } from "@/proto-bundle";
-import { API_VERSION } from "./version-api";
+import { API_VERSION } from "@/api/schema";
 
 const MODEL_API = "models";
 

@@ -1,4 +1,4 @@
-import { ColorEntity } from "@/api/color-api";
+import { ColorEntity } from "@/api/schema";
 import { modeling } from "@/proto-bundle";
 import { Color, Vector3 } from "three";
 
