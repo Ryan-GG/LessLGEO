@@ -21,7 +21,7 @@ export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNod
 		return map;
 	}, {} as ColorMap ) ?? {};
 
-	const quadGeometries: BufferGeometry[] = getQuadrilaterals( gpb ).map( quad => quadrilateralToBufferGeometery( quad, colorMap ) ).filter( quadGeometry => quadGeometry != undefined );
+	const quadGeometries: BufferGeometry[] = getQuadrilaterals( gpb ).map( quad => quadrilateralToBufferGeometry( quad, colorMap ) ).filter( quadGeometry => quadGeometry != undefined );
 	const triangleGeometries: BufferGeometry[] = getTriangles( gpb ).map( triangle => triangleToBufferGeometry( triangle, colorMap ) ).filter( triangleGeometry => triangleGeometry != undefined );
 
 
@@ -97,7 +97,7 @@ function triangleToBufferGeometry( gpb: modeling.ITriangle, colorMap: ColorMap )
 	return geometry;
 }
 
-function quadrilateralToBufferGeometery( gpb: modeling.IQuadrilateral, colorMap: ColorMap ): BufferGeometry | undefined
+function quadrilateralToBufferGeometry( gpb: modeling.IQuadrilateral, colorMap: ColorMap ): BufferGeometry | undefined
 {
 	const { p1,p2,p3,p4, colorId } = gpb;
 
