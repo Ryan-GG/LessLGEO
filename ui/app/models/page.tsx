@@ -26,7 +26,7 @@ export default function Models() {
 				<div className="h-full w-full p-8 flex flex-col gap-4 bg-gray-200">
 					<div className="flex gap-4">
 						<div className="h-[10vh] w-1/3">
-							<ModelIdDropDown modelIds={modelIds} setModelId={setModelId}/>
+							<ModelIdDropDown modelIds={modelIds ?? []} setModelId={setModelId}/>
 							<p>{`Current id: ${modelId}`}</p>
 						</div>
 					</div>
@@ -47,7 +47,7 @@ export default function Models() {
 	);
 }
 
-function ModelIdDropDown( { modelIds, setModelId }: { modelIds: string[] | undefined, setModelId: ( id: string ) => void } ): ReactElement
+function ModelIdDropDown( { modelIds, setModelId }: { modelIds: string[], setModelId: ( id: string ) => void } ): ReactElement
 {
 	return (
 		  <DropdownMenu>
