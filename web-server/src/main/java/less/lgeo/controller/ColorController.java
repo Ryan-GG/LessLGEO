@@ -3,8 +3,6 @@ package less.lgeo.controller;
 import java.util.List;
 import less.lgeo.entity.ColorEntity;
 import less.lgeo.service.ColorService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -14,12 +12,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST API endpoints for {@link ColorEntity} CRUD operations
+ */
 @Validated
 @RestController
 @RequestMapping( value = "/v1/colors" )
 public class ColorController {
-
-  private static final Logger logger = LoggerFactory.getLogger( ColorController.class );
 
   @Autowired
   private final ColorService colorService;
