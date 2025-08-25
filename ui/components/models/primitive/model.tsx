@@ -6,9 +6,9 @@ import { BufferAttribute, BufferGeometry, DoubleSide } from "three";
 import { fetchAllColors } from "@/api/color-api";
 import { useQuery } from "@tanstack/react-query";
 import { verticesToFloat32Array, colorToFloat32Array } from "@/utils/common-utilities";
-import { ColorEntity } from "@/api/schema";
+import { ColorEntity, ColorRefId } from "@/api/schema";
 
-export type ColorMap = Record<string, ColorEntity>;
+type ColorMap = Record<ColorRefId, ColorEntity>;
 
 export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNode
 {

@@ -7,11 +7,12 @@ import { fetchModelById } from "@/api/model-api";
 import { useQuery } from "@tanstack/react-query";
 import { Object3D, Vector3 } from "three";
 import { GridHelper } from "./grid-helper";
+import { ModelRefId } from "@/api/schema";
 
 // LDraw uses a right-handed co-ordinate system where -Y is "up".
 export const DEFAULT_UP = new Vector3( 0, -1, 0 );
 
-export function ModelCanvas( { modelId }: {modelId: string | undefined} ): ReactNode
+export function ModelCanvas( { modelId }: {modelId: ModelRefId | undefined} ): ReactNode
 {
 	Object3D.DEFAULT_UP = DEFAULT_UP;
 
