@@ -2,7 +2,7 @@ package less.lgeo.controller;
 
 import java.util.List;
 import java.util.UUID;
-import less.lgeo.primitive.Model;
+import less.lgeo.entity.ModelEntity;
 import less.lgeo.producer.WebServerProducer;
 import less.lgeo.service.ModelService;
 import org.slf4j.Logger;
@@ -44,17 +44,16 @@ public class ModelController {
     return ResponseEntity.ok( id );
   }
 
-  @GetMapping( value = "/{id}", produces = "application/x-protobuf" )
-  public ResponseEntity<byte[]> getModel( @PathVariable String id ) {
-    Model model = modelService.getModelById( UUID.fromString( id ) );
+  @GetMapping( value = "/{id}" )
+  public ResponseEntity<ModelEntity> getModel( @PathVariable String id ) {
+    ModelEntity modelEntity = modelService.getModelById( UUID.fromString( id ) );
 
-    if ( model == null ) {
-      logger.error( "Model {} was NULL", id );
-      return ResponseEntity.internalServerError().body(
-          ( "Failed to get model id: " + id ).getBytes() );
+    if ( modelEntity == null ) {
+      logger.error( "ModelEntity {} was NULL", id );
+      return ResponseEntity.internalServerError().body( new ModelEntity() );
     }
 
-    return ResponseEntity.ok( model.toByteArray() );
+    return ResponseEntity.ok( modelEntity );
   }
 
   @GetMapping( "/ids" )

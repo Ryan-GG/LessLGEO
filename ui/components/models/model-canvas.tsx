@@ -10,10 +10,14 @@ import { GridHelper } from "./grid-helper";
 import { ModelRefId } from "@/api/schema";
 
 // LDraw uses a right-handed co-ordinate system where -Y is "up".
-export const DEFAULT_UP = new Vector3( 0, -1, 0 );
+const DEFAULT_UP = new Vector3( 0, -1, 0 );
 
+/**
+ * @returns a ThreeJS Canvas that will render the provided modeel based on {@link ModelRefId}
+ */
 export function ModelCanvas( { modelId }: {modelId: ModelRefId | undefined} ): ReactNode
 {
+	// Sets default UP direction for the ThreeJS Canvas
 	Object3D.DEFAULT_UP = DEFAULT_UP;
 
 	const { data: model } = useQuery( { queryKey: [ "model", modelId ],

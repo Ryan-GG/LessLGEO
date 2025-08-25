@@ -1,9 +1,7 @@
 package less.lgeo.service;
 
 import static less.lgeo.entity.ModelEntity.toEntity;
-import static less.lgeo.entity.ModelEntity.toGpb;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -33,21 +31,15 @@ public class ModelService {
   /**
    * @return database entity by Model UUID, Null if no corresponding Model is found
    */
-  public @Nullable Model getModelById( UUID uuid ) {
+  public @Nullable ModelEntity getModelById( UUID uuid ) {
     Optional<ModelEntity> optionalModel = modelRepository.findById( uuid );
 
     if ( optionalModel.isEmpty() ) {
       logger.warn( "Model with id: {} doesn't exist", uuid );
       return null;
     }
-
-    try {
-      return toGpb( optionalModel.get() );
-    } catch ( InvalidProtocolBufferException e ) {
-      logger.error( "Failed to Model Id {} from entity, received: {}", uuid,
-          e.toString() );
-      return null;
-    }
+    
+    return optionalModel.get();
   }
 
   public void insertModel( Model model ) {

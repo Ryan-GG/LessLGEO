@@ -10,6 +10,9 @@ import { ColorEntity, ColorRefId } from "@/api/schema";
 
 type ColorMap = Record<ColorRefId, ColorEntity>;
 
+/**
+ * @returns a group of two meshes for all quads and triangles provided in the protobuf model object
+ */
 export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNode
 {
 	const { data: colors } = useQuery( { queryKey: [ "colors" ], queryFn: fetchAllColors } );
