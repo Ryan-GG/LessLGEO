@@ -31,17 +31,14 @@ export function colorToFloat32Array(
 	colorEntity: ColorEntity,
 	numberOfVertices: number
   ): Float32Array {
-	const color = new Color(`#${colorEntity.rgb}`);
-	const alpha = colorEntity.isTrans ? 0.0 : 1.0;
-  
-	const colorArray = new Float32Array(numberOfVertices * 4);
+	const color = new Color(`#${colorEntity.rgb}`);  
+	const colorArray = new Float32Array(numberOfVertices * 3);
   
 	for (let i = 0; i < numberOfVertices; i++) {
-	  const offset = i * 4;
+	  const offset = i * 3;
 	  colorArray[offset] = color.r;
 	  colorArray[offset + 1] = color.g;
 	  colorArray[offset + 2] = color.b;
-	  colorArray[offset + 3] = alpha;
 	}
 	
 	return colorArray;

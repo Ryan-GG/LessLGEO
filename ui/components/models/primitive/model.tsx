@@ -95,7 +95,7 @@ function triangleToBufferGeometry( gpb: modeling.ITriangle, colorMap: ColorMap )
 
 	// Defaults to black
 	const colorEntity: ColorEntity = colorMap[colorId ?? 0];
-	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( colorEntity, 3 ), 4 ) );
+	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( colorEntity, 3 ), 3 ) );
         
 	return geometry;
 }
@@ -125,7 +125,7 @@ function quadrilateralToBufferGeometry( gpb: modeling.IQuadrilateral, colorMap: 
 
 	// Defaults to black
 	const colorEntity: ColorEntity = colorMap[colorId ?? 0];
-	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( colorEntity, 4 ), 4 ) );
+	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( colorEntity, 4 ), 3 ) );
 
 	return geometry;
 }
