@@ -71,7 +71,7 @@ function getQuadrilaterals( model: modeling.IModel | null | undefined ): modelin
 
 function triangleToBufferGeometry( gpb: modeling.ITriangle, colorMap: ColorMap ): BufferGeometry | undefined
 {
-	const { p1,p2,p3, colorId } = gpb;
+	const { p1, p2, p3, colorId } = gpb;
 
 	if( !p1 ||
         !p2 ||
@@ -102,7 +102,7 @@ function triangleToBufferGeometry( gpb: modeling.ITriangle, colorMap: ColorMap )
 
 function quadrilateralToBufferGeometry( gpb: modeling.IQuadrilateral, colorMap: ColorMap ): BufferGeometry | undefined
 {
-	const { p1,p2,p3,p4, colorId } = gpb;
+	const { p1, p2, p3, p4, colorId } = gpb;
 
 	if( !p1 ||
         !p2 ||
