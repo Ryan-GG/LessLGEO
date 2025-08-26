@@ -10,7 +10,7 @@ const config: Config = {
 	// automock: false,
 
 	// Stop running tests after `n` failures
-	// bail: 0,
+	bail: 1,
 
 	// The directory where Jest should store its cached dependency information
 	// cacheDirectory: "/tmp/jest_rs",
@@ -36,12 +36,7 @@ const config: Config = {
 	coverageProvider: "v8",
 
 	// A list of reporter names that Jest uses when writing coverage reports
-	// coverageReporters: [
-	//   "json",
-	//   "text",
-	//   "lcov",
-	//   "clover"
-	// ],
+	coverageReporters: [ "json", "lcov" ], 
 
 	// An object that configures minimum threshold enforcement for coverage results
 	// coverageThreshold: undefined,
@@ -50,7 +45,7 @@ const config: Config = {
 	// dependencyExtractor: undefined,
 
 	// Make calling deprecated APIs throw helpful error messages
-	// errorOnDeprecated: false,
+	errorOnDeprecated: true,
 
 	// The default configuration for fake timers
 	// fakeTimers: {
