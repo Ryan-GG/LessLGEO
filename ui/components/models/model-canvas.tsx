@@ -26,7 +26,7 @@ export function ModelCanvas( { modelId }: {modelId: ModelRefId | undefined} ): R
 		queryFn: () => fetchModelById( modelId! ) } );
 	
 	return (
-		<Canvas camera={{ position: [ 0, -GRID_SIZE / 2, -GRID_SIZE / 2 ]}}>
+		<Canvas camera={{ position: [ 0, -GRID_SIZE / 2, -GRID_SIZE / 2 ] }}>
 			<group scale={THREE_LDU_SCALAR_VECTOR}>
 				<Model gpb={model}/>
 			</group>

@@ -4,11 +4,11 @@ import { ReactElement, Suspense } from "react";
 import { Color }  from "three";
 
 export const GRID_SIZE: number = 50 as const;
-export const GRID_COLOR_CENTER: Color = new Color(1,0,0);
-export const GRID_COLOR_LINES: Color = new Color(0.2,0.2, 0.2);
+export const GRID_COLOR_CENTER: Color = new Color( 1,0,0 );
+export const GRID_COLOR_LINES: Color = new Color( 0.2,0.2, 0.2 );
 
-export const X_COLOR: Color = new Color(1,0,0);
-export const Z_COLOR: Color = new Color(0,0,1);
+export const X_COLOR: Color = new Color( 1,0,0 );
+export const Z_COLOR: Color = new Color( 0,0,1 );
 
 export function GridHelper(): ReactElement
 {
