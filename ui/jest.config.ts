@@ -2,9 +2,14 @@
  * For a detailed explanation regarding each configuration property, visit:
  * https://jestjs.io/docs/configuration
  */
-
-import type { Config } from 'jest';
-
+import type { Config } from 'jest'
+import nextJest from 'next/jest.js'
+ 
+const createJestConfig = nextJest({
+  // Provide the path to your Next.js app to load next.config.js and .env files in your test environment
+  dir: './',
+})
+ 
 const config: Config = {
 	// All imported modules in your tests should be mocked automatically
 	// automock: false,
@@ -28,9 +33,7 @@ const config: Config = {
 	coverageDirectory: "coverage",
 
 	// An array of regexp pattern strings used to skip coverage collection
-	// coveragePathIgnorePatterns: [
-	//   "/node_modules/"
-	// ],
+	coveragePathIgnorePatterns: ["/node_modules/" ],
 
 	// Indicates which provider should be used to instrument code for coverage
 	coverageProvider: "v8",
@@ -65,7 +68,7 @@ const config: Config = {
 	// globals: {},
 
 	// The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
-	// maxWorkers: "50%",
+	maxWorkers: "75%",
 
 	// An array of directory names to be searched recursively up from the requiring module's location
 	// moduleDirectories: [
@@ -73,18 +76,12 @@ const config: Config = {
 	// ],
 
 	// An array of file extensions your modules use
-	// moduleFileExtensions: [
-	//   "js",
-	//   "mjs",
-	//   "cjs",
-	//   "jsx",
-	//   "ts",
-	//   "mts",
-	//   "cts",
-	//   "tsx",
-	//   "json",
-	//   "node"
-	// ],
+	moduleFileExtensions: [
+	  "js",
+	  "jsx",
+	  "ts",
+	  "tsx",
+	],
 
 	// A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
 	// moduleNameMapper: {},
@@ -193,4 +190,5 @@ const config: Config = {
 	// watchman: true,
 };
 
-export default config;
+// createJestConfig is exported this way to ensure that next/jest can load the Next.js config which is async
+export default createJestConfig(config);
