@@ -4,9 +4,10 @@ import { API_VERSION, ModelEntity, ModelEntitySchema, ModelRefId, UUIDArraySchem
 const MODEL_API = "models";
 
 export async function fetchAllModelIds(): Promise<ModelRefId[]> {
-	const response = await fetch( `http://localhost:8080/${API_VERSION}/${MODEL_API}/ids` );
+	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/ids`;
+	const response = await fetch( URI );
 	if ( !response.ok ) {
-		throw new Error( 'Network response was not ok' );
+		throw new Error( `${URI}, Status: ${response.statusText}` );
 	}
 
 	const jsonResponse = await response.json();
@@ -14,16 +15,18 @@ export async function fetchAllModelIds(): Promise<ModelRefId[]> {
 	
 	if( data == undefined || !success )
 	{
-		console.log( error );
+		console.error( error );
+		throw new Error( error.message );
 	}
 	return data!;
 }
 
 export async function fetchModelById( modelId: string ): Promise<modeling.Model> {
-	const response = await fetch( `http://localhost:8080/${API_VERSION}/${MODEL_API}/${modelId}` );
+	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/${modelId}`;
+	const response = await fetch( URI  );
 
 	if ( !response.ok ) {
-		throw new Error( `Failed to fetch model: ${response.status}` );
+		throw new Error( `${URI}, Status: ${response.statusText}` );
 	}
 
 	const jsonResponse = await response.json();
@@ -31,7 +34,8 @@ export async function fetchModelById( modelId: string ): Promise<modeling.Model>
 	
 	if( modelEntity == undefined || !success )
 	{
-		console.log( error );
+		console.error( error );
+		throw new Error( error.message );
 	}
 	
 	const model = entityToProtobuf<modeling.Model>( modelEntity?.modelData!, modeling.Model.decode );
@@ -40,14 +44,15 @@ export async function fetchModelById( modelId: string ): Promise<modeling.Model>
 }
 
 export async function insertModel( lDrawText: string ): Promise<ModelRefId> {
-	const response = await fetch( `http://localhost:8080/${API_VERSION}/${MODEL_API}/insert`,
+	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/insert`;
+	const response = await fetch( URI,
 		{ 
 			method: "POST",
 			body: lDrawText
 		} );
 
 	if ( !response.ok ) {
-		throw new Error( 'Network response was not ok' );
+		throw new Error( `${URI}, Status: ${response.statusText}` );
 	}
 
 	const jsonResponse = await response.json();
@@ -55,7 +60,8 @@ export async function insertModel( lDrawText: string ): Promise<ModelRefId> {
 	
 	if( data == undefined || !success )
 	{
-		console.log( error );
+		console.error( error );
+		throw new Error( error.message );
 	}
 	return data!;
 }

@@ -3,9 +3,10 @@ import { API_VERSION, ColorEntity, ColorEntityArraySchema, ColorEntitySchema } f
 const COLOR_API = "colors";
 
 export async function fetchColorById( colorId: number ): Promise<ColorEntity> {
-	const response = await fetch( `http://localhost:8080/${API_VERSION}/${COLOR_API}/${colorId}` );
+	const URI = `http://localhost:8080/${API_VERSION}/${COLOR_API}/${colorId}`;
+	const response = await fetch( URI );
 	if ( !response.ok ) {
-		throw new Error( 'Network response was not ok' );
+		throw new Error( `${URI}, Status: ${response.statusText}` );
 	}
 
 	const jsonResponse = await response.json();
@@ -13,15 +14,18 @@ export async function fetchColorById( colorId: number ): Promise<ColorEntity> {
 	
 	if( data == undefined || !success )
 	{
-		console.log( error );
+		console.error( error );
+		throw new Error( error.message );
 	}
 	return data!;
 }
 
 export async function fetchAllColors(): Promise<ColorEntity[]> {
-	const response = await fetch( `http://localhost:8080/${API_VERSION}/${COLOR_API}/` );
+	const URI = `http://localhost:8080/${API_VERSION}/${COLOR_API}/`;
+	const response = await fetch( URI );
+
 	if ( !response.ok ) {
-		throw new Error( 'Network response was not ok' );
+		throw new Error( `${URI}, Status: ${response.statusText}` );
 	}
 
 	const jsonResponse = await response.json();
@@ -29,7 +33,8 @@ export async function fetchAllColors(): Promise<ColorEntity[]> {
 	
 	if( data == undefined || !success )
 	{
-		console.log( error );
+		console.error( error );
+		throw new Error( error.message );
 	}
 	return data ?? [];
 
