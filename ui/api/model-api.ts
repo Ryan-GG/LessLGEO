@@ -26,12 +26,11 @@ export async function fetchModelById( modelId: string ): Promise<modeling.Model>
 	return model == undefined ? modeling.Model.create() : model;
 }
 
-export async function insertModel( lDrawFile: File ): Promise<ModelRefId> {
-	const body: string =  await lDrawFile.text();
+export async function insertModel( lDrawText: string ): Promise<ModelRefId> {
 	const response = await fetch( `http://localhost:8080/${API_VERSION}/${MODEL_API}/insert`,
 		{ 
 			method: "POST",
-			body: body
+			body: lDrawText
 		} );
 
 	if ( !response.ok ) {

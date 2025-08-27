@@ -18,7 +18,8 @@ export function FileUploader(): ReactElement {
 		const formData = new FormData();
 		formData.append( "myFile", selectedFile, selectedFile.name );
 
-		insertModel( selectedFile );
+		const fileText = await selectedFile.text();
+		insertModel( fileText );
 	};
 
 	return (
