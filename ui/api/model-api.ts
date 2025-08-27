@@ -1,5 +1,5 @@
 import { modeling } from "@/proto-bundle";
-import { API_VERSION, ModelEntity, ModelRefId, entityToProtobuf } from "@/api/schema";
+import { API_VERSION, ModelEntity, ModelEntitySchema, ModelRefId, UUIDArraySchema, UUIDSchema, entityToProtobuf } from "@/api/schema";
 
 const MODEL_API = "models";
 
@@ -8,7 +8,15 @@ export async function fetchAllModelIds(): Promise<ModelRefId[]> {
 	if ( !response.ok ) {
 		throw new Error( 'Network response was not ok' );
 	}
-	return response.json();
+
+	const jsonResponse = await response.json();
+	const { success, error, data } = UUIDArraySchema.safeParse(jsonResponse);
+	
+	if( data == undefined || !success )
+	{
+		console.log( error );
+	}
+	return data!;
 }
 
 export async function fetchModelById( modelId: string ): Promise<modeling.Model> {
@@ -18,10 +26,15 @@ export async function fetchModelById( modelId: string ): Promise<modeling.Model>
 		throw new Error( `Failed to fetch model: ${response.status}` );
 	}
 
-	// FIXME, This is what zod is for
-	const modelEntity = await response.json() as unknown as ModelEntity;
-
-	const model = entityToProtobuf<modeling.Model>( modelEntity.modelData, modeling.Model.decode );
+	const jsonResponse = await response.json();
+	const { success, error, data: modelEntity } = ModelEntitySchema.safeParse(jsonResponse);
+	
+	if( modelEntity == undefined || !success )
+	{
+		console.log( error );
+	}
+	
+	const model = entityToProtobuf<modeling.Model>( modelEntity?.modelData!, modeling.Model.decode );
 	
 	return model == undefined ? modeling.Model.create() : model;
 }
@@ -37,5 +50,12 @@ export async function insertModel( lDrawText: string ): Promise<ModelRefId> {
 		throw new Error( 'Network response was not ok' );
 	}
 
-	return response.json();
+	const jsonResponse = await response.json();
+	const { success, error, data } = UUIDSchema.safeParse(jsonResponse);
+	
+	if( data == undefined || !success )
+	{
+		console.log( error );
+	}
+	return data!;
 }

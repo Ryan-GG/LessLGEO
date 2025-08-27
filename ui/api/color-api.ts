@@ -1,4 +1,4 @@
-import { API_VERSION, ColorEntity } from "@/api/schema";
+import { API_VERSION, ColorEntity, ColorEntityArraySchema, ColorEntitySchema } from "@/api/schema";
 
 const COLOR_API = "colors";
 
@@ -8,8 +8,14 @@ export async function fetchColorById( colorId: number ): Promise<ColorEntity> {
 		throw new Error( 'Network response was not ok' );
 	}
 
-	// FIXME, This is what zod is for
-	return response.json() as unknown as ColorEntity;
+	const jsonResponse = await response.json();
+	const { success, error, data } = ColorEntitySchema.safeParse(jsonResponse);
+	
+	if( data == undefined || !success )
+	{
+		console.log( error );
+	}
+	return data!;
 }
 
 export async function fetchAllColors(): Promise<ColorEntity[]> {
@@ -18,6 +24,13 @@ export async function fetchAllColors(): Promise<ColorEntity[]> {
 		throw new Error( 'Network response was not ok' );
 	}
 
-	// FIXME, This is what zod is for
-	return response.json() as unknown as ColorEntity[];
+	const jsonResponse = await response.json();
+	const { success, error, data } = ColorEntityArraySchema.safeParse(jsonResponse);
+	
+	if( data == undefined || !success )
+	{
+		console.log( error );
+	}
+	return data ?? [];
+
 }
