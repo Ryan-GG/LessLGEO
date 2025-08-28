@@ -46,6 +46,7 @@ public class ParserHandler {
 
     Model joinedModel = modelJoiner.joinAndTransformModel(modelJobRequest);
 
+    logger.info("Inserting Model: {}", joinedModel.getUUID());
     modelService.insertModel(joinedModel);
 
     logger.info("Sending Model {}", joinedModel.getUUID());

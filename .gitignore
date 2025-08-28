@@ -5,6 +5,10 @@
 # Intellij
 .idea
 *.iml
+*.project
+*.factorypath
+*.settings/
+*.classpath
 
 # Vscode
 .vscode
@@ -89,6 +93,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 */next-env.d.ts
+
+# ProtobufJS
+ui/proto-bundle.js
+ui/proto-bundle.d.ts
 
 # Supabase
 supabase/

@@ -61,7 +61,6 @@
     <module>util</module>
     <module>reducer</module>
     <module>messaging</module>
-    <module>javafx</module>
     <module>web-server</module>
     <module>database</module>
   </modules>

@@ -1,9 +1,8 @@
 package less.lgeo.controller;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import com.google.protobuf.util.JsonFormat;
+import java.util.List;
 import java.util.UUID;
-import less.lgeo.primitive.Model;
+import less.lgeo.entity.ModelEntity;
 import less.lgeo.producer.WebServerProducer;
 import less.lgeo.service.ModelService;
 import org.slf4j.Logger;
@@ -18,9 +17,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * REST API endpoints for {@link ModelController} CRUD operations
+ */
 @Validated
 @RestController
-@RequestMapping( value = "/api/model/v1" )
+@RequestMapping( value = "/v1/models" )
 public class ModelController {
 
   private static final Logger logger = LoggerFactory.getLogger( ModelController.class );
@@ -42,21 +44,20 @@ public class ModelController {
     return ResponseEntity.ok( id );
   }
 
-  @GetMapping( "/{id}" )
-  public ResponseEntity<String> getModelAsJson( @PathVariable String id ) {
-    Model model = modelService.getModelById( UUID.fromString( id ) );
-    
-    if ( model == null ) {
-      logger.error( "Model {} was NULL", id );
-      return ResponseEntity.internalServerError().body( "Failed to get model id: " + id );
+  @GetMapping( value = "/{id}" )
+  public ResponseEntity<ModelEntity> getModel( @PathVariable String id ) {
+    ModelEntity modelEntity = modelService.getModelById( UUID.fromString( id ) );
+
+    if ( modelEntity == null ) {
+      logger.error( "ModelEntity {} was NULL", id );
+      return ResponseEntity.internalServerError().body( new ModelEntity() );
     }
 
-    try {
-      return ResponseEntity.ok( JsonFormat.printer().print( model ) );
-    } catch ( InvalidProtocolBufferException e ) {
-      logger.error( "Failed to convert to JSON, received {}", e.toString() );
-      return ResponseEntity.internalServerError()
-          .body( "Failed to convert Model " + id + "to JSON" );
-    }
+    return ResponseEntity.ok( modelEntity );
+  }
+
+  @GetMapping( "/ids" )
+  public ResponseEntity<List<UUID>> getAllModelIds() {
+    return ResponseEntity.ok( modelService.getAllModelUUIDs() );
   }
 }
