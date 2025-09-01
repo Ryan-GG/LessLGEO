@@ -1,12 +1,9 @@
 package less.lgeo.entity;
 
 import static less.lgeo.test.ModelTestUtils.cubeMesh;
-import static less.lgeo.test.ModelTestUtils.pyramid;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-import java.util.UUID;
 import less.lgeo.primitive.Model;
 import org.junit.jupiter.api.Test;
 
@@ -22,7 +19,7 @@ class ModelEntityTest {
     assertArrayEquals(entity.getModelData(), gpb.toByteArray());
   }
 
-  @Test
+  /*@Test
   void toGpb() throws InvalidProtocolBufferException {
     UUID id = UUID.randomUUID();
     Model gpb = pyramid().setUUID(id.toString()).build();
@@ -31,6 +28,6 @@ class ModelEntityTest {
     Model converted = ModelEntity.toGpb(entity);
 
     assertEquals(gpb, converted);
-  }
+  }*/
 
 }

@@ -13,6 +13,8 @@ spring:
     url: ${POSTGRES_URL}
   jpa:
     showSql: true
+    hibernate:
+      ddl-auto: create
 
 rabbit:
   worker-queues:
