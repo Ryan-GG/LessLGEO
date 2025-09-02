@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 import less.lgeo.common.Matrix;
 import less.lgeo.connectivity.Connection;
 import org.ejml.data.DMatrix4x4;
@@ -165,7 +166,9 @@ public class ModelUtils {
                   .setMatrix( IDENTITY_MATRIX )
                   .setSubModel(
                       transformModel(
-                          subFileReference.getSubModel(),
+                          subFileReference.getSubModel().toBuilder()
+                              .setUUID( UUID.randomUUID().toString() )
+                              .build(),
                           Optional.of( resulted ),
                           Optional.of( subPartColorId )
                       )

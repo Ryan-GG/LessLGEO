@@ -38,12 +38,12 @@ public class ModelService {
       logger.warn( "Model with id: {} doesn't exist", uuid );
       return null;
     }
-    
+
     return optionalModel.get();
   }
 
   public void insertModel( Model model ) {
-    modelRepository.save( toEntity( model ) );
+    modelRepository.save( toEntity( model, null ) );
   }
 
   public List<UUID> getAllModelUUIDs() {

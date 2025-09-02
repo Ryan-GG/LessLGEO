@@ -12,8 +12,3 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
-              - column:
-                  name: model_data
-                  type: BYTEA
-                  constraints:
-                    nullable: false

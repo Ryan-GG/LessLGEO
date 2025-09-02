@@ -1,8 +1,25 @@
 package less.lgeo.embedded;
 
 import jakarta.persistence.Embeddable;
+import less.lgeo.common.Vertex;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
 @Embeddable
-public record VertexEmbeddable(double x, double y, double z) {
+@AllArgsConstructor
+@NoArgsConstructor
+public class VertexEmbeddable {
+
+  private double x;
+  private double y;
+  private double z;
+
+  public VertexEmbeddable( Vertex vertex ) {
+    this.x = vertex.getX();
+    this.y = vertex.getY();
+    this.z = vertex.getZ();
+  }
 
 }

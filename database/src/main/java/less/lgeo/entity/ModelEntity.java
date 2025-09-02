@@ -1,59 +1,134 @@
 package less.lgeo.entity;
 
-import com.google.protobuf.InvalidProtocolBufferException;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import less.lgeo.embedded.VertexEmbeddable;
+import less.lgeo.embedded.LineEmbeddable;
+import less.lgeo.embedded.OptionalLineEmbeddable;
+import less.lgeo.embedded.QuadrilateralEmbeddable;
+import less.lgeo.embedded.TriangleEmbeddable;
 import less.lgeo.primitive.Model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ModelEntity represents queryable fields in a {@link Model} proto object as well as the binary
- * data( byte[] ) that makes up the entire object
+ * ModelEntity is a joined representation of 'embedded' collections of complex objects representing
+ * a {@link Model} proto object. These 'embedded' objects are treated a separate tables which are
+ * joined by the model uuid
  */
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "models")
+@Table( name = "models" )
 public class ModelEntity {
 
   @Id
-  @Column(unique = true, nullable = false, columnDefinition = "uuid")
+  @Column( unique = false, nullable = false, columnDefinition = "uuid" )
   private UUID uuid;
-
-  @Column(nullable = false, columnDefinition = "bytea")
-  private byte[] modelData;
 
   @ElementCollection
   @CollectionTable(
-      name = "model_vertices",
+      name = "model_lines",
       joinColumns = @JoinColumn(
           name = "model_uuid",
           referencedColumnName = "uuid",
-          unique = true,
+          unique = false,
           nullable = false,
           columnDefinition = "uuid",
           table = "models"
       )
   )
-  private List<VertexEmbeddable> vertices;
+  private List<LineEmbeddable> lines;
 
-  public static ModelEntity toEntity(Model gpb) {
-    UUID modelUUID = UUID.fromString(gpb.getUUID());
-    return new ModelEntity(modelUUID, gpb.toByteArray(), List.of(new VertexEmbeddable(0, 0, 0)));
+  @ElementCollection
+  @CollectionTable(
+      name = "model_triangles",
+      joinColumns = @JoinColumn(
+          name = "model_uuid",
+          referencedColumnName = "uuid",
+          unique = false,
+          nullable = false,
+          columnDefinition = "uuid",
+          table = "models"
+      )
+  )
+  private List<TriangleEmbeddable> triangles;
+
+  @ElementCollection
+  @CollectionTable(
+      name = "model_quadrilaterals",
+      joinColumns = @JoinColumn(
+          name = "model_uuid",
+          referencedColumnName = "uuid",
+          unique = false,
+          nullable = false,
+          columnDefinition = "uuid",
+          table = "models"
+      )
+  )
+  private List<QuadrilateralEmbeddable> quadrilaterals;
+
+  @ElementCollection
+  @CollectionTable(
+      name = "model_optional_lines",
+      joinColumns = @JoinColumn(
+          name = "model_uuid",
+          referencedColumnName = "uuid",
+          unique = false,
+          nullable = false,
+          columnDefinition = "uuid",
+          table = "models"
+      )
+  )
+  private List<OptionalLineEmbeddable> optionalLines;
+
+  @ManyToOne
+  @JsonBackReference
+  @JoinColumn( name = "parent_id" )
+  private ModelEntity parent;
+
+  @JsonManagedReference
+  @OneToMany( mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true )
+  private List<ModelEntity> children = new ArrayList<>();
+
+  /**
+   * Convert a GPB Model to a ModelEntity recursively.
+   */
+  public static ModelEntity toEntity( Model gpb, ModelEntity parent ) {
+    UUID modelUUID = UUID.fromString( gpb.getUUID() );
+
+    ModelEntity entity = new ModelEntity();
+    entity.setUuid( modelUUID );
+    entity.setLines( gpb.getLineList().stream().map( LineEmbeddable::fromGpb ).toList() );
+    entity.setTriangles(
+        gpb.getTriangleList().stream().map( TriangleEmbeddable::fromGpb ).toList() );
+    entity.setQuadrilaterals(
+        gpb.getQuadrilateralList().stream().map( QuadrilateralEmbeddable::fromGpb ).toList() );
+    entity.setOptionalLines(
+        gpb.getOptionalLineList().stream().map( OptionalLineEmbeddable::fromGpb ).toList() );
+    entity.setParent( parent );
+
+    // Recursively convert children
+    List<ModelEntity> childEntities = gpb.getPieceList().stream()
+        .map( subModelRef -> toEntity( subModelRef.getSubModel(), entity ) )
+        .toList();
+    entity.setChildren( childEntities );
+
+    return entity;
   }
 
-  public static Model toGpb(ModelEntity modelEntity) throws InvalidProtocolBufferException {
-    return Model.parseFrom(modelEntity.getModelData());
-  }
 }
