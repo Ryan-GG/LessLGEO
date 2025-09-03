@@ -19,11 +19,11 @@ import org.springframework.stereotype.Service;
 @Service
 public class ModelService {
 
-  private static final Logger logger = LoggerFactory.getLogger( ModelService.class );
+  private static final Logger logger = LoggerFactory.getLogger(ModelService.class);
 
   private final ModelRepository modelRepository;
 
-  public ModelService( ModelRepository modelRepository ) {
+  public ModelService(ModelRepository modelRepository) {
     this.modelRepository = modelRepository;
   }
 
@@ -31,23 +31,23 @@ public class ModelService {
   /**
    * @return database entity by Model UUID, Null if no corresponding Model is found
    */
-  public @Nullable ModelEntity getModelById( UUID uuid ) {
-    Optional<ModelEntity> optionalModel = modelRepository.findById( uuid );
+  public @Nullable ModelEntity getModelById(UUID uuid) {
+    Optional<ModelEntity> optionalModel = modelRepository.findById(uuid);
 
-    if ( optionalModel.isEmpty() ) {
-      logger.warn( "Model with id: {} doesn't exist", uuid );
+    if (optionalModel.isEmpty()) {
+      logger.warn("Model with id: {} doesn't exist", uuid);
       return null;
     }
 
     return optionalModel.get();
   }
 
-  public void insertModel( Model model ) {
-    modelRepository.save( toEntity( model, null ) );
+  public void insertModel(Model model) {
+    modelRepository.save(toEntity(model, null));
   }
 
-  public List<UUID> getAllModelUUIDs() {
-    return modelRepository.findAllUUIDs();
+  public List<UUID> getAllParentModelIds() {
+    return modelRepository.findAllIdsWhereParentIsNull();
   }
 
 }

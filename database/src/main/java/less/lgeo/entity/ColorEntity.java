@@ -44,6 +44,10 @@ public class ColorEntity {
   @Column(name = "y2")
   private Integer endYear;
 
+  public ColorEntity(int id) {
+    this.id = id;
+  }
+
   /**
    * @param entity Fields pulled from postgres
    * @return postgres to GPB {@link less.lgeo.common.Color}

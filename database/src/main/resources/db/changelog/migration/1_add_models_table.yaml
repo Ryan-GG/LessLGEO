@@ -7,7 +7,7 @@ databaseChangeLog:
             tableName: models
             columns:
               - column:
-                  name: uuid
+                  name: id
                   type: UUID
                   constraints:
                     nullable: false
