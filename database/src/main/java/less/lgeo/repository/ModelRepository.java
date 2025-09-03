@@ -15,6 +15,6 @@ import org.springframework.stereotype.Repository;
 @RepositoryDefinition(domainClass = ModelEntity.class, idClass = UUID.class)
 public interface ModelRepository extends JpaRepository<ModelEntity, UUID> {
 
-  @Query(value = "SELECT id FROM models WHERE parent IS NULL", nativeQuery = true)
-  List<UUID> findAllIdsWhereParentIsNull();
+  @Query(value = "SELECT id FROM models", nativeQuery = true)
+  List<UUID> findAllIds();
 }

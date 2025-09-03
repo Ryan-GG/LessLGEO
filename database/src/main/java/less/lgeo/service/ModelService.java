@@ -1,7 +1,6 @@
 package less.lgeo.service;
 
 import static less.lgeo.entity.ModelEntity.toEntity;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -46,8 +45,10 @@ public class ModelService {
     modelRepository.save(toEntity(model, null));
   }
 
-  public List<UUID> getAllParentModelIds() {
-    return modelRepository.findAllIdsWhereParentIsNull();
+
+  //TODO, this query needs to be modified to only get model entities will null parents as thats the root model
+  public List<UUID> getAllIds() {
+    return modelRepository.findAllIds();
   }
 
 }

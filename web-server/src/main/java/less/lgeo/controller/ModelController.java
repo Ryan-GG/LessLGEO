@@ -58,6 +58,6 @@ public class ModelController {
 
   @GetMapping("/ids")
   public ResponseEntity<List<UUID>> getAllModelIds() {
-    return ResponseEntity.ok(modelService.getAllParentModelIds());
+    return ResponseEntity.ok(modelService.getAllIds());
   }
 }

@@ -63,13 +63,14 @@ public class ModelEntity {
 
     ModelEntity entity = new ModelEntity();
     entity.setId(modelUUID);
-    entity.setLines(gpb.getLineList().stream().map(LineEntity::toEntity).toList());
+    // FIXME
+    /*entity.setLines(gpb.getLineList().stream().map(LineEntity::toEntity).toList());
     entity.setTriangles(
         gpb.getTriangleList().stream().map(TriangleEntity::toEntity).toList());
     entity.setQuadrilaterals(
         gpb.getQuadrilateralList().stream().map(QuadrilateralEntity::toEntity).toList());
     entity.setOptionalLines(
-        gpb.getOptionalLineList().stream().map(OptionalLineEntity::toEntity).toList());
+        gpb.getOptionalLineList().stream().map(OptionalLineEntity::toEntity).toList());*/
     entity.setParent(parent);
 
     // Recursively convert children
