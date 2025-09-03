@@ -34,16 +34,16 @@ public class ModelEntity {
   @Column(unique = false, nullable = false, columnDefinition = "uuid")
   private UUID id;
 
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<LineEntity> lines;
 
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TriangleEntity> triangles;
 
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<QuadrilateralEntity> quadrilaterals;
 
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OptionalLineEntity> optionalLines;
 
   @ManyToOne
@@ -54,32 +54,5 @@ public class ModelEntity {
   @JsonManagedReference
   @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<ModelEntity> children = new ArrayList<>();
-
-  /**
-   * Convert a GPB Model to a ModelEntity recursively.
-   */
-  public static ModelEntity toEntity(Model gpb, ModelEntity parent) {
-    UUID modelUUID = UUID.fromString(gpb.getUUID());
-
-    ModelEntity entity = new ModelEntity();
-    entity.setId(modelUUID);
-    // FIXME
-    /*entity.setLines(gpb.getLineList().stream().map(LineEntity::toEntity).toList());
-    entity.setTriangles(
-        gpb.getTriangleList().stream().map(TriangleEntity::toEntity).toList());
-    entity.setQuadrilaterals(
-        gpb.getQuadrilateralList().stream().map(QuadrilateralEntity::toEntity).toList());
-    entity.setOptionalLines(
-        gpb.getOptionalLineList().stream().map(OptionalLineEntity::toEntity).toList());*/
-    entity.setParent(parent);
-
-    // Recursively convert children
-    List<ModelEntity> childEntities = gpb.getPieceList().stream()
-        .map(subModelRef -> toEntity(subModelRef.getSubModel(), entity))
-        .toList();
-    entity.setChildren(childEntities);
-
-    return entity;
-  }
 
 }

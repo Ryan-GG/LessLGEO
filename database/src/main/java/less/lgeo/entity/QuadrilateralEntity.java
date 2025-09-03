@@ -60,16 +60,5 @@ public class QuadrilateralEntity {
       @AttributeOverride(name = "z", column = @Column(name = "p4_z"))
   })
   private VertexEmbeddable p4;
-
-/*  public static QuadrilateralEntity toEntity(Quadrilateral quadrilateral) {
-    return new QuadrilateralEntity(
-        null,
-        null,
-        new ColorEntity(quadrilateral.getColorId()),
-        new VertexEmbeddable(quadrilateral.getP1()),
-        new VertexEmbeddable(quadrilateral.getP2()),
-        new VertexEmbeddable(quadrilateral.getP3()),
-        new VertexEmbeddable(quadrilateral.getP4())
-    );
-  }*/
+  
 }

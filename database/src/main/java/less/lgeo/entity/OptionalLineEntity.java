@@ -60,16 +60,5 @@ public class OptionalLineEntity {
       @AttributeOverride(name = "z", column = @Column(name = "p4_z"))
   })
   private VertexEmbeddable p4;
-
-  /*public static OptionalLineEntity toEntity(OptionalLine optionalLine) {
-    return new OptionalLineEntity(
-        null,
-        null,
-        new ColorEntity(optionalLine.getColorId()),
-        new VertexEmbeddable(optionalLine.getP1()),
-        new VertexEmbeddable(optionalLine.getP2()),
-        new VertexEmbeddable(optionalLine.getP3()),
-        new VertexEmbeddable(optionalLine.getP4())
-    );
-  }*/
+  
 }

@@ -52,13 +52,5 @@ public class TriangleEntity {
       @AttributeOverride(name = "z", column = @Column(name = "p3_z"))
   })
   private VertexEmbeddable p3;
-
-  /*public static TriangleEntity toEntity(Triangle triangle) {
-    return new TriangleEntity(
-        new ColorEntity(triangle.getColorId()),
-        new VertexEmbeddable(triangle.getP1()),
-        new VertexEmbeddable(triangle.getP2()),
-        new VertexEmbeddable(triangle.getP3())
-    );
-  }*/
+  
 }

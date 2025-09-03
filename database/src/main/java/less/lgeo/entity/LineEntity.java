@@ -44,13 +44,5 @@ public class LineEntity {
       @AttributeOverride(name = "z", column = @Column(name = "p2_z"))
   })
   private VertexEmbeddable p2;
-
-
-  /*public static LineEntity toEntity(Line line) {
-    return new LineEntity(
-        new ColorEntity(line.getColorId()),
-        new VertexEmbeddable(line.getP1()),
-        new VertexEmbeddable(line.getP2())
-    );
-  }*/
+  
 }
