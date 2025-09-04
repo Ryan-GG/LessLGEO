@@ -27,6 +27,11 @@ databaseChangeLog:
                     nullable: false
                     primaryKey: true
               - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
                   name: color_id
                   type: int
                   constraints:
@@ -100,6 +105,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
               - column:
                   name: color_id
                   type: int
@@ -175,6 +185,11 @@ databaseChangeLog:
                     nullable: false
                     primaryKey: true
               - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
                   name: color_id
                   type: int
                   constraints:
@@ -233,6 +248,11 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
               - column:
                   name: color_id
                   type: int

@@ -34,16 +34,16 @@ public class ModelEntity {
   @Column(unique = false, nullable = false, columnDefinition = "uuid")
   private UUID id;
 
-  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<LineEntity> lines;
 
-  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<TriangleEntity> triangles;
 
-  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<QuadrilateralEntity> quadrilaterals;
 
-  @OneToMany(mappedBy = "id", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
   private List<OptionalLineEntity> optionalLines;
 
   @ManyToOne

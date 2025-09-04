@@ -1,6 +1,7 @@
 package less.lgeo.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import less.lgeo.entity.ModelEntity;
 import less.lgeo.producer.WebServerProducer;
@@ -46,14 +47,13 @@ public class ModelController {
 
   @GetMapping(value = "/{id}")
   public ResponseEntity<ModelEntity> getModel(@PathVariable String id) {
-    ModelEntity modelEntity = modelService.getModelById(UUID.fromString(id));
-
-    if (modelEntity == null) {
+    try {
+      ModelEntity modelEntity = modelService.getModelById(UUID.fromString(id));
+      return ResponseEntity.ok(modelEntity);
+    } catch (NoSuchElementException e) {
       logger.error("ModelEntity {} was NULL", id);
       return ResponseEntity.internalServerError().body(new ModelEntity());
     }
-
-    return ResponseEntity.ok(modelEntity);
   }
 
   @GetMapping("/ids")

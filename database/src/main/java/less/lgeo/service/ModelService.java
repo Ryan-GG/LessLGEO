@@ -1,7 +1,7 @@
 package less.lgeo.service;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import less.lgeo.embedded.VertexEmbeddable;
 import less.lgeo.entity.LineEntity;
@@ -49,16 +49,16 @@ public class ModelService {
     entity.setId(modelUUID);
 
     entity.setLines(
-        gpb.getLineList().stream().map(line -> createLineEntity(modelUUID, line)).toList());
+        gpb.getLineList().stream().map(line -> createLineEntity(entity, line)).toList());
     entity.setTriangles(
-        gpb.getTriangleList().stream().map(triangle -> createTriangleEntity(modelUUID, triangle))
+        gpb.getTriangleList().stream().map(triangle -> createTriangleEntity(entity, triangle))
             .toList());
     entity.setQuadrilaterals(
         gpb.getQuadrilateralList().stream()
-            .map(quadrilateral -> createQuadrilateralEntity(modelUUID, quadrilateral)).toList());
+            .map(quadrilateral -> createQuadrilateralEntity(entity, quadrilateral)).toList());
     entity.setOptionalLines(
         gpb.getOptionalLineList().stream()
-            .map(optionalLine -> createOptionalLineEntity(modelUUID, optionalLine)).toList());
+            .map(optionalLine -> createOptionalLineEntity(entity, optionalLine)).toList());
     entity.setParent(parent);
 
     // Recursively convert children
@@ -71,20 +71,20 @@ public class ModelService {
   }
 
 
-  private LineEntity createLineEntity(UUID parentModelId, Line gpb) {
+  private LineEntity createLineEntity(ModelEntity parentModelEntity, Line gpb) {
     return new LineEntity(
-        parentModelId,
+        UUID.randomUUID(),
+        parentModelEntity,
         colorRepository.findById(gpb.getColorId()).orElseThrow(),
         new VertexEmbeddable(gpb.getP1()),
         new VertexEmbeddable(gpb.getP2()));
   }
 
-  /**
-   * Creates a Triangle Entity to be stored into the model_triangle table
-   */
-  private OptionalLineEntity createOptionalLineEntity(UUID parentModelId, OptionalLine gpb) {
+  private OptionalLineEntity createOptionalLineEntity(ModelEntity parentModelEntity,
+      OptionalLine gpb) {
     return new OptionalLineEntity(
-        parentModelId,
+        UUID.randomUUID(),
+        parentModelEntity,
         colorRepository.findById(gpb.getColorId()).orElseThrow(),
         new VertexEmbeddable(gpb.getP1()),
         new VertexEmbeddable(gpb.getP2()),
@@ -92,9 +92,11 @@ public class ModelService {
         new VertexEmbeddable(gpb.getP4()));
   }
 
-  private QuadrilateralEntity createQuadrilateralEntity(UUID parentModelId, Quadrilateral gpb) {
+  private QuadrilateralEntity createQuadrilateralEntity(ModelEntity parentModelEntity,
+      Quadrilateral gpb) {
     return new QuadrilateralEntity(
-        parentModelId,
+        UUID.randomUUID(),
+        parentModelEntity,
         colorRepository.findById(gpb.getColorId()).orElseThrow(),
         new VertexEmbeddable(gpb.getP1()),
         new VertexEmbeddable(gpb.getP2()),
@@ -103,9 +105,10 @@ public class ModelService {
   }
 
 
-  private TriangleEntity createTriangleEntity(UUID parentModelId, Triangle gpb) {
+  private TriangleEntity createTriangleEntity(ModelEntity parentModelEntity, Triangle gpb) {
     return new TriangleEntity(
-        parentModelId,
+        UUID.randomUUID(),
+        parentModelEntity,
         colorRepository.findById(gpb.getColorId()).orElseThrow(),
         new VertexEmbeddable(gpb.getP1()),
         new VertexEmbeddable(gpb.getP2()),
@@ -114,17 +117,10 @@ public class ModelService {
 
 
   /**
-   * @return database entity by Model UUID, Null if no corresponding Model is found
+   * @return database entity by Model UUID throws if not found
    */
-  public @Nullable ModelEntity getModelById(UUID uuid) {
-    Optional<ModelEntity> optionalModel = modelRepository.findById(uuid);
-
-    if (optionalModel.isEmpty()) {
-      logger.warn("Model with id: {} doesn't exist", uuid);
-      return null;
-    }
-
-    return optionalModel.get();
+  public @Nullable ModelEntity getModelById(UUID uuid) throws NoSuchElementException {
+    return modelRepository.findById(uuid).orElseThrow();
   }
 
   public void insertModel(Model model) {
