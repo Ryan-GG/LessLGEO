@@ -21,14 +21,14 @@ export function ModelCanvas( { modelId }: {modelId: ModelRefId | undefined} ): R
 	// Sets default UP direction for the ThreeJS Canvas
 	Object3D.DEFAULT_UP = DEFAULT_UP;
 	
-	const { data: model } = useQuery( { queryKey: [ "model", modelId ],
+	const { data: modelEntity } = useQuery( { queryKey: [ "model", modelId ],
 		enabled: modelId !== undefined,
 		queryFn: () => fetchModelById( modelId! ) } );
 	
 	return (
 		<Canvas camera={{ position: [ 0, -GRID_SIZE / 2, -GRID_SIZE / 2 ] }}>
 			<group scale={THREE_LDU_SCALAR_VECTOR}>
-				<Model gpb={model}/>
+				<Model entity={modelEntity}/>
 			</group>
 			<GridHelper/>
 			<ambientLight intensity={1} />

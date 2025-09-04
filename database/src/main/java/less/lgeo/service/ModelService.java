@@ -128,8 +128,8 @@ public class ModelService {
   }
 
   //TODO, this query needs to be modified to only get model entities will null parents as thats the root model
-  public List<UUID> getAllIds() {
-    return modelRepository.findAllIds();
+  public List<UUID> getAllParentModelIds() {
+    return modelRepository.findAllParentModelIds();
   }
 
 }

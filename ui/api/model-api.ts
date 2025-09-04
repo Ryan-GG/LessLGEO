@@ -1,9 +1,9 @@
 import { modeling } from "@/proto-bundle";
-import { API_VERSION, ModelEntity, ModelEntitySchema, ModelRefId, UUIDArraySchema, UUIDSchema, entityToProtobuf } from "@/api/schema";
+import { API_VERSION, ModelEntity, ModelEntitySchema, ModelRefId, UUIDArraySchema, UUIDSchema } from "@/api/schema";
 
 const MODEL_API = "models";
 
-export async function fetchAllModelIds(): Promise<ModelRefId[]> {
+export async function fetchAllParentModelIds(): Promise<ModelRefId[]> {
 	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/ids`;
 	const response = await fetch( URI );
 	if ( !response.ok ) {
@@ -21,7 +21,7 @@ export async function fetchAllModelIds(): Promise<ModelRefId[]> {
 	return data!;
 }
 
-export async function fetchModelById( modelId: string ): Promise<modeling.Model> {
+export async function fetchModelById( modelId: string ): Promise<ModelEntity> {
 	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/${modelId}`;
 	const response = await fetch( URI  );
 
@@ -30,6 +30,7 @@ export async function fetchModelById( modelId: string ): Promise<modeling.Model>
 	}
 
 	const jsonResponse = await response.json();
+
 	const { success, error, data: modelEntity } = ModelEntitySchema.safeParse(jsonResponse);
 	
 	if( modelEntity == undefined || !success )
@@ -38,9 +39,7 @@ export async function fetchModelById( modelId: string ): Promise<modeling.Model>
 		throw new Error( error.message );
 	}
 	
-	const model = entityToProtobuf<modeling.Model>( modelEntity?.modelData!, modeling.Model.decode );
-	
-	return model == undefined ? modeling.Model.create() : model;
+	return modelEntity as ModelEntity ?? [];
 }
 
 export async function insertModel( lDrawText: string ): Promise<ModelRefId> {
