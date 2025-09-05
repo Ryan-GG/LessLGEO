@@ -18,7 +18,6 @@ import less.lgeo.repository.ColorRepository;
 import less.lgeo.repository.ModelRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Service;
 
 /**
@@ -43,7 +42,7 @@ public class ModelService {
    * Convert a GPB Model to a ModelEntity recursively.
    */
   private ModelEntity createModelEntity(Model gpb, ModelEntity parent) {
-    UUID modelUUID = UUID.fromString(gpb.getUUID());
+    UUID modelUUID = UUID.fromString(gpb.getId());
 
     ModelEntity entity = new ModelEntity();
     entity.setId(modelUUID);
@@ -117,9 +116,9 @@ public class ModelService {
 
 
   /**
-   * @return database entity by Model UUID throws if not found
+   * @return database entity by Model Id throws if not found
    */
-  public @Nullable ModelEntity getModelById(UUID uuid) throws NoSuchElementException {
+  public ModelEntity getModelById(UUID uuid) throws NoSuchElementException {
     return modelRepository.findById(uuid).orElseThrow();
   }
 
@@ -127,7 +126,6 @@ public class ModelService {
     modelRepository.save(createModelEntity(model, null));
   }
 
-  //TODO, this query needs to be modified to only get model entities will null parents as thats the root model
   public List<UUID> getAllParentModelIds() {
     return modelRepository.findAllParentModelIds();
   }

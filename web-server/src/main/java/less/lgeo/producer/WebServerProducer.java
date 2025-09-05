@@ -13,14 +13,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebServerProducer {
 
-  private final Logger logger = LoggerFactory.getLogger( WebServerProducer.class );
+  private final Logger logger = LoggerFactory.getLogger(WebServerProducer.class);
 
   @Autowired
   private final RabbitTemplate rabbitTemplate;
   @Autowired
   private final RabbitWorkerQueueProperties rabbitWorkerQueueProperties;
 
-  public WebServerProducer( RabbitTemplate rabbitTemplate,
+  public WebServerProducer(RabbitTemplate rabbitTemplate,
       RabbitWorkerQueueProperties rabbitWorkerQueueProperties
   ) {
     this.rabbitTemplate = rabbitTemplate;
@@ -30,14 +30,14 @@ public class WebServerProducer {
   /**
    * See at `less.lgeo.consumer.ParserConsumer`
    */
-  public void sendMessage( UUID uuid, String message ) {
+  public void sendMessage(UUID uuid, String message) {
     ModelJobRequest modelJobRequest = ModelJobRequest.newBuilder()
-        .setUUID( uuid.toString() )
-        .setModelString( message )
+        .setModelId(uuid.toString())
+        .setModelString(message)
         .build();
 
-    rabbitTemplate.convertAndSend( rabbitWorkerQueueProperties.getWebToParser(),
-        modelJobRequest.toByteArray() );
+    rabbitTemplate.convertAndSend(rabbitWorkerQueueProperties.getWebToParser(),
+        modelJobRequest.toByteArray());
   }
 
 }

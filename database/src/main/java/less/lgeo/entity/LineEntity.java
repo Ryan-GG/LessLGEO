@@ -25,6 +25,7 @@ import lombok.NoArgsConstructor;
 public class LineEntity {
 
   @Id
+  @Column(unique = true, nullable = false, columnDefinition = "uuid")
   private UUID id;
 
   @ManyToOne

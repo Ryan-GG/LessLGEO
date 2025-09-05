@@ -31,7 +31,7 @@ import lombok.NoArgsConstructor;
 public class ModelEntity {
 
   @Id
-  @Column(unique = false, nullable = false, columnDefinition = "uuid")
+  @Column(unique = true, nullable = false, columnDefinition = "uuid")
   private UUID id;
 
   @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)

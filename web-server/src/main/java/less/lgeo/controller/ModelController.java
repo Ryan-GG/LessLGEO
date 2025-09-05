@@ -51,7 +51,7 @@ public class ModelController {
       ModelEntity modelEntity = modelService.getModelById(UUID.fromString(id));
       return ResponseEntity.ok(modelEntity);
     } catch (NoSuchElementException e) {
-      logger.error("ModelEntity {} was NULL", id);
+      logger.error("ModelEntity Id {} was not found", id);
       return ResponseEntity.internalServerError().body(new ModelEntity());
     }
   }

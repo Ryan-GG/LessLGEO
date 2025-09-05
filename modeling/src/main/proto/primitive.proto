@@ -10,7 +10,7 @@ option java_package = "less.lgeo.primitive";
 option java_outer_classname = "Modeling";
 
 message Model {
-  string UUID = 1;
+  string id = 1;
   repeated Comment comment = 2;
   repeated MetaCommand command = 3;
   repeated Line line = 4;
