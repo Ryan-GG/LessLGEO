@@ -4,9 +4,7 @@ import { ReactNode } from "react";
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { BufferAttribute, BufferGeometry, DoubleSide } from "three";
 import { verticesToFloat32Array, colorToFloat32Array } from "@/utils/common-utilities";
-import { ColorEntity, ColorRefId, ModelEntity, QuadrilateralEntity, TriangleEntity } from "@/api/schema";
-
-type ColorMap = Record<ColorRefId, ColorEntity>;
+import { ModelEntity, QuadrilateralEntity, TriangleEntity } from "@/api/schema";
 
 /**
  * @returns a group of two meshes for all quads and triangles provided in the protobuf model object
@@ -47,7 +45,7 @@ function getTriangles( model: ModelEntity ): TriangleEntity[] {
 
 	const triangles: TriangleEntity[] = model.triangles ?? [];
     
-	for ( const subModel of model?.children ) triangles.push( ...getTriangles( subModel ) ); 
+	for ( const subModel of model.children ) triangles.push( ...getTriangles( subModel ) ); 
 
 	return triangles;
 }
@@ -55,7 +53,7 @@ function getTriangles( model: ModelEntity ): TriangleEntity[] {
 function getQuadrilaterals( model: ModelEntity ): QuadrilateralEntity[] {
 	const quads: QuadrilateralEntity[] = model.quadrilaterals ?? [];
     
-	for ( const subModel of model?.children ) quads.push( ...getQuadrilaterals( subModel ) ); 
+	for ( const subModel of model.children ) quads.push( ...getQuadrilaterals( subModel ) ); 
 
 	return quads;
 } 

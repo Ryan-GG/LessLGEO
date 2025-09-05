@@ -69,7 +69,7 @@ const VertexSchema = z.object({
     z: z.number(),
 })
 
-export const ColorEntitySchema = z.object({
+const ColorEntitySchema = z.object({
     id: z.number(),
     name: z.string(),
     rgb: z.string(),
@@ -79,8 +79,6 @@ export const ColorEntitySchema = z.object({
     startYear: z.optional( z.number() ).nullable(),
     endYear: z.optional( z.number() ).nullable(),
 });
-
-export const ColorEntityArraySchema = z.array( ColorEntitySchema );
 
 const LineEntitySchema = z.object({
     id: UUIDSchema,
