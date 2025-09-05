@@ -1,10 +1,17 @@
 package less.lgeo.entity;
 
-import com.google.protobuf.InvalidProtocolBufferException;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import less.lgeo.primitive.Model;
 import lombok.AllArgsConstructor;
@@ -12,8 +19,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * ModelEntity represents queryable fields in a {@link Model} proto object as well as the binary
- * data( byte[] ) that makes up the entire object
+ * ModelEntity is a joined representation of 'embedded' collections of complex objects representing
+ * a {@link Model} proto object. These 'embedded' objects are treated a separate tables which are
+ * joined by the model uuid
  */
 @Data
 @Entity
@@ -24,17 +32,27 @@ public class ModelEntity {
 
   @Id
   @Column(unique = true, nullable = false, columnDefinition = "uuid")
-  private UUID uuid;
+  private UUID id;
 
-  @Column(nullable = false, columnDefinition = "bytea")
-  private byte[] modelData;
+  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<LineEntity> lines;
 
-  public static ModelEntity toEntity(Model gpb) {
-    UUID modelUUID = UUID.fromString(gpb.getUUID());
-    return new ModelEntity(modelUUID, gpb.toByteArray());
-  }
+  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<TriangleEntity> triangles;
 
-  public static Model toGpb(ModelEntity modelEntity) throws InvalidProtocolBufferException {
-    return Model.parseFrom(modelEntity.getModelData());
-  }
+  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<QuadrilateralEntity> quadrilaterals;
+
+  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<OptionalLineEntity> optionalLines;
+
+  @ManyToOne
+  @JsonBackReference
+  @JoinColumn(name = "parent_id")
+  private ModelEntity parent;
+
+  @JsonManagedReference
+  @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<ModelEntity> children = new ArrayList<>();
+
 }

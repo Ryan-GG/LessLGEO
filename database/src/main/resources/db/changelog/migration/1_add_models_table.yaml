@@ -7,13 +7,284 @@ databaseChangeLog:
             tableName: models
             columns:
               - column:
-                  name: uuid
+                  name: id
                   type: UUID
                   constraints:
                     nullable: false
                     primaryKey: true
               - column:
-                  name: model_data
-                  type: BYTEA
+                  name: parent_id
+                  type: UUID
+                  constraints:
+                    nullable: true
+        - createTable:
+            tableName: model_quadrilaterals
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_z
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_z
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p3_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p3_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p3_z
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p4_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p4_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p4_z
+                  type: double
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: model_optional_lines
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_z
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_z
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p3_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p3_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p3_z
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p4_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p4_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p4_z
+                  type: double
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: model_triangles
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_z
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_z
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p3_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p3_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p3_z
+                  type: double
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: model_lines
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: model_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color_id
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p1_z
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: p2_z
+                  type: double
                   constraints:
                     nullable: false

@@ -1,5 +1,5 @@
 "use client";
-import { fetchAllModelIds } from "@/api/model-api";
+import { fetchAllParentModelIds } from "@/api/model-api";
 import { FileUploader } from "@/components/file-uploader";
 import { AppNavBar } from "@/components/home/app-nav-bar";
 import { ModelCanvas } from "@/components/models/model-canvas";
@@ -16,7 +16,7 @@ import { ModelRefId } from "@/api/schema";
 export default function Models() {
 
 	const [ modelId, setModelId ] = useState<ModelRefId | undefined>(  );
-	const { data: modelIds } = useQuery( { queryKey: [ "modelIds" ], queryFn: fetchAllModelIds } );
+	const { data: modelIds } = useQuery( { queryKey: [ "modelIds" ], queryFn: fetchAllParentModelIds } );
 	
 	return (
 		<div className="flex flex-col min-h-screen bg-black">

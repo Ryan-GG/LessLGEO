@@ -46,10 +46,10 @@ public class ParserHandler {
 
     Model joinedModel = modelJoiner.joinAndTransformModel(modelJobRequest);
 
-    logger.info("Inserting Model: {}", joinedModel.getUUID());
+    logger.info("Inserting Model: {}", joinedModel.getId());
     modelService.insertModel(joinedModel);
 
-    logger.info("Sending Model {}", joinedModel.getUUID());
+    logger.info("Sending Model {}", joinedModel.getId());
     parserProducer.sendMessage(joinedModel);
   }
 

@@ -3,29 +3,18 @@ import { modeling } from "@/proto-bundle";
 import { ReactNode } from "react";
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { BufferAttribute, BufferGeometry, DoubleSide } from "three";
-import { fetchAllColors } from "@/api/color-api";
-import { useQuery } from "@tanstack/react-query";
 import { verticesToFloat32Array, colorToFloat32Array } from "@/utils/common-utilities";
-import { ColorEntity, ColorRefId } from "@/api/schema";
-
-type ColorMap = Record<ColorRefId, ColorEntity>;
+import { ModelEntity, QuadrilateralEntity, TriangleEntity } from "@/api/schema";
 
 /**
  * @returns a group of two meshes for all quads and triangles provided in the protobuf model object
  */
-export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNode
-{
-	const { data: colors } = useQuery( { queryKey: [ "colors" ], queryFn: fetchAllColors } );
-	
-	if( gpb == undefined ) return [];
+export function Model( { entity }: { entity: ModelEntity | undefined } ): ReactNode
+{	
+	if( entity == undefined ) return [];
 
-	const colorMap: ColorMap = colors?.reduce( ( map, colorEntity ) => {
-		map[colorEntity.id] = colorEntity;
-		return map;
-	}, {} as ColorMap ) ?? {};
-
-	const quadGeometries: BufferGeometry[] = getQuadrilaterals( gpb ).map( quad => quadrilateralToBufferGeometry( quad, colorMap ) ).filter( quadGeometry => quadGeometry != undefined );
-	const triangleGeometries: BufferGeometry[] = getTriangles( gpb ).map( triangle => triangleToBufferGeometry( triangle, colorMap ) ).filter( triangleGeometry => triangleGeometry != undefined );
+	const quadGeometries: BufferGeometry[] = getQuadrilaterals( entity ).map( quad => quadrilateralToBufferGeometry( quad ) ).filter( quadGeometry => quadGeometry != undefined );
+	const triangleGeometries: BufferGeometry[] = getTriangles( entity ).map( triangle => triangleToBufferGeometry( triangle ) ).filter( triangleGeometry => triangleGeometry != undefined );
 
 
 	const quad: BufferGeometry = BufferGeometryUtils.mergeGeometries( quadGeometries, false );
@@ -52,26 +41,26 @@ export function Model( { gpb }: { gpb: modeling.IModel | undefined } ): ReactNod
 }
 
 
-function getTriangles( model: modeling.IModel | null | undefined ): modeling.ITriangle[] {
+function getTriangles( model: ModelEntity ): TriangleEntity[] {
 
-	const triangles: modeling.ITriangle[] = model?.triangle ?? [];
+	const triangles: TriangleEntity[] = model.triangles ?? [];
     
-	if ( model?.piece ) for ( const subFileReference of model?.piece ) triangles.push( ...getTriangles( subFileReference.subModel ) ); 
+	for ( const subModel of model.children ) triangles.push( ...getTriangles( subModel ) ); 
 
 	return triangles;
 }
 
-function getQuadrilaterals( model: modeling.IModel | null | undefined ): modeling.IQuadrilateral [] {
-	const quads: modeling.IQuadrilateral[] = model?.quadrilateral ?? [];
+function getQuadrilaterals( model: ModelEntity ): QuadrilateralEntity[] {
+	const quads: QuadrilateralEntity[] = model.quadrilaterals ?? [];
     
-	if ( model?.piece ) for ( const subFileReference of model?.piece ) quads.push( ...getQuadrilaterals( subFileReference.subModel ) ); 
+	for ( const subModel of model.children ) quads.push( ...getQuadrilaterals( subModel ) ); 
 
 	return quads;
 } 
 
-function triangleToBufferGeometry( gpb: modeling.ITriangle, colorMap: ColorMap ): BufferGeometry | undefined
+function triangleToBufferGeometry( triangleEntity: TriangleEntity ): BufferGeometry | undefined
 {
-	const { p1, p2, p3, colorId } = gpb;
+	const { p1, p2, p3, color } = triangleEntity;
 
 	if( !p1 ||
         !p2 ||
@@ -93,16 +82,14 @@ function triangleToBufferGeometry( gpb: modeling.ITriangle, colorMap: ColorMap )
 	
 	geometry.computeVertexNormals();
 
-	// Defaults to black
-	const colorEntity: ColorEntity = colorMap[colorId ?? 0];
-	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( colorEntity, 3 ), 3 ) );
+	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( color, 3 ), 3 ) );
         
 	return geometry;
 }
 
-function quadrilateralToBufferGeometry( gpb: modeling.IQuadrilateral, colorMap: ColorMap ): BufferGeometry | undefined
+function quadrilateralToBufferGeometry( quadrilateralEntity: QuadrilateralEntity ): BufferGeometry | undefined
 {
-	const { p1, p2, p3, p4, colorId } = gpb;
+	const { p1, p2, p3, p4, color } = quadrilateralEntity;
 
 	if( !p1 ||
         !p2 ||
@@ -123,9 +110,7 @@ function quadrilateralToBufferGeometry( gpb: modeling.IQuadrilateral, colorMap: 
 
 	geometry.computeVertexNormals();
 
-	// Defaults to black
-	const colorEntity: ColorEntity = colorMap[colorId ?? 0];
-	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( colorEntity, 4 ), 3 ) );
+	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( color, 4 ), 3 ) );
 
 	return geometry;
 }

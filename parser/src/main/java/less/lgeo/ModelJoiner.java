@@ -3,7 +3,6 @@ package less.lgeo;
 import static less.lgeo.common.CommonUtils.PART_EXT;
 import static less.lgeo.common.CommonUtils.changeFileExtension;
 import static less.lgeo.primitive.ModelUtils.transformModel;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -58,7 +57,7 @@ public class ModelJoiner {
 
   private @NonNull Model getLDrawModel(ModelJobRequest modelJobRequest) {
     return lDrawParser.parse(modelJobRequest.getModelString()).toBuilder()
-        .setUUID(modelJobRequest.getUUID())
+        .setId(modelJobRequest.getModelId())
         .build();
   }
 

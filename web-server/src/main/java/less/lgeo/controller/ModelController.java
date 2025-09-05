@@ -1,6 +1,7 @@
 package less.lgeo.controller;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 import less.lgeo.entity.ModelEntity;
 import less.lgeo.producer.WebServerProducer;
@@ -22,42 +23,41 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Validated
 @RestController
-@RequestMapping( value = "/v1/models" )
+@RequestMapping(value = "/v1/models")
 public class ModelController {
 
-  private static final Logger logger = LoggerFactory.getLogger( ModelController.class );
+  private static final Logger logger = LoggerFactory.getLogger(ModelController.class);
   @Autowired
   private final WebServerProducer webServerProducer;
 
   @Autowired
   private final ModelService modelService;
 
-  public ModelController( WebServerProducer webServerProducer, ModelService modelService ) {
+  public ModelController(WebServerProducer webServerProducer, ModelService modelService) {
     this.webServerProducer = webServerProducer;
     this.modelService = modelService;
   }
 
-  @PostMapping( "/insert" )
-  public ResponseEntity<UUID> insertModel( @RequestBody String body ) {
+  @PostMapping("/insert")
+  public ResponseEntity<UUID> insertModel(@RequestBody String body) {
     UUID id = UUID.randomUUID();
-    webServerProducer.sendMessage( id, body );
-    return ResponseEntity.ok( id );
+    webServerProducer.sendMessage(id, body);
+    return ResponseEntity.ok(id);
   }
 
-  @GetMapping( value = "/{id}" )
-  public ResponseEntity<ModelEntity> getModel( @PathVariable String id ) {
-    ModelEntity modelEntity = modelService.getModelById( UUID.fromString( id ) );
-
-    if ( modelEntity == null ) {
-      logger.error( "ModelEntity {} was NULL", id );
-      return ResponseEntity.internalServerError().body( new ModelEntity() );
+  @GetMapping(value = "/{id}")
+  public ResponseEntity<ModelEntity> getModel(@PathVariable String id) {
+    try {
+      ModelEntity modelEntity = modelService.getModelById(UUID.fromString(id));
+      return ResponseEntity.ok(modelEntity);
+    } catch (NoSuchElementException e) {
+      logger.error("ModelEntity Id {} was not found", id);
+      return ResponseEntity.internalServerError().body(new ModelEntity());
     }
-
-    return ResponseEntity.ok( modelEntity );
   }
 
-  @GetMapping( "/ids" )
+  @GetMapping("/ids")
   public ResponseEntity<List<UUID>> getAllModelIds() {
-    return ResponseEntity.ok( modelService.getAllModelUUIDs() );
+    return ResponseEntity.ok(modelService.getAllParentModelIds());
   }
 }

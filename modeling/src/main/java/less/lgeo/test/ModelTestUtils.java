@@ -3,7 +3,6 @@ package less.lgeo.test;
 import static less.lgeo.common.VertexUtils.toVertex;
 import static less.lgeo.primitive.QuadrilateralUtils.toQuadrilateral;
 import static less.lgeo.primitive.TriangleUtils.toTriangle;
-
 import java.util.List;
 import java.util.UUID;
 import less.lgeo.common.Vertex;
@@ -31,7 +30,7 @@ public class ModelTestUtils {
 
   public static Builder newModelEmpty() {
     return Model.newBuilder()
-        .setUUID(UUID.randomUUID().toString());
+        .setId(UUID.randomUUID().toString());
   }
 
   public static Model.Builder cubeMesh() {
