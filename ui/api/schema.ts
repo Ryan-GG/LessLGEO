@@ -150,5 +150,5 @@ export const ModelEntitySchema: z.ZodType<ModelEntitySchemaType> = z.lazy(() =>
 
 // ---------- Reference Ids ----------
 
-export type ModelRefId = modeling.Model["UUID"];
+export type ModelRefId = modeling.Model["id"];
 export type ColorRefId = modeling.Color["id"];

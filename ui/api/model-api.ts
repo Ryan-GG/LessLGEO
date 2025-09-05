@@ -1,4 +1,3 @@
-import { modeling } from "@/proto-bundle";
 import { API_VERSION, ModelEntity, ModelEntitySchema, ModelRefId, UUIDArraySchema, UUIDSchema } from "@/api/schema";
 
 const MODEL_API = "models";
