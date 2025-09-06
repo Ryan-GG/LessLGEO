@@ -6,6 +6,10 @@ spring:
     port: 5672
     username: ${RABBIT_USER}
     password: ${RABBIT_PASSWORD}
+    listener:
+      simple:
+        default-requeue-rejected: false
+
   datasource:
     driverClassName: "org.postgresql.Driver"
     username: ${POSTGRES_USER}
@@ -25,8 +29,8 @@ rabbit:
     dead-letter-exchange: "dead-letter-exchange"
     web-to-parser-dead-letter-queue: "web-to-parser-dead-letter-queue"
     parser-to-reducer-dead-letter-queue: "parser-to-reducer-dead-letter-queue"
-    web-to-parser-routing-key: "web.parser.dlq.#"
-    parser-to-reducer-routing-key: "parser.reducer.dlq.#"
+    web-to-parser-routing-key: "web.parser.dlq"
+    parser-to-reducer-routing-key: "parser.reducer.dlq"
 
 ---
 spring:
