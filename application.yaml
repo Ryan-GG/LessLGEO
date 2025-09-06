@@ -15,7 +15,10 @@ spring:
     showSql: false
 
 rabbit:
-  worker-queues:
+  exchange:
+    web-to-parser-exchange: "web-to-parser-exchange"
+    parser-to-reducer-exchange: "parser-to-reducer-exchange"
+  worker-queue:
     web-to-parser: "web-to-parser-queue"
     parser-to-reducer: "parser-to-reducer-queue"
 

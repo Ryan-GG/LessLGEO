@@ -4,7 +4,7 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConfigurationProperties(prefix = "rabbit.worker-queues")
+@ConfigurationProperties(prefix = "rabbit.worker-queue")
 public class RabbitWorkerQueueProperties {
 
   private String webToParser;
@@ -17,7 +17,7 @@ public class RabbitWorkerQueueProperties {
   public void setWebToParser(String webToParser) {
     this.webToParser = webToParser;
   }
-  
+
   public String getParserToReducer() {
     return parserToReducer;
   }
