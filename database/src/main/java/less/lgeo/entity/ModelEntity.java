@@ -2,21 +2,16 @@ package less.lgeo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import jakarta.persistence.*;
 import less.lgeo.primitive.Model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
+import java.util.UUID;
 
 /**
  * ModelEntity is a joined representation of 'embedded' collections of complex objects representing
@@ -30,29 +25,34 @@ import lombok.NoArgsConstructor;
 @Table(name = "models")
 public class ModelEntity {
 
-  @Id
-  @Column(unique = true, nullable = false, columnDefinition = "uuid")
-  private UUID id;
+    @Id
+    @Column(unique = true, nullable = false, columnDefinition = "uuid")
+    private UUID id;
 
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<LineEntity> lines;
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<LineEntity> lines;
 
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<TriangleEntity> triangles;
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<TriangleEntity> triangles;
 
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<QuadrilateralEntity> quadrilaterals;
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<QuadrilateralEntity> quadrilaterals;
 
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<OptionalLineEntity> optionalLines;
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<OptionalLineEntity> optionalLines;
 
-  @ManyToOne
-  @JsonBackReference
-  @JoinColumn(name = "parent_id")
-  private ModelEntity parent;
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "parent_id")
+    private ModelEntity parent;
 
-  @JsonManagedReference
-  @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true)
-  private List<ModelEntity> children = new ArrayList<>();
+    @JsonManagedReference
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<ModelEntity> children = new HashSet<>();
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getId(), getLines(), getTriangles(), getQuadrilaterals(), getChildren());
+    }
 
 }

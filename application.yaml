@@ -63,11 +63,10 @@ spring:
     properties:
       hibernate:
         format_sql: true
-
-  logging:
-    level:
-      org.hibernate.SQL: debug
-      org.hibernate.type.descriptor.sql.BasicBinder: trace
+        jdbc:
+          batch_size: 1000
+        order_inserts: true
+        order_updates: true
 
 
 
