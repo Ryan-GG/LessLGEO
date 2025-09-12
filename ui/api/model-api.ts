@@ -1,8 +1,8 @@
-import { API_VERSION, ModelEntity, ModelEntitySchema, ModelRefId, UUIDArraySchema, UUIDSchema } from "@/api/schema";
+import { API_VERSION, ModelEntity, ModelEntitySchema, idSchema, idSchemaArray } from "@/api/schema";
 
 const MODEL_API = "models";
 
-export async function fetchAllParentModelIds(): Promise<ModelRefId[]> {
+export async function fetchAllParentModelIds(): Promise<number[]> {
 	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/ids`;
 	const response = await fetch( URI );
 	if ( !response.ok ) {
@@ -10,7 +10,7 @@ export async function fetchAllParentModelIds(): Promise<ModelRefId[]> {
 	}
 
 	const jsonResponse = await response.json();
-	const { success, error, data } = UUIDArraySchema.safeParse(jsonResponse);
+	const { success, error, data } = idSchemaArray.safeParse(jsonResponse);
 	
 	if( data == undefined || !success )
 	{
@@ -20,7 +20,7 @@ export async function fetchAllParentModelIds(): Promise<ModelRefId[]> {
 	return data!;
 }
 
-export async function fetchModelById( modelId: string ): Promise<ModelEntity> {
+export async function fetchModelById( modelId: number ): Promise<ModelEntity> {
 	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/${modelId}`;
 	const response = await fetch( URI  );
 
@@ -41,7 +41,7 @@ export async function fetchModelById( modelId: string ): Promise<ModelEntity> {
 	return modelEntity as ModelEntity ?? [];
 }
 
-export async function insertModel( lDrawText: string ): Promise<ModelRefId> {
+export async function insertModel( lDrawText: string ): Promise<number> {
 	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/insert`;
 	const response = await fetch( URI,
 		{ 
@@ -54,7 +54,7 @@ export async function insertModel( lDrawText: string ): Promise<ModelRefId> {
 	}
 
 	const jsonResponse = await response.json();
-	const { success, error, data } = UUIDSchema.safeParse(jsonResponse);
+	const { success, error, data } = idSchema.safeParse(jsonResponse);
 	
 	if( data == undefined || !success )
 	{

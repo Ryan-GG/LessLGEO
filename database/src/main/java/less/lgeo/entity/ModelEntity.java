@@ -11,12 +11,11 @@ import lombok.NoArgsConstructor;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-import java.util.UUID;
 
 /**
  * ModelEntity is a joined representation of 'embedded' collections of complex objects representing
  * a {@link Model} proto object. These 'embedded' objects are treated a separate tables which are
- * joined by the model uuid
+ * joined by the model id
  */
 @Data
 @Entity
@@ -26,8 +25,13 @@ import java.util.UUID;
 public class ModelEntity {
 
     @Id
-    @Column(unique = true, nullable = false, columnDefinition = "uuid")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "model_seq_gen")
+    @SequenceGenerator(
+            name = "model_seq_gen",
+            sequenceName = "model_seq",
+            allocationSize = 1
+    )
+    private Long id;
 
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<LineEntity> lines;

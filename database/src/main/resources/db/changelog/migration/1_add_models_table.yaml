@@ -1,6 +1,30 @@
 databaseChangeLog:
   - changeSet:
       id: 3
+      author: you
+      changes:
+        - createSequence:
+            sequenceName: model_seq
+            startValue: 1
+            incrementBy: 1
+        - createSequence:
+            sequenceName: model_triangle_seq
+            startValue: 1
+            incrementBy: 1
+        - createSequence:
+            sequenceName: model_line_seq
+            startValue: 1
+            incrementBy: 1
+        - createSequence:
+            sequenceName: model_quadrilateral_seq
+            startValue: 1
+            incrementBy: 1
+        - createSequence:
+            sequenceName: model_optional_line_seq
+            startValue: 1
+            incrementBy: 1
+  - changeSet:
+      id: 4
       author: gross
       changes:
         - createTable:
@@ -8,13 +32,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: UUID
+                  type: BIGINT
                   constraints:
                     nullable: false
                     primaryKey: true
               - column:
                   name: parent_id
-                  type: UUID
+                  type: BIGINT
                   constraints:
                     nullable: true
         - createTable:
@@ -22,13 +46,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: UUID
+                  type: BIGINT
                   constraints:
                     nullable: false
                     primaryKey: true
               - column:
                   name: model_id
-                  type: UUID
+                  type: BIGINT
                   constraints:
                     nullable: false
               - column:
@@ -101,13 +125,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: UUID
+                  type: BIGINT
                   constraints:
                     nullable: false
                     primaryKey: true
               - column:
                   name: model_id
-                  type: UUID
+                  type: BIGINT
                   constraints:
                     nullable: false
               - column:
@@ -180,13 +204,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: UUID
+                  type: BIGINT
                   constraints:
                     nullable: false
                     primaryKey: true
               - column:
                   name: model_id
-                  type: UUID
+                  type: BIGINT
                   constraints:
                     nullable: false
               - column:
@@ -244,13 +268,13 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: UUID
+                  type: BIGINT
                   constraints:
                     nullable: false
                     primaryKey: true
               - column:
                   name: model_id
-                  type: UUID
+                  type: BIGINT
                   constraints:
                     nullable: false
               - column:

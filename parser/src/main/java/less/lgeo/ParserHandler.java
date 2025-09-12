@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.UUID;
-
 @SpringBootApplication
 public class ParserHandler {
 
@@ -44,11 +42,11 @@ public class ParserHandler {
      *
      * @param modelJobRequest uuid with associated Model LDraw String
      */
-    public UUID consume(ModelJobRequest modelJobRequest) {
+    public Long consume(ModelJobRequest modelJobRequest) {
 
         Model joinedModel = modelJoiner.joinAndTransformModel(modelJobRequest);
-        
-        UUID modelId = modelService.insertModel(joinedModel);
+
+        Long modelId = modelService.insertModel(joinedModel);
         logger.info("Inserted Model: {}", modelId);
 
         logger.info("Sending Model {}", modelId);

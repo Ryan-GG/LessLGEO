@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.UUID;
 
 /**
  * REST API endpoints for {@link ModelController} CRUD operations
@@ -35,14 +34,14 @@ public class ModelController {
     }
 
     @PostMapping("/insert")
-    public ResponseEntity<UUID> insertModel(@RequestBody String body) {
+    public ResponseEntity<Long> insertModel(@RequestBody String body) {
         return ResponseEntity.ok(webServerProducer.sendMessage(body));
     }
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<ModelEntity> getModel(@PathVariable String id) {
         try {
-            ModelEntity modelEntity = modelService.getModelById(UUID.fromString(id));
+            ModelEntity modelEntity = modelService.getModelById(Long.parseLong(id));
             return ResponseEntity.ok(modelEntity);
         } catch (NoSuchElementException e) {
             logger.error("ModelEntity Id {} was not found", id);
@@ -51,7 +50,7 @@ public class ModelController {
     }
 
     @GetMapping("/ids")
-    public ResponseEntity<List<UUID>> getAllModelIds() {
+    public ResponseEntity<List<Integer>> getAllModelIds() {
         return ResponseEntity.ok(modelService.getAllParentModelIds());
     }
 }

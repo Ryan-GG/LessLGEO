@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -18,8 +17,13 @@ import java.util.UUID;
 public class TriangleEntity {
 
     @Id
-    @Column(unique = true, nullable = false, columnDefinition = "uuid")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "model_triangle_seq_gen")
+    @SequenceGenerator(
+            name = "model_triangle_seq_gen",
+            sequenceName = "model_triangle_seq",
+            allocationSize = 1
+    )
+    private Long id;
 
     @ManyToOne
     @JsonBackReference
@@ -56,7 +60,7 @@ public class TriangleEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getColor(), getP1(), getP2(), getP3());
+        return Objects.hash(getId());
     }
 
 }

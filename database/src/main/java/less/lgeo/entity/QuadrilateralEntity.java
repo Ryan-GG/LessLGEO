@@ -8,7 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Objects;
-import java.util.UUID;
 
 @Data
 @Entity
@@ -18,8 +17,13 @@ import java.util.UUID;
 public class QuadrilateralEntity {
 
     @Id
-    @Column(unique = true, nullable = false, columnDefinition = "uuid")
-    private UUID id;
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "model_quadrilateral_seq_gen")
+    @SequenceGenerator(
+            name = "model_quadrilateral_seq_gen",
+            sequenceName = "model_quadrilateral_seq",
+            allocationSize = 1
+    )
+    private Long id;
 
     @ManyToOne
     @JsonBackReference
@@ -64,7 +68,7 @@ public class QuadrilateralEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getId(), getColor(), getP1(), getP2(), getP3(), getP4());
+        return Objects.hash(getId());
     }
 
 }

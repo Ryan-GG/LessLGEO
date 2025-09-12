@@ -9,8 +9,6 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
 public class WebServerProducer {
 
@@ -31,12 +29,12 @@ public class WebServerProducer {
     /**
      * See at `less.lgeo.consumer.ParserConsumer`
      */
-    public UUID sendMessage(String message) {
+    public Long sendMessage(String message) {
         ModelJobRequest modelJobRequest = ModelJobRequest.newBuilder()
                 .setModelString(message)
                 .build();
 
-        return (UUID) rabbitTemplate.convertSendAndReceive(rabbitRpcProperties.getWebToParser(),
+        return (Long) rabbitTemplate.convertSendAndReceive(rabbitRpcProperties.getWebToParser(),
                 modelJobRequest.toByteArray());
     }
 
