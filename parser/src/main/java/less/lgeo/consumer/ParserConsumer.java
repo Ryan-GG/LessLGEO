@@ -8,20 +8,22 @@ import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
-@RabbitListener( queues = "web-to-parser-queue" )
+@RabbitListener(queues = "web-to-parser-queue")
 public class ParserConsumer {
 
-  private final ParserHandler parserHandler;
+    private final ParserHandler parserHandler;
 
-  public ParserConsumer( ParserHandler parserHandler ) {
-    this.parserHandler = parserHandler;
-  }
+    public ParserConsumer(ParserHandler parserHandler) {
+        this.parserHandler = parserHandler;
+    }
 
-  @RabbitHandler
-  public void handleMessage( @Payload byte[] modelJobRequest )
-      throws InvalidProtocolBufferException {
-    parserHandler.consume( ModelJobRequest.parseFrom( modelJobRequest ) );
-  }
+    @RabbitHandler
+    public UUID handleMessage(@Payload byte[] modelJobRequest)
+            throws InvalidProtocolBufferException {
+        return parserHandler.consume(ModelJobRequest.parseFrom(modelJobRequest));
+    }
 
 }

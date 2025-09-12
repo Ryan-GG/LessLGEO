@@ -10,47 +10,51 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+import java.util.UUID;
+
 @SpringBootApplication
 public class ParserHandler {
 
-  private static final Logger logger = LoggerFactory.getLogger(ParserHandler.class);
+    private static final Logger logger = LoggerFactory.getLogger(ParserHandler.class);
 
-  @Autowired
-  private final ParserProducer parserProducer;
+    @Autowired
+    private final ParserProducer parserProducer;
 
-  @Autowired
-  private final ModelService modelService;
+    @Autowired
+    private final ModelService modelService;
 
-  @Autowired
-  private final ModelJoiner modelJoiner;
+    @Autowired
+    private final ModelJoiner modelJoiner;
 
-  public ParserHandler(
-      ParserProducer parserProducer,
-      ModelService modelService,
-      ModelJoiner modelJoiner) {
-    this.parserProducer = parserProducer;
-    this.modelService = modelService;
-    this.modelJoiner = modelJoiner;
-  }
+    public ParserHandler(
+            ParserProducer parserProducer,
+            ModelService modelService,
+            ModelJoiner modelJoiner) {
+        this.parserProducer = parserProducer;
+        this.modelService = modelService;
+        this.modelJoiner = modelJoiner;
+    }
 
-  public static void main(String[] args) {
-    SpringApplication.run(ParserHandler.class, args);
-  }
+    public static void main(String[] args) {
+        SpringApplication.run(ParserHandler.class, args);
+    }
 
-  /**
-   * See {@link less.lgeo.consumer.ParserConsumer}
-   *
-   * @param modelJobRequest uuid with associated Model LDraw String
-   */
-  public void consume(ModelJobRequest modelJobRequest) {
+    /**
+     * See {@link less.lgeo.consumer.ParserConsumer}
+     *
+     * @param modelJobRequest uuid with associated Model LDraw String
+     */
+    public UUID consume(ModelJobRequest modelJobRequest) {
 
-    Model joinedModel = modelJoiner.joinAndTransformModel(modelJobRequest);
+        Model joinedModel = modelJoiner.joinAndTransformModel(modelJobRequest);
+        
+        UUID modelId = modelService.insertModel(joinedModel);
+        logger.info("Inserted Model: {}", modelId);
 
-    logger.info("Inserting Model: {}", joinedModel.getId());
-    modelService.insertModel(joinedModel);
+        logger.info("Sending Model {}", modelId);
+        parserProducer.sendMessage(joinedModel);
 
-    logger.info("Sending Model {}", joinedModel.getId());
-    parserProducer.sendMessage(joinedModel);
-  }
+        return modelId;
+    }
 
 }

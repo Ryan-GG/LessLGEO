@@ -1,43 +1,43 @@
 package less.lgeo.producer;
 
 
-import java.util.UUID;
 import less.lgeo.messaging.ModelJobRequest;
-import less.lgeo.rabbitmq.RabbitWorkerQueueProperties;
+import less.lgeo.rabbitmq.RabbitRpcProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.UUID;
+
 @Component
 public class WebServerProducer {
 
-  private final Logger logger = LoggerFactory.getLogger(WebServerProducer.class);
+    private final Logger logger = LoggerFactory.getLogger(WebServerProducer.class);
 
-  @Autowired
-  private final RabbitTemplate rabbitTemplate;
-  @Autowired
-  private final RabbitWorkerQueueProperties rabbitWorkerQueueProperties;
+    @Autowired
+    private final RabbitTemplate rabbitTemplate;
+    @Autowired
+    private final RabbitRpcProperties rabbitRpcProperties;
 
-  public WebServerProducer(RabbitTemplate rabbitTemplate,
-      RabbitWorkerQueueProperties rabbitWorkerQueueProperties
-  ) {
-    this.rabbitTemplate = rabbitTemplate;
-    this.rabbitWorkerQueueProperties = rabbitWorkerQueueProperties;
-  }
+    public WebServerProducer(RabbitTemplate rabbitTemplate,
+                             RabbitRpcProperties rabbitRpcProperties
+    ) {
+        this.rabbitTemplate = rabbitTemplate;
+        this.rabbitRpcProperties = rabbitRpcProperties;
+    }
 
-  /**
-   * See at `less.lgeo.consumer.ParserConsumer`
-   */
-  public void sendMessage(UUID uuid, String message) {
-    ModelJobRequest modelJobRequest = ModelJobRequest.newBuilder()
-        .setModelId(uuid.toString())
-        .setModelString(message)
-        .build();
+    /**
+     * See at `less.lgeo.consumer.ParserConsumer`
+     */
+    public UUID sendMessage(String message) {
+        ModelJobRequest modelJobRequest = ModelJobRequest.newBuilder()
+                .setModelString(message)
+                .build();
 
-    rabbitTemplate.convertAndSend(rabbitWorkerQueueProperties.getWebToParser(),
-        modelJobRequest.toByteArray());
-  }
+        return (UUID) rabbitTemplate.convertSendAndReceive(rabbitRpcProperties.getWebToParser(),
+                modelJobRequest.toByteArray());
+    }
 
 }

@@ -7,23 +7,14 @@ import org.springframework.context.annotation.Configuration;
 @ConfigurationProperties(prefix = "rabbit.worker-queue")
 public class RabbitWorkerQueueProperties {
 
-  private String webToParser;
-  private String parserToReducer;
+    private String parserToReducer;
 
-  public String getWebToParser() {
-    return webToParser;
-  }
+    public String getParserToReducer() {
+        return parserToReducer;
+    }
 
-  public void setWebToParser(String webToParser) {
-    this.webToParser = webToParser;
-  }
-
-  public String getParserToReducer() {
-    return parserToReducer;
-  }
-
-  public void setParserToReducer(String parserToReducer) {
-    this.parserToReducer = parserToReducer;
-  }
+    public void setParserToReducer(String parserToReducer) {
+        this.parserToReducer = parserToReducer;
+    }
 
 }

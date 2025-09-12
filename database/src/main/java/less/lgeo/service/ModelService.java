@@ -35,11 +35,7 @@ public class ModelService {
      * Convert a GPB Model to a ModelEntity recursively.
      */
     private ModelEntity createModelEntity(Model gpb, ModelEntity parent, Map<Integer, ColorEntity> colorEntityMap) {
-        UUID modelUUID = UUID.fromString(gpb.getId());
-
         ModelEntity entity = new ModelEntity();
-        entity.setId(modelUUID);
-
         entity.setLines(gpb.getLineList().stream().map(line -> createLineEntity(entity, line, colorEntityMap)).collect(Collectors.toUnmodifiableSet()));
         entity.setTriangles(
                 gpb.getTriangleList().stream().map(triangle -> createTriangleEntity(entity, triangle, colorEntityMap))
@@ -114,7 +110,7 @@ public class ModelService {
         return modelRepository.findById(uuid).orElseThrow();
     }
 
-    public void insertModel(Model model) {
+    public UUID insertModel(Model model) {
         Map<Integer, ColorEntity> colorEntityMap = colorRepository.findAll().stream().collect(
                 Collectors.toMap(
                         ColorEntity::getId,
@@ -122,7 +118,7 @@ public class ModelService {
                 )
         );
 
-        modelRepository.save(createModelEntity(model, null, colorEntityMap));
+        return modelRepository.save(createModelEntity(model, null, colorEntityMap)).getId();
     }
 
     public List<UUID> getAllParentModelIds() {

@@ -20,8 +20,9 @@ rabbit:
     web-to-parser-exchange: "web-to-parser-exchange"
     parser-to-reducer-exchange: "parser-to-reducer-exchange"
   worker-queue:
-    web-to-parser: "web-to-parser-queue"
     parser-to-reducer: "parser-to-reducer-queue"
+  rpc:
+    web-to-parser: "web-to-parser-rpc"
   dead-letter:
     dead-letter-exchange: "dead-letter-exchange"
     web-to-parser-dead-letter-queue: "web-to-parser-dead-letter-queue"
