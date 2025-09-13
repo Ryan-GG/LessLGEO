@@ -1,0 +1,35 @@
+databaseChangeLog:
+  - changeSet:
+      id: 5
+      author: gross
+      changes:
+        - createIndex:
+            indexName: model_parent_index
+            tableName: models
+            columns:
+              - column:
+                  name: parent_id
+        - createIndex:
+            indexName: model_parent_line_index
+            tableName: model_lines
+            columns:
+              - column:
+                  name: model_id
+        - createIndex:
+            indexName: model_parent_triangle_index
+            tableName: model_triangles
+            columns:
+              - column:
+                  name: model_id
+        - createIndex:
+            indexName: model_parent_quadrilateral_index
+            tableName: model_quadrilaterals
+            columns:
+              - column:
+                  name: model_id
+        - createIndex:
+            indexName: model_parent_optional_line_index
+            tableName: model_optional_lines
+            columns:
+              - column:
+                  name: model_id
