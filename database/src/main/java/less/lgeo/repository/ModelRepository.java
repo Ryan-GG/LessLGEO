@@ -16,5 +16,5 @@ import java.util.List;
 public interface ModelRepository extends JpaRepository<ModelEntity, Long> {
 
     @Query(value = "SELECT id FROM models WHERE parent_id IS NULL", nativeQuery = true)
-    List<Integer> findAllParentModelIds();
+    List<Long> findAllParentModelIds();
 }

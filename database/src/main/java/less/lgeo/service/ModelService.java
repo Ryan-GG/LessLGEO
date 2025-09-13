@@ -125,7 +125,7 @@ public class ModelService {
         return modelRepository.save(createModelEntity(model, null, colorEntityMap)).getId();
     }
 
-    public List<Integer> getAllParentModelIds() {
+    public List<Long> getAllParentModelIds() {
         return modelRepository.findAllParentModelIds();
     }
 

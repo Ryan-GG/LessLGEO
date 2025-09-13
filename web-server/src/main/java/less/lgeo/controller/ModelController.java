@@ -39,9 +39,9 @@ public class ModelController {
     }
 
     @GetMapping(value = "/{id}")
-    public ResponseEntity<ModelEntity> getModel(@PathVariable String id) {
+    public ResponseEntity<ModelEntity> getModel(@PathVariable long id) {
         try {
-            ModelEntity modelEntity = modelService.getModelById(Long.parseLong(id));
+            ModelEntity modelEntity = modelService.getModelById(id);
             return ResponseEntity.ok(modelEntity);
         } catch (NoSuchElementException e) {
             logger.error("ModelEntity Id {} was not found", id);
@@ -50,7 +50,7 @@ public class ModelController {
     }
 
     @GetMapping("/ids")
-    public ResponseEntity<List<Integer>> getAllModelIds() {
+    public ResponseEntity<List<Long>> getAllModelIds() {
         return ResponseEntity.ok(modelService.getAllParentModelIds());
     }
 }
