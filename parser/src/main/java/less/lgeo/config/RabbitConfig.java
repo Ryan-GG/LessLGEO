@@ -2,7 +2,7 @@ package less.lgeo.config;
 
 import less.lgeo.rabbitmq.RabbitDeadLetterProperties;
 import less.lgeo.rabbitmq.RabbitExchangeProperties;
-import less.lgeo.rabbitmq.RabbitRpcProperties;
+import less.lgeo.rabbitmq.RabbitWebToParserRpcProperties;
 import less.lgeo.rabbitmq.RabbitWorkerQueueProperties;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
@@ -15,9 +15,9 @@ class RabbitConfig {
 
     @Bean
     Queue webToParserQueue(
-            RabbitRpcProperties rabbitRpcProperties,
+            RabbitWebToParserRpcProperties rabbitWebToParserRpcProperties,
             RabbitDeadLetterProperties rabbitDeadLetterProperties) {
-        return QueueBuilder.durable(rabbitRpcProperties.getWebToParser())
+        return QueueBuilder.durable(rabbitWebToParserRpcProperties.getName())
                 .deadLetterExchange(rabbitDeadLetterProperties.getDeadLetterExchange())
                 .deadLetterRoutingKey(rabbitDeadLetterProperties.getWebToParserRoutingKey())
                 .build();
