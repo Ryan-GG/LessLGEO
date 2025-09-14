@@ -6,23 +6,23 @@ databaseChangeLog:
         - createSequence:
             sequenceName: model_seq
             startValue: 1
-            incrementBy: 1
+            incrementBy: 30
         - createSequence:
             sequenceName: model_triangle_seq
             startValue: 1
-            incrementBy: 1
+            incrementBy: 30
         - createSequence:
             sequenceName: model_line_seq
             startValue: 1
-            incrementBy: 1
+            incrementBy: 30
         - createSequence:
             sequenceName: model_quadrilateral_seq
             startValue: 1
-            incrementBy: 1
+            incrementBy: 30
         - createSequence:
             sequenceName: model_optional_line_seq
             startValue: 1
-            incrementBy: 1
+            incrementBy: 30
   - changeSet:
       id: 4
       author: gross

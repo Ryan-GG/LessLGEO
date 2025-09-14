@@ -21,7 +21,7 @@ public class QuadrilateralEntity {
     @SequenceGenerator(
             name = "model_quadrilateral_seq_gen",
             sequenceName = "model_quadrilateral_seq",
-            allocationSize = 1
+            allocationSize = 30
     )
     private Long id;
 

@@ -29,7 +29,7 @@ public class ModelEntity {
     @SequenceGenerator(
             name = "model_seq_gen",
             sequenceName = "model_seq",
-            allocationSize = 1
+            allocationSize = 30
     )
     private Long id;
 

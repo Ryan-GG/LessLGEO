@@ -21,7 +21,7 @@ public class LineEntity {
     @SequenceGenerator(
             name = "model_line_seq_gen",
             sequenceName = "model_line_seq",
-            allocationSize = 1
+            allocationSize = 30
     )
     private Long id;
 
