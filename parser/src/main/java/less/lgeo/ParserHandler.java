@@ -50,7 +50,7 @@ public class ParserHandler {
         logger.info("Inserted Model: {}", modelId);
 
         logger.info("Sending Model {}", modelId);
-        parserProducer.sendMessage(joinedModel);
+        parserProducer.sendMessage(modelId);
 
         return modelId;
     }

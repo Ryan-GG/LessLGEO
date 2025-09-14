@@ -2,7 +2,7 @@ package less.lgeo.producer;
 
 
 import less.lgeo.messaging.ModelJobRequest;
-import less.lgeo.rabbitmq.RabbitWebToParserRpcProperties;
+import less.lgeo.rabbitmq.properties.RabbitWebToParserRpcProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -38,7 +38,7 @@ public class WebServerProducer {
         ModelJobRequest modelJobRequest = ModelJobRequest.newBuilder()
                 .setModelString(message)
                 .build();
-        
+
         return rabbitTemplate.convertSendAndReceiveAsType(
                 rabbitWebToParserRpcProperties.getName(),
                 modelJobRequest.toByteArray(),

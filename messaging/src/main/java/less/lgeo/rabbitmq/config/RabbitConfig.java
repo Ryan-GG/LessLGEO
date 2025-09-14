@@ -1,9 +1,9 @@
-package less.lgeo.config;
+package less.lgeo.rabbitmq.config;
 
-import less.lgeo.rabbitmq.RabbitDeadLetterProperties;
-import less.lgeo.rabbitmq.RabbitExchangeProperties;
-import less.lgeo.rabbitmq.RabbitWebToParserRpcProperties;
-import less.lgeo.rabbitmq.RabbitWorkerQueueProperties;
+import less.lgeo.rabbitmq.properties.RabbitDeadLetterProperties;
+import less.lgeo.rabbitmq.properties.RabbitExchangeProperties;
+import less.lgeo.rabbitmq.properties.RabbitWebToParserRpcProperties;
+import less.lgeo.rabbitmq.properties.RabbitWorkerQueueProperties;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
 import org.springframework.context.annotation.Bean;

@@ -24,7 +24,7 @@ rabbit:
   rpc:
     web-to-parser:
       name: "web-to-parser-rpc"
-      reply-timeout: PT1M
+      reply-timeout: PT5M
   dead-letter:
     dead-letter-exchange: "dead-letter-exchange"
     web-to-parser-dead-letter-queue: "web-to-parser-dead-letter-queue"
