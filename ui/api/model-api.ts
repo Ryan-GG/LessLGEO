@@ -1,4 +1,4 @@
-import { API_VERSION, ModelEntity, ModelEntitySchema, idSchema, idSchemaArray } from "@/api/schema";
+import { API_VERSION, ModelEntity, ModelEntitySchema, IdSchema, IdSchemaArray } from "@/api/schema";
 
 const MODEL_API = "models";
 
@@ -10,7 +10,7 @@ export async function fetchAllParentModelIds(): Promise<number[]> {
 	}
 
 	const jsonResponse = await response.json();
-	const { success, error, data } = idSchemaArray.safeParse(jsonResponse);
+	const { success, error, data } = IdSchemaArray.safeParse(jsonResponse);
 	
 	if( data == undefined || !success )
 	{
@@ -54,7 +54,7 @@ export async function insertModel( lDrawText: string ): Promise<number> {
 	}
 
 	const jsonResponse = await response.json();
-	const { success, error, data } = idSchema.safeParse(jsonResponse);
+	const { success, error, data } = IdSchema.safeParse(jsonResponse);
 	
 	if( data == undefined || !success )
 	{

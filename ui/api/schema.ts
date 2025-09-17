@@ -61,8 +61,8 @@ export interface ColorEntity {
 
 // ---------- Entity Schemas ----------
 
-export const idSchema = z.number();
-export const idSchemaArray = z.array( idSchema );
+export const IdSchema = z.number();
+export const IdSchemaArray = z.array( IdSchema );
 
 const VertexSchema = z.object({
     x: z.number(),
@@ -128,7 +128,7 @@ const OptionalLineEntityArraySchema = z.array( OptionalLineEntitySchema );
  * This can be safely casted to a {@link ModelEntity}
  */
 export type ModelEntitySchemaType = {
-    id: number,
+    id: z.infer<typeof IdSchema>,
     lines: z.infer<typeof LineEntityArraySchema>;
     triangles: z.infer<typeof TriangleEntityArraySchema>;
     quadrilaterals: z.infer<typeof QuadrilateralEntityArraySchema>;
@@ -138,7 +138,7 @@ export type ModelEntitySchemaType = {
   
 export const ModelEntitySchema: z.ZodType<ModelEntitySchemaType> = z.lazy(() =>
     z.object({
-      id: z.number(),
+      id: IdSchema,
       lines: LineEntityArraySchema,
       triangles: TriangleEntityArraySchema,
       quadrilaterals: QuadrilateralEntityArraySchema,
