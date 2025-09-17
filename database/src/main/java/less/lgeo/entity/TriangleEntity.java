@@ -19,7 +19,7 @@ public class TriangleEntity {
     @SequenceGenerator(
             name = "model_triangle_seq_gen",
             sequenceName = "model_triangle_seq",
-            allocationSize = 30
+            allocationSize = 50
     )
     private Long id;
 

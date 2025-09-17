@@ -19,7 +19,7 @@ public class OptionalLineEntity {
     @SequenceGenerator(
             name = "model_optional_line_seq_gen",
             sequenceName = "model_optional_line_seq",
-            allocationSize = 30
+            allocationSize = 50
     )
     private Long id;
 
