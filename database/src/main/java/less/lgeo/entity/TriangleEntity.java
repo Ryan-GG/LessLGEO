@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
 @Data
 @Entity
 @NoArgsConstructor
@@ -57,10 +55,5 @@ public class TriangleEntity {
             @AttributeOverride(name = "z", column = @Column(name = "p3_z"))
     })
     private VertexEmbeddable p3;
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
 
 }

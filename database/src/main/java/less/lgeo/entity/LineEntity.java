@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
 @Data
 @Entity
 @NoArgsConstructor
@@ -49,10 +47,5 @@ public class LineEntity {
             @AttributeOverride(name = "z", column = @Column(name = "p2_z"))
     })
     private VertexEmbeddable p2;
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
 
 }

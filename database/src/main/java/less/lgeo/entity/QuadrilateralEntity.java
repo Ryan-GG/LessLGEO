@@ -7,8 +7,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
 @Data
 @Entity
 @NoArgsConstructor
@@ -66,9 +64,5 @@ public class QuadrilateralEntity {
     })
     private VertexEmbeddable p4;
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
-
 }
+

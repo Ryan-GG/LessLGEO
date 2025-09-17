@@ -8,9 +8,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * ModelEntity is a joined representation of 'embedded' collections of complex objects representing
@@ -34,16 +33,16 @@ public class ModelEntity {
     private Long id;
 
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<LineEntity> lines;
+    private List<LineEntity> lines;
 
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<TriangleEntity> triangles;
+    private List<TriangleEntity> triangles;
 
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<QuadrilateralEntity> quadrilaterals;
+    private List<QuadrilateralEntity> quadrilaterals;
 
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<OptionalLineEntity> optionalLines;
+    private List<OptionalLineEntity> optionalLines;
 
     @ManyToOne
     @JsonBackReference
@@ -52,11 +51,6 @@ public class ModelEntity {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    private Set<ModelEntity> children = new HashSet<>();
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getId());
-    }
+    private List<ModelEntity> children = new ArrayList<>();
 
 }
