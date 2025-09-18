@@ -9,6 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -120,6 +121,7 @@ public class ModelService {
         return modelRepository.findById(id).orElseThrow();
     }
 
+    @Transactional
     public Long insertModel(Model model) {
         Map<Integer, ColorEntity> colorEntityMap = colorRepository.findAll().stream().collect(
                 Collectors.toMap(

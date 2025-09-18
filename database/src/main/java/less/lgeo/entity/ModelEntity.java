@@ -7,6 +7,7 @@ import less.lgeo.primitive.Model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,15 +33,19 @@ public class ModelEntity {
     )
     private Long id;
 
+    @BatchSize(size = 500)
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<LineEntity> lines;
 
+    @BatchSize(size = 500)
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<TriangleEntity> triangles;
 
+    @BatchSize(size = 500)
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<QuadrilateralEntity> quadrilaterals;
 
+    @BatchSize(size = 500)
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<OptionalLineEntity> optionalLines;
 
@@ -50,6 +55,7 @@ public class ModelEntity {
     private ModelEntity parent;
 
     @JsonManagedReference
+    @BatchSize(size = 500)
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ModelEntity> children = new ArrayList<>();
 
