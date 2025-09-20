@@ -5,3 +5,6 @@ databaseChangeLog:
   - include:
       file: classpath:/db/changelog/migration/1_add_models_table.yaml
       relativeToChangelogFile: false
+  - include:
+      file: classpath:/db/changelog/migration/2_create_indexes_on_model_join_ids.yaml
+      relativeToChangelogFile: false

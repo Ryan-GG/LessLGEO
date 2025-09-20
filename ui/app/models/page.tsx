@@ -8,14 +8,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { useQuery } from "@tanstack/react-query";
 import { ReactElement, useState } from "react";
-import { ModelRefId } from "@/api/schema";
 
 /**
  * Models Landing Page, where to view and add new Models
  */
 export default function Models() {
 
-	const [ modelId, setModelId ] = useState<ModelRefId | undefined>(  );
+	const [ modelId, setModelId ] = useState<number | undefined>(  );
 	const { data: modelIds } = useQuery( { queryKey: [ "modelIds" ], queryFn: fetchAllParentModelIds } );
 	
 	return (
@@ -48,7 +47,7 @@ export default function Models() {
 	);
 }
 
-function ModelIdDropDown( { modelIds, setModelId }: { modelIds: string[], setModelId: ( id: string ) => void } ): ReactElement
+function ModelIdDropDown( { modelIds, setModelId }: { modelIds: number[], setModelId: ( id: number ) => void } ): ReactElement
 {
 	return (
 		  <DropdownMenu>

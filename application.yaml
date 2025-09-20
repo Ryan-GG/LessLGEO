@@ -6,18 +6,42 @@ spring:
     port: 5672
     username: ${RABBIT_USER}
     password: ${RABBIT_PASSWORD}
+    listener:
+      simple:
+        default-requeue-rejected: false
   datasource:
     driverClassName: "org.postgresql.Driver"
     username: ${POSTGRES_USER}
     password: ${POSTGRES_PASSWORD}
     url: ${POSTGRES_URL}
   jpa:
-    showSql: false
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        jdbc:
+          batch_size: 30
+        order_inserts: true
+        order_updates: true
+
 
 rabbit:
-  worker-queues:
-    web-to-parser: "web-to-parser-queue"
+  exchange:
+    web-to-parser-exchange: "web-to-parser-exchange"
+    parser-to-reducer-exchange: "parser-to-reducer-exchange"
+  worker-queue:
     parser-to-reducer: "parser-to-reducer-queue"
+  rpc:
+    web-to-parser:
+      name: "web-to-parser-rpc"
+      reply-timeout: PT5M
+  dead-letter:
+    dead-letter-exchange: "dead-letter-exchange"
+    web-to-parser-dead-letter-queue: "web-to-parser-dead-letter-queue"
+    parser-to-reducer-dead-letter-queue: "parser-to-reducer-dead-letter-queue"
+    web-to-parser-routing-key: "web.parser.dlq"
+    parser-to-reducer-routing-key: "parser.reducer.dlq"
 
 ---
 spring:
@@ -48,6 +72,11 @@ spring:
       file: "compose.yaml"
       profiles:
         active: "local"
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        generate_statistics: true
 
 
 

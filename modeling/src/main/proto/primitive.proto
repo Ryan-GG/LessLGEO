@@ -10,14 +10,13 @@ option java_package = "less.lgeo.primitive";
 option java_outer_classname = "Modeling";
 
 message Model {
-  string id = 1;
-  repeated Comment comment = 2;
-  repeated MetaCommand command = 3;
-  repeated Line line = 4;
-  repeated Triangle triangle = 5;
-  repeated Quadrilateral quadrilateral = 6;
-  repeated OptionalLine optionalLine = 7;
-  repeated SubFileReference piece = 8;
+  repeated Comment comment = 1;
+  repeated MetaCommand command = 2;
+  repeated Line line = 3;
+  repeated Triangle triangle = 4;
+  repeated Quadrilateral quadrilateral = 5;
+  repeated OptionalLine optionalLine = 6;
+  repeated SubFileReference piece = 7;
 }
 
 message Line {

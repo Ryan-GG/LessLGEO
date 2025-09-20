@@ -7,14 +7,14 @@ export const API_VERSION = "v1";
 // ---------- Entities ----------
 
 export interface LineEntity {
-    readonly id: string;
+    readonly id: number;
     readonly color: ColorEntity;
     readonly p1: modeling.Vertex;
     readonly p2: modeling.Vertex;
 }
 
 export interface TriangleEntity {
-    readonly id: string;
+    readonly id: number;
     readonly color: ColorEntity;
     readonly p1: modeling.Vertex;
     readonly p2: modeling.Vertex;
@@ -22,7 +22,7 @@ export interface TriangleEntity {
 }
 
 export interface QuadrilateralEntity {
-    readonly id: string;
+    readonly id: number;
     readonly color: ColorEntity;
     readonly p1: modeling.Vertex;
     readonly p2: modeling.Vertex;
@@ -31,7 +31,7 @@ export interface QuadrilateralEntity {
 }
 
 export interface OptionalLineEntity {
-    readonly id: string;
+    readonly id: number;
     readonly color: ColorEntity;
     readonly p1: modeling.Vertex;
     readonly p2: modeling.Vertex;
@@ -40,7 +40,7 @@ export interface OptionalLineEntity {
 }
 
 export interface ModelEntity {
-    readonly id: string;
+    readonly id: number;
     readonly lines: LineEntity[];
     readonly triangles: TriangleEntity[];
     readonly quadrilaterals: QuadrilateralEntity[];
@@ -60,8 +60,9 @@ export interface ColorEntity {
 }
 
 // ---------- Entity Schemas ----------
-export const UUIDSchema = z.string().uuid();
-export const UUIDArraySchema = z.array( UUIDSchema );
+
+export const IdSchema = z.number();
+export const IdSchemaArray = z.array( IdSchema );
 
 const VertexSchema = z.object({
     x: z.number(),
@@ -81,7 +82,7 @@ const ColorEntitySchema = z.object({
 });
 
 const LineEntitySchema = z.object({
-    id: UUIDSchema,
+    id: z.number(),
     color: ColorEntitySchema,
     p1: VertexSchema,
     p2: VertexSchema
@@ -90,7 +91,7 @@ const LineEntitySchema = z.object({
 const LineEntityArraySchema = z.array( LineEntitySchema );
 
 const TriangleEntitySchema = z.object({
-    id: UUIDSchema,
+    id: z.number(),
     color: ColorEntitySchema,
     p1: VertexSchema,
     p2: VertexSchema,
@@ -100,7 +101,7 @@ const TriangleEntitySchema = z.object({
 const TriangleEntityArraySchema = z.array( TriangleEntitySchema );
 
 const QuadrilateralEntitySchema = z.object({
-    id: UUIDSchema,
+    id: z.number(),
     color: ColorEntitySchema,
     p1: VertexSchema,
     p2: VertexSchema,
@@ -111,7 +112,7 @@ const QuadrilateralEntitySchema = z.object({
 const QuadrilateralEntityArraySchema = z.array( QuadrilateralEntitySchema );
 
 const OptionalLineEntitySchema = z.object({
-    id: UUIDSchema,
+    id: z.number(),
     color: ColorEntitySchema,
     p1: VertexSchema,
     p2: VertexSchema,
@@ -127,7 +128,7 @@ const OptionalLineEntityArraySchema = z.array( OptionalLineEntitySchema );
  * This can be safely casted to a {@link ModelEntity}
  */
 export type ModelEntitySchemaType = {
-    id: z.infer<typeof UUIDSchema>;
+    id: z.infer<typeof IdSchema>,
     lines: z.infer<typeof LineEntityArraySchema>;
     triangles: z.infer<typeof TriangleEntityArraySchema>;
     quadrilaterals: z.infer<typeof QuadrilateralEntityArraySchema>;
@@ -137,7 +138,7 @@ export type ModelEntitySchemaType = {
   
 export const ModelEntitySchema: z.ZodType<ModelEntitySchemaType> = z.lazy(() =>
     z.object({
-      id: UUIDSchema,
+      id: IdSchema,
       lines: LineEntityArraySchema,
       triangles: TriangleEntityArraySchema,
       quadrilaterals: QuadrilateralEntityArraySchema,
@@ -148,5 +149,4 @@ export const ModelEntitySchema: z.ZodType<ModelEntitySchemaType> = z.lazy(() =>
 
 // ---------- Reference Ids ----------
 
-export type ModelRefId = modeling.Model["id"];
 export type ColorRefId = modeling.Color["id"];

@@ -7,7 +7,6 @@ import { fetchModelById } from "@/api/model-api";
 import { useQuery } from "@tanstack/react-query";
 import { Object3D, Vector3 } from "three";
 import { GRID_SIZE, GridHelper } from "./grid-helper";
-import { ModelRefId } from "@/api/schema";
 import { THREE_LDU_SCALAR_VECTOR } from "@/utils/units-utilities";
 
 // LDraw uses a right-handed co-ordinate system where -Y is "up".
@@ -16,7 +15,7 @@ const DEFAULT_UP = new Vector3( 0, -1, 0 );
 /**
  * @returns a ThreeJS Canvas that will render the provided modeel based on {@link ModelRefId}
  */
-export function ModelCanvas( { modelId }: {modelId: ModelRefId | undefined} ): ReactNode
+export function ModelCanvas( { modelId }: {modelId: number | undefined} ): ReactNode
 {
 	// Sets default UP direction for the ThreeJS Canvas
 	Object3D.DEFAULT_UP = DEFAULT_UP;
