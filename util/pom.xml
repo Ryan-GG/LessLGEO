@@ -4,14 +4,28 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>util</artifactId>
 
-  <groupId>less.lgeo</groupId>
-
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+        <groupId>org.springframework.boot</groupId>
+        <version>3.5.6</version>
+      </plugin>
+    </plugins>
+  </build>
+  
   <modelVersion>4.0.0</modelVersion>
-  <properties>
-    <maven.compiler.source>23</maven.compiler.source>
-    <maven.compiler.target>23</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
+  <packaging>jar</packaging>
+
+  <parent>
+    <artifactId>bom</artifactId>
+    <groupId>less.lgeo</groupId>
+    <relativePath>../bom/pom.xml</relativePath>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
 
   <version>0.0.1-SNAPSHOT</version>
 

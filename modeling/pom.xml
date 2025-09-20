@@ -4,6 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>modeling</artifactId>
 
+  <!-- TODO FIXME -->
   <build>
     <extensions>
       <extension>
@@ -35,40 +36,40 @@
       </plugin>
       <plugin>
         <artifactId>spring-boot-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>repackage</id>
-            <phase>none</phase>
-          </execution>
-        </executions>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
         <groupId>org.springframework.boot</groupId>
+        <version>${spring.version}</version>
       </plugin>
     </plugins>
   </build>
 
   <dependencies>
-    <!-- https://mvnrepository.com/artifact/com.google.protobuf/protobuf-java -->
     <dependency>
       <artifactId>protobuf-java</artifactId>
       <groupId>com.google.protobuf</groupId>
       <version>${protobuf.version}</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/org.ejml/ejml-core -->
-    <dependency>
-      <artifactId>ejml-core</artifactId>
-      <groupId>org.ejml</groupId>
-      <version>0.44.0</version>
-    </dependency>
-    <!-- https://mvnrepository.com/artifact/org.ejml/ejml-ddense -->
-    <dependency>
-      <artifactId>ejml-ddense</artifactId>
-      <groupId>org.ejml</groupId>
-      <version>0.44.0</version>
-    </dependency>
     <dependency>
       <artifactId>util</artifactId>
       <groupId>less.lgeo</groupId>
       <version>0.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <artifactId>ejml-core</artifactId>
+      <groupId>org.ejml</groupId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <artifactId>ejml-ddense</artifactId>
+      <groupId>org.ejml</groupId>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <artifactId>junit-jupiter</artifactId>
+      <groupId>org.junit.jupiter</groupId>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
@@ -76,17 +77,11 @@
   <packaging>jar</packaging>
 
   <parent>
-    <artifactId>parent</artifactId>
+    <artifactId>bom</artifactId>
     <groupId>less.lgeo</groupId>
-    <relativePath>../pom.xml</relativePath>
+    <relativePath>../bom/pom.xml</relativePath>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-
-  <properties>
-    <maven.compiler.source>23</maven.compiler.source>
-    <maven.compiler.target>23</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
 
   <version>0.0.1-SNAPSHOT</version>
 

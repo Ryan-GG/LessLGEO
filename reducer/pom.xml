@@ -3,6 +3,30 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>reducer</artifactId>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <excludeDockerCompose>false</excludeDockerCompose>
+          <layout>JAR</layout>
+          <mainClass>less.lgeo.ReducerHandler</mainClass>
+          <outputTimestamp/>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
+        <groupId>org.springframework.boot</groupId>
+        <version>${spring.version}</version>
+      </plugin>
+    </plugins>
+  </build>
+
   <dependencies>
     <dependency>
       <artifactId>modeling</artifactId>
@@ -19,17 +43,11 @@
   <packaging>jar</packaging>
 
   <parent>
-    <artifactId>parent</artifactId>
+    <artifactId>bom</artifactId>
     <groupId>less.lgeo</groupId>
-    <relativePath>../pom.xml</relativePath>
+    <relativePath>../bom/pom.xml</relativePath>
     <version>0.0.1-SNAPSHOT</version>
   </parent>
-
-  <properties>
-    <maven.compiler.source>23</maven.compiler.source>
-    <maven.compiler.target>23</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
   <version>0.0.1-SNAPSHOT</version>
 
 </project>

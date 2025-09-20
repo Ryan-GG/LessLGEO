@@ -3,46 +3,6 @@
   xmlns="http://maven.apache.org/POM/4.0.0"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>parent</artifactId>
-  <build>
-    <plugins>
-      <plugin>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <groupId>org.springframework.boot</groupId>
-      </plugin>
-    </plugins>
-  </build>
-  <dependencies>
-    <dependency>
-      <artifactId>spring-boot-starter-logging</artifactId>
-      <groupId>org.springframework.boot</groupId>
-      <version>3.4.4</version>
-    </dependency>
-    <dependency>
-      <artifactId>spring-boot-starter-amqp</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>spring-boot-docker-compose</artifactId>
-      <groupId>org.springframework.boot</groupId>
-      <optional>true</optional>
-      <scope>runtime</scope>
-    </dependency>
-    <dependency>
-      <artifactId>spring-boot-starter-test</artifactId>
-      <groupId>org.springframework.boot</groupId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <artifactId>spring-rabbit-test</artifactId>
-      <groupId>org.springframework.amqp</groupId>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <artifactId>snakeyaml</artifactId>
-      <groupId>org.yaml</groupId>
-      <version>2.4</version>
-    </dependency>
-  </dependencies>
   <description>Minimize legos needed</description>
   <developers>
     <developer>
@@ -52,7 +12,11 @@
   </developers>
   <groupId>less.lgeo</groupId>
   <licenses>
-    <license/>
+    <license>
+      <distribution>repo</distribution>
+      <name>MIT License</name>
+      <url>https://opensource.org/licenses/MIT</url>
+    </license>
   </licenses>
   <modelVersion>4.0.0</modelVersion>
   <modules>
@@ -71,19 +35,14 @@
     <artifactId>spring-boot-starter-parent</artifactId>
     <groupId>org.springframework.boot</groupId>
     <relativePath/>
-    <version>3.5.1</version>
+    <!-- Corresponds to `spring.version` -->
+    <version>3.5.6</version>
   </parent>
   <properties>
     <java.version>23</java.version>
-    <protobuf.version>4.31.0</protobuf.version>
+    <maven.compiler.source>23</maven.compiler.source>
+    <maven.compiler.target>23</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
-  <scm>
-    <connection/>
-    <developerConnection/>
-    <tag/>
-    <url/>
-  </scm>
-  <url/>
   <version>0.0.1-SNAPSHOT</version>
-
 </project>
