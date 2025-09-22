@@ -3,6 +3,15 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <artifactId>parent</artifactId>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>2.19.1</version>
+            </plugin>
+        </plugins>
+    </build>
     <description>Minimize legos needed</description>
     <developers>
         <developer>
@@ -45,5 +54,5 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <spring.version>3.5.6</spring.version>
     </properties>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
 </project>

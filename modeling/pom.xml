@@ -12,7 +12,7 @@
         <dependency>
             <artifactId>util</artifactId>
             <groupId>less.lgeo</groupId>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>ejml-core</artifactId>
@@ -36,7 +36,7 @@
         <artifactId>bom</artifactId>
         <groupId>less.lgeo</groupId>
         <relativePath>../bom/pom.xml</relativePath>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
 </project>

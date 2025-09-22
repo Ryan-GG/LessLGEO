@@ -36,19 +36,19 @@
             <artifactId>modeling</artifactId>
             <groupId>less.lgeo</groupId>
             <scope>compile</scope>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>messaging</artifactId>
             <groupId>less.lgeo</groupId>
             <scope>compile</scope>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>database</artifactId>
             <groupId>less.lgeo</groupId>
             <scope>compile</scope>
-            <version>0.0.1-SNAPSHOT</version>
+            <version>0.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <artifactId>protobuf-java-util</artifactId>
@@ -64,9 +64,9 @@
         <artifactId>bom</artifactId>
         <groupId>less.lgeo</groupId>
         <relativePath>../bom/pom.xml</relativePath>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
 
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
 
 </project>

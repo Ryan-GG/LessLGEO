@@ -141,11 +141,11 @@
     <parent>
         <artifactId>parent</artifactId>
         <groupId>less.lgeo</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
     <properties>
         <ejml.version>0.44.0</ejml.version>
         <protobuf.version>4.31.0</protobuf.version>
     </properties>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.2-SNAPSHOT</version>
 </project>
