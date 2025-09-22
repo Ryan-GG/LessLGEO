@@ -1,83 +1,78 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <artifactId>messaging</artifactId>
-
-  <!-- TODO FIXME -->
-  <build>
-    <extensions>
-      <extension>
-        <artifactId>os-maven-plugin</artifactId>
-        <groupId>kr.motd.maven</groupId>
-        <version>1.7.1</version>
-      </extension>
-    </extensions>
-
-    <plugins>
-      <!-- Protobuf plugin to generate Java sources from .proto files -->
-      <plugin>
-        <artifactId>protobuf-maven-plugin</artifactId>
-        <configuration>
-          <!-- OS-maven-plugin: no goals, just adds os.detected.classifier -->
-          <protocArtifact>
-            com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
-          </protocArtifact>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-        </executions>
-        <groupId>org.xolstice.maven.plugins</groupId>
-        <version>0.6.1</version>
-      </plugin>
-      <plugin>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-        <groupId>org.springframework.boot</groupId>
-        <version>${spring.version}</version>
-      </plugin>
-    </plugins>
-  </build>
-
-  <dependencies>
-    <dependency>
-      <artifactId>protobuf-java</artifactId>
-      <groupId>com.google.protobuf</groupId>
-      <version>${protobuf.version}</version>
-    </dependency>
-    <dependency>
-      <artifactId>modeling</artifactId>
-      <groupId>less.lgeo</groupId>
-      <version>0.0.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <artifactId>snakeyaml</artifactId>
-      <groupId>org.yaml</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>spring-boot-autoconfigure</artifactId>
-      <groupId>org.springframework.boot</groupId>
-    </dependency>
-    <dependency>
-      <artifactId>spring-rabbit</artifactId>
-      <groupId>org.springframework.amqp</groupId>
-    </dependency>
-  </dependencies>
-  <modelVersion>4.0.0</modelVersion>
-  <packaging>jar</packaging>
-  <parent>
-    <artifactId>bom</artifactId>
-    <groupId>less.lgeo</groupId>
-    <relativePath>../bom/pom.xml</relativePath>
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <artifactId>messaging</artifactId>
+    <!-- TODO FIXME -->
+    <build>
+        <extensions>
+            <extension>
+                <artifactId>os-maven-plugin</artifactId>
+                <groupId>kr.motd.maven</groupId>
+                <version>1.7.1</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <!-- Protobuf plugin to generate Java sources from .proto files -->
+            <plugin>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <configuration>
+                    <!-- OS-maven-plugin: no goals, just adds os.detected.classifier -->
+                    <protocArtifact>
+                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+                    </protocArtifact>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <version>0.6.1</version>
+            </plugin>
+            <plugin>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+                <groupId>org.springframework.boot</groupId>
+                <version>${spring.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+    <dependencies>
+        <dependency>
+            <artifactId>protobuf-java</artifactId>
+            <groupId>com.google.protobuf</groupId>
+            <version>${protobuf.version}</version>
+        </dependency>
+        <dependency>
+            <artifactId>modeling</artifactId>
+            <groupId>less.lgeo</groupId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <artifactId>snakeyaml</artifactId>
+            <groupId>org.yaml</groupId>
+        </dependency>
+        <dependency>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <groupId>org.springframework.boot</groupId>
+        </dependency>
+        <dependency>
+            <artifactId>spring-rabbit</artifactId>
+            <groupId>org.springframework.amqp</groupId>
+        </dependency>
+    </dependencies>
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>jar</packaging>
+    <parent>
+        <artifactId>bom</artifactId>
+        <groupId>less.lgeo</groupId>
+        <relativePath>../bom/pom.xml</relativePath>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
     <version>0.0.1-SNAPSHOT</version>
-  </parent>
-
-  <version>0.0.1-SNAPSHOT</version>
-
 </project>
