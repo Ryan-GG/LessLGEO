@@ -3,6 +3,50 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <artifactId>bom</artifactId>
+    <build>
+        <extensions>
+            <extension>
+                <artifactId>os-maven-plugin</artifactId>
+                <groupId>kr.motd.maven</groupId>
+                <version>1.7.1</version>
+            </extension>
+        </extensions>
+        <plugins>
+            <plugin>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <configuration>
+                    <!--suppress UnresolvedMavenProperty -->
+                    <protocArtifact>
+                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
+                    </protocArtifact>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <groupId>org.xolstice.maven.plugins</groupId>
+                <version>0.6.1</version>
+            </plugin>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <annotationProcessorPaths>
+                        <path>
+                            <artifactId>lombok</artifactId>
+                            <groupId>org.projectlombok</groupId>
+                            <version>${lombok.version}</version>
+                        </path>
+                    </annotationProcessorPaths>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+                <version>3.11.0</version>
+            </plugin>
+        </plugins>
+    </build>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -102,7 +146,6 @@
     <properties>
         <ejml.version>0.44.0</ejml.version>
         <protobuf.version>4.31.0</protobuf.version>
-        <spring.version>3.5.6</spring.version>
     </properties>
     <version>0.0.1-SNAPSHOT</version>
 </project>

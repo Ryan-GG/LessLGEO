@@ -1,48 +1,49 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xmlns="http://maven.apache.org/POM/4.0.0"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <artifactId>parent</artifactId>
-  <description>Minimize legos needed</description>
-  <developers>
-    <developer>
-      <email>ryangross47@gmail.com</email>
-      <name>Ryan Gross</name>
-    </developer>
-  </developers>
-  <groupId>less.lgeo</groupId>
-  <licenses>
-    <license>
-      <distribution>repo</distribution>
-      <name>MIT License</name>
-      <url>https://opensource.org/licenses/MIT</url>
-    </license>
-  </licenses>
-  <modelVersion>4.0.0</modelVersion>
-  <modules>
-    <module>modeling</module>
-    <module>parser</module>
-    <module>util</module>
-    <module>reducer</module>
-    <module>messaging</module>
-    <module>web-server</module>
-    <module>database</module>
-    <module>bom</module>
-  </modules>
-  <name>LessLGEO</name>
-  <packaging>pom</packaging>
-  <parent>
-    <artifactId>spring-boot-starter-parent</artifactId>
-    <groupId>org.springframework.boot</groupId>
-    <relativePath/>
-    <!-- Corresponds to `spring.version` -->
-    <version>3.5.6</version>
-  </parent>
-  <properties>
-    <java.version>23</java.version>
-    <maven.compiler.source>23</maven.compiler.source>
-    <maven.compiler.target>23</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-  </properties>
-  <version>0.0.1-SNAPSHOT</version>
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <artifactId>parent</artifactId>
+    <description>Minimize legos needed</description>
+    <developers>
+        <developer>
+            <email>ryangross47@gmail.com</email>
+            <name>Ryan Gross</name>
+        </developer>
+    </developers>
+    <groupId>less.lgeo</groupId>
+    <licenses>
+        <license>
+            <distribution>repo</distribution>
+            <name>MIT License</name>
+            <url>https://opensource.org/licenses/MIT</url>
+        </license>
+    </licenses>
+    <modelVersion>4.0.0</modelVersion>
+    <modules>
+        <module>modeling</module>
+        <module>parser</module>
+        <module>util</module>
+        <module>reducer</module>
+        <module>messaging</module>
+        <module>web-server</module>
+        <module>database</module>
+        <module>bom</module>
+    </modules>
+    <name>LessLGEO</name>
+    <packaging>pom</packaging>
+    <parent>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <groupId>org.springframework.boot</groupId>
+        <relativePath/>
+        <!-- Corresponds to `spring.version` -->
+        <version>3.5.6</version>
+    </parent>
+    <properties>
+        <java.version>23</java.version>
+        <maven.compiler.source>23</maven.compiler.source>
+        <maven.compiler.target>23</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <spring.version>3.5.6</spring.version>
+    </properties>
+    <version>0.0.1-SNAPSHOT</version>
 </project>

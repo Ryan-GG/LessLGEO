@@ -3,45 +3,6 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <artifactId>modeling</artifactId>
-    <!-- TODO FIXME -->
-    <build>
-        <extensions>
-            <extension>
-                <artifactId>os-maven-plugin</artifactId>
-                <groupId>kr.motd.maven</groupId>
-                <version>1.7.1</version>
-            </extension>
-        </extensions>
-        <plugins>
-            <!-- Protobuf plugin to generate Java sources from .proto files -->
-            <plugin>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <configuration>
-                    <!-- OS-maven-plugin: no goals, just adds os.detected.classifier -->
-                    <protocArtifact>
-                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
-                    </protocArtifact>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <version>0.6.1</version>
-            </plugin>
-            <plugin>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-                <groupId>org.springframework.boot</groupId>
-                <version>${spring.version}</version>
-            </plugin>
-        </plugins>
-    </build>
     <dependencies>
         <dependency>
             <artifactId>protobuf-java</artifactId>
