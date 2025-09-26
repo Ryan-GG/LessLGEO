@@ -1,4 +1,4 @@
-package less.lgeo;
+package less.lgeo.controller;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -9,7 +9,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.util.JsonFormat;
 import java.util.List;
-import less.lgeo.controller.ModelController;
 import less.lgeo.embedded.VertexEmbeddable;
 import less.lgeo.entity.ColorEntity;
 import less.lgeo.entity.LineEntity;

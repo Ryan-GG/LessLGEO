@@ -57,6 +57,12 @@
       <groupId>com.google.protobuf</groupId>
       <scope>compile</scope>
     </dependency>
+    <dependency>
+      <groupId>less.lgeo</groupId>
+      <artifactId>autoconfigure</artifactId>
+      <version>0.0.2-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>

@@ -51,6 +51,8 @@
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <argLine>
+            <!-- Raising Heap space in tests for Integration Tests which require a seed database -->
+            -Xmx4G
             -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
           </argLine>
         </configuration>
