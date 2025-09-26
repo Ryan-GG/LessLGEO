@@ -134,6 +134,12 @@
                 <groupId>org.projectlombok</groupId>
                 <version>${lombok.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.testcontainers</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>1.21.3</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <modelVersion>4.0.0</modelVersion>
