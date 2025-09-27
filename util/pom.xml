@@ -1,27 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xmlns="http://maven.apache.org/POM/4.0.0"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <artifactId>util</artifactId>
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-                <groupId>org.springframework.boot</groupId>
-                <version>3.5.6</version>
-            </plugin>
-        </plugins>
-    </build>
-    <modelVersion>4.0.0</modelVersion>
-    <packaging>jar</packaging>
-    <parent>
-        <artifactId>bom</artifactId>
-        <groupId>less.lgeo</groupId>
-        <relativePath>../bom/pom.xml</relativePath>
-        <version>0.0.2-SNAPSHOT</version>
-    </parent>
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <artifactId>util</artifactId>
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>spring-boot-maven-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+        <groupId>org.springframework.boot</groupId>
+      </plugin>
+      <plugin>
+        <artifactId>protobuf-maven-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+        <groupId>org.xolstice.maven.plugins</groupId>
+      </plugin>
+    </plugins>
+  </build>
+  <modelVersion>4.0.0</modelVersion>
+  <packaging>jar</packaging>
+  <parent>
+    <artifactId>bom</artifactId>
+    <groupId>less.lgeo</groupId>
+    <relativePath>../bom/pom.xml</relativePath>
     <version>0.0.2-SNAPSHOT</version>
+  </parent>
+  <version>0.0.2-SNAPSHOT</version>
 </project>
