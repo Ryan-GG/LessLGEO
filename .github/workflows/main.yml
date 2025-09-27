@@ -54,14 +54,6 @@ jobs:
           distribution: 'temurin'
           architecture: x64
           cache: maven
-            
-            # FIX: Remove any corrupted mockito-core artifact before the build
-                   - name: Delete corrupted mockito-core jar (if present)
-                   run: rm -rf ~/.m2/repository/org/mockito/mockito-core
-                     
-                     # FIX: Make sure dependencies are present before the agent is needed
-                     - name: Resolve Maven dependencies
-                       run: mvn dependency:resolve
 
       - name: Build with Maven
         run: mvn --batch-mode --update-snapshots verify
