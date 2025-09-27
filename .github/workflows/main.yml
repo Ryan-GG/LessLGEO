@@ -8,57 +8,60 @@ on:
 
 jobs:
   build_ui:
-    name: Compile UI
+    name: 'Compile UI'
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ui
     steps:
-      - name: Checkout repository
+      - name: 'Checkout repository'
         uses: actions/checkout@v5
         with:
           lfs: true
 
-      - name: Set up Node.js
+      - name: 'Set up Node.js'
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
           cache: 'npm'
           cache-dependency-path: ui/package-lock.json
 
-      - name: Install NPM Dependencies
+      - name: 'Install NPM Dependencies'
         run: npm ci
 
-      - name: Generate Proto Sources
+      - name: 'Generate Proto Sources'
         run: npm run generate-sources
 
-      - name: Compile Typescript
+      - name: 'Type-check'
         run: npm run type-check
 
-      - name: Lint
+      - name: 'Lint'
         run: npm run lint
 
+      - name: 'Build'
+        run: npm run build
+
   build_java:
-    name: Compile Maven
+    name: 'Compile Maven'
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: 'Checkout repository'
         uses: actions/checkout@v5
         with:
           lfs: true
 
-      - name: Set up JDK 23
+      - name: 'Set up JDK 23'
         uses: actions/setup-java@v4
         with:
           java-version: '23'
           distribution: 'temurin'
-          architecture: x64
-          cache: maven
+          architecture: 'x64'
+          cache: 'maven'
 
-      - name: Build with Maven
+      - name: 'Build with Maven'
         run: mvn --batch-mode --update-snapshots verify
 
-      - name: Upload Maven Artifacts
+      - name: 'Upload Maven Artifacts'
         uses: actions/upload-artifact@v4
         with:
           name: Package
