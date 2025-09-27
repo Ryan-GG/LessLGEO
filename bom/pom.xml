@@ -46,14 +46,11 @@
         <version>3.11.0</version>
       </plugin>
       <plugin>
-        <!--To add Mockito as an agent to Maven's surefire plugin, the following configuration is needed-->
-        <!--https://javadoc.io/doc/org.mockito/mockito-core/latest/org.mockito/org/mockito/Mockito.html#0.3-->
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <argLine>
             <!-- Raising Heap space in tests for Integration Tests which require a seed database -->
             -Xmx4G
-            -javaagent:"${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar"
           </argLine>
         </configuration>
         <groupId>org.apache.maven.plugins</groupId>
