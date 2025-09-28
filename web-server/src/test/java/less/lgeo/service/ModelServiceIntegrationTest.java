@@ -1,7 +1,5 @@
 package less.lgeo.service;
 
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import less.lgeo.PostgresTestInitializer;
 import less.lgeo.primitive.Model;
 import less.lgeo.test.ModelTestUtils;
@@ -11,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.transaction.annotation.Transactional;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * <p>
@@ -28,23 +28,23 @@ import org.springframework.transaction.annotation.Transactional;
  * @author Ryan Gross
  */
 @SpringBootTest(
-    classes = less.lgeo.WebServer.class,
-    properties = "spring.config.location=classpath:/application-test.yaml"
+        classes = less.lgeo.WebServer.class,
+        properties = "spring.config.location=classpath:/application-test.yaml"
 )
-@ExtendWith(PostgresTestInitializer.class)
+@ExtendWith(value = {PostgresTestInitializer.class})
 @ContextConfiguration(initializers = PostgresTestInitializer.class)
 public class ModelServiceIntegrationTest {
 
-  @Autowired
-  private ModelService modelService;
+    @Autowired
+    private ModelService modelService;
 
-  @Test
-  @Transactional
-  void saveAndRetrieveModel() {
+    @Test
+    @Transactional
+    void saveAndRetrieveModel() {
 
-    Model model = ModelTestUtils.cube().build();
-    Long id = modelService.insertModel(model);
-    assertNotNull(id);
-  }
+        Model model = ModelTestUtils.cube().build();
+        Long id = modelService.insertModel(model);
+        assertNotNull(id);
+    }
 
 }
