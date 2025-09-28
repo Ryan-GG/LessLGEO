@@ -15,7 +15,7 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
 
   database:
-    image: 'postgres:17.5'
+    image: 'postgres:18.0'
     restart: always
     profiles:
       - "local"
@@ -24,11 +24,11 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - pg_data:/var/lib/postgresql/data
+      - pg_data:/var/lib/postgresql
 
   # Use container 'database' as Host for PgAdmin
   database-viewer:
-    image: 'dpage/pgadmin4:9.7.0'
+    image: 'dpage/pgadmin4:9.8.0'
     restart: always
     profiles:
       - "local"

@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 
@@ -39,9 +38,9 @@ public class WebServerProducer {
                 .setModelString(message)
                 .build();
 
-        return rabbitTemplate.convertSendAndReceiveAsType(
+        return (Long) rabbitTemplate.convertSendAndReceive(
                 rabbitWebToParserRpcProperties.getName(),
-                modelJobRequest.toByteArray(),
-                ParameterizedTypeReference.forType(Long.TYPE));
+                modelJobRequest.toByteArray());
     }
+
 }
