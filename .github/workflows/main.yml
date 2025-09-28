@@ -7,61 +7,63 @@ on:
       - main
 
 jobs:
-  # UI Build Job
   build_ui:
-    name: Compile UI
+    name: 'Compile UI'
     runs-on: ubuntu-latest
     defaults:
       run:
         working-directory: ui
     steps:
-      - uses: actions/checkout@v4
+      - name: 'Checkout repository'
+        uses: actions/checkout@v5
+        with:
+          lfs: true
 
-      - uses: actions/setup-node@v4
+      - name: 'Set up Node.js'
+        uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+          cache: 'npm'
+          cache-dependency-path: ui/package-lock.json
 
-      - name: Cache NPM dependencies
-        uses: actions/cache@v3
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-node-${{ hashFiles('ui/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-node-
-
-      - name: Install NPM Dependencies
+      - name: 'Install NPM Dependencies'
         run: npm ci
 
-      - name: Generate Proto Sources
+      - name: 'Generate Proto Sources'
         run: npm run generate-sources
 
-      - name: Compile Typescript
+      - name: 'Type-check'
         run: npm run type-check
 
-      - name: Lint
+      - name: 'Lint'
         run: npm run lint
 
-  # Java Build Job
+      - name: 'Build'
+        run: npm run build
+
   build_java:
-    name: Compile Maven
+    name: 'Compile Maven'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: 'Checkout repository'
+        uses: actions/checkout@v5
+        with:
+          lfs: true
 
-      - name: Set up JDK 23
+      - name: 'Set up JDK 23'
         uses: actions/setup-java@v4
         with:
           java-version: '23'
           distribution: 'temurin'
-          architecture: x64
+          architecture: 'x64'
+          cache: 'maven'
 
-      - name: Cache Maven dependencies
-        uses: actions/cache@v3
+      - name: 'Build with Maven'
+        run: mvn --batch-mode --update-snapshots verify
+
+      - name: 'Upload Maven Artifacts'
+        uses: actions/upload-artifact@v4
         with:
-          path: ~/.m2/repository
-          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
-          restore-keys: |
-            ${{ runner.os }}-maven-
-
-      - name: Build with Maven
-        run: mvn clean install
+          name: Package
+          path: '**/target/*.jar'
+          retention-days: 5

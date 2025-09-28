@@ -22,36 +22,35 @@ import java.util.NoSuchElementException;
 public class ModelController {
 
     private static final Logger logger = LoggerFactory.getLogger(ModelController.class);
-    @Autowired
-    private final WebServerProducer webServerProducer;
 
-    @Autowired
+    private final WebServerProducer webServerProducer;
     private final ModelService modelService;
 
+    @Autowired
     public ModelController(WebServerProducer webServerProducer, ModelService modelService) {
         this.webServerProducer = webServerProducer;
         this.modelService = modelService;
     }
 
-    @PostMapping("/insert")
-    public ResponseEntity<Long> insertModel(@RequestBody String body) {
+    @PostMapping
+    public ResponseEntity<Long> createModel(@RequestBody String body) {
         Long modelId = webServerProducer.sendMessage(body);
         return ResponseEntity.ok(modelId);
     }
-
-    @GetMapping(value = "/{id}")
+    
+    @GetMapping("/{id}")
     public ResponseEntity<ModelEntity> getModel(@PathVariable long id) {
         try {
             ModelEntity modelEntity = modelService.getModelById(id);
             return ResponseEntity.ok(modelEntity);
         } catch (NoSuchElementException e) {
             logger.error("ModelEntity Id {} was not found", id);
-            return ResponseEntity.internalServerError().body(new ModelEntity());
+            return ResponseEntity.notFound().build();
         }
     }
 
-    @GetMapping("/ids")
-    public ResponseEntity<List<Long>> getAllModelIds() {
+    @GetMapping("/parents/ids")
+    public ResponseEntity<List<Long>> getAllParentModelIds() {
         return ResponseEntity.ok(modelService.getAllParentModelIds());
     }
 }
