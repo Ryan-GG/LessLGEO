@@ -1,5 +1,6 @@
 package less.lgeo.service;
 
+import less.lgeo.embedded.ModelId;
 import less.lgeo.embedded.VertexEmbeddable;
 import less.lgeo.entity.*;
 import less.lgeo.primitive.*;
@@ -18,7 +19,8 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Service layer for interacting with {@link less.lgeo.entity.ModelEntity} from the database
+ * Service layer for interacting with {@link less.lgeo.entity.ModelEntity} from the database.
+ * Handles the Type conversion from {@link ModelId} to {@link Long} based on {@link ModelRepository}
  */
 @Service
 public class ModelService {
@@ -117,12 +119,12 @@ public class ModelService {
     /**
      * @return database entity by Model Id throws if not found
      */
-    public ModelEntity getModelById(Long id) throws NoSuchElementException {
-        return modelRepository.findById(id).orElseThrow();
+    public ModelEntity getModelById(ModelId id) throws NoSuchElementException {
+        return modelRepository.findById(id.getValue()).orElseThrow();
     }
 
     @Transactional
-    public Long insertModel(Model model) {
+    public ModelId insertModel(Model model) {
         Map<Integer, ColorEntity> colorEntityMap = colorRepository.findAll().stream().collect(
                 Collectors.toMap(
                         ColorEntity::getId,
@@ -133,8 +135,8 @@ public class ModelService {
         return modelRepository.save(createModelEntity(model, null, colorEntityMap)).getId();
     }
 
-    public List<Long> getAllParentModelIds() {
-        return modelRepository.findAllParentModelIds();
+    public List<ModelId> getAllParentModelIds() {
+        return modelRepository.findAllParentModels().stream().map(ModelEntity::getId).toList();
     }
 
 }

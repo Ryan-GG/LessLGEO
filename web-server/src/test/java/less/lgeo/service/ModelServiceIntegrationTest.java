@@ -1,6 +1,7 @@
 package less.lgeo.service;
 
 import less.lgeo.PostgresTestInitializer;
+import less.lgeo.embedded.ModelId;
 import less.lgeo.entity.ModelEntity;
 import less.lgeo.primitive.Model;
 import less.lgeo.test.ModelTestUtils;
@@ -48,7 +49,7 @@ public class ModelServiceIntegrationTest {
     void saveAndRetrieveModel() {
 
         Model model = ModelTestUtils.cube().build();
-        Long id = modelService.insertModel(model);
+        ModelId id = modelService.insertModel(model);
 
         ModelEntity retrievedEntity = modelService.getModelById(id);
         assertNotNull(retrievedEntity);

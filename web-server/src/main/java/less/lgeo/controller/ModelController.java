@@ -1,5 +1,6 @@
 package less.lgeo.controller;
 
+import less.lgeo.embedded.ModelId;
 import less.lgeo.entity.ModelEntity;
 import less.lgeo.producer.WebServerProducer;
 import less.lgeo.service.ModelService;
@@ -37,11 +38,12 @@ public class ModelController {
         Long modelId = webServerProducer.sendMessage(body);
         return ResponseEntity.ok(modelId);
     }
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<ModelEntity> getModel(@PathVariable long id) {
         try {
-            ModelEntity modelEntity = modelService.getModelById(id);
+            //FIXME, can path variaables be object modoeel id
+            ModelEntity modelEntity = modelService.getModelById(ModelId.of(id));
             return ResponseEntity.ok(modelEntity);
         } catch (NoSuchElementException e) {
             logger.error("ModelEntity Id {} was not found", id);
@@ -50,7 +52,7 @@ public class ModelController {
     }
 
     @GetMapping("/parents/ids")
-    public ResponseEntity<List<Long>> getAllParentModelIds() {
+    public ResponseEntity<List<ModelId>> getAllParentModelIds() {
         return ResponseEntity.ok(modelService.getAllParentModelIds());
     }
 }

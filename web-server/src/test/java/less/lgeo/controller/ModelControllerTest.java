@@ -2,6 +2,7 @@ package less.lgeo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.util.JsonFormat;
+import less.lgeo.embedded.ModelId;
 import less.lgeo.embedded.VertexEmbeddable;
 import less.lgeo.entity.ColorEntity;
 import less.lgeo.entity.LineEntity;
@@ -18,6 +19,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -59,17 +61,18 @@ class ModelControllerTest {
     @Test
     void getModel() throws Exception {
 
+        ModelId modelId = ModelId.of(1L);
         VertexEmbeddable p1 = new VertexEmbeddable(0, 0, 0);
         VertexEmbeddable p2 = new VertexEmbeddable(1, 1, 1);
         ColorEntity colorEntity = new ColorEntity(1, "Black", "ffffff", false, 0, 0, 0, 0);
         ModelEntity modelEntity = new ModelEntity();
-        modelEntity.setId(1L);
+        modelEntity.setId(modelId);
         modelEntity.setParent(null);
         LineEntity lineEntity = new LineEntity(1L, modelEntity, colorEntity, p1, p2);
         modelEntity.setLines(List.of(lineEntity));
-        when(modelService.getModelById(1L)).thenReturn(modelEntity);
+        when(modelService.getModelById(modelId)).thenReturn(modelEntity);
 
-        mockMvc.perform(get("/v1/models/{id}", 1)
+        mockMvc.perform(get("/v1/models/{id}", modelId.getValue())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(content().string(objectMapper.writeValueAsString(modelEntity)));
@@ -77,7 +80,7 @@ class ModelControllerTest {
 
     @Test
     void getAllParentModelIds() throws Exception {
-        List<Long> mockedReturn = List.of(1L, 2L, 3L, 4L);
+        List<ModelId> mockedReturn = Stream.of(1L, 2L, 3L, 4L).map(ModelId::of).toList();
         when(modelService.getAllParentModelIds()).thenReturn(mockedReturn);
         mockMvc.perform(get("/v1/models/parents/ids")
                         .contentType(MediaType.APPLICATION_JSON))
