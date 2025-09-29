@@ -34,8 +34,8 @@ public class ModelController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createModel(@RequestBody String body) {
-        Long modelId = webServerProducer.sendMessage(body);
+    public ResponseEntity<ModelId> insertModel(@RequestBody String body) {
+        ModelId modelId = webServerProducer.sendMessage(body);
         return ResponseEntity.ok(modelId);
     }
 

@@ -43,6 +43,12 @@
       <scope>compile</scope>
       <version>0.0.2-SNAPSHOT</version>
     </dependency>
+      <dependency>
+          <groupId>less.lgeo</groupId>
+          <artifactId>database</artifactId>
+          <version>0.0.2-SNAPSHOT</version>
+          <scope>compile</scope>
+      </dependency>
   </dependencies>
   <modelVersion>4.0.0</modelVersion>
   <packaging>jar</packaging>

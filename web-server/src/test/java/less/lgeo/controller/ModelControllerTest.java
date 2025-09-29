@@ -49,7 +49,7 @@ class ModelControllerTest {
         Model cube = ModelTestUtils.cube().build();
 
         String cubeJson = JsonFormat.printer().print(cube);
-        when(webServerProducer.sendMessage(cubeJson)).thenReturn(1L);
+        when(webServerProducer.sendMessage(cubeJson)).thenReturn(ModelId.of(1L));
 
         mockMvc.perform(post("/v1/models")
                         .contentType(MediaType.APPLICATION_JSON)

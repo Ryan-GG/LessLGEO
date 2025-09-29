@@ -43,18 +43,17 @@ public class ParserHandler {
      *
      * @param modelJobRequest Model LDraw String
      */
-    public Long consume(ModelJobRequest modelJobRequest) {
+    public ModelId consume(ModelJobRequest modelJobRequest) {
 
         Model joinedModel = modelJoiner.joinAndTransformModel(modelJobRequest);
 
         ModelId modelId = modelService.insertModel(joinedModel);
         logger.info("Inserted Model: {}", modelId);
 
-        //FIXME, Switch from lonog to ModelId
         logger.info("Sending Model {}", modelId);
-        parserProducer.sendMessage(modelId.getValue());
+        parserProducer.sendMessage(modelId);
 
-        return modelId.getValue();
+        return modelId;
     }
 
 }
