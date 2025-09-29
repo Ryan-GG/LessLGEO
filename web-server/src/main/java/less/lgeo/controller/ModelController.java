@@ -40,13 +40,12 @@ public class ModelController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ModelEntity> getModel(@PathVariable long id) {
+    public ResponseEntity<ModelEntity> getModel(@PathVariable long modelId) {
         try {
-            //FIXME, can path variaables be object modoeel id
-            ModelEntity modelEntity = modelService.getModelById(ModelId.of(id));
+            ModelEntity modelEntity = modelService.getModelById(ModelId.of(modelId));
             return ResponseEntity.ok(modelEntity);
         } catch (NoSuchElementException e) {
-            logger.error("ModelEntity Id {} was not found", id);
+            logger.error("ModelEntity Id {} was not found", modelId);
             return ResponseEntity.notFound().build();
         }
     }
