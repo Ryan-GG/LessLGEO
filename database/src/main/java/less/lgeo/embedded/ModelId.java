@@ -5,11 +5,14 @@ import lombok.*;
 
 import java.io.Serializable;
 
+/**
+ * Strongly Typed Id for {@link less.lgeo.entity.ModelEntity}
+ */
+@Data
+@ToString
+@EqualsAndHashCode
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@EqualsAndHashCode
-@ToString
-@Data
 public class ModelId implements Serializable {
 
     @JsonValue
