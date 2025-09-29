@@ -1,5 +1,6 @@
 package less.lgeo;
 
+import less.lgeo.embedded.ModelId;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
@@ -18,7 +19,7 @@ public class ReducerHandler {
     /**
      * See {@link less.lgeo.consumer.ReducerConsumer}
      */
-    public void consume(Long modelId) {
+    public void consume(ModelId modelId) {
         logger.info("Consuming: {}", modelId);
     }
 }

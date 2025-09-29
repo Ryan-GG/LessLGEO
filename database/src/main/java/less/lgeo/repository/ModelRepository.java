@@ -15,6 +15,6 @@ import java.util.List;
 @RepositoryDefinition(domainClass = ModelEntity.class, idClass = Long.class)
 public interface ModelRepository extends JpaRepository<ModelEntity, Long> {
 
-    @Query(value = "SELECT id FROM models WHERE parent_id IS NULL", nativeQuery = true)
-    List<Long> findAllParentModelIds();
+    @Query(value = "SELECT * FROM models WHERE parent_id IS NULL", nativeQuery = true)
+    List<ModelEntity> findAllParentModels();
 }

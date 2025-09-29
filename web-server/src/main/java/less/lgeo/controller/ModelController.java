@@ -1,5 +1,6 @@
 package less.lgeo.controller;
 
+import less.lgeo.embedded.ModelId;
 import less.lgeo.entity.ModelEntity;
 import less.lgeo.producer.WebServerProducer;
 import less.lgeo.service.ModelService;
@@ -33,24 +34,24 @@ public class ModelController {
     }
 
     @PostMapping
-    public ResponseEntity<Long> createModel(@RequestBody String body) {
-        Long modelId = webServerProducer.sendMessage(body);
+    public ResponseEntity<ModelId> insertModel(@RequestBody String body) {
+        ModelId modelId = webServerProducer.sendMessage(body);
         return ResponseEntity.ok(modelId);
     }
-    
+
     @GetMapping("/{id}")
-    public ResponseEntity<ModelEntity> getModel(@PathVariable long id) {
+    public ResponseEntity<ModelEntity> getModel(@PathVariable("id") Long modelId) {
         try {
-            ModelEntity modelEntity = modelService.getModelById(id);
+            ModelEntity modelEntity = modelService.getModelById(ModelId.of(modelId));
             return ResponseEntity.ok(modelEntity);
         } catch (NoSuchElementException e) {
-            logger.error("ModelEntity Id {} was not found", id);
+            logger.error("ModelEntity Id {} was not found", modelId);
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/parents/ids")
-    public ResponseEntity<List<Long>> getAllParentModelIds() {
+    public ResponseEntity<List<ModelId>> getAllParentModelIds() {
         return ResponseEntity.ok(modelService.getAllParentModelIds());
     }
 }

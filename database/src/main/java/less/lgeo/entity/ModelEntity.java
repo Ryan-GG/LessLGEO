@@ -3,10 +3,9 @@ package less.lgeo.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
+import less.lgeo.embedded.ModelId;
 import less.lgeo.primitive.Model;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.BatchSize;
 
 import java.util.ArrayList;
@@ -33,6 +32,11 @@ public class ModelEntity {
     )
     private Long id;
 
+    @Transient
+    @Getter(value = AccessLevel.NONE)
+    @Setter(value = AccessLevel.NONE)
+    private ModelId modelId;
+
     @BatchSize(size = 500)
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<LineEntity> lines;
@@ -58,5 +62,13 @@ public class ModelEntity {
     @BatchSize(size = 500)
     @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<ModelEntity> children = new ArrayList<>();
+
+    public ModelId getId() {
+        return id == null ? null : ModelId.of(id);
+    }
+
+    public void setId(ModelId id) {
+        this.id = id == null ? null : id.getValue();
+    }
 
 }

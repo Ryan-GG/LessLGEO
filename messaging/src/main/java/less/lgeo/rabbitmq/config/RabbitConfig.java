@@ -6,6 +6,8 @@ import less.lgeo.rabbitmq.properties.RabbitWebToParserRpcProperties;
 import less.lgeo.rabbitmq.properties.RabbitWorkerQueueProperties;
 import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.annotation.EnableRabbit;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
+import org.springframework.amqp.support.converter.MessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -88,6 +90,16 @@ class RabbitConfig {
             RabbitDeadLetterProperties rabbitDeadLetterProperties) {
         return BindingBuilder.bind(webToParserDeadLetterQueue).to(deadLetterExchange)
                 .with(rabbitDeadLetterProperties.getWebToParserRoutingKey());
+    }
+
+    /**
+     * See {@link org.springframework.amqp.rabbit.core.RabbitTemplate#setMessageConverter(MessageConverter)}
+     *
+     * @return RabbitMQ converter for Json Messages, as JPA Entities are encoded as JSON, this works nicely
+     */
+    @Bean
+    MessageConverter messageConverter() {
+        return new Jackson2JsonMessageConverter();
     }
 
 }
