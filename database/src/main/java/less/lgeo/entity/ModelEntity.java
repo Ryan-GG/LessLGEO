@@ -30,13 +30,12 @@ public class ModelEntity {
             sequenceName = "model_seq",
             allocationSize = 50
     )
-    @Column(name = "id")
-    private Long rawId;
+    private Long id;
 
     @Transient
     @Getter(value = AccessLevel.NONE)
     @Setter(value = AccessLevel.NONE)
-    private ModelId id;
+    private ModelId modelId;
 
     @BatchSize(size = 500)
     @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
@@ -65,11 +64,11 @@ public class ModelEntity {
     private List<ModelEntity> children = new ArrayList<>();
 
     public ModelId getId() {
-        return rawId == null ? null : ModelId.of(rawId);
+        return id == null ? null : ModelId.of(id);
     }
 
     public void setId(ModelId id) {
-        this.rawId = id == null ? null : id.getValue();
+        this.id = id == null ? null : id.getValue();
     }
 
 }
