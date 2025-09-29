@@ -40,7 +40,7 @@ public class ModelController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ModelEntity> getModel(@PathVariable long modelId) {
+    public ResponseEntity<ModelEntity> getModel(@PathVariable("id") Long modelId) {
         try {
             ModelEntity modelEntity = modelService.getModelById(ModelId.of(modelId));
             return ResponseEntity.ok(modelEntity);
