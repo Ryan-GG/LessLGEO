@@ -92,6 +92,11 @@ class RabbitConfig {
                 .with(rabbitDeadLetterProperties.getWebToParserRoutingKey());
     }
 
+    /**
+     * See {@link org.springframework.amqp.rabbit.core.RabbitTemplate#setMessageConverter(MessageConverter)}
+     *
+     * @return RabbitMQ converter for Json Messages, as JPA Entities are encoded as JSON, this works nicely
+     */
     @Bean
     MessageConverter messageConverter() {
         return new Jackson2JsonMessageConverter();
