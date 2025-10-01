@@ -80,7 +80,7 @@ Download LDraw Parts [complete.zip](https://library.ldraw.org/library/updates/co
 $ unzip complete.zip
 $
 $ # Copy the ldraw/ folder into your Repository directory 
-$ cp -r ~/complete/*
+$ cp -r ~/complete/* ~/LessLGEO
 ```
 
 ## Create .env for local Development
