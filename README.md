@@ -1,7 +1,7 @@
 <div align="center" style="text-align: center">
 <h1>Less LGEO </h1>
 <p>
-  Find the minimum amount of Lego Bricks needed
+  <i>Finding the minimum amount of Lego Bricks needed</i>
 </p>
 <p>
   <a href="https://github.com/Ryan-GG/LessLGEO/actions/workflows/main.yml">
