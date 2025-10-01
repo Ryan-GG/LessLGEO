@@ -17,6 +17,8 @@
 
 # Summary
 
+<img src="docs/resources/lesslgeo.drawio.svg"/>
+
 # Quick-Start
 
  
