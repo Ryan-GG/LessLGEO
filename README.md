@@ -66,4 +66,30 @@ connects to know that maybe this part shouldn't be removed because its supportin
 
 # Quick-Start
 
- 
+## Clone Repository
+
+```bash
+$ git clone https://github.com/Ryan-GG/LessLGEO.git LessLGEO
+```
+
+## Download & Setup LDraw Parts
+
+Download LDraw Parts [complete.zip](https://library.ldraw.org/library/updates/complete.zip) here
+
+```bash
+$ unzip complete.zip
+$
+$ # Copy the ldraw/ folder into your Repository directory 
+$ cp -r ~/complete/*
+```
+
+## Create .env for local Development
+
+By default `.env-template` is configure to work for a local developer instance definining login
+credentials for RabbitMQ, Postgres, and PgAdmin.
+
+```bash
+$ cp ~/LessLGEO/.env-template ~/LessLGEO/.env.local 
+```
+
+**All Done!**
