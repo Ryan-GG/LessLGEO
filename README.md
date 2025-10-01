@@ -24,7 +24,7 @@ unnecessary(filler) pieces that are normally hidden to a viewer such as interior
 Lego parts that tend to be included in sets.
 
 <div align="center" style="text-align: center">
-    <img src="docs/resources/software_architecture_diagram.drawio.svg"/>
+    <img src="docs/resources/software-architecture-diagram.drawio.svg"/>
 </div>
 
 ## Determining <i>Required Parts</i>
