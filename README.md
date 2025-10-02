@@ -13,6 +13,9 @@
 # Contents
 
 - [Summary](#summary)
+    - [Cost](#cost)
+    - [Visibility](#visibility)
+    - [Structural Importance](#structural-importance)
 - [Quick-Start](#quick-start)
 
 # Summary
