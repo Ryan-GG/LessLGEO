@@ -62,3 +62,9 @@ enum LineType {
   QUADRILATERAL = 5;
   OPTIONAL_LINE = 6;
 }
+
+message Ray {
+  Vertex origin = 1;
+  Vertex direction = 2;
+  double scale = 3;
+}
