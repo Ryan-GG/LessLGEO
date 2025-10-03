@@ -1,6 +1,7 @@
 package less.lgeo.primitive;
 
 import static less.lgeo.common.CommonUtils.getColor;
+import static less.lgeo.common.VertexUtils.toVertex;
 
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,18 @@ public class TriangleUtils {
         transformationMatrix.map(value -> VertexUtils.transform(p2, value)).orElse(p2),
         transformationMatrix.map(value -> VertexUtils.transform(p3, value)).orElse(p3)
     );
+  }
+
+  public static Vertex getCentroid(Triangle triangle) {
+    Vertex p1 = triangle.getP1();
+    Vertex p2 = triangle.getP2();
+    Vertex p3 = triangle.getP3();
+
+    double xCentroid = (p1.getX() + p2.getX() + p3.getX()) / 3;
+    double yCentroid = (p1.getY() + p2.getY() + p3.getY()) / 3;
+    double zCentroid = (p1.getZ() + p2.getZ() + p3.getZ()) / 3;
+
+    return toVertex(xCentroid, yCentroid, zCentroid);
   }
 
 }
