@@ -3,6 +3,8 @@ package less.lgeo.tracer;
 import less.lgeo.common.Vertex;
 import less.lgeo.primitive.Quadrilateral;
 import less.lgeo.primitive.Triangle;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.joml.Vector3d;
 
 import java.util.List;
@@ -39,19 +41,6 @@ import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
  *               └────────────────────→ +X
  *                        ( +Z → forward, toward H )
  * </pre>
- * <p>
- * Vertex mapping:
- * <ul>
- *   <li>A = (minX, minY, minZ)</li>
- *   <li>B = (maxX, minY, minZ)</li>
- *   <li>C = (maxX, minY, maxZ)</li>
- *   <li>D = (minX, minY, maxZ)</li>
- *   <li>E = (minX, maxY, minZ)</li>
- *   <li>F = (maxX, maxY, minZ)</li>
- *   <li>G = (maxX, maxY, maxZ)</li>
- *   <li>H = (minX, maxY, maxZ)</li>
- * </ul>
- * <p>
  * Faces:
  * <p>
  *     Ordering is CCW(Counter-Clockwise) starting from the bottom left vertex respective to the face's normal
@@ -72,53 +61,48 @@ import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
  *   <li>+X extends to the right</li>
  * </ul>
  */
+@NoArgsConstructor
 public class BoundingBox {
 
+    @Getter
     private Vector3d min = new Vector3d(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-    private final Vector3d a = calculateA();
+    @Getter
     private Vector3d max = new Vector3d(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
-    private final Vector3d b = calculateB();
-    private final Vector3d c = calculateC();
-    private final Vector3d d = calculateD();
-    private final Vector3d e = calculateE();
-    private final Vector3d f = calculateF();
-    private final Vector3d g = calculateG();
-    private final Vector3d h = calculateH();
 
     public BoundingBox(List<Vertex> vertices) {
         vertices.forEach(this::growToInclude);
     }
 
     private Vector3d calculateA() {
-        return min;
-    }
-
-    private Vector3d calculateB() {
-        return new Vector3d(max.x, min.y, min.z);
-    }
-
-    private Vector3d calculateC() {
-        return new Vector3d(max.x, min.y, max.z);
-    }
-
-    private Vector3d calculateD() {
-        return new Vector3d(min.x, min.y, max.z);
-    }
-
-    private Vector3d calculateE() {
         return new Vector3d(min.x, max.y, min.z);
     }
 
-    private Vector3d calculateF() {
+    private Vector3d calculateB() {
         return new Vector3d(max.x, max.y, min.z);
     }
 
-    private Vector3d calculateG() {
+    private Vector3d calculateC() {
         return max;
     }
 
-    private Vector3d calculateH() {
+    private Vector3d calculateD() {
         return new Vector3d(min.x, max.y, max.z);
+    }
+
+    private Vector3d calculateE() {
+        return min;
+    }
+
+    private Vector3d calculateF() {
+        return new Vector3d(max.x, min.y, min.z);
+    }
+
+    private Vector3d calculateG() {
+        return new Vector3d(max.x, min.y, max.z);
+    }
+
+    private Vector3d calculateH() {
+        return new Vector3d(min.x(), min.y, max.z);
     }
 
     public void growToInclude(Vertex point) {
@@ -131,16 +115,16 @@ public class BoundingBox {
     }
 
     private Vector3d min(Vector3d a, Vector3d b) {
-        double xMin = Math.min(a.x(), b.x());
-        double yMin = Math.max(a.y(), b.y());
-        double zMin = Math.min(a.z(), b.z());
+        double xMin = Math.min(a.x, b.x);
+        double yMin = Math.max(a.y, b.y);
+        double zMin = Math.min(a.z, b.z);
         return new Vector3d(xMin, yMin, zMin);
     }
 
     private Vector3d max(Vector3d a, Vector3d b) {
-        double xMax = Math.max(a.x(), b.x());
-        double yMax = Math.min(a.y(), b.y());
-        double zMax = Math.max(a.z(), b.z());
+        double xMax = Math.max(a.x, b.x);
+        double yMax = Math.min(a.y, b.y);
+        double zMax = Math.max(a.z, b.z);
         return new Vector3d(xMax, yMax, zMax);
     }
 
@@ -179,26 +163,50 @@ public class BoundingBox {
     }
 
     private Quadrilateral getTopFace() {
+        Vector3d a = calculateA();
+        Vector3d b = calculateB();
+        Vector3d c = calculateC();
+        Vector3d d = calculateD();
         return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(a), toVertex(b), toVertex(c), toVertex(d));
     }
 
     private Quadrilateral getBottomFace() {
+        Vector3d e = calculateE();
+        Vector3d f = calculateF();
+        Vector3d g = calculateG();
+        Vector3d h = calculateH();
         return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(e), toVertex(f), toVertex(g), toVertex(h));
     }
 
     private Quadrilateral getFrontFace() {
+        Vector3d e = calculateE();
+        Vector3d f = calculateF();
+        Vector3d b = calculateB();
+        Vector3d a = calculateA();
         return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(e), toVertex(f), toVertex(b), toVertex(a));
     }
 
     private Quadrilateral getBackFace() {
+        Vector3d g = calculateG();
+        Vector3d h = calculateH();
+        Vector3d d = calculateD();
+        Vector3d c = calculateC();
         return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(g), toVertex(h), toVertex(d), toVertex(c));
     }
 
     private Quadrilateral getLeftFace() {
+        Vector3d h = calculateH();
+        Vector3d e = calculateE();
+        Vector3d a = calculateA();
+        Vector3d d = calculateD();
         return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(h), toVertex(e), toVertex(a), toVertex(d));
     }
 
     private Quadrilateral getRightFace() {
+        Vector3d f = calculateF();
+        Vector3d g = calculateG();
+        Vector3d c = calculateC();
+        Vector3d b = calculateB();
         return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(f), toVertex(g), toVertex(c), toVertex(b));
     }
 
