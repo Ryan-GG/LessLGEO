@@ -74,9 +74,9 @@ import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
  */
 public class BoundingBox {
 
-    private Vector3d min = new Vector3d(Double.POSITIVE_INFINITY);
+    private Vector3d min = new Vector3d(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
     private final Vector3d a = calculateA();
-    private Vector3d max = new Vector3d(Double.NEGATIVE_INFINITY);
+    private Vector3d max = new Vector3d(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
     private final Vector3d b = calculateB();
     private final Vector3d c = calculateC();
     private final Vector3d d = calculateD();
@@ -121,14 +121,27 @@ public class BoundingBox {
         return new Vector3d(min.x, max.y, max.z);
     }
 
-    //TODO, these may be incorrect since -Y is actually larger than positive Y
     public void growToInclude(Vertex point) {
         growToInclude(toVector3d(point));
     }
 
     public void growToInclude(Vector3d point) {
-        min = min.min(point);
-        max = max.max(point);
+        min = min(min, point);
+        max = max(max, point);
+    }
+
+    private Vector3d min(Vector3d a, Vector3d b) {
+        double xMin = Math.min(a.x(), b.x());
+        double yMin = Math.max(a.y(), b.y());
+        double zMin = Math.min(a.z(), b.z());
+        return new Vector3d(xMin, yMin, zMin);
+    }
+
+    private Vector3d max(Vector3d a, Vector3d b) {
+        double xMax = Math.max(a.x(), b.x());
+        double yMax = Math.min(a.y(), b.y());
+        double zMax = Math.max(a.z(), b.z());
+        return new Vector3d(xMax, yMax, zMax);
     }
 
     public void growToInclude(Triangle triangle) {
