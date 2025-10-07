@@ -1,5 +1,7 @@
 package less.lgeo.common;
 
+import org.joml.Vector3d;
+
 public class VertexUtils {
 
   public static Vertex toVertex(double x, double y, double z) {
@@ -8,6 +10,10 @@ public class VertexUtils {
         .setY(y)
         .setZ(z)
         .build();
+  }
+
+  public static Vector3d toVector3d(Vertex vertex) {
+    return new Vector3d(vertex.getX(), vertex.getY(), vertex.getZ());
   }
 
   /**
@@ -29,7 +35,7 @@ public class VertexUtils {
         + matrix.getF() * oldVertex.getZ() + matrix.getY();
     double newZ = matrix.getG() * oldVertex.getX() + matrix.getH() * oldVertex.getY()
         + matrix.getI() * oldVertex.getZ() + matrix.getZ();
-    
+
     return toVertex(newX, newY, newZ);
   }
 }
