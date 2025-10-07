@@ -1,0 +1,33 @@
+0 Cube
+0 Name:  Cube of triangles
+0 Author: Ryan Gross
+0 Format for Triangle, 3 <colour> x1 y1 z1 x2 y2 z2 x3 y3 z3
+0 Top
+0 a, b, d
+3 -1 0 -1 0 1 -1 0 0 -1 1
+0 b, c ,d
+3 -1 1 -1 0 1 -1 1 0 -1 1
+0 e, f, h
+3 -1 0 0 0 1 0 0 0 0 1
+0 f, g, h
+3 -1 1 0 0 1 0 1 0 0 1
+0 Front
+0 e, f, a
+3 -1 0 0 0 1 0 0 0 -1 0
+0 f, b, a
+3 -1 1 0 0 1 -1 0 0 -1 0
+0 Back
+0 g, h, c
+3 -1 1 0 1 0 0 1 1 -1 1
+0 h, d, c
+3 -1 0 0 1 0 -1 1 1 -1 1
+0 Left
+0 h, e, d
+3 -1 0 0 1 0 0 0 0 -1 1
+0 e, a d
+3 -1 0 0 0 0 -1 0 0 -1 1
+0 Right
+0 f, g, b
+3 -1 1 0 0 1 0 1 1 -1 0
+0 g, c, b
+3 -1 1 0 1 1 -1 1 1 -1 0
