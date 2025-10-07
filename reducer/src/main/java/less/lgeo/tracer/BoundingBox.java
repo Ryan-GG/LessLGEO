@@ -1,18 +1,15 @@
 package less.lgeo.tracer;
 
-import less.lgeo.common.LineType;
 import less.lgeo.common.Vertex;
 import less.lgeo.primitive.Quadrilateral;
 import less.lgeo.primitive.Triangle;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.joml.Vector3d;
 
 import java.util.List;
 
 import static less.lgeo.common.VertexUtils.toVector3d;
 import static less.lgeo.common.VertexUtils.toVertex;
+import static less.lgeo.primitive.QuadrilateralUtils.toQuadrilateral;
 import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
 
 
@@ -75,22 +72,18 @@ import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
  *   <li>+X extends to the right</li>
  * </ul>
  */
-@Getter
-@NoArgsConstructor
-@AllArgsConstructor
 public class BoundingBox {
 
     private Vector3d min = new Vector3d(Double.POSITIVE_INFINITY);
+    private final Vector3d a = calculateA();
     private Vector3d max = new Vector3d(Double.NEGATIVE_INFINITY);
-    private Vector3d center = calculateCenter();
-    private Vector3d a = calculateA();
-    private Vector3d b = calculateB();
-    private Vector3d c = calculateC();
-    private Vector3d d = calculateD();
-    private Vector3d e = calculateE();
-    private Vector3d f = calculateF();
-    private Vector3d g = calculateG();
-    private Vector3d h = calculateH();
+    private final Vector3d b = calculateB();
+    private final Vector3d c = calculateC();
+    private final Vector3d d = calculateD();
+    private final Vector3d e = calculateE();
+    private final Vector3d f = calculateF();
+    private final Vector3d g = calculateG();
+    private final Vector3d h = calculateH();
 
     public BoundingBox(List<Vertex> vertices) {
         vertices.forEach(this::growToInclude);
@@ -130,8 +123,7 @@ public class BoundingBox {
 
     //TODO, these may be incorrect since -Y is actually larger than positive Y
     public void growToInclude(Vertex point) {
-        min = min.min(toVector3d(point));
-        max = max.max(toVector3d(point));
+        growToInclude(toVector3d(point));
     }
 
     public void growToInclude(Vector3d point) {
@@ -140,12 +132,25 @@ public class BoundingBox {
     }
 
     public void growToInclude(Triangle triangle) {
-        growToInclude(toVector3d(triangle.getP1()));
-        growToInclude(toVector3d(triangle.getP2()));
-        growToInclude(toVector3d(triangle.getP3()));
+        growToInclude(triangle.getP1());
+        growToInclude(triangle.getP2());
+        growToInclude(triangle.getP3());
     }
 
-    private Vector3d calculateCenter() {
+    public boolean includesPoint(Vector3d point) {
+        boolean inXBounds = min.x <= point.x && point.x <= max.x;
+        // Flipped due to -Y being UP
+        boolean inYBounds = max.y <= point.y && point.y <= min.y;
+        boolean inZBounds = min.z <= point.z && point.z <= max.z;
+
+        return inXBounds && inYBounds && inZBounds;
+    }
+
+    public boolean includesPoint(Vertex point) {
+        return includesPoint(toVector3d(point));
+    }
+
+    public Vector3d getCenter() {
         return (min.add(max)).mul(0.5);
     }
 
@@ -161,68 +166,47 @@ public class BoundingBox {
     }
 
     private Quadrilateral getTopFace() {
-        return Quadrilateral.newBuilder()
-                .setP1(toVertex(a))
-                .setP2(toVertex(b))
-                .setP3(toVertex(c))
-                .setP4(toVertex(d))
-                .setColorId(UNKNOWN_COLOR_ID)
-                .build();
+        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(a), toVertex(b), toVertex(c), toVertex(d));
     }
 
     private Quadrilateral getBottomFace() {
-        return Quadrilateral.newBuilder()
-                .setP1(toVertex(e))
-                .setP2(toVertex(f))
-                .setP3(toVertex(g))
-                .setP4(toVertex(h))
-                .setColorId(UNKNOWN_COLOR_ID)
-                .setType(LineType.QUADRILATERAL)
-                .build();
+        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(e), toVertex(f), toVertex(g), toVertex(h));
     }
 
     private Quadrilateral getFrontFace() {
-        return Quadrilateral.newBuilder()
-                .setP1(toVertex(e))
-                .setP2(toVertex(f))
-                .setP3(toVertex(b))
-                .setP4(toVertex(a))
-                .setColorId(UNKNOWN_COLOR_ID)
-                .setType(LineType.QUADRILATERAL)
-                .build();
+        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(e), toVertex(f), toVertex(b), toVertex(a));
     }
-    
+
     private Quadrilateral getBackFace() {
-        return Quadrilateral.newBuilder()
-                .setP1(toVertex(g))
-                .setP2(toVertex(h))
-                .setP3(toVertex(d))
-                .setP4(toVertex(c))
-                .setColorId(UNKNOWN_COLOR_ID)
-                .setType(LineType.QUADRILATERAL)
-                .build();
+        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(g), toVertex(h), toVertex(d), toVertex(c));
     }
 
     private Quadrilateral getLeftFace() {
-        return Quadrilateral.newBuilder()
-                .setP1(toVertex(h))
-                .setP2(toVertex(e))
-                .setP3(toVertex(a))
-                .setP4(toVertex(d))
-                .setColorId(UNKNOWN_COLOR_ID)
-                .setType(LineType.QUADRILATERAL)
-                .build();
+        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(h), toVertex(e), toVertex(a), toVertex(d));
     }
 
     private Quadrilateral getRightFace() {
-        return Quadrilateral.newBuilder()
-                .setP1(toVertex(f))
-                .setP2(toVertex(g))
-                .setP3(toVertex(c))
-                .setP4(toVertex(b))
-                .setColorId(UNKNOWN_COLOR_ID)
-                .setType(LineType.QUADRILATERAL)
-                .build();
+        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(f), toVertex(g), toVertex(c), toVertex(b));
+    }
+
+    @Override
+    public String toString() {
+        return String.format(
+                """
+                        Top: %s,
+                        Bottom: %s,
+                        Front: %s,
+                        Back: %s,
+                        Left: %s,
+                        Right: %s
+                        """,
+                getTopFace(),
+                getBottomFace(),
+                getFrontFace(),
+                getBackFace(),
+                getLeftFace(),
+                getRightFace()
+        );
     }
 
 
