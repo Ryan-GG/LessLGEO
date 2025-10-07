@@ -24,9 +24,9 @@ public class ModelTestUtils {
     }
 
     /**
-     * See BoundingBox
+     * See BoundingBox for ordering
      *
-     * @return
+     * @return {@link Model} shaped as a Cube
      */
     public static Model.Builder cube() {
 
@@ -45,9 +45,9 @@ public class ModelTestUtils {
 
         Quadrilateral front = toQuadrilateral(UNKNOWN_COLOR_ID, e, f, b, a);
         Quadrilateral back = toQuadrilateral(UNKNOWN_COLOR_ID, g, h, d, c);
-        
+
         Quadrilateral left = toQuadrilateral(UNKNOWN_COLOR_ID, h, e, a, d);
-        Quadrilateral right = toQuadrilateral(UNKNOWN_COLOR_ID, f, g, b, c);
+        Quadrilateral right = toQuadrilateral(UNKNOWN_COLOR_ID, f, g, c, b);
 
         List<Quadrilateral> cube = List.of(top, bottom, front, back, left, right);
 

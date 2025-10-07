@@ -14,9 +14,9 @@ public class VertexUtils {
 
     public static Vertex toVertex(Vector3d vector3d) {
         return Vertex.newBuilder()
-                .setX(vector3d.x)
-                .setY(vector3d.y)
-                .setZ(vector3d.z)
+                .setX(vector3d.x())
+                .setY(vector3d.y())
+                .setZ(vector3d.z())
                 .build();
     }
 
