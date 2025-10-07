@@ -17,42 +17,39 @@ import static less.lgeo.primitive.TriangleUtils.toTriangle;
  */
 public class ModelTestUtils {
 
-    public static int INHERIT_VALUE_ID = 16;
-    public static int INHERIT_EDGE_ID = 24;
-
     public static int UNKNOWN_COLOR_ID = -1;
-    public static int BLACK_COLOR_ID = 1;
-    public static int RED_COLOR_ID = 4;
-    public static int ORANGE_COLOR_ID = 25;
-    public static int YELLOW_COLOR_ID = 14;
-    public static int GREEN_COLOR_ID = 2;
-    public static int BLUE_COLOR_ID = 1;
-    public static int INDIGO_COLOR_ID = 118;
-    public static int VIOLET_COLOR_ID = 110;
 
     public static Builder newModelEmpty() {
         return Model.newBuilder();
     }
 
+    /**
+     * See BoundingBox
+     *
+     * @return
+     */
     public static Model.Builder cube() {
 
-        Vertex a = toVertex(0, 0, 0);
-        Vertex b = toVertex(0, 0, 1);
-        Vertex c = toVertex(1, 0, 1);
-        Vertex d = toVertex(1, 0, 0);
-        Vertex e = toVertex(0, -1, 0);
-        Vertex f = toVertex(0, -1, 1);
-        Vertex g = toVertex(1, -1, 1);
-        Vertex h = toVertex(1, -1, 0);
+        Vertex a = toVertex(0, -1, 0);
+        Vertex b = toVertex(1, -1, 0);
+        Vertex c = toVertex(1, -1, 1);
+        Vertex d = toVertex(0, -1, 1);
 
-        Quadrilateral bottom = toQuadrilateral(ORANGE_COLOR_ID, a, b, c, d);
-        Quadrilateral top = toQuadrilateral(RED_COLOR_ID, e, f, g, h);
-        Quadrilateral front = toQuadrilateral(YELLOW_COLOR_ID, a, e, h, d);
-        Quadrilateral back = toQuadrilateral(GREEN_COLOR_ID, b, f, g, c);
-        Quadrilateral left = toQuadrilateral(BLUE_COLOR_ID, b, f, e, a);
-        Quadrilateral right = toQuadrilateral(INDIGO_COLOR_ID, d, h, g, c);
+        Vertex e = toVertex(0, 0, 0);
+        Vertex f = toVertex(1, 0, 0);
+        Vertex g = toVertex(1, 0, 1);
+        Vertex h = toVertex(0, 0, 1);
 
-        List<Quadrilateral> cube = List.of(bottom, top, front, back, left, right);
+        Quadrilateral top = toQuadrilateral(UNKNOWN_COLOR_ID, a, b, c, d);
+        Quadrilateral bottom = toQuadrilateral(UNKNOWN_COLOR_ID, e, f, g, h);
+
+        Quadrilateral front = toQuadrilateral(UNKNOWN_COLOR_ID, e, f, b, a);
+        Quadrilateral back = toQuadrilateral(UNKNOWN_COLOR_ID, g, h, d, c);
+        
+        Quadrilateral left = toQuadrilateral(UNKNOWN_COLOR_ID, h, e, a, d);
+        Quadrilateral right = toQuadrilateral(UNKNOWN_COLOR_ID, f, g, b, c);
+
+        List<Quadrilateral> cube = List.of(top, bottom, front, back, left, right);
 
         return newModelEmpty()
                 .addAllQuadrilateral(cube);
@@ -66,11 +63,11 @@ public class ModelTestUtils {
         Vertex d = toVertex(1, 0, 0);
         Vertex e = toVertex(0.5, -1, 0.5);
 
-        Quadrilateral bottom = toQuadrilateral(VIOLET_COLOR_ID, a, b, c, d);
-        Triangle front = toTriangle(RED_COLOR_ID, a, e, d);
-        Triangle back = toTriangle(YELLOW_COLOR_ID, b, e, c);
-        Triangle left = toTriangle(GREEN_COLOR_ID, a, e, b);
-        Triangle right = toTriangle(BLACK_COLOR_ID, d, e, c);
+        Quadrilateral bottom = toQuadrilateral(UNKNOWN_COLOR_ID, a, b, c, d);
+        Triangle front = toTriangle(UNKNOWN_COLOR_ID, a, e, d);
+        Triangle back = toTriangle(UNKNOWN_COLOR_ID, b, e, c);
+        Triangle left = toTriangle(UNKNOWN_COLOR_ID, a, e, b);
+        Triangle right = toTriangle(UNKNOWN_COLOR_ID, d, e, c);
 
         List<Triangle> pyramid = List.of(front, back, left, right);
 
