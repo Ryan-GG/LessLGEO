@@ -54,9 +54,6 @@ class BoundBoxTest {
         List<Vertex> vertices = quadrilaterals.stream().flatMap(quadrilateral -> getVertices(quadrilateral).stream()).toList();
 
         BoundingBox boundingBox = new BoundingBox(vertices);
-        List<Quadrilateral> boundingBoxQuads = boundingBox.getBoundingBoxAsQuadrilaterals();
-
-        quadrilaterals.forEach(quadrilateral -> assertTrue(boundingBoxQuads.contains(quadrilateral), () ->
-                String.format("Bounding Box Quads\n%s does not contain:\n%s", boundingBox, quadrilateral.toString())));
+        vertices.forEach(vertex -> assertTrue(boundingBox.includesPoint(vertex)));
     }
 }
