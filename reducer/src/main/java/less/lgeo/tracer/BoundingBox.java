@@ -1,17 +1,18 @@
 package less.lgeo.tracer;
 
 import less.lgeo.common.Vertex;
-import less.lgeo.primitive.Quadrilateral;
+import less.lgeo.primitive.Line;
 import less.lgeo.primitive.Triangle;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.joml.Vector3d;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static less.lgeo.common.VertexUtils.toVector3d;
 import static less.lgeo.common.VertexUtils.toVertex;
-import static less.lgeo.primitive.QuadrilateralUtils.toQuadrilateral;
+import static less.lgeo.primitive.LineUtils.toLine;
 import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
 
 
@@ -61,12 +62,11 @@ import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
  *   <li>+X extends to the right</li>
  * </ul>
  */
+@Getter
 @NoArgsConstructor
 public class BoundingBox {
 
-    @Getter
     private Vector3d min = new Vector3d(Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
-    @Getter
     private Vector3d max = new Vector3d(Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY, Double.NEGATIVE_INFINITY);
 
     public BoundingBox(List<Vertex> vertices) {
@@ -148,85 +148,107 @@ public class BoundingBox {
     }
 
     public Vector3d getCenter() {
-        return (min.add(max)).mul(0.5);
+        return (getMin().add(getMax())).mul(0.5);
     }
 
-    public List<Quadrilateral> getBoundingBoxAsQuadrilaterals() {
+    public List<Line> getBoundingBoxAsLines() {
+
+        return Stream.of(
+                        getTopFace(),
+                        getBottomFace(),
+                        getFrontFace(),
+                        getBackFace(),
+                        getLeftFace(),
+                        getRightFace())
+                .flatMap(List::stream)
+                .toList();
+
+    }
+
+    private List<Line> getTopFace() {
+        Vector3d a = calculateA();
+        Vector3d b = calculateB();
+        Vector3d c = calculateC();
+        Vector3d d = calculateD();
         return List.of(
-                getTopFace(),
-                getBottomFace(),
-                getFrontFace(),
-                getBackFace(),
-                getLeftFace(),
-                getRightFace()
+                toLine(UNKNOWN_COLOR_ID, toVertex(a), toVertex(b)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(b), toVertex(c)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(c), toVertex(d)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(d), toVertex(a))
         );
     }
 
-    private Quadrilateral getTopFace() {
-        Vector3d a = calculateA();
-        Vector3d b = calculateB();
-        Vector3d c = calculateC();
-        Vector3d d = calculateD();
-        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(a), toVertex(b), toVertex(c), toVertex(d));
-    }
-
-    private Quadrilateral getBottomFace() {
+    private List<Line> getBottomFace() {
         Vector3d e = calculateE();
         Vector3d f = calculateF();
         Vector3d g = calculateG();
         Vector3d h = calculateH();
-        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(e), toVertex(f), toVertex(g), toVertex(h));
+        return List.of(
+                toLine(UNKNOWN_COLOR_ID, toVertex(e), toVertex(f)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(f), toVertex(g)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(g), toVertex(h)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(h), toVertex(e))
+        );
     }
 
-    private Quadrilateral getFrontFace() {
+    private List<Line> getFrontFace() {
         Vector3d e = calculateE();
         Vector3d f = calculateF();
         Vector3d b = calculateB();
         Vector3d a = calculateA();
-        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(e), toVertex(f), toVertex(b), toVertex(a));
+        return List.of(
+                toLine(UNKNOWN_COLOR_ID, toVertex(e), toVertex(f)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(f), toVertex(b)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(b), toVertex(a)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(a), toVertex(e))
+        );
     }
 
-    private Quadrilateral getBackFace() {
+    private List<Line> getBackFace() {
         Vector3d g = calculateG();
         Vector3d h = calculateH();
         Vector3d d = calculateD();
         Vector3d c = calculateC();
-        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(g), toVertex(h), toVertex(d), toVertex(c));
+        return List.of(
+                toLine(UNKNOWN_COLOR_ID, toVertex(g), toVertex(h)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(h), toVertex(d)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(d), toVertex(c)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(c), toVertex(g))
+        );
     }
 
-    private Quadrilateral getLeftFace() {
+    private List<Line> getLeftFace() {
         Vector3d h = calculateH();
         Vector3d e = calculateE();
         Vector3d a = calculateA();
         Vector3d d = calculateD();
-        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(h), toVertex(e), toVertex(a), toVertex(d));
+        return List.of(
+                toLine(UNKNOWN_COLOR_ID, toVertex(h), toVertex(e)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(e), toVertex(a)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(a), toVertex(d)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(d), toVertex(h))
+        );
     }
 
-    private Quadrilateral getRightFace() {
+    private List<Line> getRightFace() {
         Vector3d f = calculateF();
         Vector3d g = calculateG();
         Vector3d c = calculateC();
         Vector3d b = calculateB();
-        return toQuadrilateral(UNKNOWN_COLOR_ID, toVertex(f), toVertex(g), toVertex(c), toVertex(b));
+        return List.of(
+                toLine(UNKNOWN_COLOR_ID, toVertex(f), toVertex(g)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(g), toVertex(c)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(c), toVertex(b)),
+                toLine(UNKNOWN_COLOR_ID, toVertex(b), toVertex(f))
+        );
     }
 
     @Override
     public String toString() {
-        return String.format(
-                """
-                        Top: %s,
-                        Bottom: %s,
-                        Front: %s,
-                        Back: %s,
-                        Left: %s,
-                        Right: %s
-                        """,
-                getTopFace(),
-                getBottomFace(),
-                getFrontFace(),
-                getBackFace(),
-                getLeftFace(),
-                getRightFace()
+        return String.format("Min: %s, Center: %s, Max: %s",
+                getMin(),
+                getCenter(),
+                getMax()
         );
     }
 

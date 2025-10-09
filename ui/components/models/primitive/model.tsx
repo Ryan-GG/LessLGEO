@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { BufferAttribute, BufferGeometry, DoubleSide } from "three";
 import { verticesToFloat32Array, colorToFloat32Array } from "@/utils/common-utilities";
-import { ModelEntity, QuadrilateralEntity, TriangleEntity } from "@/api/schema";
+import { LineEntity, ModelEntity, QuadrilateralEntity, TriangleEntity } from "@/api/schema";
 
 /**
  * @returns a group of two meshes for all quads and triangles provided in the protobuf model object
@@ -14,28 +14,50 @@ export function Model( { entity }: { entity: ModelEntity | undefined } ): ReactN
 	if( entity == undefined ) return [];
 
 	const quadGeometries: BufferGeometry[] = getQuadrilaterals( entity ).map( quad => quadrilateralToBufferGeometry( quad ) ).filter( quadGeometry => quadGeometry != undefined );
+	
 	const triangleGeometries: BufferGeometry[] = getTriangles( entity ).map( triangle => triangleToBufferGeometry( triangle ) ).filter( triangleGeometry => triangleGeometry != undefined );
 
+	const lineGeometries: BufferGeometry[] = getLines( entity ).map( line => lineToBufferGeometry( line ) ).filter( lineGeometry => lineGeometry != undefined );
 
-	const quad: BufferGeometry = BufferGeometryUtils.mergeGeometries( quadGeometries, false );
-	const triangle: BufferGeometry = BufferGeometryUtils.mergeGeometries( triangleGeometries, false );
+	let quad: BufferGeometry | undefined = undefined;
+	let triangle: BufferGeometry | undefined = undefined;
+	let line: BufferGeometry | undefined = undefined;
+
+	if( 0 < quadGeometries.length)
+	{
+		quad = BufferGeometryUtils.mergeGeometries( quadGeometries, false );
+	}
+	if( 0 < triangleGeometries.length )
+	{
+		triangle = BufferGeometryUtils.mergeGeometries( triangleGeometries, false );
+	}
+	if( 0 < lineGeometries.length )
+	{
+		line = BufferGeometryUtils.mergeGeometries( lineGeometries, false );
+	}
 
 	return (
 		<group>
-			<mesh geometry={quad}>
+			{/* {quad &&<mesh geometry={quad}>
 				<meshPhongMaterial vertexColors transparent side={DoubleSide}/>
 				<lineSegments>
 					<edgesGeometry args={[ quad ]} />
 					<lineBasicMaterial color={"black"} linewidth={1}/>
 				</lineSegments>
-			</mesh>	
-			<mesh geometry={triangle}>
+			</mesh>	}
+			{triangle && <mesh geometry={triangle}>
 				<meshPhongMaterial vertexColors transparent side={DoubleSide}/>
 				<lineSegments>
 					<edgesGeometry args={[ triangle ]} />
 					<lineBasicMaterial color={"black"} linewidth={1}/>
 				</lineSegments>
-			</mesh>	
+			</mesh>} */}
+			{line &&
+				<lineSegments>
+					<edgesGeometry args={[ line ]} />
+					<lineBasicMaterial color={"black"} linewidth={1}/>
+				</lineSegments>
+			}
 		</group>	
 	);	  
 }
@@ -43,7 +65,7 @@ export function Model( { entity }: { entity: ModelEntity | undefined } ): ReactN
 
 function getTriangles( model: ModelEntity ): TriangleEntity[] {
 
-	const triangles: TriangleEntity[] = model.triangles ?? [];
+	const triangles: TriangleEntity[] = model.triangles;
     
 	for ( const subModel of model.children ) triangles.push( ...getTriangles( subModel ) ); 
 
@@ -51,11 +73,19 @@ function getTriangles( model: ModelEntity ): TriangleEntity[] {
 }
 
 function getQuadrilaterals( model: ModelEntity ): QuadrilateralEntity[] {
-	const quads: QuadrilateralEntity[] = model.quadrilaterals ?? [];
+	const quads: QuadrilateralEntity[] = model.quadrilaterals;
     
 	for ( const subModel of model.children ) quads.push( ...getQuadrilaterals( subModel ) ); 
 
 	return quads;
+} 
+
+function getLines( model: ModelEntity ): LineEntity[] {
+	const lines: LineEntity[] = model.lines;
+    
+	for ( const subModel of model.children ) lines.push( ...getLines( subModel ) ); 
+
+	return lines;
 } 
 
 function triangleToBufferGeometry( triangleEntity: TriangleEntity ): BufferGeometry | undefined
@@ -114,3 +144,30 @@ function quadrilateralToBufferGeometry( quadrilateralEntity: QuadrilateralEntity
 
 	return geometry;
 }
+
+function lineToBufferGeometry( lineEntity: LineEntity ): BufferGeometry | undefined
+{
+	const { p1, p2, color } = lineEntity;
+
+	if( !p1 || !p2 )
+	{
+		console.warn( "Vertex is undefined" );
+		return undefined;
+	}
+
+	const geometry = new BufferGeometry();
+	const gpbVertices: Array<modeling.IVertex> = [ p1, p2  ];
+	const vertices = verticesToFloat32Array( gpbVertices );
+	const indices = [ 0, 1, 2, 2, 3, 0, ];
+        
+	geometry.setIndex( indices );
+	geometry.setAttribute( "position", new BufferAttribute( vertices, 3, false ) );
+
+	geometry.computeVertexNormals();
+
+	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( color, 4 ), 3 ) );
+
+	return geometry;
+}
+
+
