@@ -52,6 +52,7 @@ public class ReducerHandler {
         .clearLine()
         .clearOptionalLine()
         .clearPiece()
+        .addAllTriangle(modelAsTriangles)
         .addAllLine(boundingBoxesLines)
         .build();
 
