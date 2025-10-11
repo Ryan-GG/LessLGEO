@@ -31,14 +31,10 @@ export function Model( { entity }: { entity: ModelEntity | undefined } ): ReactN
 	{
 		triangle = BufferGeometryUtils.mergeGeometries( triangleGeometries, false );
 	}
-	if( 0 < lineGeometries.length )
-	{
-		line = BufferGeometryUtils.mergeGeometries( lineGeometries, false );
-	}
 
 	return (
 		<group>
-			{/* {quad &&<mesh geometry={quad}>
+			{quad &&<mesh geometry={quad}>
 				<meshPhongMaterial vertexColors transparent side={DoubleSide}/>
 				<lineSegments>
 					<edgesGeometry args={[ quad ]} />
@@ -51,12 +47,17 @@ export function Model( { entity }: { entity: ModelEntity | undefined } ): ReactN
 					<edgesGeometry args={[ triangle ]} />
 					<lineBasicMaterial color={"black"} linewidth={1}/>
 				</lineSegments>
-			</mesh>} */}
-			{line &&
-				<lineSegments>
-					<edgesGeometry args={[ line ]} />
-					<lineBasicMaterial color={"black"} linewidth={1}/>
-				</lineSegments>
+			</mesh>}
+			{
+				lineGeometries.map( line =>
+					{
+						return (
+							<lineSegments>
+								<edgesGeometry args={[ line ]} />
+								<lineBasicMaterial color={"black"} linewidth={1}/>
+							</lineSegments>
+						);
+					})
 			}
 		</group>	
 	);	  
@@ -133,7 +134,7 @@ function quadrilateralToBufferGeometry( quadrilateralEntity: QuadrilateralEntity
 	const geometry = new BufferGeometry();
 	const gpbVertices: Array<modeling.IVertex> = [ p1, p2, p3, p4 ];
 	const vertices = verticesToFloat32Array( gpbVertices );
-	const indices = [ 0, 1, 2, 2, 3, 0, ];
+	const indices = [ 0, 1, 2, 2, 3, 0 ];
         
 	geometry.setIndex( indices );
 	geometry.setAttribute( "position", new BufferAttribute( vertices, 3, false ) );
@@ -158,14 +159,8 @@ function lineToBufferGeometry( lineEntity: LineEntity ): BufferGeometry | undefi
 	const geometry = new BufferGeometry();
 	const gpbVertices: Array<modeling.IVertex> = [ p1, p2  ];
 	const vertices = verticesToFloat32Array( gpbVertices );
-	const indices = [ 0, 1, 2, 2, 3, 0, ];
         
-	geometry.setIndex( indices );
 	geometry.setAttribute( "position", new BufferAttribute( vertices, 3, false ) );
-
-	geometry.computeVertexNormals();
-
-	geometry.setAttribute( "color", new BufferAttribute( colorToFloat32Array( color, 4 ), 3 ) );
 
 	return geometry;
 }

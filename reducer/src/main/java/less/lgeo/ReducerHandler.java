@@ -50,13 +50,18 @@ public class ReducerHandler {
         List<Triangle> triangles = splitIntoTriangles(converted);
         BoundingVolumeHierarchy bvh = new BoundingVolumeHierarchy(triangles);
         List<Line> boundingBoxesLines = bvh.getBoundingBoxes();
-        Model withBoundingBox = converted.toBuilder()
+        Model justBoundBoxes = converted.toBuilder()
+                .clearTriangle()
+                .clearQuadrilateral()
+                .clearLine()
+                .clearOptionalLine()
+                .clearPiece()
                 .addAllLine(boundingBoxesLines)
                 .build();
 
-        ModelId newBoundBoxId = modelService.insertModel(withBoundingBox);
+        ModelId newBoundBoxId = modelService.insertModel(justBoundBoxes);
         logger.info("Inserting model with bounding boxes, {}", newBoundBoxId);
-
+        logger.info("BVH: {}", bvh);
 
     }
 
