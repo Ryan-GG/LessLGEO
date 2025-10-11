@@ -15,24 +15,29 @@ import static less.lgeo.primitive.TriangleUtils.getVertices;
 @Getter
 public class BoundingVolumeHierarchy {
 
-    private static final int MAX_DEPTH = 2;
+    private static final int MAX_DEPTH = 20;
     private final Node root;
 
     public BoundingVolumeHierarchy(List<Triangle> triangles) {
         List<Vertex> vertices = triangles.stream()
                 .flatMap(triangle -> getVertices(triangle).stream())
                 .toList();
+
         BoundingBox boundingBox = new BoundingBox(vertices);
         Node root = new Node(boundingBox, triangles);
-        root.split(root, 0);
+        root.split(0);
         this.root = root;
     }
 
     public List<Line> getBoundingBoxes() {
-        return getBoundBoxOfNode(getRoot());
+        return getBoundBoxOfNode(root);
     }
 
     private List<Line> getBoundBoxOfNode(Node node) {
+        if (node == null || node.getBoundingBox() == null) {
+            return List.of();
+        }
+
         List<Line> lines = new ArrayList<>(node.getBoundingBox().getBoundingBoxAsLines());
         if (node.getChildA() != null) {
             lines.addAll(getBoundBoxOfNode(node.getChildA()));
@@ -49,33 +54,44 @@ public class BoundingVolumeHierarchy {
 
         private BoundingBox boundingBox;
         private List<Triangle> triangles = new ArrayList<>();
-        private Node childA = null;
-        private Node childB = null;
+        private Node childA;
+        private Node childB;
 
         public Node(BoundingBox boundingBox, List<Triangle> triangles) {
             this.boundingBox = boundingBox;
-            this.triangles = triangles;
+            this.triangles = new ArrayList<>(triangles);
         }
 
-        public void split(Node parent, int depth) {
-            if (depth == MAX_DEPTH) return;
+        public void split(int depth) {
+            if (depth >= MAX_DEPTH || triangles.size() <= 1) {
+                return;
+            }
 
-            parent.childA = new Node();
-            parent.childB = new Node();
+            double midX = boundingBox.getCenter().x();
+            List<Triangle> left = new ArrayList<>();
+            List<Triangle> right = new ArrayList<>();
 
-            triangles.forEach(triangle -> {
-                boolean inA = getCentroid(triangle).getX() < parent.boundingBox.getCenter().x();
-                Node child = inA ? parent.childA : parent.childB;
-                child.triangles.add(triangle);
-                if (child.boundingBox == null) {
-                    child.boundingBox = new BoundingBox(getVertices(triangle));
-                } else {
-                    child.boundingBox.growToInclude(triangle);
-                }
-            });
+            for (Triangle triangle : triangles) {
+                boolean inLeft = getCentroid(triangle).getX() < midX;
+                (inLeft ? left : right).add(triangle);
+            }
 
-            if (!parent.childA.triangles.isEmpty()) split(parent.childA, depth + 1);
-            if (!parent.childB.triangles.isEmpty()) split(parent.childB, depth + 1);
+            // No effective split, stop to prevent pointless split
+            if (left.isEmpty() || right.isEmpty()) {
+                return;
+            }
+
+            BoundingBox leftBox = new BoundingBox(left.stream()
+                    .flatMap(t -> getVertices(t).stream()).toList());
+            BoundingBox rightBox = new BoundingBox(right.stream()
+                    .flatMap(t -> getVertices(t).stream()).toList());
+
+            childA = new Node(leftBox, left);
+            childB = new Node(rightBox, right);
+
+            childA.split(depth + 1);
+            childB.split(depth + 1);
         }
+
     }
 }
