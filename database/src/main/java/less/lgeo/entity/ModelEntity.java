@@ -1,5 +1,7 @@
 package less.lgeo.entity;
 
+import static less.lgeo.primitive.ModelUtils.IDENTITY_MATRIX;
+
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
@@ -16,8 +18,10 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import java.util.ArrayList;
 import java.util.List;
+import less.lgeo.common.LineType;
 import less.lgeo.embedded.ModelId;
 import less.lgeo.primitive.Model;
+import less.lgeo.primitive.SubFileReference;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -78,6 +82,27 @@ public class ModelEntity {
   @BatchSize(size = 500)
   @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
   private List<ModelEntity> children = new ArrayList<>();
+
+  public static Model toGpb(ModelEntity modelEntity) {
+    return Model.newBuilder()
+        .addAllLine(modelEntity.getLines().stream().map(LineEntity::toGpb).toList())
+        .addAllTriangle(modelEntity.getTriangles().stream().map(TriangleEntity::toGpb).toList())
+        .addAllQuadrilateral(
+            modelEntity.getQuadrilaterals().stream().map(QuadrilateralEntity::toGpb).toList())
+        .addAllOptionalLine(
+            modelEntity.getOptionalLines().stream().map(OptionalLineEntity::toGpb).toList())
+        .addAllPiece(
+            modelEntity.getChildren().stream().map(ModelEntity::toGpbSubFileReference).toList())
+        .build();
+  }
+
+  private static SubFileReference toGpbSubFileReference(ModelEntity modelEntity) {
+    return SubFileReference.newBuilder()
+        .setType(LineType.SUB_FILE_REF)
+        .setMatrix(IDENTITY_MATRIX)
+        .setSubModel(toGpb(modelEntity))
+        .build();
+  }
 
   public @Nullable ModelId getId() {
     return id == null ? null : ModelId.of(id);
