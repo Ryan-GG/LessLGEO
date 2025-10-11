@@ -154,7 +154,8 @@ public class ModelUtils {
     List<Triangle> triangles = new ArrayList<>(model.getTriangleList());
 
     List<Triangle> quadTriangles = model.getQuadrilateralList().stream()
-        .flatMap(quadrilateral -> QuadrilateralUtils.splitIntoTriangles(quadrilateral).stream())
+        .flatMap(
+            quadrilateral -> QuadrilateralUtils.tessellateQuadrilateral(quadrilateral).stream())
         .toList();
 
     triangles.addAll(quadTriangles);

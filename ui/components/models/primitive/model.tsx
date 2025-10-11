@@ -2,7 +2,7 @@
 import { modeling } from "@/proto-bundle";
 import { ReactNode } from "react";
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
-import { BufferAttribute, BufferGeometry, DoubleSide } from "three";
+import { BufferAttribute, BufferGeometry, DoubleSide, EdgesGeometry, WireframeGeometry } from "three";
 import { verticesToFloat32Array, colorToFloat32Array } from "@/utils/common-utilities";
 import { LineEntity, ModelEntity, QuadrilateralEntity, TriangleEntity } from "@/api/schema";
 
@@ -21,43 +21,52 @@ export function Model( { entity }: { entity: ModelEntity | undefined } ): ReactN
 
 	let quad: BufferGeometry | undefined = undefined;
 	let triangle: BufferGeometry | undefined = undefined;
-	let line: BufferGeometry | undefined = undefined;
 
-	if( 0 < quadGeometries.length)
+	if( quadGeometries.length > 0 )
 	{
 		quad = BufferGeometryUtils.mergeGeometries( quadGeometries, false );
 	}
-	if( 0 < triangleGeometries.length )
+	if( triangleGeometries.length > 0 )
 	{
 		triangle = BufferGeometryUtils.mergeGeometries( triangleGeometries, false );
 	}
 
 	return (
 		<group>
-			{quad &&<mesh geometry={quad}>
-				<meshPhongMaterial vertexColors transparent side={DoubleSide}/>
-				<lineSegments>
-					<edgesGeometry args={[ quad ]} />
-					<lineBasicMaterial color={"black"} linewidth={1}/>
-				</lineSegments>
-			</mesh>	}
-			{triangle && <mesh geometry={triangle}>
-				<meshPhongMaterial vertexColors transparent side={DoubleSide}/>
-				<lineSegments>
-					<edgesGeometry args={[ triangle ]} />
-					<lineBasicMaterial color={"black"} linewidth={1}/>
-				</lineSegments>
-			</mesh>}
+			{quad && (
+				<group>
+					<mesh geometry={quad}>
+						<meshPhongMaterial vertexColors transparent side={DoubleSide} />
+					</mesh>
+
+					<lineSegments>
+						<edgesGeometry args={[ quad ]}/>
+						<lineBasicMaterial color="black" linewidth={1} />
+					</lineSegments>
+				</group>
+			)}
+			{triangle && (
+				<group>
+					<mesh geometry={triangle}>
+						<meshPhongMaterial vertexColors transparent side={DoubleSide} />
+					</mesh>
+
+					<lineSegments>
+						<wireframeGeometry args={[ triangle ]}/>
+						<lineBasicMaterial color="black" linewidth={1} />
+					</lineSegments>
+				</group>
+			)}
 			{
-				lineGeometries.map( line =>
-					{
-						return (
-							<lineSegments>
-								<edgesGeometry args={[ line ]} />
-								<lineBasicMaterial color={"black"} linewidth={1}/>
-							</lineSegments>
-						);
-					})
+				lineGeometries.map( ( line, index ) =>
+				{
+					return (
+						<lineSegments key={index}>
+							<edgesGeometry args={[ line ]}/>
+							<lineBasicMaterial color={"black"} linewidth={1}/>
+						</lineSegments>
+					);
+				} )
 			}
 		</group>	
 	);	  
@@ -106,7 +115,7 @@ function triangleToBufferGeometry( triangleEntity: TriangleEntity ): BufferGeome
 
 	const vertices = verticesToFloat32Array( gpbVertices );
 
-	const indices = [ 0, 1, 2 ];
+	const indices = [ 0, 1, 2  ];
         
 	geometry.setIndex( indices );
 	geometry.setAttribute( 'position', new BufferAttribute( vertices, 3, false ) );
@@ -164,5 +173,4 @@ function lineToBufferGeometry( lineEntity: LineEntity ): BufferGeometry | undefi
 
 	return geometry;
 }
-
 
