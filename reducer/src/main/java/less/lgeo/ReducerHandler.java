@@ -1,7 +1,7 @@
 package less.lgeo;
 
 import static less.lgeo.entity.ModelEntity.toGpb;
-import static less.lgeo.primitive.ModelUtils.splitIntoTriangles;
+import static less.lgeo.primitive.ModelUtils.tessellateModel;
 
 import java.util.List;
 import less.lgeo.embedded.ModelId;
@@ -38,15 +38,15 @@ public class ReducerHandler {
    * See {@link less.lgeo.consumer.ReducerConsumer}
    */
   public void consume(ModelId modelId) {
-    ModelEntity model = modelService.getModelById(modelId);
+    ModelEntity modelEntity = modelService.getModelById(modelId);
 
-    Model converted = toGpb(model);
-    logger.info("converted: {}", converted);
+    Model model = toGpb(modelEntity);
+    logger.info("converted: {}", model);
 
-    List<Triangle> triangles = splitIntoTriangles(converted);
-    BoundingVolumeHierarchy bvh = new BoundingVolumeHierarchy(triangles);
-    List<Line> boundingBoxesLines = bvh.getBoundingBoxes();
-    Model justBoundBoxes = converted.toBuilder()
+    List<Triangle> modelAsTriangles = tessellateModel(model);
+    BoundingVolumeHierarchy boundingVolumeHierarchy = new BoundingVolumeHierarchy(modelAsTriangles);
+    List<Line> boundingBoxesLines = boundingVolumeHierarchy.getBoundingBoxesAsLines();
+    Model justBoundBoxes = model.toBuilder()
         .clearTriangle()
         .clearQuadrilateral()
         .clearLine()
@@ -57,6 +57,5 @@ public class ReducerHandler {
 
     ModelId newBoundBoxId = modelService.insertModel(justBoundBoxes);
     logger.info("Inserting model with bounding boxes, {}", newBoundBoxId);
-    logger.info("BVH: {}", bvh);
   }
 }
