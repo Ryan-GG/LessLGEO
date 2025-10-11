@@ -61,10 +61,9 @@ export function Model( { entity }: { entity: ModelEntity | undefined } ): ReactN
 				lineGeometries.map( ( line, index ) =>
 				{
 					return (
-						<lineSegments key={index}>
-							<edgesGeometry args={[ line ]}/>
-							<lineBasicMaterial color={"black"} linewidth={1}/>
-						</lineSegments>
+						<lineSegments key={index} geometry={line}>
+							<lineBasicMaterial color="black" linewidth={1} />
+						</lineSegments >
 					);
 				} )
 			}
@@ -157,7 +156,7 @@ function quadrilateralToBufferGeometry( quadrilateralEntity: QuadrilateralEntity
 
 function lineToBufferGeometry( lineEntity: LineEntity ): BufferGeometry | undefined
 {
-	const { p1, p2, color } = lineEntity;
+	const { p1, p2 } = lineEntity;
 
 	if( !p1 || !p2 )
 	{
