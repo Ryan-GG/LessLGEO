@@ -23,9 +23,8 @@ public class BoundingVolumeHierarchy {
         .toList();
 
     BoundingBox boundingBox = new BoundingBox(vertices);
-    Node root = new Node(boundingBox, triangles);
-    root.split(0);
-    this.root = root;
+    this.root = new Node(boundingBox, triangles);
+    this.root.split();
   }
 
 
@@ -62,8 +61,12 @@ public class BoundingVolumeHierarchy {
       this.triangles = new ArrayList<>(triangles);
     }
 
-    public void split(int depth) {
-      if (depth >= MAX_DEPTH || triangles.size() <= 1) {
+    public void split() {
+      split(0);
+    }
+
+    private void split(int currentDepth) {
+      if (MAX_DEPTH <= currentDepth || triangles.size() <= 1) {
         return;
       }
 
@@ -82,15 +85,15 @@ public class BoundingVolumeHierarchy {
       }
 
       BoundingBox leftBox = new BoundingBox(left.stream()
-          .flatMap(t -> getVertices(t).stream()).toList());
+          .flatMap(triangle -> getVertices(triangle).stream()).toList());
       BoundingBox rightBox = new BoundingBox(right.stream()
-          .flatMap(t -> getVertices(t).stream()).toList());
+          .flatMap(triangle -> getVertices(triangle).stream()).toList());
 
       childA = new Node(leftBox, left);
       childB = new Node(rightBox, right);
 
-      childA.split(depth + 1);
-      childB.split(depth + 1);
+      childA.split(currentDepth + 1);
+      childB.split(currentDepth + 1);
     }
 
   }
