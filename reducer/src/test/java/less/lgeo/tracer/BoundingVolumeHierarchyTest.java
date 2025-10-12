@@ -35,15 +35,18 @@ public class BoundingVolumeHierarchyTest {
         assertEquals(new Vector3d(0, -1, 0), rootBoundingBox.getMin());
         assertEquals(new Vector3d(0.5, -0.5, 0.5), rootBoundingBox.getCenter());
         assertEquals(new Vector3d(1, 0, 1), rootBoundingBox.getMax());
+        assertEquals(new Vector3d(1, 1, 1), rootBoundingBox.getSize());
 
         BoundingBox childABoundingBox = root.getChildA().getBoundingBox();
         assertEquals(new Vector3d(0, -1, 0), childABoundingBox.getMin());
         assertEquals(new Vector3d(0.5, -0.5, 0.5), childABoundingBox.getCenter());
         assertEquals(new Vector3d(1, 0, 1), childABoundingBox.getMax());
+        assertEquals(new Vector3d(1, 1, 1), childABoundingBox.getSize());
 
         BoundingBox childBBoundingBox = root.getChildB().getBoundingBox();
         assertEquals(new Vector3d(0, -1, 0), childBBoundingBox.getMin());
         assertEquals(new Vector3d(0.5, -0.5, 0.5), childBBoundingBox.getCenter());
         assertEquals(new Vector3d(1, 0, 1), childBBoundingBox.getMax());
+        assertEquals(new Vector3d(1, 1, 1), childBBoundingBox.getSize());
     }
 }

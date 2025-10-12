@@ -68,6 +68,7 @@ public class BoundingBox {
 
     private final Vector3d min = new Vector3d(Double.POSITIVE_INFINITY);
     private final Vector3d max = new Vector3d(Double.NEGATIVE_INFINITY);
+    private Vector3d size = new Vector3d(Double.POSITIVE_INFINITY);
 
     public BoundingBox(List<Vertex> vertices) {
         vertices.forEach(this::growToInclude);
@@ -112,6 +113,7 @@ public class BoundingBox {
     public void growToInclude(Vector3d point) {
         min.min(point);
         max.max(point);
+        size = new Vector3d(Math.abs(max.x - min.x), Math.abs(max.y - min.y), Math.abs(max.z - min.z));
     }
 
     public void growToInclude(Triangle triangle) {
@@ -137,6 +139,7 @@ public class BoundingBox {
         Vector3d max = new Vector3d(calculateG());
         return min.add(max).mul(0.5);
     }
+
 
     public List<Line> getBoundingBoxAsLines() {
         return Stream.of(
