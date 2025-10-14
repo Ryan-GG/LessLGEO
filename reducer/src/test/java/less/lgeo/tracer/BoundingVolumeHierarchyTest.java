@@ -9,6 +9,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static less.lgeo.common.VertexUtils.toVertex;
+import static less.lgeo.primitive.TriangleUtils.toTriangle;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -20,7 +22,7 @@ public class BoundingVolumeHierarchyTest {
      * (i.e. - cube made oof triangles )
      */
     @Test
-    void testBVHWithSharedPoints() {
+    void equalSharedPoints() {
 
         Model cube = ModelTestUtils.cube().build();
         List<Triangle> triangles = ModelUtils.tessellateModel(cube);
@@ -48,5 +50,104 @@ public class BoundingVolumeHierarchyTest {
         assertEquals(new Vector3d(0.5, -0.5, 0.5), childBBoundingBox.getCenter());
         assertEquals(new Vector3d(1, 0, 1), childBBoundingBox.getMax());
         assertEquals(new Vector3d(1, 1, 1), childBBoundingBox.getSize());
+    }
+
+    @Test
+    void splitOnXAxis() {
+        Triangle negative = toTriangle(-1,
+                toVertex(0, 0, 0),
+                toVertex(0, 0, 1),
+                toVertex(-1, 0, 0));
+
+        Triangle positive = toTriangle(-1,
+                toVertex(0, 0, 0),
+                toVertex(0, 0, 1),
+                toVertex(1, 0, 0));
+
+        List<Triangle> triangles = List.of(negative, positive);
+
+        BoundingVolumeHierarchy bvh = new BoundingVolumeHierarchy(triangles);
+
+        BoundingVolumeHierarchy.Node root = bvh.getRoot();
+        BoundingBox rootBoundingBox = root.getBoundingBox();
+        assertEquals(new Vector3d(-1, 0, 0), rootBoundingBox.getMin());
+        assertEquals(new Vector3d(0, 0, 0.5), rootBoundingBox.getCenter());
+        assertEquals(new Vector3d(1, 0, 1), rootBoundingBox.getMax());
+
+        BoundingBox childABox = root.getChildA().getBoundingBox();
+        assertEquals(new Vector3d(-1, 0, 0), childABox.getMin());
+        assertEquals(new Vector3d(-0.5, 0, 0.5), childABox.getCenter());
+        assertEquals(new Vector3d(0, 0, 1), childABox.getMax());
+
+        BoundingBox childBBox = root.getChildB().getBoundingBox();
+        assertEquals(new Vector3d(0, 0, 0), childBBox.getMin());
+        assertEquals(new Vector3d(0.5, 0, 0.5), childBBox.getCenter());
+        assertEquals(new Vector3d(1, 0, 1), childBBox.getMax());
+    }
+
+    @Test
+    void splitOnYAxis() {
+        Triangle negative = toTriangle(-1,
+                toVertex(0, 0, 0),
+                toVertex(0, -1, 0),
+                toVertex(1, 0, 0));
+
+        Triangle positive = toTriangle(-1,
+                toVertex(0, 0, 0),
+                toVertex(0, 1, 0),
+                toVertex(1, 0, 0));
+
+        List<Triangle> triangles = List.of(negative, positive);
+
+        BoundingVolumeHierarchy bvh = new BoundingVolumeHierarchy(triangles);
+
+        BoundingVolumeHierarchy.Node root = bvh.getRoot();
+        BoundingBox rootBoundingBox = root.getBoundingBox();
+        assertEquals(new Vector3d(0, -1, 0), rootBoundingBox.getMin());
+        assertEquals(new Vector3d(0.5, 0, 0), rootBoundingBox.getCenter());
+        assertEquals(new Vector3d(1, 1, 0), rootBoundingBox.getMax());
+
+        BoundingBox childABox = root.getChildA().getBoundingBox();
+        assertEquals(new Vector3d(0, -1, 0), childABox.getMin());
+        assertEquals(new Vector3d(0.5, -0.5, 0), childABox.getCenter());
+        assertEquals(new Vector3d(1, 0, 0), childABox.getMax());
+
+        BoundingBox childBBox = root.getChildB().getBoundingBox();
+        assertEquals(new Vector3d(0, 0, 0), childBBox.getMin());
+        assertEquals(new Vector3d(0.5, 0.5, 0), childBBox.getCenter());
+        assertEquals(new Vector3d(1, 1, 0), childBBox.getMax());
+    }
+
+    @Test
+    void splitOnZAxis() {
+        Triangle negative = toTriangle(-1,
+                toVertex(0, 0, -1),
+                toVertex(0, 0, 0),
+                toVertex(1, 0, 0));
+
+        Triangle positive = toTriangle(-1,
+                toVertex(0, 0, 1),
+                toVertex(0, 0, 0),
+                toVertex(1, 0, 0));
+
+        List<Triangle> triangles = List.of(negative, positive);
+
+        BoundingVolumeHierarchy bvh = new BoundingVolumeHierarchy(triangles);
+
+        BoundingVolumeHierarchy.Node root = bvh.getRoot();
+        BoundingBox rootBoundingBox = root.getBoundingBox();
+        assertEquals(new Vector3d(0, 0, -1), rootBoundingBox.getMin());
+        assertEquals(new Vector3d(0.5, 0, 0), rootBoundingBox.getCenter());
+        assertEquals(new Vector3d(1, 0, 1), rootBoundingBox.getMax());
+
+        BoundingBox childABox = root.getChildA().getBoundingBox();
+        assertEquals(new Vector3d(0, 0, -1), childABox.getMin());
+        assertEquals(new Vector3d(0.5, 0, -0.5), childABox.getCenter());
+        assertEquals(new Vector3d(1, 0, 0), childABox.getMax());
+
+        BoundingBox childBBox = root.getChildB().getBoundingBox();
+        assertEquals(new Vector3d(0, 0, 0), childBBox.getMin());
+        assertEquals(new Vector3d(0.5, 0, 0.5), childBBox.getCenter());
+        assertEquals(new Vector3d(1, 0, 1), childBBox.getMax());
     }
 }
