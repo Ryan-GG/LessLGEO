@@ -13,7 +13,6 @@ import lombok.Data;
 public class SubFileReference {
 
   private final LineType type = LineType.SUB_FILE_REF;
-  private final Long id = null;
   private final int colorId;
   private final Matrix matrix;
   private final Model subModel;

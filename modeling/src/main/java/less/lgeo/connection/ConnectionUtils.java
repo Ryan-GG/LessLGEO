@@ -39,8 +39,9 @@ public class ConnectionUtils {
 
   /**
    * @param partConnection connection model
-   * @return Gets the stud vertices for a part connection. Creates points by the rotation and
-   * translation of the connection matrix
+   * @return Gets the stud vertices for a part connection. Creates points by the
+   *         rotation and
+   *         translation of the connection matrix
    */
   private static Stream<Vector3> getGroupStudVertices(PartConnection partConnection) {
     GroupStud studGeometry = partConnection.getGroupStud();
@@ -80,7 +81,6 @@ public class ConnectionUtils {
     return connectionVertices;
   }
 
-
   private static Vector3 transformConnectionVector3(double xOffset, double yOffset, double zOffset,
       Matrix partconnectionMatrix) {
 
@@ -117,7 +117,7 @@ public class ConnectionUtils {
           CommonOps_DDF4.mult(matrixToDMatrix(transformationMatrix),
               matrixToDMatrix(partConnection.getMatrix()),
               result);
-          Matrix resulted = dMatrixToGpb(result);
+          Matrix resulted = dMatrixToMatrix(result);
 
           return partConnection.toBuilder()
               .setMatrix(resulted)

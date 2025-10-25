@@ -28,7 +28,6 @@ public class ModelUtils {
       .setScale(1)
       .build();
 
-
   /**
    * @param model gpb {@link Model}
    * @return All {@link Quadrilateral} from the Parent Model
@@ -53,9 +52,8 @@ public class ModelUtils {
 
     Set<Connection> connections = new HashSet<>(
         model.getPieceList().stream().map(
-                SubFileReference::getPieceConnection)
-            .toList()
-    );
+            SubFileReference::getPieceConnection)
+            .toList());
 
     model.getPieceList()
         .forEach(
@@ -66,8 +64,7 @@ public class ModelUtils {
   }
 
   public static Model transformModel(Model model) {
-    return transformModel(model, Optional.empty(), Optional.empty()
-    );
+    return transformModel(model, Optional.empty(), Optional.empty());
   }
 
   private static Model transformModel(
@@ -75,61 +72,54 @@ public class ModelUtils {
       Optional<Matrix> transformationMatrix,
       Optional<Integer> parentColor) {
 
-    List<Line> transformedLines =
-        model.getLineList().stream()
-            .map(line -> transform(line, transformationMatrix, parentColor))
-            .toList();
+    List<Line> transformedLines = model.getLineList().stream()
+        .map(line -> transform(line, transformationMatrix, parentColor))
+        .toList();
 
-    List<Triangle> transformedTriangles =
-        model.getTriangleList().stream()
-            .map(triangle -> transform(triangle, transformationMatrix, parentColor))
-            .toList();
+    List<Triangle> transformedTriangles = model.getTriangleList().stream()
+        .map(triangle -> transform(triangle, transformationMatrix, parentColor))
+        .toList();
 
-    List<Quadrilateral> transformedQuadrilaterals =
-        model.getQuadrilateralList().stream()
-            .map(quadrilateral -> transform(quadrilateral, transformationMatrix,
-                parentColor))
-            .toList();
+    List<Quadrilateral> transformedQuadrilaterals = model.getQuadrilateralList().stream()
+        .map(quadrilateral -> transform(quadrilateral, transformationMatrix,
+            parentColor))
+        .toList();
 
-    List<OptionalLine> transformedOptionalLines =
-        model.getOptionalLineList().stream()
-            .map(optionalLine -> transform(optionalLine, transformationMatrix,
-                parentColor))
-            .toList();
+    List<OptionalLine> transformedOptionalLines = model.getOptionalLineList().stream()
+        .map(optionalLine -> transform(optionalLine, transformationMatrix,
+            parentColor))
+        .toList();
 
-    List<SubFileReference> transformedPieces =
-        model.getPieceList()
-            .stream()
-            .map(subFileReference -> {
-              // Prepare output matrix
-              Matrix resulted = subFileReference.getMatrix();
+    List<SubFileReference> transformedPieces = model.getPieceList()
+        .stream()
+        .map(subFileReference -> {
+          // Prepare output matrix
+          Matrix resulted = subFileReference.getMatrix();
 
-              if (transformationMatrix.isPresent()) {
-                DMatrix4x4 result = new DMatrix4x4();
-                CommonOps_DDF4.mult(matrixToDMatrix(transformationMatrix.get()),
-                    matrixToDMatrix(subFileReference.getMatrix()),
-                    result);
-                resulted = dMatrixToGpb(result);
-              }
+          if (transformationMatrix.isPresent()) {
+            DMatrix4x4 result = new DMatrix4x4();
+            CommonOps_DDF4.mult(matrixToDMatrix(transformationMatrix.get()),
+                matrixToDMatrix(subFileReference.getMatrix()),
+                result);
+            resulted = dMatrixToMatrix(result);
+          }
 
-              int subPartColorId = getColor(parentColor, subFileReference.getColorId());
+          int subPartColorId = getColor(parentColor, subFileReference.getColorId());
 
-              return SubFileReference.newBuilder()
-                  .setFileName(subFileReference.getFileName())
-                  .setPieceConnection(
-                      transformConnection(subFileReference.getPieceConnection(), resulted))
-                  .setColorId(subPartColorId)
-                  .setMatrix(IDENTITY_MATRIX)
-                  .setSubModel(
-                      transformModel(
-                          subFileReference.getSubModel(),
-                          Optional.of(resulted),
-                          Optional.of(subPartColorId)
-                      )
-                  )
-                  .build();
-            })
-            .toList();
+          return SubFileReference.newBuilder()
+              .setFileName(subFileReference.getFileName())
+              .setPieceConnection(
+                  transformConnection(subFileReference.getPieceConnection(), resulted))
+              .setColorId(subPartColorId)
+              .setMatrix(IDENTITY_MATRIX)
+              .setSubModel(
+                  transformModel(
+                      subFileReference.getSubModel(),
+                      Optional.of(resulted),
+                      Optional.of(subPartColorId)))
+              .build();
+        })
+        .toList();
 
     return Model.newBuilder()
         .addAllComment(model.getCommentList())
@@ -146,8 +136,9 @@ public class ModelUtils {
    * Recursively tessellates a given LDraw Model
    *
    * @param model LDraw Model
-   * @return a List triangles that comprise the passed in Model, Lines/Optional Lines are ignored as
-   * they cannot form a triangle
+   * @return a List triangles that comprise the passed in Model, Lines/Optional
+   *         Lines are ignored as
+   *         they cannot form a triangle
    */
   public static List<Triangle> tessellateModel(Model model) {
 
@@ -155,7 +146,7 @@ public class ModelUtils {
 
     List<Triangle> quadTriangles = model.getQuadrilateralList().stream()
         .flatMap(
-            quadrilateral -> QuadrilateralUtils.tessellateQuadrilateral(quadrilateral).stream())
+            quadrilateral -> QuadrilateralUtils.tessellate(quadrilateral).stream())
         .toList();
 
     triangles.addAll(quadTriangles);
