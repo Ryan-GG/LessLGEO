@@ -15,7 +15,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import less.lgeo.common.LineType;
-import less.lgeo.embedded.VertexEmbeddable;
+import less.lgeo.embedded.Vector3Embeddable;
 import less.lgeo.primitive.Triangle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -52,7 +52,7 @@ public class TriangleEntity {
       @AttributeOverride(name = "y", column = @Column(name = "p1_y")),
       @AttributeOverride(name = "z", column = @Column(name = "p1_z"))
   })
-  private VertexEmbeddable p1;
+  private Vector3Embeddable p1;
 
   @Embedded
   @AttributeOverrides({
@@ -60,7 +60,7 @@ public class TriangleEntity {
       @AttributeOverride(name = "y", column = @Column(name = "p2_y")),
       @AttributeOverride(name = "z", column = @Column(name = "p2_z"))
   })
-  private VertexEmbeddable p2;
+  private Vector3Embeddable p2;
 
   @Embedded
   @AttributeOverrides({
@@ -68,16 +68,16 @@ public class TriangleEntity {
       @AttributeOverride(name = "y", column = @Column(name = "p3_y")),
       @AttributeOverride(name = "z", column = @Column(name = "p3_z"))
   })
-  private VertexEmbeddable p3;
+  private Vector3Embeddable p3;
 
 
   public static Triangle toGpb(TriangleEntity triangleEntity) {
     return Triangle.newBuilder()
         .setType(LineType.TRIANGLE)
         .setColorId(triangleEntity.getColor().getId())
-        .setP1(VertexEmbeddable.toGpb(triangleEntity.getP1()))
-        .setP2(VertexEmbeddable.toGpb(triangleEntity.getP2()))
-        .setP3(VertexEmbeddable.toGpb(triangleEntity.getP3()))
+        .setP1(Vector3Embeddable.toGpb(triangleEntity.getP1()))
+        .setP2(Vector3Embeddable.toGpb(triangleEntity.getP2()))
+        .setP3(Vector3Embeddable.toGpb(triangleEntity.getP3()))
         .build();
   }
 

@@ -15,7 +15,7 @@ public class CommonUtilsTest {
         .setC( 9 ).setF( 10 ).setI( 11 ).setZ( 12 )
         .setScale( 1.0 )
         .build();
-    DMatrix4x4 dMatrixFromGpb = CommonUtils.gpbToDMatrix( m );
+    DMatrix4x4 dMatrixFromGpb = CommonUtils.matrixToDMatrix( m );
     Matrix gpbFromDMatrix = CommonUtils.dMatrixToGpb( dMatrixFromGpb );
     assertEquals( m.getA(), gpbFromDMatrix.getA() );
     assertEquals( m.getB(), gpbFromDMatrix.getB() );
@@ -33,37 +33,37 @@ public class CommonUtilsTest {
   }
 
   @Test
-  void testVertexTransformIdentity() {
+  void testVector3TransformIdentity() {
     Matrix identity = Matrix.newBuilder()
         .setA( 1 ).setD( 0 ).setG( 0 ).setX( 0 )
         .setB( 0 ).setE( 1 ).setH( 0 ).setY( 0 )
         .setC( 0 ).setF( 0 ).setI( 1 ).setZ( 0 )
         .setScale( 1.0 )
         .build();
-    Vertex vertex = Vertex.newBuilder().setX( 1 ).setY( 2 ).setZ( 3 ).build();
-    Vertex result = VertexUtils.transform( vertex, identity );
+    Vector3 vertex = Vector3.newBuilder().setX( 1 ).setY( 2 ).setZ( 3 ).build();
+    Vector3 result = Vector3Utils.transform( vertex, identity );
     assertEquals( 1, result.getX() );
     assertEquals( 2, result.getY() );
     assertEquals( 3, result.getZ() );
   }
 
   @Test
-  void testVertexTransformTranslation() {
+  void testVector3TransformTranslation() {
     Matrix translation = Matrix.newBuilder()
         .setA( 1 ).setD( 0 ).setG( 0 ).setX( 5 )
         .setB( 0 ).setE( 1 ).setH( 0 ).setY( -3 )
         .setC( 0 ).setF( 0 ).setI( 1 ).setZ( 2 )
         .setScale( 1.0 )
         .build();
-    Vertex transform = Vertex.newBuilder().setX( 1 ).setY( 2 ).setZ( 3 ).build();
-    Vertex result = VertexUtils.transform( transform, translation );
+    Vector3 transform = Vector3.newBuilder().setX( 1 ).setY( 2 ).setZ( 3 ).build();
+    Vector3 result = Vector3Utils.transform( transform, translation );
     assertEquals( 6, result.getX() );
     assertEquals( -1, result.getY() );
     assertEquals( 5, result.getZ() );
   }
 
   @Test
-  void testVertexTransformRotationZ45() {
+  void testVector3TransformRotationZ45() {
     double sqrt2over2 = Math.sqrt( 2 ) / 2.0;
     Matrix rotZ45 = Matrix.newBuilder()
         .setA( sqrt2over2 ).setD( sqrt2over2 ).setG( 0 ).setX( 0 )
@@ -71,8 +71,8 @@ public class CommonUtilsTest {
         .setC( 0 ).setF( 0 ).setI( 1 ).setZ( 0 )
         .setScale( 1.0 )
         .build();
-    Vertex transform = Vertex.newBuilder().setX( 1 ).setY( 0 ).setZ( 0 ).build();
-    Vertex result = VertexUtils.transform( transform, rotZ45 );
+    Vector3 transform = Vector3.newBuilder().setX( 1 ).setY( 0 ).setZ( 0 ).build();
+    Vector3 result = Vector3Utils.transform( transform, rotZ45 );
     assertEquals( sqrt2over2, result.getX() );
     assertEquals( sqrt2over2, result.getY() );
     assertEquals( 0, result.getZ() );

@@ -1,6 +1,6 @@
 package less.lgeo.test;
 
-import less.lgeo.common.Vertex;
+import less.lgeo.common.Vector3;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.Model.Builder;
 import less.lgeo.primitive.Quadrilateral;
@@ -8,7 +8,7 @@ import less.lgeo.primitive.Triangle;
 
 import java.util.List;
 
-import static less.lgeo.common.VertexUtils.toVertex;
+import static less.lgeo.common.Vector3Utils.toVector3;
 import static less.lgeo.primitive.QuadrilateralUtils.toQuadrilateral;
 import static less.lgeo.primitive.TriangleUtils.toTriangle;
 
@@ -30,15 +30,15 @@ public class ModelTestUtils {
      */
     public static Model.Builder cube() {
 
-        Vertex a = toVertex(0, -1, 0);
-        Vertex b = toVertex(1, -1, 0);
-        Vertex c = toVertex(1, -1, 1);
-        Vertex d = toVertex(0, -1, 1);
+        Vector3 a = toVector3(0, -1, 0);
+        Vector3 b = toVector3(1, -1, 0);
+        Vector3 c = toVector3(1, -1, 1);
+        Vector3 d = toVector3(0, -1, 1);
 
-        Vertex e = toVertex(0, 0, 0);
-        Vertex f = toVertex(1, 0, 0);
-        Vertex g = toVertex(1, 0, 1);
-        Vertex h = toVertex(0, 0, 1);
+        Vector3 e = toVector3(0, 0, 0);
+        Vector3 f = toVector3(1, 0, 0);
+        Vector3 g = toVector3(1, 0, 1);
+        Vector3 h = toVector3(0, 0, 1);
 
         Quadrilateral top = toQuadrilateral(UNKNOWN_COLOR_ID, a, b, c, d);
         Quadrilateral bottom = toQuadrilateral(UNKNOWN_COLOR_ID, e, f, g, h);
@@ -57,11 +57,11 @@ public class ModelTestUtils {
 
     public static Model.Builder pyramid() {
 
-        Vertex a = toVertex(0, 0, 0);
-        Vertex b = toVertex(0, 0, 1);
-        Vertex c = toVertex(1, 0, 1);
-        Vertex d = toVertex(1, 0, 0);
-        Vertex e = toVertex(0.5, -1, 0.5);
+        Vector3 a = toVector3(0, 0, 0);
+        Vector3 b = toVector3(0, 0, 1);
+        Vector3 c = toVector3(1, 0, 1);
+        Vector3 d = toVector3(1, 0, 0);
+        Vector3 e = toVector3(0.5, -1, 0.5);
 
         Quadrilateral bottom = toQuadrilateral(UNKNOWN_COLOR_ID, a, b, c, d);
         Triangle front = toTriangle(UNKNOWN_COLOR_ID, a, e, d);

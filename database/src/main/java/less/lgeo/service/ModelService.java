@@ -1,7 +1,7 @@
 package less.lgeo.service;
 
 import less.lgeo.embedded.ModelId;
-import less.lgeo.embedded.VertexEmbeddable;
+import less.lgeo.embedded.Vector3Embeddable;
 import less.lgeo.entity.*;
 import less.lgeo.primitive.*;
 import less.lgeo.repository.ColorRepository;
@@ -73,8 +73,8 @@ public class ModelService {
         LineEntity lineEntity = new LineEntity();
         lineEntity.setModel(parentModelEntity);
         lineEntity.setColor(colorEntityMap.get(gpb.getColorId()));
-        lineEntity.setP1(new VertexEmbeddable(gpb.getP1()));
-        lineEntity.setP2(new VertexEmbeddable(gpb.getP2()));
+        lineEntity.setP1(new Vector3Embeddable(gpb.getP1()));
+        lineEntity.setP2(new Vector3Embeddable(gpb.getP2()));
         return lineEntity;
     }
 
@@ -84,10 +84,10 @@ public class ModelService {
         OptionalLineEntity optionalLineEntity = new OptionalLineEntity();
         optionalLineEntity.setModel(parentModelEntity);
         optionalLineEntity.setColor(colorEntityMap.get(gpb.getColorId()));
-        optionalLineEntity.setP1(new VertexEmbeddable(gpb.getP1()));
-        optionalLineEntity.setP2(new VertexEmbeddable(gpb.getP2()));
-        optionalLineEntity.setP3(new VertexEmbeddable(gpb.getP3()));
-        optionalLineEntity.setP4(new VertexEmbeddable(gpb.getP4()));
+        optionalLineEntity.setP1(new Vector3Embeddable(gpb.getP1()));
+        optionalLineEntity.setP2(new Vector3Embeddable(gpb.getP2()));
+        optionalLineEntity.setP3(new Vector3Embeddable(gpb.getP3()));
+        optionalLineEntity.setP4(new Vector3Embeddable(gpb.getP4()));
         return optionalLineEntity;
     }
 
@@ -96,10 +96,10 @@ public class ModelService {
         QuadrilateralEntity quadrilateralEntity = new QuadrilateralEntity();
         quadrilateralEntity.setModel(parentModelEntity);
         quadrilateralEntity.setColor(colorEntityMap.get(gpb.getColorId()));
-        quadrilateralEntity.setP1(new VertexEmbeddable(gpb.getP1()));
-        quadrilateralEntity.setP2(new VertexEmbeddable(gpb.getP2()));
-        quadrilateralEntity.setP3(new VertexEmbeddable(gpb.getP3()));
-        quadrilateralEntity.setP4(new VertexEmbeddable(gpb.getP4()));
+        quadrilateralEntity.setP1(new Vector3Embeddable(gpb.getP1()));
+        quadrilateralEntity.setP2(new Vector3Embeddable(gpb.getP2()));
+        quadrilateralEntity.setP3(new Vector3Embeddable(gpb.getP3()));
+        quadrilateralEntity.setP4(new Vector3Embeddable(gpb.getP4()));
         return quadrilateralEntity;
     }
 
@@ -109,9 +109,9 @@ public class ModelService {
         TriangleEntity triangleEntity = new TriangleEntity();
         triangleEntity.setModel(parentModelEntity);
         triangleEntity.setColor(colorEntityMap.get(gpb.getColorId()));
-        triangleEntity.setP1(new VertexEmbeddable(gpb.getP1()));
-        triangleEntity.setP2(new VertexEmbeddable(gpb.getP2()));
-        triangleEntity.setP3(new VertexEmbeddable(gpb.getP3()));
+        triangleEntity.setP1(new Vector3Embeddable(gpb.getP1()));
+        triangleEntity.setP2(new Vector3Embeddable(gpb.getP2()));
+        triangleEntity.setP3(new Vector3Embeddable(gpb.getP3()));
         return triangleEntity;
     }
 

@@ -1,6 +1,6 @@
 package less.lgeo.tracer;
 
-import less.lgeo.common.Vertex;
+import less.lgeo.common.Vector3;
 import less.lgeo.primitive.Line;
 import less.lgeo.primitive.Triangle;
 import lombok.Getter;
@@ -10,7 +10,7 @@ import org.joml.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
 
-import static less.lgeo.common.VertexUtils.toVector3d;
+import static less.lgeo.common.Vector3Utils.toVector3d;
 import static less.lgeo.primitive.TriangleUtils.getCentroid;
 import static less.lgeo.primitive.TriangleUtils.getVertices;
 
@@ -21,7 +21,7 @@ public class BoundingVolumeHierarchy {
     private final Node root;
 
     public BoundingVolumeHierarchy(List<Triangle> triangles) {
-        List<Vertex> vertices = triangles.stream()
+        List<Vector3> vertices = triangles.stream()
                 .flatMap(triangle -> getVertices(triangle).stream())
                 .toList();
 

@@ -15,7 +15,7 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.SequenceGenerator;
 import jakarta.persistence.Table;
 import less.lgeo.common.LineType;
-import less.lgeo.embedded.VertexEmbeddable;
+import less.lgeo.embedded.Vector3Embeddable;
 import less.lgeo.primitive.Line;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -52,7 +52,7 @@ public class LineEntity {
       @AttributeOverride(name = "y", column = @Column(name = "p1_y")),
       @AttributeOverride(name = "z", column = @Column(name = "p1_z"))
   })
-  private VertexEmbeddable p1;
+  private Vector3Embeddable p1;
 
   @Embedded
   @AttributeOverrides({
@@ -60,15 +60,15 @@ public class LineEntity {
       @AttributeOverride(name = "y", column = @Column(name = "p2_y")),
       @AttributeOverride(name = "z", column = @Column(name = "p2_z"))
   })
-  private VertexEmbeddable p2;
+  private Vector3Embeddable p2;
 
 
   public static Line toGpb(LineEntity lineEntity) {
     return Line.newBuilder()
         .setType(LineType.LINE)
         .setColorId(lineEntity.getColor().getId())
-        .setP1(VertexEmbeddable.toGpb(lineEntity.getP1()))
-        .setP2(VertexEmbeddable.toGpb(lineEntity.getP2()))
+        .setP1(Vector3Embeddable.toGpb(lineEntity.getP1()))
+        .setP2(Vector3Embeddable.toGpb(lineEntity.getP2()))
         .build();
   }
 }

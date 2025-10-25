@@ -1,9 +1,9 @@
 package less.lgeo.embedded;
 
-import static less.lgeo.common.VertexUtils.toVertex;
+import static less.lgeo.common.Vector3Utils.toVector3;
 
 import jakarta.persistence.Embeddable;
-import less.lgeo.common.Vertex;
+import less.lgeo.common.Vector3;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,21 +12,21 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
-public class VertexEmbeddable {
+public class Vector3Embeddable {
 
   private double x;
   private double y;
   private double z;
 
-  public VertexEmbeddable(Vertex vertex) {
+  public Vector3Embeddable(Vector3 vertex) {
     this.x = vertex.getX();
     this.y = vertex.getY();
     this.z = vertex.getZ();
   }
 
 
-  public static Vertex toGpb(VertexEmbeddable vertexEmbeddable) {
-    return toVertex(vertexEmbeddable.getX(), vertexEmbeddable.getY(), vertexEmbeddable.getZ());
+  public static Vector3 toGpb(Vector3Embeddable vertexEmbeddable) {
+    return toVector3(vertexEmbeddable.getX(), vertexEmbeddable.getY(), vertexEmbeddable.getZ());
   }
 
 }

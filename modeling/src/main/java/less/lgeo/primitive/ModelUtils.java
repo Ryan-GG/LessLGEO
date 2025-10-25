@@ -77,23 +77,23 @@ public class ModelUtils {
 
     List<Line> transformedLines =
         model.getLineList().stream()
-            .map(line -> transformLine(line, transformationMatrix, parentColor))
+            .map(line -> transform(line, transformationMatrix, parentColor))
             .toList();
 
     List<Triangle> transformedTriangles =
         model.getTriangleList().stream()
-            .map(triangle -> transformTriangle(triangle, transformationMatrix, parentColor))
+            .map(triangle -> transform(triangle, transformationMatrix, parentColor))
             .toList();
 
     List<Quadrilateral> transformedQuadrilaterals =
         model.getQuadrilateralList().stream()
-            .map(quadrilateral -> transformQuadrilateral(quadrilateral, transformationMatrix,
+            .map(quadrilateral -> transform(quadrilateral, transformationMatrix,
                 parentColor))
             .toList();
 
     List<OptionalLine> transformedOptionalLines =
         model.getOptionalLineList().stream()
-            .map(optionalLine -> transformOptionalLine(optionalLine, transformationMatrix,
+            .map(optionalLine -> transform(optionalLine, transformationMatrix,
                 parentColor))
             .toList();
 
@@ -106,8 +106,8 @@ public class ModelUtils {
 
               if (transformationMatrix.isPresent()) {
                 DMatrix4x4 result = new DMatrix4x4();
-                CommonOps_DDF4.mult(gpbToDMatrix(transformationMatrix.get()),
-                    gpbToDMatrix(subFileReference.getMatrix()),
+                CommonOps_DDF4.mult(matrixToDMatrix(transformationMatrix.get()),
+                    matrixToDMatrix(subFileReference.getMatrix()),
                     result);
                 resulted = dMatrixToGpb(result);
               }

@@ -1,6 +1,6 @@
 package less.lgeo.tracer;
 
-import less.lgeo.common.Vertex;
+import less.lgeo.common.Vector3;
 import less.lgeo.primitive.Line;
 import less.lgeo.primitive.Triangle;
 import lombok.Getter;
@@ -10,8 +10,8 @@ import org.joml.Vector3d;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static less.lgeo.common.VertexUtils.toVector3d;
-import static less.lgeo.common.VertexUtils.toVertex;
+import static less.lgeo.common.Vector3Utils.toVector3d;
+import static less.lgeo.common.Vector3Utils.toVector3;
 import static less.lgeo.primitive.LineUtils.toLine;
 import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
 
@@ -26,7 +26,7 @@ import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
  *   <li>+Z → forward (toward H)</li>
  * </ul>
  * <p>
- * Vertex layout:
+ * Vector3 layout:
  *
  * <pre>
  *            (-Y up)
@@ -70,7 +70,7 @@ public class BoundingBox {
     private final Vector3d max = new Vector3d(Double.NEGATIVE_INFINITY);
     private Vector3d size = new Vector3d(Double.POSITIVE_INFINITY);
 
-    public BoundingBox(List<Vertex> vertices) {
+    public BoundingBox(List<Vector3> vertices) {
         vertices.forEach(this::growToInclude);
     }
 
@@ -106,7 +106,7 @@ public class BoundingBox {
         return new Vector3d(min.x(), max.y, max.z);
     }
 
-    public void growToInclude(Vertex point) {
+    public void growToInclude(Vector3 point) {
         growToInclude(toVector3d(point));
     }
 
@@ -130,7 +130,7 @@ public class BoundingBox {
         return inXBounds && inYBounds && inZBounds;
     }
 
-    public boolean includesPoint(Vertex point) {
+    public boolean includesPoint(Vector3 point) {
         return includesPoint(toVector3d(point));
     }
 
@@ -157,10 +157,10 @@ public class BoundingBox {
         Vector3d c = calculateC();
         Vector3d d = calculateD();
         return List.of(
-                toLine(UNKNOWN_COLOR_ID, toVertex(a), toVertex(b)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(b), toVertex(c)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(c), toVertex(d)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(d), toVertex(a))
+                toLine(UNKNOWN_COLOR_ID, toVector3(a), toVector3(b)),
+                toLine(UNKNOWN_COLOR_ID, toVector3(b), toVector3(c)),
+                toLine(UNKNOWN_COLOR_ID, toVector3(c), toVector3(d)),
+                toLine(UNKNOWN_COLOR_ID, toVector3(d), toVector3(a))
         );
     }
 
@@ -170,10 +170,10 @@ public class BoundingBox {
         Vector3d g = calculateG();
         Vector3d h = calculateH();
         return List.of(
-                toLine(UNKNOWN_COLOR_ID, toVertex(e), toVertex(f)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(f), toVertex(g)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(g), toVertex(h)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(h), toVertex(e))
+                toLine(UNKNOWN_COLOR_ID, toVector3(e), toVector3(f)),
+                toLine(UNKNOWN_COLOR_ID, toVector3(f), toVector3(g)),
+                toLine(UNKNOWN_COLOR_ID, toVector3(g), toVector3(h)),
+                toLine(UNKNOWN_COLOR_ID, toVector3(h), toVector3(e))
         );
     }
 
@@ -195,10 +195,10 @@ public class BoundingBox {
         Vector3d h = calculateH();
 
         return List.of(
-                toLine(UNKNOWN_COLOR_ID, toVertex(a), toVertex(e)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(b), toVertex(f)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(c), toVertex(g)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(d), toVertex(h))
+                toLine(UNKNOWN_COLOR_ID, toVector3(a), toVector3(e)),
+                toLine(UNKNOWN_COLOR_ID, toVector3(b), toVector3(f)),
+                toLine(UNKNOWN_COLOR_ID, toVector3(c), toVector3(g)),
+                toLine(UNKNOWN_COLOR_ID, toVector3(d), toVector3(h))
         );
     }
 

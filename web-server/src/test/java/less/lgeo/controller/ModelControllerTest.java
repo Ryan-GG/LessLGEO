@@ -3,7 +3,7 @@ package less.lgeo.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.protobuf.util.JsonFormat;
 import less.lgeo.embedded.ModelId;
-import less.lgeo.embedded.VertexEmbeddable;
+import less.lgeo.embedded.Vector3Embeddable;
 import less.lgeo.entity.ColorEntity;
 import less.lgeo.entity.LineEntity;
 import less.lgeo.entity.ModelEntity;
@@ -62,8 +62,8 @@ class ModelControllerTest {
     void getModel() throws Exception {
 
         ModelId modelId = ModelId.of(1L);
-        VertexEmbeddable p1 = new VertexEmbeddable(0, 0, 0);
-        VertexEmbeddable p2 = new VertexEmbeddable(1, 1, 1);
+        Vector3Embeddable p1 = new Vector3Embeddable(0, 0, 0);
+        Vector3Embeddable p2 = new Vector3Embeddable(1, 1, 1);
         ColorEntity colorEntity = new ColorEntity(1, "Black", "ffffff", false, 0, 0, 0, 0);
         ModelEntity modelEntity = new ModelEntity();
         modelEntity.setId(modelId);
