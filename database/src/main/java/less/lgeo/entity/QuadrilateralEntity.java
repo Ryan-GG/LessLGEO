@@ -69,10 +69,10 @@ public class QuadrilateralEntity {
     public static Quadrilateral toPojo(QuadrilateralEntity quadrilateralEntity) {
         return new Quadrilateral(
                 quadrilateralEntity.getColor().getId(),
-                quadrilateralEntity.getP1().toVector3(),
-                quadrilateralEntity.getP2().toVector3(),
-                quadrilateralEntity.getP3().toVector3(),
-                quadrilateralEntity.getP3().toVector3()
+                quadrilateralEntity.getP1().toVector3d(),
+                quadrilateralEntity.getP2().toVector3d(),
+                quadrilateralEntity.getP3().toVector3d(),
+                quadrilateralEntity.getP3().toVector3d()
         );
     }
 

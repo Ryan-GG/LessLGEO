@@ -1,6 +1,6 @@
 package less.lgeo;
 
-import less.lgeo.connectivity.Connection;
+
 import less.lgeo.messaging.ModelJobRequest;
 import less.lgeo.parse.ConnectivityParser;
 import less.lgeo.parse.LDrawParser;
@@ -18,7 +18,6 @@ import java.util.List;
 
 import static less.lgeo.common.CommonUtils.PART_EXT;
 import static less.lgeo.common.CommonUtils.changeFileExtension;
-import static less.lgeo.primitive.ModelUtils.transformModel;
 
 /**
  * Provides parsing, transforming, and joining of .dat and .part Currently parses a file one by one

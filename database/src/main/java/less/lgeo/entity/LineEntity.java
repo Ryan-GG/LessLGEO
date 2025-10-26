@@ -53,8 +53,8 @@ public class LineEntity {
     public static Line toPojo(LineEntity lineEntity) {
         return new Line(
                 lineEntity.getColor().getId(),
-                lineEntity.getP1().toVector3(),
-                lineEntity.getP2().toVector3()
+                lineEntity.getP1().toVector3d(),
+                lineEntity.getP2().toVector3d()
         );
     }
 }

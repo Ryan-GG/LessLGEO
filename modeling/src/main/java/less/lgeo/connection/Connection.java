@@ -3,13 +3,13 @@ package less.lgeo.connection;
 import less.lgeo.common.Comment;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.MetaCommand;
-import less.lgeo.common.Vector3;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.ejml.data.DMatrix4x4;
 import org.ejml.data.DMatrixRMaj;
 import org.ejml.dense.fixed.CommonOps_DDF4;
 import org.ejml.dense.row.CommonOps_DDRM;
+import org.joml.Vector3d;
 
 import java.util.List;
 
@@ -111,8 +111,8 @@ public class Connection {
 
         return connectionVertices;
     }*/
-    private static Vector3 transformConnectionVector3(double xOffset, double yOffset, double zOffset,
-                                                      Matrix partconnectionMatrix) {
+    private static Vector3d transformConnectionVector3(double xOffset, double yOffset, double zOffset,
+                                                       Matrix partconnectionMatrix) {
 
         DMatrixRMaj transformVector = new DMatrixRMaj(4, 1);
         transformVector.set(0, 0, xOffset);
@@ -128,7 +128,7 @@ public class Connection {
         double y = resultVector.get(1, 0);
         double z = resultVector.get(2, 0);
 
-        return new Vector3(x, y, z);
+        return new Vector3d(x, y, z);
     }
 
     /**

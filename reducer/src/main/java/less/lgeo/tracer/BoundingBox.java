@@ -1,16 +1,11 @@
 package less.lgeo.tracer;
 
-import less.lgeo.common.Vector3;
-import less.lgeo.primitive.Line;
 import less.lgeo.primitive.Triangle;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.joml.Vector3d;
 
 import java.util.List;
-import java.util.stream.Stream;
-
-import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
 
 /**
  * Represents a 3D axis-aligned box defined by its 8 vertices.
@@ -67,7 +62,7 @@ public class BoundingBox {
     private final Vector3d max = new Vector3d(Double.NEGATIVE_INFINITY);
     private Vector3d size = new Vector3d(Double.POSITIVE_INFINITY);
 
-    public BoundingBox(List<Vector3> vertices) {
+    public BoundingBox(List<Vector3d> vertices) {
         vertices.forEach(this::growToInclude);
     }
 
@@ -103,10 +98,6 @@ public class BoundingBox {
         return new Vector3d(min.x(), max.y, max.z);
     }
 
-    public void growToInclude(Vector3 point) {
-        growToInclude(point.toVector3d());
-    }
-
     public void growToInclude(Vector3d point) {
         min.min(point);
         max.max(point);
@@ -127,76 +118,10 @@ public class BoundingBox {
         return inXBounds && inYBounds && inZBounds;
     }
 
-    public boolean includesPoint(Vector3 point) {
-        return includesPoint(point.toVector3d());
-    }
-
     public Vector3d getCenter() {
         Vector3d min = new Vector3d(calculateA());
         Vector3d max = new Vector3d(calculateG());
         return min.add(max).mul(0.5);
-    }
-
-
-    public List<Line> getBoundingBoxAsLines() {
-        return Stream.of(
-                        getTopFace(),
-                        getBottomFace(),
-                        getTopToBottomConnectingLines())
-                .flatMap(List::stream)
-                .toList();
-
-    }
-
-    private List<Line> getTopFace() {
-        Vector3d a = calculateA();
-        Vector3d b = calculateB();
-        Vector3d c = calculateC();
-        Vector3d d = calculateD();
-        return List.of(
-                new Line(UNKNOWN_COLOR_ID, new Vector3(a), new Vector3(b)),
-                new Line(UNKNOWN_COLOR_ID, new Vector3(b), new Vector3(c)),
-                new Line(UNKNOWN_COLOR_ID, new Vector3(c), new Vector3(d)),
-                new Line(UNKNOWN_COLOR_ID, new Vector3(d), new Vector3(a))
-        );
-    }
-
-    private List<Line> getBottomFace() {
-        Vector3d e = calculateE();
-        Vector3d f = calculateF();
-        Vector3d g = calculateG();
-        Vector3d h = calculateH();
-        return List.of(
-                new Line(UNKNOWN_COLOR_ID, new Vector3(e), new Vector3(f)),
-                new Line(UNKNOWN_COLOR_ID, new Vector3(f), new Vector3(g)),
-                new Line(UNKNOWN_COLOR_ID, new Vector3(g), new Vector3(h)),
-                new Line(UNKNOWN_COLOR_ID, new Vector3(h), new Vector3(e))
-        );
-    }
-
-    /**
-     * <p>
-     * a -> e, b -> f, c -> g, d -> h
-     * </p>
-     *
-     * @return Connecting lines between top and bottom faces of the bounding box
-     */
-    private List<Line> getTopToBottomConnectingLines() {
-        Vector3d a = calculateA();
-        Vector3d e = calculateE();
-        Vector3d b = calculateB();
-        Vector3d f = calculateF();
-        Vector3d c = calculateC();
-        Vector3d g = calculateG();
-        Vector3d d = calculateD();
-        Vector3d h = calculateH();
-
-        return List.of(
-                new Line(UNKNOWN_COLOR_ID, new Vector3(a), new Vector3(e)),
-                new Line(UNKNOWN_COLOR_ID, new Vector3(b), new Vector3(f)),
-                new Line(UNKNOWN_COLOR_ID, new Vector3(c), new Vector3(g)),
-                new Line(UNKNOWN_COLOR_ID, new Vector3(d), new Vector3(h))
-        );
     }
 
     @Override

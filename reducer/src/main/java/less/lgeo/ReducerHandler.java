@@ -14,8 +14,6 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
 
-import static less.lgeo.entity.ModelEntity.toPojo;
-
 @SpringBootApplication
 public class ReducerHandler {
 
@@ -39,7 +37,7 @@ public class ReducerHandler {
     public void consume(ModelId modelId) {
         ModelEntity modelEntity = modelService.getModelById(modelId);
 
-        Model model = toPojo(modelEntity);
+        Model model = modelEntity.toPojo();
         logger.info("converted: {}", model);
 
         List<Triangle> modelAsTriangles = model.tessellate();

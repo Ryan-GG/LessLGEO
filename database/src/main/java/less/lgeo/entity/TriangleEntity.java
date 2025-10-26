@@ -61,9 +61,9 @@ public class TriangleEntity {
     public static Triangle toPojo(TriangleEntity triangleEntity) {
         return new Triangle(
                 triangleEntity.getColor().getId(),
-                triangleEntity.getP1().toVector3(),
-                triangleEntity.getP2().toVector3(),
-                triangleEntity.getP3().toVector3()
+                triangleEntity.getP1().toVector3d(),
+                triangleEntity.getP2().toVector3d(),
+                triangleEntity.getP3().toVector3d()
         );
     }
 

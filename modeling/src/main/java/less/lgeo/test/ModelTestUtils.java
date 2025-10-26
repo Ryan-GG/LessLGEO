@@ -1,9 +1,9 @@
 package less.lgeo.test;
 
-import less.lgeo.common.Vector3;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.Quadrilateral;
 import less.lgeo.primitive.Triangle;
+import org.joml.Vector3d;
 
 import java.util.List;
 
@@ -22,15 +22,15 @@ public class ModelTestUtils {
      */
     public static Model cube() {
 
-        Vector3 a = new Vector3(0, -1, 0);
-        Vector3 b = new Vector3(1, -1, 0);
-        Vector3 c = new Vector3(1, -1, 1);
-        Vector3 d = new Vector3(0, -1, 1);
+        Vector3d a = new Vector3d(0, -1, 0);
+        Vector3d b = new Vector3d(1, -1, 0);
+        Vector3d c = new Vector3d(1, -1, 1);
+        Vector3d d = new Vector3d(0, -1, 1);
 
-        Vector3 e = new Vector3(0, 0, 0);
-        Vector3 f = new Vector3(1, 0, 0);
-        Vector3 g = new Vector3(1, 0, 1);
-        Vector3 h = new Vector3(0, 0, 1);
+        Vector3d e = new Vector3d(0, 0, 0);
+        Vector3d f = new Vector3d(1, 0, 0);
+        Vector3d g = new Vector3d(1, 0, 1);
+        Vector3d h = new Vector3d(0, 0, 1);
 
         Quadrilateral top = new Quadrilateral(UNKNOWN_COLOR_ID, a, b, c, d);
         Quadrilateral bottom = new Quadrilateral(UNKNOWN_COLOR_ID, e, f, g, h);
@@ -50,11 +50,11 @@ public class ModelTestUtils {
 
     public static Model pyramid() {
 
-        Vector3 a = new Vector3(0, 0, 0);
-        Vector3 b = new Vector3(0, 0, 1);
-        Vector3 c = new Vector3(1, 0, 1);
-        Vector3 d = new Vector3(1, 0, 0);
-        Vector3 e = new Vector3(0.5, -1, 0.5);
+        Vector3d a = new Vector3d(0, 0, 0);
+        Vector3d b = new Vector3d(0, 0, 1);
+        Vector3d c = new Vector3d(1, 0, 1);
+        Vector3d d = new Vector3d(1, 0, 0);
+        Vector3d e = new Vector3d(0.5, -1, 0.5);
 
         Quadrilateral bottom = new Quadrilateral(UNKNOWN_COLOR_ID, a, b, c, d);
         Triangle front = new Triangle(UNKNOWN_COLOR_ID, a, e, d);

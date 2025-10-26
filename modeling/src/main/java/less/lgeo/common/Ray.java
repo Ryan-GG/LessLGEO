@@ -1,12 +1,6 @@
 package less.lgeo.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import org.joml.Vector3d;
 
-@Data
-@AllArgsConstructor
-public class Ray {
-  private final Vector3 origin;
-  private final Vector3 direction;
-  private final double scale;
+public record Ray(Vector3d origin, Vector3d direction, double scale) {
 }

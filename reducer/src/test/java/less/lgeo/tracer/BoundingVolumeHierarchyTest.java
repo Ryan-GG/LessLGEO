@@ -1,6 +1,5 @@
 package less.lgeo.tracer;
 
-import less.lgeo.common.Vector3;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.Triangle;
 import less.lgeo.test.ModelTestUtils;
@@ -55,14 +54,14 @@ public class BoundingVolumeHierarchyTest {
     @Test
     void splitOnXAxis() {
         Triangle negative = new Triangle(-1,
-                new Vector3(0, 0, 0),
-                new Vector3(0, 0, 1),
-                new Vector3(-1, 0, 0));
+                new Vector3d(0, 0, 0),
+                new Vector3d(0, 0, 1),
+                new Vector3d(-1, 0, 0));
 
         Triangle positive = new Triangle(-1,
-                new Vector3(0, 0, 0),
-                new Vector3(0, 0, 1),
-                new Vector3(1, 0, 0));
+                new Vector3d(0, 0, 0),
+                new Vector3d(0, 0, 1),
+                new Vector3d(1, 0, 0));
 
         List<Triangle> triangles = List.of(negative, positive);
 
@@ -88,14 +87,14 @@ public class BoundingVolumeHierarchyTest {
     @Test
     void splitOnYAxis() {
         Triangle negative = new Triangle(-1,
-                new Vector3(0, 0, 0),
-                new Vector3(0, -1, 0),
-                new Vector3(1, 0, 0));
+                new Vector3d(0, 0, 0),
+                new Vector3d(0, -1, 0),
+                new Vector3d(1, 0, 0));
 
         Triangle positive = new Triangle(-1,
-                new Vector3(0, 0, 0),
-                new Vector3(0, 1, 0),
-                new Vector3(1, 0, 0));
+                new Vector3d(0, 0, 0),
+                new Vector3d(0, 1, 0),
+                new Vector3d(1, 0, 0));
 
         List<Triangle> triangles = List.of(negative, positive);
 
@@ -121,14 +120,14 @@ public class BoundingVolumeHierarchyTest {
     @Test
     void splitOnZAxis() {
         Triangle negative = new Triangle(-1,
-                new Vector3(0, 0, -1),
-                new Vector3(0, 0, 0),
-                new Vector3(1, 0, 0));
+                new Vector3d(0, 0, -1),
+                new Vector3d(0, 0, 0),
+                new Vector3d(1, 0, 0));
 
         Triangle positive = new Triangle(-1,
-                new Vector3(0, 0, 1),
-                new Vector3(0, 0, 0),
-                new Vector3(1, 0, 0));
+                new Vector3d(0, 0, 1),
+                new Vector3d(0, 0, 0),
+                new Vector3d(1, 0, 0));
 
         List<Triangle> triangles = List.of(negative, positive);
 

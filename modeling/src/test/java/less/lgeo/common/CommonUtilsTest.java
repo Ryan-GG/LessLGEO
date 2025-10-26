@@ -1,6 +1,7 @@
 package less.lgeo.common;
 
 import org.ejml.data.DMatrix4x4;
+import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -40,11 +41,11 @@ public class CommonUtilsTest {
                 .c(0).f(0).i(1).z(0)
                 .scale(1.0)
                 .build();
-        Vector3 vertex = new Vector3(1, 2, 3);
-        Vector3 result = vertex.transform(identity);
-        assertEquals(1, result.getX());
-        assertEquals(2, result.getY());
-        assertEquals(3, result.getZ());
+        Vector3d vertex = new Vector3d(1, 2, 3);
+        Vector3d result = Vector3Utils.transform(vertex, identity);
+        assertEquals(1, result.x);
+        assertEquals(2, result.y);
+        assertEquals(3, result.z);
     }
 
     @Test
@@ -55,11 +56,11 @@ public class CommonUtilsTest {
                 .c(0).f(0).i(1).z(2)
                 .scale(1.0)
                 .build();
-        Vector3 transform = new Vector3(1, 2, 3);
-        Vector3 result = transform.transform(translation);
-        assertEquals(6, result.getX());
-        assertEquals(-1, result.getY());
-        assertEquals(5, result.getZ());
+        Vector3d transform = new Vector3d(1, 2, 3);
+        Vector3d result = Vector3Utils.transform(transform, translation);
+        assertEquals(6, result.x);
+        assertEquals(-1, result.y);
+        assertEquals(5, result.z);
     }
 
     @Test
@@ -71,10 +72,10 @@ public class CommonUtilsTest {
                 .c(0).f(0).i(1).z(0)
                 .scale(1.0)
                 .build();
-        Vector3 transform = new Vector3(1, 0, 0);
-        Vector3 result = transform.transform(rotZ45);
-        assertEquals(sqrt2over2, result.getX());
-        assertEquals(sqrt2over2, result.getY());
-        assertEquals(0, result.getZ());
+        Vector3d transform = new Vector3d(1, 0, 0);
+        Vector3d result = Vector3Utils.transform(transform, rotZ45);
+        assertEquals(sqrt2over2, result.x);
+        assertEquals(sqrt2over2, result.y;
+        assertEquals(0, result.z);
     }
 }

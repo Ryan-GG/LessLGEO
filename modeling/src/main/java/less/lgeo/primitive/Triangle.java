@@ -2,8 +2,9 @@ package less.lgeo.primitive;
 
 import less.lgeo.common.LineType;
 import less.lgeo.common.Matrix;
-import less.lgeo.common.Vector3;
+import less.lgeo.common.Vector3Utils;
 import lombok.Data;
+import org.joml.Vector3d;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,30 +17,30 @@ public class Triangle {
     private final LineType type = LineType.TRIANGLE;
     private final Long id = null;
     private final int colorId;
-    private final Vector3 p1;
-    private final Vector3 p2;
-    private final Vector3 p3;
+    private final Vector3d p1;
+    private final Vector3d p2;
+    private final Vector3d p3;
 
     public Triangle(
             int colorId,
-            Vector3 p1,
-            Vector3 p2,
-            Vector3 p3) {
+            Vector3d p1,
+            Vector3d p2,
+            Vector3d p3) {
         this.colorId = colorId;
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
     }
 
-    public Vector3 getCentroid() {
-        double xCentroid = (p1.getX() + p2.getX() + p3.getX()) / 3;
-        double yCentroid = (p1.getY() + p2.getY() + p3.getY()) / 3;
-        double zCentroid = (p1.getZ() + p2.getZ() + p3.getZ()) / 3;
+    public Vector3d getCentroid() {
+        double xCentroid = (p1.x() + p2.x() + p3.x()) / 3;
+        double yCentroid = (p1.y() + p2.y() + p3.y()) / 3;
+        double zCentroid = (p1.z() + p2.z() + p3.z()) / 3;
 
-        return new Vector3(xCentroid, yCentroid, zCentroid);
+        return new Vector3d(xCentroid, yCentroid, zCentroid);
     }
 
-    public List<Vector3> getVertices() {
+    public List<Vector3d> getVertices() {
         return List.of(p1, p2, p3);
     }
 
@@ -48,9 +49,9 @@ public class Triangle {
             Optional<Integer> inheritedColorId) {
         return new Triangle(
                 getColor(inheritedColorId, colorId),
-                transformationMatrix.map(p1::transform).orElse(p1),
-                transformationMatrix.map(p2::transform).orElse(p2),
-                transformationMatrix.map(p3::transform).orElse(p3));
+                transformationMatrix.map(matrix -> Vector3Utils.transform(p1, matrix)).orElse(p1),
+                transformationMatrix.map(matrix -> Vector3Utils.transform(p2, matrix)).orElse(p2),
+                transformationMatrix.map(matrix -> Vector3Utils.transform(p3, matrix)).orElse(p3));
     }
 
 }

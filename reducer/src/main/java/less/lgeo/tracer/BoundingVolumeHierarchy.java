@@ -1,7 +1,5 @@
 package less.lgeo.tracer;
 
-import less.lgeo.common.Vector3;
-import less.lgeo.primitive.Line;
 import less.lgeo.primitive.Triangle;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,33 +15,13 @@ public class BoundingVolumeHierarchy {
     private final Node root;
 
     public BoundingVolumeHierarchy(List<Triangle> triangles) {
-        List<Vector3> vertices = triangles.stream()
+        List<Vector3d> vertices = triangles.stream()
                 .flatMap(triangle -> triangle.getVertices().stream())
                 .toList();
 
         BoundingBox boundingBox = new BoundingBox(vertices);
         this.root = new Node(boundingBox, triangles);
         this.root.split();
-    }
-
-
-    public List<Line> getBoundingBoxesAsLines() {
-        return getBoundBoxOfNode(root);
-    }
-
-    private List<Line> getBoundBoxOfNode(Node node) {
-        if (node == null || node.getBoundingBox() == null) {
-            return List.of();
-        }
-
-        List<Line> lines = new ArrayList<>(node.getBoundingBox().getBoundingBoxAsLines());
-        if (node.getChildA() != null) {
-            lines.addAll(getBoundBoxOfNode(node.getChildA()));
-        }
-        if (node.getChildB() != null) {
-            lines.addAll(getBoundBoxOfNode(node.getChildB()));
-        }
-        return lines;
     }
 
     @Getter
@@ -70,7 +48,7 @@ public class BoundingVolumeHierarchy {
          */
         private int getSplitComponentIndex() {
             Vector3d size = boundingBox.getSize();
-            return size.x > Math.max(size.y, size.z) ? 0 : size.y > size.z ? 1 : 2;
+            return size.x() > Math.max(size.y(), size.z()) ? 0 : size.y() > size.z() ? 1 : 2;
         }
 
         private void split(int currentDepth) {
@@ -83,7 +61,7 @@ public class BoundingVolumeHierarchy {
             List<Triangle> bList = new ArrayList<>();
 
             for (Triangle triangle : triangles) {
-                boolean inA = triangle.getCentroid().toVector3d().get(splitAxis) < boundingBox.getCenter().get(splitAxis);
+                boolean inA = triangle.getCentroid().get(splitAxis) < boundingBox.getCenter().get(splitAxis);
                 (inA ? aList : bList).add(triangle);
             }
 

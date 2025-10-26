@@ -2,8 +2,8 @@ package less.lgeo.parse;
 
 import less.lgeo.common.LineType;
 import less.lgeo.common.Matrix;
-import less.lgeo.common.Vector3;
 import less.lgeo.primitive.*;
+import org.joml.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -178,8 +178,8 @@ public class LDrawParser implements Parser<Model> {
         double y2 = toDouble(iterator.next());
         double z2 = toDouble(iterator.next());
 
-        Vector3 p1 = new Vector3(x1, y1, z1);
-        Vector3 p2 = new Vector3(x2, y2, z2);
+        Vector3d p1 = new Vector3d(x1, y1, z1);
+        Vector3d p2 = new Vector3d(x2, y2, z2);
         return new Line(
                 colorId,
                 p1,
@@ -202,9 +202,9 @@ public class LDrawParser implements Parser<Model> {
         double y3 = toDouble(iterator.next());
         double z3 = toDouble(iterator.next());
 
-        Vector3 p1 = new Vector3(x1, y1, z1);
-        Vector3 p2 = new Vector3(x2, y2, z2);
-        Vector3 p3 = new Vector3(x3, y3, z3);
+        Vector3d p1 = new Vector3d(x1, y1, z1);
+        Vector3d p2 = new Vector3d(x2, y2, z2);
+        Vector3d p3 = new Vector3d(x3, y3, z3);
         return new Triangle(
                 colorId,
                 p1,
@@ -231,10 +231,10 @@ public class LDrawParser implements Parser<Model> {
         double y4 = toDouble(iterator.next());
         double z4 = toDouble(iterator.next());
 
-        Vector3 p1 = new Vector3(x1, y1, z1);
-        Vector3 p2 = new Vector3(x2, y2, z2);
-        Vector3 p3 = new Vector3(x3, y3, z3);
-        Vector3 p4 = new Vector3(x4, y4, z4);
+        Vector3d p1 = new Vector3d(x1, y1, z1);
+        Vector3d p2 = new Vector3d(x2, y2, z2);
+        Vector3d p3 = new Vector3d(x3, y3, z3);
+        Vector3d p4 = new Vector3d(x4, y4, z4);
         return new Quadrilateral(
                 colorId,
                 p1,
@@ -262,10 +262,10 @@ public class LDrawParser implements Parser<Model> {
         double y4 = toDouble(iterator.next());
         double z4 = toDouble(iterator.next());
 
-        Vector3 p1 = new Vector3(x1, y1, z1);
-        Vector3 p2 = new Vector3(x2, y2, z2);
-        Vector3 p3 = new Vector3(x3, y3, z3);
-        Vector3 p4 = new Vector3(x4, y4, z4);
+        Vector3d p1 = new Vector3d(x1, y1, z1);
+        Vector3d p2 = new Vector3d(x2, y2, z2);
+        Vector3d p3 = new Vector3d(x3, y3, z3);
+        Vector3d p4 = new Vector3d(x4, y4, z4);
         return new OptionalLine(
                 colorId,
                 p1,

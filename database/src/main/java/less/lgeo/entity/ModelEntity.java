@@ -29,65 +29,65 @@ import java.util.Optional;
 @Table(name = "models")
 public class ModelEntity {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "model_seq_gen")
-  @SequenceGenerator(name = "model_seq_gen", sequenceName = "model_seq", allocationSize = 50)
-  private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "model_seq_gen")
+    @SequenceGenerator(name = "model_seq_gen", sequenceName = "model_seq", allocationSize = 50)
+    private Long id;
 
-  @Transient
-  @Getter(value = AccessLevel.NONE)
-  @Setter(value = AccessLevel.NONE)
-  private ModelId modelId;
+    @Transient
+    @Getter(value = AccessLevel.NONE)
+    @Setter(value = AccessLevel.NONE)
+    private ModelId modelId;
 
-  @BatchSize(size = 500)
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-  private List<LineEntity> lines;
+    @BatchSize(size = 500)
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<LineEntity> lines;
 
-  @BatchSize(size = 500)
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-  private List<TriangleEntity> triangles;
+    @BatchSize(size = 500)
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<TriangleEntity> triangles;
 
-  @BatchSize(size = 500)
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-  private List<QuadrilateralEntity> quadrilaterals;
+    @BatchSize(size = 500)
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<QuadrilateralEntity> quadrilaterals;
 
-  @BatchSize(size = 500)
-  @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-  private List<OptionalLineEntity> optionalLines;
+    @BatchSize(size = 500)
+    @OneToMany(mappedBy = "model", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<OptionalLineEntity> optionalLines;
 
-  @ManyToOne
-  @JsonBackReference
-  @JoinColumn(name = "parent_id")
-  private ModelEntity parent;
+    @ManyToOne
+    @JsonBackReference
+    @JoinColumn(name = "parent_id")
+    private ModelEntity parent;
 
-  @JsonManagedReference
-  @BatchSize(size = 500)
-  @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-  private List<ModelEntity> children = new ArrayList<>();
+    @JsonManagedReference
+    @BatchSize(size = 500)
+    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    private List<ModelEntity> children = new ArrayList<>();
 
-  public Model toPojo() {
-    return new Model(
-        List.of(),
-        List.of(),
-        lines.stream().map(LineEntity::toPojo).toList(),
-        triangles.stream().map(TriangleEntity::toPojo).toList(),
-        quadrilaterals.stream().map(QuadrilateralEntity::toPojo).toList(),
-        optionalLines.stream().map(OptionalLineEntity::toPojo).toList(),
-        children.stream().map(ModelEntity::toSubFileRef).toList());
-  }
+    public Model toPojo() {
+        return new Model(
+                List.of(),
+                List.of(),
+                lines.stream().map(LineEntity::toPojo).toList(),
+                triangles.stream().map(TriangleEntity::toPojo).toList(),
+                quadrilaterals.stream().map(QuadrilateralEntity::toPojo).toList(),
+                optionalLines.stream().map(OptionalLineEntity::toPojo).toList(),
+                children.stream().map(ModelEntity::toSubFileRef).toList());
+    }
 
-  private SubFileReference toSubFileRef() {
-    // This seems like the database doesn't match the pojos and is awkward to deal
-    // with
-    return new SubFileReference(16, Matrix.IDENTITY_MATRIX, this.toPojo(), "", Optional.empty());
-  }
+    private SubFileReference toSubFileRef() {
+        // FIXME, This seems like the database doesn't match the pojos and is awkward to deal
+        // with
+        return new SubFileReference(16, Matrix.IDENTITY_MATRIX, this.toPojo(), "", Optional.empty());
+    }
 
-  public @Nullable ModelId getId() {
-    return id == null ? null : ModelId.of(id);
-  }
+    public @Nullable ModelId getId() {
+        return id == null ? null : ModelId.of(id);
+    }
 
-  public void setId(ModelId id) {
-    this.id = id == null ? null : id.getValue();
-  }
+    public void setId(ModelId id) {
+        this.id = id == null ? null : id.getValue();
+    }
 
 }

@@ -21,6 +21,11 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
+            <artifactId>joml</artifactId>
+            <groupId>org.joml</groupId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <artifactId>junit-jupiter</artifactId>
             <groupId>org.junit.jupiter</groupId>
             <scope>test</scope>

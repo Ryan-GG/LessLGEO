@@ -69,10 +69,10 @@ public class OptionalLineEntity {
     public static OptionalLine toPojo(OptionalLineEntity optionalLineEntity) {
         return new OptionalLine(
                 optionalLineEntity.getColor().getId(),
-                optionalLineEntity.getP1().toVector3(),
-                optionalLineEntity.getP2().toVector3(),
-                optionalLineEntity.getP3().toVector3(),
-                optionalLineEntity.getP3().toVector3()
+                optionalLineEntity.getP1().toVector3d(),
+                optionalLineEntity.getP2().toVector3d(),
+                optionalLineEntity.getP3().toVector3d(),
+                optionalLineEntity.getP3().toVector3d()
         );
     }
 
