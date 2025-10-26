@@ -4,32 +4,7 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <artifactId>bom</artifactId>
   <build>
-    <extensions>
-      <extension>
-        <artifactId>os-maven-plugin</artifactId>
-        <groupId>kr.motd.maven</groupId>
-        <version>1.7.1</version>
-      </extension>
-    </extensions>
     <plugins>
-      <plugin>
-        <artifactId>protobuf-maven-plugin</artifactId>
-        <configuration>
-          <!--suppress UnresolvedMavenProperty -->
-          <protocArtifact>
-            com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
-          </protocArtifact>
-        </configuration>
-        <executions>
-          <execution>
-            <goals>
-              <goal>compile</goal>
-            </goals>
-          </execution>
-        </executions>
-        <groupId>org.xolstice.maven.plugins</groupId>
-        <version>0.6.1</version>
-      </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
@@ -106,11 +81,6 @@
         <version>${spring.version}</version>
       </dependency>
       <dependency>
-        <artifactId>protobuf-java-util</artifactId>
-        <groupId>com.google.protobuf</groupId>
-        <version>${protobuf.version}</version>
-      </dependency>
-      <dependency>
         <artifactId>ejml-core</artifactId>
         <groupId>org.ejml</groupId>
         <version>${ejml.version}</version>
@@ -167,7 +137,6 @@
   </parent>
   <properties>
     <ejml.version>0.44.0</ejml.version>
-    <protobuf.version>4.31.0</protobuf.version>
   </properties>
   <version>0.0.2-SNAPSHOT</version>
 </project>

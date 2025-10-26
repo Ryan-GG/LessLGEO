@@ -1,6 +1,5 @@
 package less.lgeo.producer;
 
-
 import less.lgeo.embedded.ModelId;
 import less.lgeo.messaging.ModelJobRequest;
 import less.lgeo.rabbitmq.properties.RabbitWebToParserRpcProperties;
@@ -15,36 +14,33 @@ import org.springframework.stereotype.Component;
 @Component
 public class WebServerProducer {
 
-    private final Logger logger = LoggerFactory.getLogger(WebServerProducer.class);
+  private final Logger logger = LoggerFactory.getLogger(WebServerProducer.class);
 
-    @Autowired
-    private final RabbitTemplate rabbitTemplate;
-    @Autowired
-    private final RabbitWebToParserRpcProperties rabbitWebToParserRpcProperties;
+  @Autowired
+  private final RabbitTemplate rabbitTemplate;
+  @Autowired
+  private final RabbitWebToParserRpcProperties rabbitWebToParserRpcProperties;
 
-    public WebServerProducer(RabbitTemplate rabbitTemplate,
-                             RabbitWebToParserRpcProperties rabbitWebToParserRpcProperties
-    ) {
-        this.rabbitTemplate = rabbitTemplate;
-        this.rabbitWebToParserRpcProperties = rabbitWebToParserRpcProperties;
+  public WebServerProducer(RabbitTemplate rabbitTemplate,
+      RabbitWebToParserRpcProperties rabbitWebToParserRpcProperties) {
+    this.rabbitTemplate = rabbitTemplate;
+    this.rabbitWebToParserRpcProperties = rabbitWebToParserRpcProperties;
 
-        long replyTimeout_MILLIS = this.rabbitWebToParserRpcProperties.getReplyTimeout().toMillis();
-        this.rabbitTemplate.setReplyTimeout(replyTimeout_MILLIS);
-    }
+    long replyTimeout_MILLIS = this.rabbitWebToParserRpcProperties.getReplyTimeout().toMillis();
+    this.rabbitTemplate.setReplyTimeout(replyTimeout_MILLIS);
+  }
 
-    /**
-     * See at `less.lgeo.consumer.ParserConsumer`
-     */
-    public @Nullable ModelId sendMessage(String message) {
-        ModelJobRequest modelJobRequest = ModelJobRequest.newBuilder()
-                .setModelString(message)
-                .build();
+  /**
+   * See at `less.lgeo.consumer.ParserConsumer`
+   */
+  public @Nullable ModelId sendMessage(String message) {
 
-        return rabbitTemplate.convertSendAndReceiveAsType(
-                rabbitWebToParserRpcProperties.getName(),
-                modelJobRequest.toByteArray(),
-                ParameterizedTypeReference.forType(ModelId.class));
-    }
-
+    return rabbitTemplate.convertSendAndReceiveAsType(
+        rabbitWebToParserRpcProperties.getName(),
+        // FIXME, unsure if this is correct or if i can make this an actual amqp message
+        // to send
+        message,
+        ParameterizedTypeReference.forType(ModelId.class));
+  }
 
 }

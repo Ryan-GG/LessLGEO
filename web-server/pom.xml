@@ -6,13 +6,6 @@
   <build>
     <plugins>
       <plugin>
-        <artifactId>protobuf-maven-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-        <groupId>org.xolstice.maven.plugins</groupId>
-      </plugin>
-      <plugin>
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <layout>WAR</layout>
@@ -58,11 +51,6 @@
       <groupId>less.lgeo</groupId>
       <scope>compile</scope>
       <version>0.0.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <artifactId>protobuf-java-util</artifactId>
-      <groupId>com.google.protobuf</groupId>
-      <scope>compile</scope>
     </dependency>
     <dependency>
       <artifactId>autoconfigure</artifactId>
