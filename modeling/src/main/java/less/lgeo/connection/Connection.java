@@ -1,40 +1,180 @@
 package less.lgeo.connection;
 
+import less.lgeo.common.Comment;
+import less.lgeo.common.Matrix;
+import less.lgeo.common.MetaCommand;
+import less.lgeo.common.Vector3;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import org.ejml.data.DMatrix4x4;
+import org.ejml.data.DMatrixRMaj;
+import org.ejml.dense.fixed.CommonOps_DDF4;
+import org.ejml.dense.row.CommonOps_DDRM;
+
+import java.util.List;
+
+import static less.lgeo.common.Matrix.dMatrixToMatrix;
+import static less.lgeo.common.Matrix.matrixToDMatrix;
+
+/**
+ * I’ve been playing around with these values and compared it with the other
+ * connectivity elements. What I’ve found out so far:
+ * <p>
+ * First block: 0 (always the same)
+ * Second block: PE_CONN (always the same, mostly likely a meta command; Part
+ * Editor Connectivity maybe)
+ * Third block: ID1 (group ID see figure 1.2 below)
+ * Fourth block: ID2 (element ID see figure 1.2 below)
+ * Fifth block: 1 0 0 0 1 0 0 0 1 (always the same, Transformation matrix)*
+ * Sixth block: XYZ (Position of the element)
+ * Seventh block: 2 2 (always the same; geometry data aka visual representation
+ * of the element)**
+ * Eight block: 3:1,0:4,3:1,0:4,10:4,0:4,3:1,0:4,3:1 (always the same; geometry
+ * data aka visual representation of the element)***
+ * <p>
+ * For other elements not always the identity matrix; see figure 1.2
+ * * Lateral size. If you change it from 2 2 to 1 1 it has half the size. But
+ * any other value does not work
+ * ** Most complicated one. I guess it describes or are related the geometry of
+ * the connectivity element itself
+ * (squares in the corner, disc in the center and the connection lines). If you
+ * change 10:4 to 20:4 for example the disc changes
+ * its form from a disc to a ring. Some of the numbers fit roughly to the size
+ * of the connectivity element.
+ */
+@Data
 public class Connection {
-  // FIXME
+    private List<Comment> comments;
+    private List<MetaCommand> commands;
+    private List<PartConnection> partConnections;
+
+    public Connection(List<Comment> comments, List<MetaCommand> commands, List<PartConnection> partConnections) {
+        this.comments = comments;
+        this.commands = commands;
+        this.partConnections = partConnections;
+    }
+
+    /**
+     * @return Set of rendered connection points as {@link Vector3}
+     */
+    /*public static Set<Vector3> getConnectionPoints(Connection connection) {
+        return connection.getPartConnections().stream()
+                .flatMap(partConnection -> switch (partConnection.getGroupId()) {
+                    case GroupId.GROUP_ZERO -> Stream.empty();
+                    case GroupId.GROUP_ONE -> Stream.empty();
+                    case GroupId.GROUP_STUD -> getGroupStudVertices(partConnection);
+                    case GroupId.GROUP_FOUR -> Stream.empty();
+                    case GroupId.GROUP_SIX -> Stream.empty();
+                    default -> Stream.empty();
+                }).collect(Collectors.toSet());
+    }*/
+
+    /**
+     * @return Gets the stud vertices for a part connection. Creates points by the
+     * rotation and
+     * translation of the connection matrix
+     */
+    /*private static Stream<Vector3> getGroupStudVertices(PartConnection partConnection) {
+        GroupStud studGeometry = partConnection.getGroupStud();
+
+        int zStuds = studGeometry.getZWidthHalfStud() / 2;
+        int xStuds = studGeometry.getXWidthHalfStud() / 2;
+
+        Stream<Vector3> connectionVertices = Stream.empty();
+
+        for (int z = 0; z < zStuds; z++) {
+            for (int x = 0; x < xStuds; x++) {
+
+                int index = (2 * z + 1) * (studGeometry.getXWidthHalfStud() + 1) + (2 * x + 1);
+                if (!studGeometry.getStudGrid(index)) {
+                    continue;
+                }
+
+                double xStudOffset = -xStuds / 2.0;
+                double zStudOffset = zStuds / 2.0;
+
+                // This is to translate so that stud centers align
+                double xTranslation = x + 0.5;
+                double zTranslation = -z - 0.5;
+
+                double xOffset = (xStudOffset + xTranslation) * BRICK_TO_LDU;
+                double zOffset = (zStudOffset + zTranslation) * BRICK_TO_LDU;
+
+                Vector3 center = transformConnectionVector3(xOffset, -STUD_HEIGHT,
+                        zOffset,
+                        partConnection.getMatrix());
+
+                connectionVertices = Stream.concat(connectionVertices,
+                        Stream.of(center));
+            }
+        }
+
+        return connectionVertices;
+    }*/
+    private static Vector3 transformConnectionVector3(double xOffset, double yOffset, double zOffset,
+                                                      Matrix partconnectionMatrix) {
+
+        DMatrixRMaj transformVector = new DMatrixRMaj(4, 1);
+        transformVector.set(0, 0, xOffset);
+        transformVector.set(1, 0, yOffset);
+        transformVector.set(2, 0, zOffset);
+        transformVector.set(3, 0, partconnectionMatrix.getScale());
+
+        DMatrixRMaj resultVector = new DMatrixRMaj(4, 1);
+        CommonOps_DDRM.mult(new DMatrixRMaj(matrixToDMatrix(partconnectionMatrix)), transformVector,
+                resultVector);
+
+        double x = resultVector.get(0, 0);
+        double y = resultVector.get(1, 0);
+        double z = resultVector.get(2, 0);
+
+        return new Vector3(x, y, z);
+    }
+
+    /**
+     * @param transformationMatrix 'dat' / 'piece' matrix
+     * @return Transformed connected by 'piece' transformation matrix
+     */
+    public Connection transformConnection(Matrix transformationMatrix) {
+
+        List<PartConnection> transformedPartConnections = getPartConnections().stream()
+                .map(partConnection -> {
+                    DMatrix4x4 result = new DMatrix4x4();
+                    CommonOps_DDF4.mult(matrixToDMatrix(transformationMatrix),
+                            matrixToDMatrix(partConnection.getMatrix()),
+                            result);
+                    Matrix resulted = dMatrixToMatrix(result);
+
+                    return new PartConnection(partConnection.groupId, partConnection.elementId, resulted);
+                })
+                .toList();
+
+        return new Connection(
+                this.getComments(),
+                this.getCommands(),
+                transformedPartConnections
+        );
+    }
+
+    private enum GroupId {
+        GROUP_ZERO,
+        GROUP_ONE,
+        GROUP_STUD,
+        GROUP_FOUR,
+        GROUP_SIX
+    }
+
+    @Data
+    @AllArgsConstructor
+    private class PartConnection {
+        private final int groupId;
+        private final int elementId;
+        private final Matrix matrix;
+        // figure out geometry
+    }
 }
-// /**
-// I’ve been playing around with these values and compared it with the other
-// connectivity elements. What I’ve found out so far:
-//
-// First block: 0 (always the same)
-// Second block: PE_CONN (always the same, mostly likely a meta command; Part
-// Editor Connectivity maybe)
-// Third block: ID1 (group ID see figure 1.2 below)
-// Fourth block: ID2 (element ID see figure 1.2 below)
-// Fifth block: 1 0 0 0 1 0 0 0 1 (always the same, Transformation matrix)*
-// Sixth block: XYZ (Position of the element)
-// Seventh block: 2 2 (always the same; geometry data aka visual representation
-// of the element)**
-// Eight block: 3:1,0:4,3:1,0:4,10:4,0:4,3:1,0:4,3:1 (always the same; geometry
-// data aka visual representation of the element)***
-//
-// * For other elements not always the identity matrix; see figure 1.2
-// ** Lateral size. If you change it from 2 2 to 1 1 it has half the size. But
-// any other value does not work
-// *** Most complicated one. I guess it describes or are related the geometry of
-// the connectivity element itself
-// (squares in the corner, disc in the center and the connection lines). If you
-// change 10:4 to 20:4 for example the disc changes
-// its form from a disc to a ring. Some of the numbers fit roughly to the size
-// of the connectivity element.
-// */
-// message Connection {
-// repeated Comment comment = 1;
-// repeated MetaCommand command = 2;
-// repeated PartConnection part_connection = 3;
-// }
-//
+
+
 // message PartConnection {
 // GroupId group_id = 1;
 // int32 element_id = 2;
@@ -48,22 +188,7 @@ public class Connection {
 // }
 // }
 //
-// enum GroupId {
-// GROUP_ZERO = 0;
-// GROUP_ONE = 1;
-// GROUP_STUD = 2;
-// GROUP_FOUR = 3;
-// GROUP_SIX = 4;
-// }
-//
-// message GroupZero {
-//
-// }
-//
-// message GroupOne {
-//
-// }
-//
+
 // message GroupStud {
 // // X Width in half stud
 // int32 x_width_half_stud = 1;

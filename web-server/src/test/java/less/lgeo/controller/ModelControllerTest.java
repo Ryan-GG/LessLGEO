@@ -1,7 +1,6 @@
 package less.lgeo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.protobuf.util.JsonFormat;
 import less.lgeo.embedded.ModelId;
 import less.lgeo.embedded.Vector3Embeddable;
 import less.lgeo.entity.ColorEntity;
@@ -46,9 +45,9 @@ class ModelControllerTest {
 
     @Test
     void insert() throws Exception {
-        Model cube = ModelTestUtils.cube().build();
+        Model cube = ModelTestUtils.cube();
 
-        String cubeJson = JsonFormat.printer().print(cube);
+        //String cubeJson = JsonFormat.printer().print(cube);
         when(webServerProducer.sendMessage(cubeJson)).thenReturn(ModelId.of(1L));
 
         mockMvc.perform(post("/v1/models")

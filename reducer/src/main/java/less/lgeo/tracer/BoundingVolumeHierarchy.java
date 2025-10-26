@@ -10,10 +10,6 @@ import org.joml.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
 
-import static less.lgeo.common.Vector3Utils.toVector3d;
-import static less.lgeo.primitive.TriangleUtils.getCentroid;
-import static less.lgeo.primitive.TriangleUtils.getVertices;
-
 @Getter
 public class BoundingVolumeHierarchy {
 
@@ -22,7 +18,7 @@ public class BoundingVolumeHierarchy {
 
     public BoundingVolumeHierarchy(List<Triangle> triangles) {
         List<Vector3> vertices = triangles.stream()
-                .flatMap(triangle -> getVertices(triangle).stream())
+                .flatMap(triangle -> triangle.getVertices().stream())
                 .toList();
 
         BoundingBox boundingBox = new BoundingBox(vertices);
@@ -87,7 +83,7 @@ public class BoundingVolumeHierarchy {
             List<Triangle> bList = new ArrayList<>();
 
             for (Triangle triangle : triangles) {
-                boolean inA = toVector3d(getCentroid(triangle)).get(splitAxis) < boundingBox.getCenter().get(splitAxis);
+                boolean inA = triangle.getCentroid().toVector3d().get(splitAxis) < boundingBox.getCenter().get(splitAxis);
                 (inA ? aList : bList).add(triangle);
             }
 
@@ -97,9 +93,9 @@ public class BoundingVolumeHierarchy {
             }
 
             BoundingBox leftBox = new BoundingBox(aList.stream()
-                    .flatMap(triangle -> getVertices(triangle).stream()).toList());
+                    .flatMap(triangle -> triangle.getVertices().stream()).toList());
             BoundingBox rightBox = new BoundingBox(bList.stream()
-                    .flatMap(triangle -> getVertices(triangle).stream()).toList());
+                    .flatMap(triangle -> triangle.getVertices().stream()).toList());
 
             childA = new Node(leftBox, aList);
             childB = new Node(rightBox, bList);

@@ -10,9 +10,6 @@ import org.joml.Vector3d;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static less.lgeo.common.Vector3Utils.toVector3d;
-import static less.lgeo.common.Vector3Utils.toVector3;
-import static less.lgeo.primitive.LineUtils.toLine;
 import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
 
 /**
@@ -107,7 +104,7 @@ public class BoundingBox {
     }
 
     public void growToInclude(Vector3 point) {
-        growToInclude(toVector3d(point));
+        growToInclude(point.toVector3d());
     }
 
     public void growToInclude(Vector3d point) {
@@ -131,7 +128,7 @@ public class BoundingBox {
     }
 
     public boolean includesPoint(Vector3 point) {
-        return includesPoint(toVector3d(point));
+        return includesPoint(point.toVector3d());
     }
 
     public Vector3d getCenter() {
@@ -157,10 +154,10 @@ public class BoundingBox {
         Vector3d c = calculateC();
         Vector3d d = calculateD();
         return List.of(
-                toLine(UNKNOWN_COLOR_ID, toVector3(a), toVector3(b)),
-                toLine(UNKNOWN_COLOR_ID, toVector3(b), toVector3(c)),
-                toLine(UNKNOWN_COLOR_ID, toVector3(c), toVector3(d)),
-                toLine(UNKNOWN_COLOR_ID, toVector3(d), toVector3(a))
+                new Line(UNKNOWN_COLOR_ID, new Vector3(a), new Vector3(b)),
+                new Line(UNKNOWN_COLOR_ID, new Vector3(b), new Vector3(c)),
+                new Line(UNKNOWN_COLOR_ID, new Vector3(c), new Vector3(d)),
+                new Line(UNKNOWN_COLOR_ID, new Vector3(d), new Vector3(a))
         );
     }
 
@@ -170,10 +167,10 @@ public class BoundingBox {
         Vector3d g = calculateG();
         Vector3d h = calculateH();
         return List.of(
-                toLine(UNKNOWN_COLOR_ID, toVector3(e), toVector3(f)),
-                toLine(UNKNOWN_COLOR_ID, toVector3(f), toVector3(g)),
-                toLine(UNKNOWN_COLOR_ID, toVector3(g), toVector3(h)),
-                toLine(UNKNOWN_COLOR_ID, toVector3(h), toVector3(e))
+                new Line(UNKNOWN_COLOR_ID, new Vector3(e), new Vector3(f)),
+                new Line(UNKNOWN_COLOR_ID, new Vector3(f), new Vector3(g)),
+                new Line(UNKNOWN_COLOR_ID, new Vector3(g), new Vector3(h)),
+                new Line(UNKNOWN_COLOR_ID, new Vector3(h), new Vector3(e))
         );
     }
 
@@ -195,10 +192,10 @@ public class BoundingBox {
         Vector3d h = calculateH();
 
         return List.of(
-                toLine(UNKNOWN_COLOR_ID, toVector3(a), toVector3(e)),
-                toLine(UNKNOWN_COLOR_ID, toVector3(b), toVector3(f)),
-                toLine(UNKNOWN_COLOR_ID, toVector3(c), toVector3(g)),
-                toLine(UNKNOWN_COLOR_ID, toVector3(d), toVector3(h))
+                new Line(UNKNOWN_COLOR_ID, new Vector3(a), new Vector3(e)),
+                new Line(UNKNOWN_COLOR_ID, new Vector3(b), new Vector3(f)),
+                new Line(UNKNOWN_COLOR_ID, new Vector3(c), new Vector3(g)),
+                new Line(UNKNOWN_COLOR_ID, new Vector3(d), new Vector3(h))
         );
     }
 
