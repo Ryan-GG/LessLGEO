@@ -1,7 +1,6 @@
 package less.lgeo;
 
-
-import less.lgeo.messaging.ModelJobRequest;
+import less.lgeo.connection.Connection;
 import less.lgeo.parse.ConnectivityParser;
 import less.lgeo.parse.LDrawParser;
 import less.lgeo.primitive.Model;
@@ -15,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.List;
+import java.util.Optional;
 
 import static less.lgeo.common.CommonUtils.PART_EXT;
 import static less.lgeo.common.CommonUtils.changeFileExtension;
@@ -38,26 +38,31 @@ public class ModelJoiner {
         this.connectivityParser = connectivityParser;
     }
 
-    public Model joinAndTransformModel(ModelJobRequest modelJobRequest) {
+    public Model joinAndTransformModel(String modelJobRequest) {
 
         Model parentModel = getLDrawModel(modelJobRequest);
 
-        List<SubFileReference> connectedPieces = parentModel.getPieceList().stream()
+        List<SubFileReference> connectedPieces = parentModel.getPieces().stream()
                 .map(this::joinPieceWithConnection)
                 .toList();
 
         if (!connectedPieces.isEmpty()) {
-            parentModel = parentModel.toBuilder()
-                    .clearPiece()
-                    .addAllPiece(connectedPieces)
-                    .build();
+            parentModel = new Model(
+                    parentModel.getComments(),
+                    parentModel.getCommands(),
+                    parentModel.getLines(),
+                    parentModel.getTriangles(),
+                    parentModel.getQuadrilaterals(),
+                    parentModel.getOptionalLines(),
+                    connectedPieces
+            );
         }
 
-        return transformModel(parentModel);
+        return parentModel.transformModel();
     }
 
-    private @NonNull Model getLDrawModel(ModelJobRequest modelJobRequest) {
-        return lDrawParser.parse(modelJobRequest.getModelString()).toBuilder().build();
+    private @NonNull Model getLDrawModel(String modelJobRequest) {
+        return lDrawParser.parse(modelJobRequest);
     }
 
     private @NonNull SubFileReference joinPieceWithConnection(SubFileReference piece) {
@@ -71,10 +76,13 @@ public class ModelJoiner {
 
                 Connection pieceConnection = connectivityParser.parse(input);
 
-                return piece.toBuilder()
-                        .clearPieceConnection()
-                        .setPieceConnection(pieceConnection)
-                        .build();
+                return new SubFileReference(
+                        piece.getColorId(),
+                        piece.getMatrix(),
+                        piece.getSubModel(),
+                        piece.getFileName(),
+                        Optional.of(pieceConnection)
+                );
             } catch (IOException e) {
                 logger.error("Failed to open connectivity file {}", connectionFile.getAbsolutePath());
             }

@@ -1,7 +1,9 @@
 package less.lgeo.parse;
 
+import less.lgeo.common.Comment;
 import less.lgeo.common.LineType;
 import less.lgeo.common.Matrix;
+import less.lgeo.common.MetaCommand;
 import less.lgeo.primitive.*;
 import org.joml.Vector3d;
 import org.slf4j.Logger;
@@ -38,7 +40,13 @@ public class LDrawParser implements Parser<Model> {
 
     public Model parse(String toParse) {
 
-        Model.ModelBuilder modelBuilder = Model.builder();
+        List<MetaCommand> commands = new ArrayList<>();
+        List<Comment> comments = new ArrayList<>();
+        List<SubFileReference> pieces = new ArrayList<>();
+        List<Line> lines = new ArrayList<>();
+        List<Triangle> triangles = new ArrayList<>();
+        List<Quadrilateral> quadrilaterals = new ArrayList<>();
+        List<OptionalLine> optionalLines = new ArrayList<>();
 
         logger.info("Parsing file name: {}", toParse);
 
@@ -58,23 +66,23 @@ public class LDrawParser implements Parser<Model> {
                     } else {
                         String command = lineIterator.next();
                         if (isMetaCommand(command)) {
-                            modelBuilder.addCommand(parseCommand(command, lineIterator));
+                            commands.add(parseCommand(command, lineIterator));
                         } else {
-                            modelBuilder.addComment(parseComment(line));
+                            comments.add(parseComment(line));
                         }
                     }
                 }
-                case SUB_FILE_REF -> modelBuilder.addPiece(parseSubFileReference(lineIterator));
-                case LINE -> modelBuilder.addLine(parseLine(lineIterator));
-                case TRIANGLE -> modelBuilder.addTriangle(parseTriangle(lineIterator));
-                case QUADRILATERAL -> modelBuilder.addQuadrilateral(parseQuadrilateral(lineIterator));
-                case OPTIONAL_LINE -> modelBuilder.addOptionalLine(parseOptionalLine(lineIterator));
+                case SUB_FILE_REF -> pieces.add(parseSubFileReference(lineIterator));
+                case LINE -> lines.add(parseLine(lineIterator));
+                case TRIANGLE -> triangles.add(parseTriangle(lineIterator));
+                case QUADRILATERAL -> quadrilaterals.add(parseQuadrilateral(lineIterator));
+                case OPTIONAL_LINE -> optionalLines.add(parseOptionalLine(lineIterator));
                 default -> throw new IllegalStateException(
                         "Line Type has an Illegal type of " + lineType);
             }
         });
         logger.info("Finished Parsing");
-        return modelBuilder.build();
+        return new Model(comments, commands, lines, triangles, quadrilaterals, optionalLines, pieces);
     }
 
 
@@ -127,6 +135,7 @@ public class LDrawParser implements Parser<Model> {
         String subFileName = subFileParts.getLast();
         Model parsedSubFileModel = getParsedSubFileModel(subFileName);
 
+        //FIXME??
         return new SubFileReference(
                 colorId,
                 parsedMatrix,

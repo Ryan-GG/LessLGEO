@@ -4,6 +4,7 @@ import less.lgeo.common.Comment;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.MetaCommand;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import org.ejml.data.DMatrix4x4;
 import org.ejml.data.DMatrixRMaj;
@@ -145,7 +146,7 @@ public class Connection {
                             result);
                     Matrix resulted = dMatrixToMatrix(result);
 
-                    return new PartConnection(partConnection.groupId, partConnection.elementId, resulted);
+                    return new PartConnection(partConnection.groupId, partConnection.elementId, resulted, partConnection.groupStud);
                 })
                 .toList();
 
@@ -156,21 +157,47 @@ public class Connection {
         );
     }
 
-    private enum GroupId {
+    public enum GroupId {
         GROUP_ZERO,
         GROUP_ONE,
         GROUP_STUD,
         GROUP_FOUR,
-        GROUP_SIX
+        GROUP_SIX;
+
+        public static GroupId fromValue(int i) {
+
+            return switch (i) {
+                case 0 -> GROUP_ZERO;
+                case 1 -> GROUP_ONE;
+                case 2 -> GROUP_STUD;
+                case 3 -> GROUP_FOUR;
+                case 4 -> GROUP_SIX;
+                default -> throw new IllegalStateException("Unexpected value: " + i);
+            };
+        }
+
+    }
+
+    @Data
+    @Builder
+    public static class PartConnection {
+        private final GroupId groupId;
+        private final int elementId;
+        private final Matrix matrix;
+        // FIXME, This should be a oneof like in GPB
+        private final GroupStud groupStud;
+
     }
 
     @Data
     @AllArgsConstructor
-    private class PartConnection {
-        private final int groupId;
-        private final int elementId;
-        private final Matrix matrix;
-        // figure out geometry
+    public static class GroupStud {
+        private int xWidthHalfStud;
+        private int zWidthHalfStud;
+
+        // flat 2d array, representing a Z by X grid where true means its a
+        // connection point for a stud
+        private List<Boolean> studGrid;
     }
 }
 

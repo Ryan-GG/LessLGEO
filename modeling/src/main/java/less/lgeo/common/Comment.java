@@ -1,12 +1,5 @@
-
 package less.lgeo.common;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-
-@Data
-@AllArgsConstructor
-public class Comment {
-  private final LineType lineType;
-  private final String comment;
+public record Comment(String comment) {
+    private static final LineType lineType = LineType.COMMENT_OR_META_CMD;
 }

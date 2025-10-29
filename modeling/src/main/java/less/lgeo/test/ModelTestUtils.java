@@ -43,9 +43,14 @@ public class ModelTestUtils {
 
         List<Quadrilateral> cube = List.of(top, bottom, front, back, left, right);
 
-        return Model.builder()
-                .quadrilaterals(cube)
-                .build();
+        return new Model(
+                List.of(),
+                List.of(),
+                List.of(),
+                List.of(),
+                cube,
+                List.of(),
+                List.of());
     }
 
     public static Model pyramid() {
@@ -64,10 +69,15 @@ public class ModelTestUtils {
 
         List<Triangle> pyramid = List.of(front, back, left, right);
 
-        return Model.builder()
-                .triangles(pyramid)
-                .quadrilaterals(List.of(bottom))
-                .build();
+        return new Model(
+                List.of(),
+                List.of(),
+                List.of(),
+                pyramid,
+                List.of(bottom),
+                List.of(),
+                List.of()
+        );
     }
 
 }

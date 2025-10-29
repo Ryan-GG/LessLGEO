@@ -4,20 +4,19 @@ import less.lgeo.common.Comment;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.MetaCommand;
 import less.lgeo.connection.Connection;
-import lombok.Builder;
 import lombok.Data;
 import org.ejml.data.DMatrix4x4;
 import org.ejml.dense.fixed.CommonOps_DDF4;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import static less.lgeo.common.CommonUtils.getColor;
 import static less.lgeo.common.Matrix.dMatrixToMatrix;
 import static less.lgeo.common.Matrix.matrixToDMatrix;
 
 @Data
-@Builder
 public class Model {
 
     private final Long id = null;
@@ -49,9 +48,9 @@ public class Model {
     /**
      * @return All {@link Quadrilateral} from the Parent Model
      */
-    public Set<Quadrilateral> getQuadrilaterals() {
+    public List<Quadrilateral> getQuadrilaterals() {
 
-        Set<Quadrilateral> quadrilaterals = new HashSet<>(this.quadrilaterals);
+        List<Quadrilateral> quadrilaterals = new ArrayList<>(this.quadrilaterals);
 
         pieces.forEach(
                 subFileReference -> quadrilaterals.addAll(subFileReference.getSubModel().getQuadrilaterals()));
@@ -62,11 +61,12 @@ public class Model {
     /**
      * @return All {@link Connection} from the Parent Model
      */
-    public Set<Connection> getConnections() {
+    public List<Connection> getConnections() {
 
-        Set<Connection> connections = pieces.stream().map(SubFileReference::getPieceConnection)
-                .filter(optionalConnection -> optionalConnection.isPresent())
-                .map(connection -> connection.get()).collect(Collectors.toSet());
+        List<Connection> connections = new ArrayList<>(pieces.stream().map(SubFileReference::getPieceConnection)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .toList());
 
         pieces.forEach(
                 subFileReference -> connections.addAll(subFileReference.getSubModel().getConnections()));

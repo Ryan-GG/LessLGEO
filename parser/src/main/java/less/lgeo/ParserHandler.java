@@ -1,7 +1,6 @@
 package less.lgeo;
 
 import less.lgeo.embedded.ModelId;
-import less.lgeo.messaging.ModelJobRequest;
 import less.lgeo.primitive.Model;
 import less.lgeo.producer.ParserProducer;
 import less.lgeo.service.ModelService;
@@ -43,7 +42,7 @@ public class ParserHandler {
      *
      * @param modelJobRequest Model LDraw String
      */
-    public ModelId consume(ModelJobRequest modelJobRequest) {
+    public ModelId consume(String modelJobRequest) {
 
         Model joinedModel = modelJoiner.joinAndTransformModel(modelJobRequest);
 
