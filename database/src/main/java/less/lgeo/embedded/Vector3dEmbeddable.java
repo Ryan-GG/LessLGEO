@@ -10,13 +10,13 @@ import org.joml.Vector3d;
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
-public class Vector3Embeddable {
+public class Vector3dEmbeddable {
 
     private double x;
     private double y;
     private double z;
 
-    public Vector3Embeddable(Vector3d vertex) {
+    public Vector3dEmbeddable(Vector3d vertex) {
         this.x = vertex.x;
         this.y = vertex.y;
         this.z = vertex.z;

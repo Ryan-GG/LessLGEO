@@ -2,7 +2,7 @@ package less.lgeo.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import less.lgeo.embedded.ModelId;
-import less.lgeo.embedded.Vector3Embeddable;
+import less.lgeo.embedded.Vector3dEmbeddable;
 import less.lgeo.entity.ColorEntity;
 import less.lgeo.entity.LineEntity;
 import less.lgeo.entity.ModelEntity;
@@ -61,8 +61,8 @@ class ModelControllerTest {
     void getModel() throws Exception {
 
         ModelId modelId = ModelId.of(1L);
-        Vector3Embeddable p1 = new Vector3Embeddable(0, 0, 0);
-        Vector3Embeddable p2 = new Vector3Embeddable(1, 1, 1);
+        Vector3dEmbeddable p1 = new Vector3dEmbeddable(0, 0, 0);
+        Vector3dEmbeddable p2 = new Vector3dEmbeddable(1, 1, 1);
         ColorEntity colorEntity = new ColorEntity(1, "Black", "ffffff", false, 0, 0, 0, 0);
         ModelEntity modelEntity = new ModelEntity();
         modelEntity.setId(modelId);

@@ -2,7 +2,7 @@ package less.lgeo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import less.lgeo.embedded.Vector3Embeddable;
+import less.lgeo.embedded.Vector3dEmbeddable;
 import less.lgeo.primitive.Triangle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,7 +39,7 @@ public class TriangleEntity {
             @AttributeOverride(name = "y", column = @Column(name = "p1_y")),
             @AttributeOverride(name = "z", column = @Column(name = "p1_z"))
     })
-    private Vector3Embeddable p1;
+    private Vector3dEmbeddable p1;
 
     @Embedded
     @AttributeOverrides({
@@ -47,7 +47,7 @@ public class TriangleEntity {
             @AttributeOverride(name = "y", column = @Column(name = "p2_y")),
             @AttributeOverride(name = "z", column = @Column(name = "p2_z"))
     })
-    private Vector3Embeddable p2;
+    private Vector3dEmbeddable p2;
 
     @Embedded
     @AttributeOverrides({
@@ -55,7 +55,7 @@ public class TriangleEntity {
             @AttributeOverride(name = "y", column = @Column(name = "p3_y")),
             @AttributeOverride(name = "z", column = @Column(name = "p3_z"))
     })
-    private Vector3Embeddable p3;
+    private Vector3dEmbeddable p3;
 
 
     public static Triangle toPojo(TriangleEntity triangleEntity) {
