@@ -23,8 +23,8 @@ public class Vector3dEmbeddable {
         this.y = vertex.y;
         this.z = vertex.z;
     }
-    
-    public Vector3d toVector3d() {
+
+    public Vector3d toDomain() {
         return new Vector3d(getX(), getY(), getZ());
     }
 

@@ -2,30 +2,58 @@ package less.lgeo.mapper;
 
 import less.lgeo.entity.ModelEntity;
 import less.lgeo.primitive.Model;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/**
- * This create a generated implementation using the MapStruct dependency
- */
-@Mapper(componentModel = "spring", uses = {ColorMapper.class})
-public interface ModelMapper {
+@Component
+public class ModelMapper implements Mapper<Model, ModelEntity> {
 
-    // --- Entity <-> Domain ---
-    Model toDomain(ModelEntity entity);
+    private final LineMapper lineMapper;
+    private final TriangleMapper triangleMapper;
+    private final QuadrilateralMapper quadrilateralMapper;
+    private final OptionalLineMapper optionalLineMapper;
+    private final SubFileReferenceMapper subFileReferenceMapper;
 
-    ModelEntity toEntity(Model domain);
+    public ModelMapper(
+            LineMapper lineMapper,
+            TriangleMapper triangleMapper,
+            QuadrilateralMapper quadrilateralMapper,
+            OptionalLineMapper optionalLineMapper,
+            SubFileReferenceMapper subFileReferenceMapper
+    ) {
+        this.lineMapper = lineMapper;
+        this.triangleMapper = triangleMapper;
+        this.quadrilateralMapper = quadrilateralMapper;
+        this.optionalLineMapper = optionalLineMapper;
+        this.subFileReferenceMapper = subFileReferenceMapper;
+    }
 
-    // --- Domain <-> DTO ---
-    /*@Mapping(target = "monthlyPayment", expression = "java(loan.calculateMonthlyPayment())")
-    LoanDTO toDto(Loan loan);*/
 
-    /*@InheritInverseConfiguration(name = "toDto")
-    Loan toDomain(LoanDTO dto);*/
+    @Override
+    public Model toDomain(ModelEntity entity) {
+        //FIXME, comments/commands need to be stored in the database
+        return new Model(
+                List.of(),
+                List.of(),
+                lineMapper.toDomainList(entity.getLines()),
+                triangleMapper.toDomainList(entity.getTriangles()),
+                quadrilateralMapper.toDomainList(entity.getQuadrilaterals()),
+                optionalLineMapper.toDomainList(entity.getOptionalLines()),
+                subFileReferenceMapper.toDomainList(entity.getPieces(), this));
+    }
 
-    // --- List mappings (optional) ---
-    //List<LoanDTO> toDtoList(List<Loan> loans);
+    @Override
+    public ModelEntity toEntity(Model domain) {
+        ModelEntity modelEntity = new ModelEntity();
+        //Skip Id, auto created by sequence
+        modelEntity.setLines(lineMapper.toEntityList(domain.lines(), modelEntity));
+        modelEntity.setTriangles(triangleMapper.toEntityList(domain.triangles(), modelEntity));
+        modelEntity.setQuadrilaterals(quadrilateralMapper.toEntityList(domain.quadrilaterals(), modelEntity));
+        modelEntity.setOptionalLines(optionalLineMapper.toEntityList(domain.optionalLines(), modelEntity));
+        modelEntity.setPieces(subFileReferenceMapper.toEntityList(domain.pieces(), modelEntity, this));
+        return modelEntity;
 
-    List<ModelEntity> toDomainList(List<ModelEntity> entities);
+    }
+
 }

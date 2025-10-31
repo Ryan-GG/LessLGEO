@@ -2,27 +2,22 @@ package less.lgeo.mapper;
 
 import less.lgeo.common.Color;
 import less.lgeo.entity.ColorEntity;
-import org.mapstruct.Mapper;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
+@Component
+public class ColorMapper implements Mapper<Color, ColorEntity> {
 
-@Mapper(componentModel = "spring")
-public interface ColorMapper {
-    // --- Entity <-> Domain ---
-    Color toDomain(ColorEntity entity);
+    @Override
+    public Color toDomain(ColorEntity entity) {
+        return new Color(entity.getId(), entity.getName(), entity.getRgb(), entity.isTrans());
+    }
 
-    ColorEntity toEntity(Color domain);
-
-    // --- Domain <-> DTO ---
-    /*@Mapping(target = "monthlyPayment", expression = "java(loan.calculateMonthlyPayment())")
-    LoanDTO toDto(Loan loan);*/
-
-    /*@InheritInverseConfiguration(name = "toDto")
-    Loan toDomain(LoanDTO dto);*/
-
-    // --- List mappings (optional) ---
-    //List<LoanDTO> toDtoList(List<Loan> loans);
-
-    List<Color> toDomainList(List<ColorEntity> entities);
+    @Override
+    public ColorEntity toEntity(Color domain) {
+        //Only sets Id for joining
+        ColorEntity entity = new ColorEntity();
+        entity.setId(domain.getId());
+        return entity;
+    }
 
 }
