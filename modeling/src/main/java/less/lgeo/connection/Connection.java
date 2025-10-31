@@ -119,7 +119,7 @@ public class Connection {
         transformVector.set(0, 0, xOffset);
         transformVector.set(1, 0, yOffset);
         transformVector.set(2, 0, zOffset);
-        transformVector.set(3, 0, partconnectionMatrix.getScale());
+        transformVector.set(3, 0, partconnectionMatrix.scale());
 
         DMatrixRMaj resultVector = new DMatrixRMaj(4, 1);
         CommonOps_DDRM.mult(new DMatrixRMaj(matrixToDMatrix(partconnectionMatrix)), transformVector,

@@ -42,18 +42,18 @@ public class ModelJoiner {
 
         Model parentModel = getLDrawModel(modelJobRequest);
 
-        List<SubFileReference> connectedPieces = parentModel.getPieces().stream()
+        List<SubFileReference> connectedPieces = parentModel.pieces().stream()
                 .map(this::joinPieceWithConnection)
                 .toList();
 
         if (!connectedPieces.isEmpty()) {
             parentModel = new Model(
-                    parentModel.getComments(),
-                    parentModel.getCommands(),
-                    parentModel.getLines(),
-                    parentModel.getTriangles(),
-                    parentModel.getQuadrilaterals(),
-                    parentModel.getOptionalLines(),
+                    parentModel.comments(),
+                    parentModel.commands(),
+                    parentModel.lines(),
+                    parentModel.triangles(),
+                    parentModel.quadrilaterals(),
+                    parentModel.optionalLines(),
                     connectedPieces
             );
         }
@@ -68,7 +68,7 @@ public class ModelJoiner {
     private @NonNull SubFileReference joinPieceWithConnection(SubFileReference piece) {
 
         File connectionFile = new File("connectivity",
-                changeFileExtension(piece.getFileName(), PART_EXT));
+                changeFileExtension(piece.fileName(), PART_EXT));
 
         if (Files.exists(connectionFile.toPath())) {
             try {
@@ -77,10 +77,10 @@ public class ModelJoiner {
                 Connection pieceConnection = connectivityParser.parse(input);
 
                 return new SubFileReference(
-                        piece.getColorId(),
-                        piece.getMatrix(),
-                        piece.getSubModel(),
-                        piece.getFileName(),
+                        piece.color(),
+                        piece.matrix(),
+                        piece.subModel(),
+                        piece.fileName(),
                         Optional.of(pieceConnection)
                 );
             } catch (IOException e) {

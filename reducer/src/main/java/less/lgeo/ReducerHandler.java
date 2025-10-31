@@ -2,6 +2,7 @@ package less.lgeo;
 
 import less.lgeo.embedded.ModelId;
 import less.lgeo.entity.ModelEntity;
+import less.lgeo.mapper.ModelMapper;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.Triangle;
 import less.lgeo.service.ModelService;
@@ -22,8 +23,12 @@ public class ReducerHandler {
     @Autowired
     private final ModelService modelService;
 
-    public ReducerHandler(ModelService modelService) {
+    @Autowired
+    private final ModelMapper modelMapper;
+
+    public ReducerHandler(ModelService modelService, ModelMapper modelMapper) {
         this.modelService = modelService;
+        this.modelMapper = modelMapper;
     }
 
     public static void main(String[] args) {
@@ -37,7 +42,7 @@ public class ReducerHandler {
     public void consume(ModelId modelId) {
         ModelEntity modelEntity = modelService.getModelById(modelId);
 
-        Model model = modelEntity.toPojo();
+        Model model = modelMapper.toDomain(modelEntity);
         logger.info("converted: {}", model);
 
         List<Triangle> modelAsTriangles = model.tessellate();

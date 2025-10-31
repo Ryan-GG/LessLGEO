@@ -19,12 +19,12 @@ public class Vector3Utils {
         double y = vector.y;
         double z = vector.z;
 
-        double newX = matrix.getA() * x + matrix.getB() * y
-                + matrix.getC() * z + matrix.getX();
-        double newY = matrix.getD() * x + matrix.getE() * y
-                + matrix.getF() * z + matrix.getY();
-        double newZ = matrix.getG() * x + matrix.getH() * y
-                + matrix.getI() * z + matrix.getZ();
+        double newX = matrix.a() * x + matrix.b() * y
+                + matrix.c() * z + matrix.x();
+        double newY = matrix.d() * x + matrix.e() * y
+                + matrix.f() * z + matrix.y();
+        double newZ = matrix.g() * x + matrix.h() * y
+                + matrix.i() * z + matrix.z();
 
         return new Vector3d(newX, newY, newZ);
     }

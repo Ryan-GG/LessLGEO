@@ -2,11 +2,13 @@ package less.lgeo.embedded;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.joml.Vector3d;
 
-@Data
+@Getter
+@Setter
 @Embeddable
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,8 +23,7 @@ public class Vector3dEmbeddable {
         this.y = vertex.y;
         this.z = vertex.z;
     }
-
-
+    
     public Vector3d toVector3d() {
         return new Vector3d(getX(), getY(), getZ());
     }

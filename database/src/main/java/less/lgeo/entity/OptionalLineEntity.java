@@ -3,12 +3,13 @@ package less.lgeo.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import less.lgeo.embedded.Vector3dEmbeddable;
-import less.lgeo.primitive.OptionalLine;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -64,16 +65,5 @@ public class OptionalLineEntity {
             @AttributeOverride(name = "z", column = @Column(name = "p4_z"))
     })
     private Vector3dEmbeddable p4;
-
-
-    public static OptionalLine toPojo(OptionalLineEntity optionalLineEntity) {
-        return new OptionalLine(
-                optionalLineEntity.getColor().getId(),
-                optionalLineEntity.getP1().toVector3d(),
-                optionalLineEntity.getP2().toVector3d(),
-                optionalLineEntity.getP3().toVector3d(),
-                optionalLineEntity.getP3().toVector3d()
-        );
-    }
 
 }

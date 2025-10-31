@@ -1,34 +1,29 @@
 package less.lgeo.primitive;
 
-import less.lgeo.common.LineType;
-import less.lgeo.common.Matrix;
-import less.lgeo.common.Vector3Utils;
+import less.lgeo.common.*;
 import lombok.Data;
 import org.joml.Vector3d;
 
 import java.util.List;
 import java.util.Optional;
 
-import static less.lgeo.common.CommonUtils.getColor;
-
 @Data
 public class OptionalLine {
 
     private final LineType type = LineType.OPTIONAL_LINE;
-    private final Long id = null;
-    private final int colorId;
+    private final Color color;
     private final Vector3d p1;
     private final Vector3d p2;
     private final Vector3d p3;
     private final Vector3d p4;
 
     public OptionalLine(
-            int colorId,
+            Color color,
             Vector3d p1,
             Vector3d p2,
             Vector3d p3,
             Vector3d p4) {
-        this.colorId = colorId;
+        this.color = color;
         this.p1 = p1;
         this.p2 = p2;
         this.p3 = p3;
@@ -44,9 +39,9 @@ public class OptionalLine {
 
     public OptionalLine transform(
             Optional<Matrix> transformationMatrix,
-            Optional<Integer> inheritedColor) {
+            Optional<Color> inheritedColor) {
         return new OptionalLine(
-                getColor(inheritedColor, colorId),
+                CommonUtils.getColor(inheritedColor, color),
                 transformationMatrix.map(matrix -> Vector3Utils.transform(p1, matrix)).orElse(p1),
                 transformationMatrix.map(matrix -> Vector3Utils.transform(p2, matrix)).orElse(p2),
                 transformationMatrix.map(matrix -> Vector3Utils.transform(p3, matrix)).orElse(p3),

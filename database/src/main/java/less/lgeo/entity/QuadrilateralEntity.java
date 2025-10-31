@@ -3,12 +3,13 @@ package less.lgeo.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import less.lgeo.embedded.Vector3dEmbeddable;
-import less.lgeo.primitive.Quadrilateral;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -64,17 +65,6 @@ public class QuadrilateralEntity {
             @AttributeOverride(name = "z", column = @Column(name = "p4_z"))
     })
     private Vector3dEmbeddable p4;
-
-
-    public static Quadrilateral toPojo(QuadrilateralEntity quadrilateralEntity) {
-        return new Quadrilateral(
-                quadrilateralEntity.getColor().getId(),
-                quadrilateralEntity.getP1().toVector3d(),
-                quadrilateralEntity.getP2().toVector3d(),
-                quadrilateralEntity.getP3().toVector3d(),
-                quadrilateralEntity.getP3().toVector3d()
-        );
-    }
 
 }
 

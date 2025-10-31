@@ -3,12 +3,13 @@ package less.lgeo.entity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import less.lgeo.embedded.Vector3dEmbeddable;
-import less.lgeo.primitive.Line;
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
@@ -29,8 +30,8 @@ public class LineEntity {
     @JoinColumn(name = "model_id", nullable = false)
     private ModelEntity model;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "color_id", referencedColumnName = "id", unique = false)
+    @OneToOne
+    @JoinColumn(name = "color_id", referencedColumnName = "id", unique = false, nullable = false)
     private ColorEntity color;
 
     @Embedded
@@ -49,12 +50,4 @@ public class LineEntity {
     })
     private Vector3dEmbeddable p2;
 
-
-    public static Line toPojo(LineEntity lineEntity) {
-        return new Line(
-                lineEntity.getColor().getId(),
-                lineEntity.getP1().toVector3d(),
-                lineEntity.getP2().toVector3d()
-        );
-    }
 }

@@ -18,19 +18,19 @@ public class CommonUtilsTest {
                 .build();
         DMatrix4x4 dMatrixFromMatrix = Matrix.matrixToDMatrix(m);
         Matrix matrixFromDMatrix = Matrix.dMatrixToMatrix(dMatrixFromMatrix);
-        assertEquals(m.getA(), matrixFromDMatrix.getA());
-        assertEquals(m.getB(), matrixFromDMatrix.getB());
-        assertEquals(m.getC(), matrixFromDMatrix.getC());
-        assertEquals(m.getD(), matrixFromDMatrix.getD());
-        assertEquals(m.getE(), matrixFromDMatrix.getE());
-        assertEquals(m.getF(), matrixFromDMatrix.getF());
-        assertEquals(m.getG(), matrixFromDMatrix.getG());
-        assertEquals(m.getH(), matrixFromDMatrix.getH());
-        assertEquals(m.getI(), matrixFromDMatrix.getI());
-        assertEquals(m.getX(), matrixFromDMatrix.getX());
-        assertEquals(m.getY(), matrixFromDMatrix.getY());
-        assertEquals(m.getZ(), matrixFromDMatrix.getZ());
-        assertEquals(m.getScale(), matrixFromDMatrix.getScale());
+        assertEquals(m.a(), matrixFromDMatrix.a());
+        assertEquals(m.b(), matrixFromDMatrix.b());
+        assertEquals(m.c(), matrixFromDMatrix.c());
+        assertEquals(m.d(), matrixFromDMatrix.d());
+        assertEquals(m.e(), matrixFromDMatrix.e());
+        assertEquals(m.f(), matrixFromDMatrix.f());
+        assertEquals(m.g(), matrixFromDMatrix.g());
+        assertEquals(m.h(), matrixFromDMatrix.h());
+        assertEquals(m.i(), matrixFromDMatrix.i());
+        assertEquals(m.x(), matrixFromDMatrix.x());
+        assertEquals(m.y(), matrixFromDMatrix.y());
+        assertEquals(m.z(), matrixFromDMatrix.z());
+        assertEquals(m.scale(), matrixFromDMatrix.scale());
     }
 
     @Test
@@ -75,7 +75,7 @@ public class CommonUtilsTest {
         Vector3d transform = new Vector3d(1, 0, 0);
         Vector3d result = Vector3Utils.transform(transform, rotZ45);
         assertEquals(sqrt2over2, result.x);
-        assertEquals(sqrt2over2, result.y;
+        assertEquals(sqrt2over2, result.y);
         assertEquals(0, result.z);
     }
 }

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
+import static less.lgeo.test.ModelTestUtils.BLACK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -53,12 +54,12 @@ public class BoundingVolumeHierarchyTest {
 
     @Test
     void splitOnXAxis() {
-        Triangle negative = new Triangle(-1,
+        Triangle negative = new Triangle(BLACK,
                 new Vector3d(0, 0, 0),
                 new Vector3d(0, 0, 1),
                 new Vector3d(-1, 0, 0));
 
-        Triangle positive = new Triangle(-1,
+        Triangle positive = new Triangle(BLACK,
                 new Vector3d(0, 0, 0),
                 new Vector3d(0, 0, 1),
                 new Vector3d(1, 0, 0));
@@ -86,12 +87,12 @@ public class BoundingVolumeHierarchyTest {
 
     @Test
     void splitOnYAxis() {
-        Triangle negative = new Triangle(-1,
+        Triangle negative = new Triangle(BLACK,
                 new Vector3d(0, 0, 0),
                 new Vector3d(0, -1, 0),
                 new Vector3d(1, 0, 0));
 
-        Triangle positive = new Triangle(-1,
+        Triangle positive = new Triangle(BLACK,
                 new Vector3d(0, 0, 0),
                 new Vector3d(0, 1, 0),
                 new Vector3d(1, 0, 0));
@@ -119,12 +120,12 @@ public class BoundingVolumeHierarchyTest {
 
     @Test
     void splitOnZAxis() {
-        Triangle negative = new Triangle(-1,
+        Triangle negative = new Triangle(BLACK,
                 new Vector3d(0, 0, -1),
                 new Vector3d(0, 0, 0),
                 new Vector3d(1, 0, 0));
 
-        Triangle positive = new Triangle(-1,
+        Triangle positive = new Triangle(BLACK,
                 new Vector3d(0, 0, 1),
                 new Vector3d(0, 0, 0),
                 new Vector3d(1, 0, 0));

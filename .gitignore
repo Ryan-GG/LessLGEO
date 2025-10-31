@@ -43,7 +43,6 @@ replay_pid*
 
 # Local ldraw files
 ldraw/
-*.ldr
 *.dat
 
 # Connectivity files

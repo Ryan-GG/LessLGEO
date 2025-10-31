@@ -7,7 +7,6 @@ import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -48,7 +47,7 @@ class BoundBoxTest {
     @Test
     void getBoundBoxQuads() {
         Model cube = ModelTestUtils.cube();
-        Set<Quadrilateral> quadrilaterals = cube.getQuadrilaterals();
+        List<Quadrilateral> quadrilaterals = cube.quadrilaterals();
         List<Vector3d> vertices = quadrilaterals.stream()
                 .flatMap(quadrilateral -> quadrilateral.getVertices().stream()).toList();
 

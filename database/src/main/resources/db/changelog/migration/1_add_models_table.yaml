@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: 3
-      author: you
+      author: gross
       changes:
         - createSequence:
             sequenceName: model_seq

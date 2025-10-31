@@ -1,9 +1,6 @@
 package less.lgeo.parse;
 
-import less.lgeo.common.Comment;
-import less.lgeo.common.LineType;
-import less.lgeo.common.Matrix;
-import less.lgeo.common.MetaCommand;
+import less.lgeo.common.*;
 import less.lgeo.primitive.*;
 import org.joml.Vector3d;
 import org.slf4j.Logger;
@@ -135,9 +132,12 @@ public class LDrawParser implements Parser<Model> {
         String subFileName = subFileParts.getLast();
         Model parsedSubFileModel = getParsedSubFileModel(subFileName);
 
+        Color color = new Color();
+        color.setId(colorId);
+
         //FIXME??
         return new SubFileReference(
-                colorId,
+                color,
                 parsedMatrix,
                 parsedSubFileModel,
                 subFileName,
@@ -189,8 +189,12 @@ public class LDrawParser implements Parser<Model> {
 
         Vector3d p1 = new Vector3d(x1, y1, z1);
         Vector3d p2 = new Vector3d(x2, y2, z2);
+
+        Color color = new Color();
+        color.setId(colorId);
+
         return new Line(
-                colorId,
+                color,
                 p1,
                 p2
         );
@@ -214,8 +218,12 @@ public class LDrawParser implements Parser<Model> {
         Vector3d p1 = new Vector3d(x1, y1, z1);
         Vector3d p2 = new Vector3d(x2, y2, z2);
         Vector3d p3 = new Vector3d(x3, y3, z3);
+
+        Color color = new Color();
+        color.setId(colorId);
+
         return new Triangle(
-                colorId,
+                color,
                 p1,
                 p2,
                 p3
@@ -244,8 +252,12 @@ public class LDrawParser implements Parser<Model> {
         Vector3d p2 = new Vector3d(x2, y2, z2);
         Vector3d p3 = new Vector3d(x3, y3, z3);
         Vector3d p4 = new Vector3d(x4, y4, z4);
+
+        Color color = new Color();
+        color.setId(colorId);
+
         return new Quadrilateral(
-                colorId,
+                color,
                 p1,
                 p2,
                 p3,
@@ -275,8 +287,12 @@ public class LDrawParser implements Parser<Model> {
         Vector3d p2 = new Vector3d(x2, y2, z2);
         Vector3d p3 = new Vector3d(x3, y3, z3);
         Vector3d p4 = new Vector3d(x4, y4, z4);
+
+        Color color = new Color();
+        color.setId(colorId);
+
         return new OptionalLine(
-                colorId,
+                color,
                 p1,
                 p2,
                 p3,

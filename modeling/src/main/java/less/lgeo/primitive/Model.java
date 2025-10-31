@@ -1,10 +1,10 @@
 package less.lgeo.primitive;
 
+import less.lgeo.common.Color;
 import less.lgeo.common.Comment;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.MetaCommand;
 import less.lgeo.connection.Connection;
-import lombok.Data;
 import org.ejml.data.DMatrix4x4;
 import org.ejml.dense.fixed.CommonOps_DDF4;
 
@@ -16,44 +16,26 @@ import static less.lgeo.common.CommonUtils.getColor;
 import static less.lgeo.common.Matrix.dMatrixToMatrix;
 import static less.lgeo.common.Matrix.matrixToDMatrix;
 
-@Data
-public class Model {
-
-    private final Long id = null;
-    private final List<Comment> comments;
-    private final List<MetaCommand> commands;
-    private final List<Line> lines;
-    private final List<Triangle> triangles;
-    private final List<Quadrilateral> quadrilaterals;
-    private final List<OptionalLine> optionalLines;
-    private final List<SubFileReference> pieces;
-
-    public Model(
-            List<Comment> comments,
-            List<MetaCommand> commands,
-            List<Line> lines,
-            List<Triangle> triangles,
-            List<Quadrilateral> quadrilaterals,
-            List<OptionalLine> optionalLines,
-            List<SubFileReference> pieces) {
-        this.comments = comments;
-        this.commands = commands;
-        this.lines = lines;
-        this.triangles = triangles;
-        this.quadrilaterals = quadrilaterals;
-        this.optionalLines = optionalLines;
-        this.pieces = pieces;
-    }
+public record Model(
+        //FIXME, comments/commands need to be stored in the database
+        List<Comment> comments,
+        List<MetaCommand> commands,
+        List<Line> lines,
+        List<Triangle> triangles,
+        List<Quadrilateral> quadrilaterals,
+        List<OptionalLine> optionalLines,
+        List<SubFileReference> pieces) {
 
     /**
      * @return All {@link Quadrilateral} from the Parent Model
      */
-    public List<Quadrilateral> getQuadrilaterals() {
+    @Override
+    public List<Quadrilateral> quadrilaterals() {
 
         List<Quadrilateral> quadrilaterals = new ArrayList<>(this.quadrilaterals);
 
         pieces.forEach(
-                subFileReference -> quadrilaterals.addAll(subFileReference.getSubModel().getQuadrilaterals()));
+                subFileReference -> quadrilaterals.addAll(subFileReference.subModel().quadrilaterals()));
 
         return quadrilaterals;
     }
@@ -63,13 +45,13 @@ public class Model {
      */
     public List<Connection> getConnections() {
 
-        List<Connection> connections = new ArrayList<>(pieces.stream().map(SubFileReference::getPieceConnection)
+        List<Connection> connections = new ArrayList<>(pieces.stream().map(SubFileReference::pieceConnection)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
                 .toList());
 
         pieces.forEach(
-                subFileReference -> connections.addAll(subFileReference.getSubModel().getConnections()));
+                subFileReference -> connections.addAll(subFileReference.subModel().getConnections()));
 
         return connections;
     }
@@ -80,45 +62,45 @@ public class Model {
 
     private Model transformModel(
             Optional<Matrix> transformationMatrix,
-            Optional<Integer> parentColor) {
+            Optional<Color> parentColor) {
 
-        List<Line> transformedLines = getLines().stream().map(line -> line.transform(transformationMatrix, parentColor))
+        List<Line> transformedLines = lines().stream().map(line -> line.transform(transformationMatrix, parentColor))
                 .toList();
 
-        List<Triangle> transformedTriangles = getTriangles().stream()
+        List<Triangle> transformedTriangles = triangles().stream()
                 .map(triangle -> triangle.transform(transformationMatrix, parentColor))
                 .toList();
 
-        List<Quadrilateral> transformedQuadrilaterals = getQuadrilaterals().stream()
+        List<Quadrilateral> transformedQuadrilaterals = quadrilaterals().stream()
                 .map(quadrilateral -> quadrilateral.transform(transformationMatrix, parentColor))
                 .toList();
 
-        List<OptionalLine> transformedOptionalLines = getOptionalLines().stream()
+        List<OptionalLine> transformedOptionalLines = optionalLines().stream()
                 .map(optionaLine -> optionaLine.transform(transformationMatrix, parentColor))
                 .toList();
 
-        List<SubFileReference> transformedPieces = getPieces()
+        List<SubFileReference> transformedPieces = pieces()
                 .stream()
                 .map(subFileReference -> {
-                    Matrix resulted = subFileReference.getMatrix();
+                    Matrix resulted = subFileReference.matrix();
 
                     if (transformationMatrix.isPresent()) {
                         DMatrix4x4 result = new DMatrix4x4();
                         CommonOps_DDF4.mult(matrixToDMatrix(transformationMatrix.get()),
-                                matrixToDMatrix(subFileReference.getMatrix()),
+                                matrixToDMatrix(subFileReference.matrix()),
                                 result);
                         resulted = dMatrixToMatrix(result);
                     }
 
-                    int subPartColorId = getColor(parentColor, subFileReference.getColorId());
+                    Color subPartColor = getColor(parentColor, subFileReference.color());
 
                     return new SubFileReference(
-                            subPartColorId,
+                            subPartColor,
                             Matrix.IDENTITY_MATRIX,
-                            subFileReference.getSubModel().transformModel(Optional.of(resulted), Optional.of(subPartColorId)),
-                            subFileReference.getFileName(),
+                            subFileReference.subModel().transformModel(Optional.of(resulted), Optional.of(subPartColor)),
+                            subFileReference.fileName(),
                             //FIXME
-                            Optional.of(subFileReference.getPieceConnection().get().transformConnection(resulted)));
+                            Optional.of(subFileReference.pieceConnection().get().transformConnection(resulted)));
                 }).toList();
 
         return new Model(
@@ -144,15 +126,15 @@ public class Model {
 
     private List<Triangle> tessellateModel(Model model) {
 
-        List<Triangle> triangles = new ArrayList<>(model.getTriangles());
+        List<Triangle> triangles = new ArrayList<>(model.triangles());
 
-        List<Triangle> quadTriangles = model.getQuadrilaterals().stream()
+        List<Triangle> quadTriangles = model.quadrilaterals().stream()
                 .flatMap(quadrilateral -> quadrilateral.tessellate().stream())
                 .toList();
 
         triangles.addAll(quadTriangles);
 
-        model.getPieces().forEach(subFileReference -> triangles.addAll(tessellateModel(subFileReference.getSubModel())));
+        model.pieces().forEach(subFileReference -> triangles.addAll(tessellateModel(subFileReference.subModel())));
 
         return triangles;
 
