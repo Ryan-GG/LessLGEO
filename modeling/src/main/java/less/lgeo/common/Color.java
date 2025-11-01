@@ -14,4 +14,14 @@ public class Color {
     private String name;
     private String rgb;
     private boolean isTransparent;
+
+    @Override
+    public String toString() {
+        return String.format("(id: %d, name: %s, rgb: %s, isTransparent: %b)",
+                id,
+                name,
+                rgb,
+                isTransparent
+        );
+    }
 }

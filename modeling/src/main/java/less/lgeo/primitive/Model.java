@@ -4,7 +4,6 @@ import less.lgeo.common.Color;
 import less.lgeo.common.Comment;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.MetaCommand;
-import less.lgeo.connection.Connection;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,33 +20,29 @@ public record Model(
         List<SubFileReference> pieces) {
 
     /**
-     * @return All {@link Quadrilateral} from the Parent Model
+     * @return All {@link Quadrilateral}s and child quadrilaterals for the given {@link Model}
      */
-    @Override
-    public List<Quadrilateral> quadrilaterals() {
+    private List<Quadrilateral> getAllQuadrilaterals() {
 
         List<Quadrilateral> quadrilaterals = new ArrayList<>(this.quadrilaterals);
 
         pieces.forEach(
-                subFileReference -> quadrilaterals.addAll(subFileReference.subModel().quadrilaterals()));
+                subFileReference -> quadrilaterals.addAll(subFileReference.subModel().getAllQuadrilaterals()));
 
         return quadrilaterals;
     }
 
     /**
-     * @return All {@link Connection} from the Parent Model
+     * @return All {@link Triangle}s and child triangles for the given {@link Model}
      */
-    public List<Connection> getConnections() {
+    private List<Triangle> getAllTriangles() {
 
-        List<Connection> connections = new ArrayList<>(pieces.stream().map(SubFileReference::pieceConnection)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .toList());
+        List<Triangle> triangleList = new ArrayList<>(this.triangles);
 
         pieces.forEach(
-                subFileReference -> connections.addAll(subFileReference.subModel().getConnections()));
+                subFileReference -> triangleList.addAll(subFileReference.subModel().getAllTriangles()));
 
-        return connections;
+        return triangleList;
     }
 
     public Model transformModel() {
@@ -73,8 +68,7 @@ public record Model(
                 .map(optionalLine -> optionalLine.transform(transformationMatrix, parentColor))
                 .toList();
 
-        List<SubFileReference> transformedPieces = pieces()
-                .stream()
+        List<SubFileReference> transformedPieces = pieces().stream()
                 .map(subFileReference -> subFileReference.transform(transformationMatrix, parentColor))
                 .toList();
 
@@ -96,21 +90,14 @@ public record Model(
      * they cannot form a triangle
      */
     public List<Triangle> tessellate() {
-        return tessellateModel(this);
-    }
+        List<Triangle> triangles = new ArrayList<>(getAllTriangles());
 
-    private List<Triangle> tessellateModel(Model model) {
-
-        List<Triangle> triangles = new ArrayList<>(model.triangles());
-
-        List<Triangle> quadTriangles = model.quadrilaterals().stream()
+        List<Triangle> quadTriangles = getAllQuadrilaterals().stream()
                 .flatMap(quadrilateral -> quadrilateral.tessellate().stream())
                 .toList();
 
         triangles.addAll(quadTriangles);
-
-        model.pieces().forEach(subFileReference -> triangles.addAll(tessellateModel(subFileReference.subModel())));
-
+        
         return triangles;
 
     }
