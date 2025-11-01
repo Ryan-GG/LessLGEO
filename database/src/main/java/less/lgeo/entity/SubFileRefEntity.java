@@ -34,10 +34,10 @@ public class SubFileRefEntity {
     @JoinColumn(name = "parent_model_id", nullable = false)
     private ModelEntity model;
 
-    @OneToOne(optional = false)
-    @JoinColumn(name = "sub_model_id", referencedColumnName = "id", unique = false)
+    @OneToOne(optional = false, cascade = CascadeType.ALL)
+    @JoinColumn(name = "sub_model_id", referencedColumnName = "id", unique = false, nullable = true)
     private ModelEntity subModel;
-
+    
     private String fileName;
 
     private Long connectionId;
