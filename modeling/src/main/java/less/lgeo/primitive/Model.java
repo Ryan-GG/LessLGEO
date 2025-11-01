@@ -82,14 +82,16 @@ public record Model(
         List<SubFileReference> transformedPieces = pieces()
                 .stream()
                 .map(subFileReference -> {
-                    Matrix resulted = subFileReference.matrix();
-
+                    final Matrix resulted;
+                    
                     if (transformationMatrix.isPresent()) {
                         DMatrix4x4 result = new DMatrix4x4();
                         CommonOps_DDF4.mult(matrixToDMatrix(transformationMatrix.get()),
                                 matrixToDMatrix(subFileReference.matrix()),
                                 result);
                         resulted = dMatrixToMatrix(result);
+                    } else {
+                        resulted = subFileReference.matrix();
                     }
 
                     Color subPartColor = getColor(parentColor, subFileReference.color());
@@ -99,8 +101,7 @@ public record Model(
                             Matrix.IDENTITY_MATRIX,
                             subFileReference.subModel().transformModel(Optional.of(resulted), Optional.of(subPartColor)),
                             subFileReference.fileName(),
-                            //FIXME
-                            Optional.of(subFileReference.pieceConnection().get().transformConnection(resulted)));
+                            subFileReference.pieceConnection().map(connection -> connection.transformConnection(resulted)));
                 }).toList();
 
         return new Model(

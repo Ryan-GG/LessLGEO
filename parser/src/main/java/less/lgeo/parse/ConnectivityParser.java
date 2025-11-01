@@ -81,11 +81,9 @@ public class ConnectivityParser implements Parser<Connection> {
 
         Connection.PartConnection.PartConnectionBuilder builder = parseBody(groupId, iter);
         return switch (groupId) {
-            case GROUP_ZERO -> null;
-            case GROUP_ONE -> null;
+            // FIXME, don't know what do for these connection groups yet
+            case GROUP_ZERO, GROUP_ONE, GROUP_FOUR, GROUP_SIX -> builder.build();
             case GROUP_STUD -> parseGroupStud(builder, iter);
-            case GROUP_FOUR -> null;
-            case GROUP_SIX -> null;
             default -> throw new IllegalArgumentException("Unrecognized Group Id");
         };
     }
