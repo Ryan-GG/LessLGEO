@@ -10,7 +10,7 @@ import java.util.Optional;
 @Data
 public class Quadrilateral {
 
-    private final LineType type = LineType.QUADRILATERAL;
+    public final LineType type = LineType.QUADRILATERAL;
     private final Color color;
     private final Vector3d p1;
     private final Vector3d p2;

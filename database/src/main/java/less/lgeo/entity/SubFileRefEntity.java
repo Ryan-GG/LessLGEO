@@ -13,7 +13,7 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "models_sub_file_reference")
+@Table(name = "models_sub_file_references")
 public class SubFileRefEntity {
 
     @Id
@@ -37,7 +37,7 @@ public class SubFileRefEntity {
     @OneToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn(name = "sub_model_id", referencedColumnName = "id", unique = false, nullable = true)
     private ModelEntity subModel;
-    
+
     private String fileName;
 
     private Long connectionId;

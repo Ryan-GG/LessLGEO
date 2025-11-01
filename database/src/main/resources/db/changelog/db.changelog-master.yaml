@@ -8,6 +8,3 @@ databaseChangeLog:
   - include:
       file: classpath:/db/changelog/migration/2_create_indexes_on_model_join_ids.yaml
       relativeToChangelogFile: false
-  - include:
-      file: classpath:/db/changelog/migration/3_add_sub_file_reference_table.yaml
-      relativeToChangelogFile: false

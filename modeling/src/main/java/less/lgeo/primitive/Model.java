@@ -5,16 +5,10 @@ import less.lgeo.common.Comment;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.MetaCommand;
 import less.lgeo.connection.Connection;
-import org.ejml.data.DMatrix4x4;
-import org.ejml.dense.fixed.CommonOps_DDF4;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
-import static less.lgeo.common.CommonUtils.getColor;
-import static less.lgeo.common.Matrix.dMatrixToMatrix;
-import static less.lgeo.common.Matrix.matrixToDMatrix;
 
 public record Model(
         //FIXME, comments/commands need to be stored in the database
@@ -60,7 +54,7 @@ public record Model(
         return transformModel(Optional.empty(), Optional.empty());
     }
 
-    private Model transformModel(
+    Model transformModel(
             Optional<Matrix> transformationMatrix,
             Optional<Color> parentColor) {
 
@@ -76,33 +70,13 @@ public record Model(
                 .toList();
 
         List<OptionalLine> transformedOptionalLines = optionalLines().stream()
-                .map(optionaLine -> optionaLine.transform(transformationMatrix, parentColor))
+                .map(optionalLine -> optionalLine.transform(transformationMatrix, parentColor))
                 .toList();
 
         List<SubFileReference> transformedPieces = pieces()
                 .stream()
-                .map(subFileReference -> {
-                    final Matrix resulted;
-                    
-                    if (transformationMatrix.isPresent()) {
-                        DMatrix4x4 result = new DMatrix4x4();
-                        CommonOps_DDF4.mult(matrixToDMatrix(transformationMatrix.get()),
-                                matrixToDMatrix(subFileReference.matrix()),
-                                result);
-                        resulted = dMatrixToMatrix(result);
-                    } else {
-                        resulted = subFileReference.matrix();
-                    }
-
-                    Color subPartColor = getColor(parentColor, subFileReference.color());
-
-                    return new SubFileReference(
-                            subPartColor,
-                            Matrix.IDENTITY_MATRIX,
-                            subFileReference.subModel().transformModel(Optional.of(resulted), Optional.of(subPartColor)),
-                            subFileReference.fileName(),
-                            subFileReference.pieceConnection().map(connection -> connection.transformConnection(resulted)));
-                }).toList();
+                .map(subFileReference -> subFileReference.transform(transformationMatrix, parentColor))
+                .toList();
 
         return new Model(
                 comments,

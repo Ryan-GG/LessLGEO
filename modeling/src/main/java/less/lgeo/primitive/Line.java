@@ -8,7 +8,7 @@ import java.util.Optional;
 
 public record Line(Color color, Vector3d p1, Vector3d p2) {
 
-    private static final LineType type = LineType.LINE;
+    public static final LineType type = LineType.LINE;
 
     public List<Vector3d> getVertices() {
         return List.of(p1, p2);

@@ -4,12 +4,6 @@ databaseChangeLog:
       author: gross
       changes:
         - createIndex:
-            indexName: model_parent_index
-            tableName: models
-            columns:
-              - column:
-                  name: parent_id
-        - createIndex:
             indexName: model_parent_line_index
             tableName: model_lines
             columns:
@@ -33,3 +27,15 @@ databaseChangeLog:
             columns:
               - column:
                   name: model_id
+        - createIndex:
+            indexName: model_parent_sub_file_reference_index
+            tableName: models_sub_file_references
+            columns:
+              - column:
+                  name: parent_model_id
+        - createIndex:
+            indexName: model_sub_model_sub_file_reference_index
+            tableName: models_sub_file_references
+            columns:
+              - column:
+                  name: sub_model_id

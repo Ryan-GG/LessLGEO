@@ -105,22 +105,11 @@ public class LDrawParser implements Parser<Model> {
         double h = toDouble(iterator.next());
         double i = toDouble(iterator.next());
 
-        Matrix parsedMatrix = Matrix.builder()
-                .x(x)
-                .y(y)
-                .z(z)
-                .a(a)
-                .b(b)
-                .c(c)
-                .d(d)
-                .e(e)
-                .f(f)
-                .g(g)
-                .h(h)
-                .i(i)
-                .scale(1.0)
-                .build();
-
+        Matrix parsedMatrix = new Matrix(
+                a, b, c, x,
+                d, e, f, y,
+                g, h, i, z,
+                1.0);
 
 
         /*
@@ -134,8 +123,7 @@ public class LDrawParser implements Parser<Model> {
 
         Color color = new Color();
         color.setId(colorId);
-
-        //FIXME??
+        
         return new SubFileReference(
                 color,
                 parsedMatrix,

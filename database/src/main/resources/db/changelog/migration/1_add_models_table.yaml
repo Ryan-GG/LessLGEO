@@ -23,6 +23,10 @@ databaseChangeLog:
             sequenceName: model_optional_line_seq
             startValue: 1
             incrementBy: 50
+        - createSequence:
+            sequenceName: model_sub_file_reference_seq
+            startValue: 1
+            incrementBy: 50
   - changeSet:
       id: 4
       author: gross
@@ -304,6 +308,105 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: p2_z
+                  type: double
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: models_sub_file_references
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+              - column:
+                  name: parent_model_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sub_model_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: color_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: file_name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: connection_id
+                  type: BIGINT
+                  constraints:
+                    nullable: true
+              - column:
+                  name: a
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: b
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: c
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: x
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: d
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: e
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: f
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: y
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: g
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: h
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: i
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: z
+                  type: double
+                  constraints:
+                    nullable: false
+              - column:
+                  name: scale
                   type: double
                   constraints:
                     nullable: false

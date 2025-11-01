@@ -10,7 +10,7 @@ import java.util.Optional;
 @Data
 public class Triangle {
 
-    private final LineType type = LineType.TRIANGLE;
+    public final LineType type = LineType.TRIANGLE;
     private final Color color;
     private final Vector3d p1;
     private final Vector3d p2;
