@@ -15,6 +15,12 @@ import java.util.List;
 @RepositoryDefinition(domainClass = ModelEntity.class, idClass = Long.class)
 public interface ModelRepository extends JpaRepository<ModelEntity, Long> {
 
-    @Query(value = "SELECT * FROM models WHERE parent_id IS NULL", nativeQuery = true)
-    List<ModelEntity> findAllParentModels();
+    //find all model ids which are not contained in the subfile reference
+    // should be the disjoint between parent_model_id & sub_model_id
+    @Query(value = """
+            SELECT DISTINCT parent_model_id AS num
+            FROM models_sub_file_references
+            WHERE parent_model_id NOT IN (SELECT sub_model_id FROM models_sub_file_references)
+            """, nativeQuery = true)
+    List<Long> findAllParentModelIds();
 }

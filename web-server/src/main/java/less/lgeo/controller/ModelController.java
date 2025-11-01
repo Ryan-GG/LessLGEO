@@ -50,8 +50,8 @@ public class ModelController {
         }
     }
 
-    @GetMapping("/parents/ids")
-    public ResponseEntity<List<ModelId>> getAllParentModelIds() {
-        return ResponseEntity.ok(modelService.getAllParentModelIds());
+    @GetMapping("/id")
+    public ResponseEntity<List<ModelId>> getAllRootModelIds() {
+        return ResponseEntity.ok(modelService.getAllRootModelIds());
     }
 }

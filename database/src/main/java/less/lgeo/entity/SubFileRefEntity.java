@@ -26,16 +26,16 @@ public class SubFileRefEntity {
     private Long id;
 
     @OneToOne(optional = false)
-    @JoinColumn(name = "color_id", referencedColumnName = "id", unique = false)
+    @JoinColumn(name = "color_id", referencedColumnName = "id", unique = false, nullable = false)
     private ColorEntity color;
 
     @ManyToOne
     @JsonBackReference
-    @JoinColumn(name = "parent_model_id", nullable = false)
+    @JoinColumn(name = "parent_model_id", referencedColumnName = "id", unique = false, nullable = false)
     private ModelEntity model;
 
     @OneToOne(optional = false, cascade = CascadeType.ALL)
-    @JoinColumn(name = "sub_model_id", referencedColumnName = "id", unique = false, nullable = true)
+    @JoinColumn(name = "sub_model_id", referencedColumnName = "id", unique = true, nullable = true)
     private ModelEntity subModel;
 
     private String fileName;

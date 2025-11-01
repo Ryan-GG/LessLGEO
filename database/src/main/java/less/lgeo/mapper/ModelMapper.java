@@ -53,7 +53,6 @@ public class ModelMapper implements Mapper<Model, ModelEntity> {
         modelEntity.setOptionalLines(optionalLineMapper.toEntityList(domain.optionalLines(), modelEntity));
         modelEntity.setPieces(subFileReferenceMapper.toEntityList(domain.pieces(), modelEntity, this));
         return modelEntity;
-
     }
-
+    
 }

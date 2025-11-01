@@ -53,8 +53,8 @@ public class ModelService {
         return modelRepository.save(entity).getId();
     }
 
-    public List<ModelId> getAllParentModelIds() {
-        return modelRepository.findAllParentModels().stream().map(ModelEntity::getId).toList();
+    public List<ModelId> getAllRootModelIds() {
+        return modelRepository.findAllParentModelIds().stream().map(ModelId::new).toList();
     }
 
 }

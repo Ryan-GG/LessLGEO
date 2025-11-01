@@ -50,7 +50,7 @@ class ModelControllerTest {
 
         URL cubeResourceURL = getClass().getClassLoader().getResource("cube.ldr");
         if (cubeResourceURL == null) fail("Cube LDraw Resource doesn't exist");
-        
+
         try {
             Path cubeLdrawPath = Path.of(cubeResourceURL.toURI());
             String cubeLDraw = Files.readString(cubeLdrawPath);
@@ -91,11 +91,11 @@ class ModelControllerTest {
     }
 
     @Test
-    void getAllParentModelIds() {
+    void getAllRootModelIds() {
         List<ModelId> mockedReturn = Stream.of(1L, 2L, 3L, 4L).map(ModelId::of).toList();
-        when(modelService.getAllParentModelIds()).thenReturn(mockedReturn);
+        when(modelService.getAllRootModelIds()).thenReturn(mockedReturn);
         try {
-            mockMvc.perform(get("/v1/models/parents/ids")
+            mockMvc.perform(get("/v1/models/id")
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(content().string(objectMapper.writeValueAsString(mockedReturn)));
