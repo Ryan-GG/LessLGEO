@@ -36,11 +36,6 @@ databaseChangeLog:
                   constraints:
                     nullable: false
                     primaryKey: true
-              - column:
-                  name: parent_id
-                  type: BIGINT
-                  constraints:
-                    nullable: true
         - createTable:
             tableName: model_quadrilaterals
             columns:
