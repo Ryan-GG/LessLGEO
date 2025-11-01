@@ -26,22 +26,17 @@ public class ModelService {
     private final ModelRepository modelRepository;
 
     @Autowired
-    private final ColorRepository colorRepository;
-
-    @Autowired
     private final ModelMapper modelMapper;
 
     public ModelService(
             ModelRepository modelRepository,
-            ColorRepository colorRepository,
             ModelMapper modelMapper) {
         this.modelRepository = modelRepository;
-        this.colorRepository = colorRepository;
         this.modelMapper = modelMapper;
     }
 
     /**
-     * @return database entity by Model Id throws if not found
+     * @return database entity by {@link ModelId} throws if not found
      */
     public ModelEntity getModelById(ModelId id) throws NoSuchElementException {
         return modelRepository.findById(id.getValue()).orElseThrow();
