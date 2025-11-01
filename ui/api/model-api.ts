@@ -35,7 +35,7 @@ export async function fetchModelById( modelId: number ): Promise<ModelEntity> {
 	if( modelEntity == undefined || !success )
 	{
 		console.error( error );
-		throw new Error( error.message );
+		throw new Error( error?.message );
 	}
 	
 	return modelEntity as ModelEntity ?? [];

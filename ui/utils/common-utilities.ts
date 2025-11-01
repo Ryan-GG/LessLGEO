@@ -1,5 +1,4 @@
-import { ColorEntity } from "@/api/schema";
-import { modeling } from "@/proto-bundle";
+import { ColorEntity, Vector3dEmbeddable } from "@/api/schema";
 import { Color, Vector3 } from "three";
 
 export const MISSING_VALUE_EXCEPTION = "Missing Value Exception" as const;
@@ -8,7 +7,7 @@ export const MISSING_VALUE_EXCEPTION = "Missing Value Exception" as const;
  * @param vertex vertex protobuf
  * @returns Vector3 encoding of vertex protobuf
  */
-export function gpbToVector3( vertex: modeling.IVertex ): Vector3
+export function toVector3( vertex: Vector3dEmbeddable ): Vector3
 {
 	const { x, y, z } = vertex;
 	if ( x == undefined || y == undefined || z == undefined ) {
@@ -22,7 +21,7 @@ export function gpbToVector3( vertex: modeling.IVertex ): Vector3
  * @param vertex vertex protobuf
  * @returns Float32Array encoding of vertex protobuf [ x, y, z ]
  */
-export function gpbToFloat32Array( vertex: modeling.IVertex ): Float32Array
+export function toFloat32Array( vertex: Vector3dEmbeddable): Float32Array
 {
 	const { x, y, z } = vertex;
 	if ( x == undefined || y == undefined || z == undefined ) {
@@ -36,10 +35,10 @@ export function gpbToFloat32Array( vertex: modeling.IVertex ): Float32Array
  * @param vertices Array of vertex protobufs
  * @returns Float32Array encoding of each vertex [ x1, y1, z1, x2, y2, z2, ... xN-1, yN-1, zN-1 ]
  */
-export function verticesToFloat32Array( vertices: ReadonlyArray<modeling.IVertex> ): Float32Array
+export function verticesToFloat32Array( vertices: ReadonlyArray<Vector3dEmbeddable> ): Float32Array
 {
 	return new Float32Array(
-		vertices.flatMap( vertex => [ ...gpbToFloat32Array( vertex ) ] )
+		vertices.flatMap( vertex => [ ...toFloat32Array( vertex ) ] )
 	);
 }
 

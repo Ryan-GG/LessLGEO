@@ -1,42 +1,65 @@
 import { z } from "zod";
-import { modeling } from "@/proto-bundle";
-import { Reader } from "protobufjs";
 
 export const API_VERSION = "v1";
+
+// ---------- Embeddable ----------
+
+export interface Vector3dEmbeddable {
+    readonly x: number;
+    readonly y: number;
+    readonly z: number;
+}
+
+export interface MatrixEmbeddable {
+    readonly a: number;
+    readonly b: number;
+    readonly c: number;
+    readonly x: number;
+    readonly d: number;
+    readonly e: number;
+    readonly f: number;
+    readonly y: number;
+    readonly g: number;
+    readonly h: number;
+    readonly i: number;
+    readonly z: number;
+    readonly scale: number;
+}
+
 
 // ---------- Entities ----------
 
 export interface LineEntity {
     readonly id: number;
     readonly color: ColorEntity;
-    readonly p1: modeling.Vertex;
-    readonly p2: modeling.Vertex;
+    readonly p1: Vector3dEmbeddable;
+    readonly p2: Vector3dEmbeddable;
 }
 
 export interface TriangleEntity {
     readonly id: number;
     readonly color: ColorEntity;
-    readonly p1: modeling.Vertex;
-    readonly p2: modeling.Vertex;
-    readonly p3: modeling.Vertex;
+    readonly p1: Vector3dEmbeddable;
+    readonly p2: Vector3dEmbeddable;
+    readonly p3: Vector3dEmbeddable;
 }
 
 export interface QuadrilateralEntity {
     readonly id: number;
     readonly color: ColorEntity;
-    readonly p1: modeling.Vertex;
-    readonly p2: modeling.Vertex;
-    readonly p3: modeling.Vertex;
-    readonly p4: modeling.Vertex;
+    readonly p1: Vector3dEmbeddable;
+    readonly p2: Vector3dEmbeddable;
+    readonly p3: Vector3dEmbeddable;
+    readonly p4: Vector3dEmbeddable;
 }
 
 export interface OptionalLineEntity {
     readonly id: number;
     readonly color: ColorEntity;
-    readonly p1: modeling.Vertex;
-    readonly p2: modeling.Vertex;
-    readonly p3: modeling.Vertex;
-    readonly p4: modeling.Vertex;
+    readonly p1: Vector3dEmbeddable;
+    readonly p2: Vector3dEmbeddable;
+    readonly p3: Vector3dEmbeddable;
+    readonly p4: Vector3dEmbeddable;
 }
 
 export interface ModelEntity {
@@ -45,7 +68,16 @@ export interface ModelEntity {
     readonly triangles: TriangleEntity[];
     readonly quadrilaterals: QuadrilateralEntity[];
     readonly optionalLines: OptionalLineEntity[];
-    readonly children: ModelEntity[];
+    readonly pieces: SubFileReferenceEntity[];
+}
+
+export interface SubFileReferenceEntity {
+    readonly id: number;
+    readonly color: ColorEntity;
+    readonly subModel: ModelEntity;
+    readonly fileName: string;
+    readonly connectionId: number;
+    readonly matrix: MatrixEmbeddable;
 }
 
 export interface ColorEntity {
@@ -70,8 +102,24 @@ const VertexSchema = z.object({
     z: z.number(),
 })
 
+const MatrixSchema = z.object({
+    a: z.number(),
+    b: z.number(),
+    c: z.number(),
+    x: z.number(),
+    d: z.number(),
+    e: z.number(),
+    f: z.number(),
+    y: z.number(),
+    g: z.number(),
+    h: z.number(),
+    i: z.number(),
+    z: z.number(),
+    scale: z.number(),
+})
+
 const ColorEntitySchema = z.object({
-    id: z.number(),
+    id: IdSchema,
     name: z.string(),
     rgb: z.string(),
     isTrans: z.coerce.boolean(),
@@ -82,7 +130,7 @@ const ColorEntitySchema = z.object({
 });
 
 const LineEntitySchema = z.object({
-    id: z.number(),
+    id: IdSchema,
     color: ColorEntitySchema,
     p1: VertexSchema,
     p2: VertexSchema
@@ -91,7 +139,7 @@ const LineEntitySchema = z.object({
 const LineEntityArraySchema = z.array( LineEntitySchema );
 
 const TriangleEntitySchema = z.object({
-    id: z.number(),
+    id: IdSchema,
     color: ColorEntitySchema,
     p1: VertexSchema,
     p2: VertexSchema,
@@ -101,7 +149,7 @@ const TriangleEntitySchema = z.object({
 const TriangleEntityArraySchema = z.array( TriangleEntitySchema );
 
 const QuadrilateralEntitySchema = z.object({
-    id: z.number(),
+    id: IdSchema,
     color: ColorEntitySchema,
     p1: VertexSchema,
     p2: VertexSchema,
@@ -112,7 +160,7 @@ const QuadrilateralEntitySchema = z.object({
 const QuadrilateralEntityArraySchema = z.array( QuadrilateralEntitySchema );
 
 const OptionalLineEntitySchema = z.object({
-    id: z.number(),
+    id: IdSchema,
     color: ColorEntitySchema,
     p1: VertexSchema,
     p2: VertexSchema,
@@ -127,26 +175,31 @@ const OptionalLineEntityArraySchema = z.array( OptionalLineEntitySchema );
  * This is a problem due to the recursive structure of LDraw Models.
  * This can be safely casted to a {@link ModelEntity}
  */
-export type ModelEntitySchemaType = {
-    id: z.infer<typeof IdSchema>,
-    lines: z.infer<typeof LineEntityArraySchema>;
-    triangles: z.infer<typeof TriangleEntityArraySchema>;
-    quadrilaterals: z.infer<typeof QuadrilateralEntityArraySchema>;
-    optionalLines: z.infer<typeof OptionalLineEntityArraySchema>;
-    children: ModelEntitySchemaType[];
-  };
-  
-export const ModelEntitySchema: z.ZodType<ModelEntitySchemaType> = z.lazy(() =>
-    z.object({
-      id: IdSchema,
-      lines: LineEntityArraySchema,
-      triangles: TriangleEntityArraySchema,
-      quadrilaterals: QuadrilateralEntityArraySchema,
-      optionalLines: OptionalLineEntityArraySchema,
-      children: z.array(ModelEntitySchema),
-    })
-  );
+export let ModelEntitySchema: z.ZodType<any>;
+export let SubFileReferenceEntitySchema: z.ZodType<any>;
 
-// ---------- Reference Ids ----------
+ModelEntitySchema = z.lazy(() =>
+  z.object({
+    id: IdSchema,
+    lines: LineEntityArraySchema,
+    triangles: TriangleEntityArraySchema,
+    quadrilaterals: QuadrilateralEntityArraySchema,
+    optionalLines: OptionalLineEntityArraySchema,
+    pieces: z.array(SubFileReferenceEntitySchema),
+  })
+);
 
-export type ColorRefId = modeling.Color["id"];
+SubFileReferenceEntitySchema = z.lazy(() =>
+  z.object({
+    id: IdSchema,
+    color: ColorEntitySchema,
+    subModel: ModelEntitySchema,
+    fileName: z.string(),
+    connectionId: z.number(),
+    matrix: MatrixSchema,
+  })
+);
+
+export type ModelEntitySchemaType = z.infer<typeof ModelEntitySchema>;
+export type SubFileReferenceEntitySchemaType = z.infer<typeof SubFileReferenceEntitySchema>;
+

@@ -1,10 +1,9 @@
 "use client";
-import { modeling } from "@/proto-bundle";
 import { ReactNode } from "react";
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
-import { BufferAttribute, BufferGeometry, DoubleSide, EdgesGeometry, WireframeGeometry } from "three";
+import { BufferAttribute, BufferGeometry, DoubleSide } from "three";
 import { verticesToFloat32Array, colorToFloat32Array } from "@/utils/common-utilities";
-import { LineEntity, ModelEntity, QuadrilateralEntity, TriangleEntity } from "@/api/schema";
+import { LineEntity, ModelEntity, QuadrilateralEntity, TriangleEntity, Vector3dEmbeddable } from "@/api/schema";
 
 /**
  * @returns a group of two meshes for all quads and triangles provided in the protobuf model object
@@ -76,7 +75,7 @@ function getTriangles( model: ModelEntity ): TriangleEntity[] {
 
 	const triangles: TriangleEntity[] = model.triangles;
     
-	for ( const subModel of model.children ) triangles.push( ...getTriangles( subModel ) ); 
+	for ( const subFileRef of model.pieces ) triangles.push( ...getTriangles( subFileRef.subModel ) ); 
 
 	return triangles;
 }
@@ -84,7 +83,7 @@ function getTriangles( model: ModelEntity ): TriangleEntity[] {
 function getQuadrilaterals( model: ModelEntity ): QuadrilateralEntity[] {
 	const quads: QuadrilateralEntity[] = model.quadrilaterals;
     
-	for ( const subModel of model.children ) quads.push( ...getQuadrilaterals( subModel ) ); 
+	for ( const subFileRef of model.pieces ) quads.push( ...getQuadrilaterals( subFileRef.subModel ) ); 
 
 	return quads;
 } 
@@ -92,7 +91,7 @@ function getQuadrilaterals( model: ModelEntity ): QuadrilateralEntity[] {
 function getLines( model: ModelEntity ): LineEntity[] {
 	const lines: LineEntity[] = model.lines;
     
-	for ( const subModel of model.children ) lines.push( ...getLines( subModel ) ); 
+	for ( const subFileRef of model.pieces ) lines.push( ...getLines( subFileRef.subModel ) ); 
 
 	return lines;
 } 
@@ -110,7 +109,7 @@ function triangleToBufferGeometry( triangleEntity: TriangleEntity ): BufferGeome
 	}
 
 	const geometry = new BufferGeometry();
-	const gpbVertices: Array<modeling.IVertex> = [ p1, p2, p3 ];
+	const gpbVertices: Array<Vector3dEmbeddable> = [ p1, p2, p3 ];
 
 	const vertices = verticesToFloat32Array( gpbVertices );
 
@@ -140,7 +139,7 @@ function quadrilateralToBufferGeometry( quadrilateralEntity: QuadrilateralEntity
 	}
 
 	const geometry = new BufferGeometry();
-	const gpbVertices: Array<modeling.IVertex> = [ p1, p2, p3, p4 ];
+	const gpbVertices: Array<Vector3dEmbeddable> = [ p1, p2, p3, p4 ];
 	const vertices = verticesToFloat32Array( gpbVertices );
 	const indices = [ 0, 1, 2, 2, 3, 0 ];
         
@@ -165,7 +164,7 @@ function lineToBufferGeometry( lineEntity: LineEntity ): BufferGeometry | undefi
 	}
 
 	const geometry = new BufferGeometry();
-	const gpbVertices: Array<modeling.IVertex> = [ p1, p2  ];
+	const gpbVertices: Array<Vector3dEmbeddable> = [ p1, p2  ];
 	const vertices = verticesToFloat32Array( gpbVertices );
         
 	geometry.setAttribute( "position", new BufferAttribute( vertices, 3, false ) );
