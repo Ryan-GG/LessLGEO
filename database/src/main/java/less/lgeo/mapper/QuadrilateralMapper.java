@@ -34,11 +34,11 @@ public class QuadrilateralMapper implements ModelDependencyMapper<Quadrilateral,
     public QuadrilateralEntity toEntity(Quadrilateral domain) {
         QuadrilateralEntity entity = new QuadrilateralEntity();
         // Don't set id, as it will be set by the sequence
-        entity.setColor(colorMapper.toEntity(domain.getColor()));
-        entity.setP1(new Vector3dEmbeddable(domain.getP1()));
-        entity.setP2(new Vector3dEmbeddable(domain.getP2()));
-        entity.setP3(new Vector3dEmbeddable(domain.getP3()));
-        entity.setP4(new Vector3dEmbeddable(domain.getP4()));
+        entity.setColor(colorMapper.toEntity(domain.color()));
+        entity.setP1(new Vector3dEmbeddable(domain.p1()));
+        entity.setP2(new Vector3dEmbeddable(domain.p2()));
+        entity.setP3(new Vector3dEmbeddable(domain.p3()));
+        entity.setP4(new Vector3dEmbeddable(domain.p4()));
         return entity;
     }
 

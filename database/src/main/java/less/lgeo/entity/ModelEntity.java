@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import java.util.List;
 
@@ -73,7 +72,7 @@ public class ModelEntity {
     }
 
 
-    public @Nullable ModelId getId() {
+    public ModelId getId() {
         return ModelId.of(id);
     }
 

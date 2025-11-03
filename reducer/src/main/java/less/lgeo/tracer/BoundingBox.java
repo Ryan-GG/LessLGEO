@@ -105,9 +105,9 @@ public class BoundingBox {
     }
 
     public void growToInclude(Triangle triangle) {
-        growToInclude(triangle.getP1());
-        growToInclude(triangle.getP2());
-        growToInclude(triangle.getP3());
+        growToInclude(triangle.p1());
+        growToInclude(triangle.p2());
+        growToInclude(triangle.p3());
     }
 
     public boolean includesPoint(Vector3d point) {

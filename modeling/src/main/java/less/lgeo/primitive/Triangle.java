@@ -4,31 +4,14 @@ import less.lgeo.common.Color;
 import less.lgeo.common.LineType;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.Vector3dUtils;
-import lombok.Data;
 import org.joml.Vector3d;
 
 import java.util.List;
 import java.util.Optional;
 
-@Data
-public class Triangle {
+public record Triangle(Color color, Vector3d p1, Vector3d p2, Vector3d p3) {
 
-    public final LineType type = LineType.TRIANGLE;
-    private final Color color;
-    private final Vector3d p1;
-    private final Vector3d p2;
-    private final Vector3d p3;
-
-    public Triangle(
-            Color color,
-            Vector3d p1,
-            Vector3d p2,
-            Vector3d p3) {
-        this.color = color;
-        this.p1 = p1;
-        this.p2 = p2;
-        this.p3 = p3;
-    }
+    public static final LineType type = LineType.TRIANGLE;
 
     public Vector3d getCentroid() {
         double xCentroid = (p1.x() + p2.x() + p3.x()) / 3;

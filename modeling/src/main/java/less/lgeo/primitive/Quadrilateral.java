@@ -4,34 +4,14 @@ import less.lgeo.common.Color;
 import less.lgeo.common.LineType;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.Vector3dUtils;
-import lombok.Data;
 import org.joml.Vector3d;
 
 import java.util.List;
 import java.util.Optional;
 
-@Data
-public class Quadrilateral {
+public record Quadrilateral(Color color, Vector3d p1, Vector3d p2, Vector3d p3, Vector3d p4) {
 
-    public final LineType type = LineType.QUADRILATERAL;
-    private final Color color;
-    private final Vector3d p1;
-    private final Vector3d p2;
-    private final Vector3d p3;
-    private final Vector3d p4;
-
-    public Quadrilateral(
-            Color color,
-            Vector3d p1,
-            Vector3d p2,
-            Vector3d p3,
-            Vector3d p4) {
-        this.color = color;
-        this.p1 = p1;
-        this.p2 = p2;
-        this.p3 = p3;
-        this.p4 = p4;
-    }
+    public static final LineType type = LineType.QUADRILATERAL;
 
     public List<Vector3d> getVertices() {
         return List.of(p1, p2, p3, p4);
