@@ -2,17 +2,16 @@ package less.lgeo.common;
 
 import org.joml.Vector3d;
 
-public class Vector3Utils {
+public class Vector3dUtils {
 
     /**
      * u' = a*u + b*v + c*w + x
      * v' = d*u + e*v + f*w + y
      * w' = g*u + h*v + i*w + z
      *
-     * @param matrix Matrix that holds transformation
+     * @param matrix {@link Matrix} that holds transformation
      * @return The resulting {@link Vector3d} from the previous position with the
-     * transformation
-     * applied.
+     * transformation applied.
      */
     public static Vector3d transform(Vector3d vector, Matrix matrix) {
         double x = vector.x;

@@ -16,8 +16,8 @@ import java.nio.file.Files;
 import java.util.List;
 import java.util.Optional;
 
-import static less.lgeo.common.CommonUtils.PART_EXT;
-import static less.lgeo.common.CommonUtils.changeFileExtension;
+import static less.lgeo.connection.Connection.PART_EXT;
+import static less.lgeo.connection.Connection.changeFileExtension;
 
 /**
  * Provides parsing, transforming, and joining of .dat and .part Currently parses a file one by one

@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
-import static less.lgeo.common.CommonUtils.getLineType;
+import static less.lgeo.common.LineType.getLineType;
 import static less.lgeo.util.ParseUtils.*;
 
 @Component
@@ -123,7 +123,7 @@ public class LDrawParser implements Parser<Model> {
 
         Color color = new Color();
         color.setId(colorId);
-        
+
         return new SubFileReference(
                 color,
                 parsedMatrix,

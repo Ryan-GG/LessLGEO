@@ -10,8 +10,8 @@ import org.joml.Vector3d;
 @Getter
 @Setter
 @Embeddable
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Vector3dEmbeddable {
 
     private double x;

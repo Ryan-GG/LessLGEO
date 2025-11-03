@@ -1,6 +1,5 @@
 package less.lgeo.mapper;
 
-import less.lgeo.common.Color;
 import less.lgeo.embedded.Vector3dEmbeddable;
 import less.lgeo.entity.ModelEntity;
 import less.lgeo.entity.TriangleEntity;
@@ -22,9 +21,8 @@ public class TriangleMapper implements ModelDependencyMapper<Triangle, TriangleE
 
     @Override
     public Triangle toDomain(TriangleEntity entity) {
-        Color color = colorMapper.toDomain(entity.getColor());
         return new Triangle(
-                color,
+                colorMapper.toDomain(entity.getColor()),
                 entity.getP1().toDomain(),
                 entity.getP2().toDomain(),
                 entity.getP3().toDomain()

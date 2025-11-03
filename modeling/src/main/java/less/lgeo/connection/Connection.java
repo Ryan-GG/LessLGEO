@@ -45,6 +45,14 @@ import static less.lgeo.common.Matrix.matrixToDMatrix;
  */
 @Data
 public class Connection {
+
+    public static String COL_EXT = ".col";
+    public static String DAT_EXT = ".dat";
+    // Part Extension defines connections via PE_CONN meta command
+    // This is because traditional .conn files are proprietary and cannot be parsed
+    // normally
+    public static String PART_EXT = ".part";
+        
     private List<Comment> comments;
     private List<MetaCommand> commands;
     private List<PartConnection> partConnections;
@@ -53,6 +61,11 @@ public class Connection {
         this.comments = comments;
         this.commands = commands;
         this.partConnections = partConnections;
+    }
+
+    public static String changeFileExtension(String subFileName, String extension) {
+        String fileName = subFileName.substring(0, subFileName.lastIndexOf("."));
+        return fileName.concat(extension);
     }
 
     /**
@@ -200,37 +213,3 @@ public class Connection {
         private List<Boolean> studGrid;
     }
 }
-
-
-// message PartConnection {
-// GroupId group_id = 1;
-// int32 element_id = 2;
-// Matrix matrix = 3;
-// oneof group_geometry {
-// GroupZero group_zero = 4;
-// GroupOne group_one = 5;
-// GroupStud group_stud = 6;
-// GroupFour group_four = 7;
-// GroupSix group_six = 8;
-// }
-// }
-//
-
-// message GroupStud {
-// // X Width in half stud
-// int32 x_width_half_stud = 1;
-// // Z Width in half stud
-// int32 z_width_half_stud = 2;
-//
-// // flat 2d array, representing a Z by X grid where true means its a
-// connection point for a stud
-// repeated bool stud_grid = 3;
-// }
-//
-// message GroupFour {
-//
-// }
-//
-// message GroupSix {
-//
-// }

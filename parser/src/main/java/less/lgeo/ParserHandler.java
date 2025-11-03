@@ -40,11 +40,11 @@ public class ParserHandler {
     /**
      * See {@link less.lgeo.consumer.ParserConsumer}
      *
-     * @param modelJobRequest Model LDraw String
+     * @param lDraw Model LDraw String
      */
-    public ModelId consume(String modelJobRequest) {
+    public ModelId consume(String lDraw) {
 
-        Model joinedModel = modelJoiner.joinAndTransformModel(modelJobRequest);
+        Model joinedModel = modelJoiner.joinAndTransformModel(lDraw);
 
         ModelId modelId = modelService.insertModel(joinedModel);
         logger.info("Inserted Model: {}", modelId);

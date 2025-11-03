@@ -1,6 +1,5 @@
 package less.lgeo.mapper;
 
-import less.lgeo.common.Color;
 import less.lgeo.embedded.Vector3dEmbeddable;
 import less.lgeo.entity.LineEntity;
 import less.lgeo.entity.ModelEntity;
@@ -22,9 +21,8 @@ public class LineMapper implements ModelDependencyMapper<Line, LineEntity> {
 
     @Override
     public Line toDomain(LineEntity entity) {
-        Color color = colorMapper.toDomain(entity.getColor());
         return new Line(
-                color,
+                colorMapper.toDomain(entity.getColor()),
                 entity.getP1().toDomain(),
                 entity.getP2().toDomain()
         );

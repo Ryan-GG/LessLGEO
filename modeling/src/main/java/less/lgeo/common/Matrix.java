@@ -23,14 +23,6 @@ public record Matrix(
             .scale(1)
             .build();
 
-    /**
-     * @formatter:off
-     * / a b c x \
-     * | d e f y |
-     * | g h i z |
-     * \ 0 0 0 1 /
-     * @formatter:on
-     */
     public static DMatrix4x4 matrixToDMatrix(Matrix matrix) {
         return new DMatrix4x4(
                 matrix.a(), matrix.b(), matrix.c(), matrix.x(),
@@ -46,15 +38,7 @@ public record Matrix(
                 matrix.a31, matrix.a32, matrix.a33, matrix.a34,
                 matrix.a44);
     }
-
-    /**
-     * @formatter:off
-     * / a b c x \
-     * | d e f y |
-     * | g h i z |
-     * \ 0 0 0 1 /
-     * @formatter:on
-     */
+    
     @Override
     public String toString() {
         return String.format(

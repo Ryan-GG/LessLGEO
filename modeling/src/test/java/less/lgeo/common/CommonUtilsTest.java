@@ -42,7 +42,7 @@ public class CommonUtilsTest {
                 .scale(1.0)
                 .build();
         Vector3d vertex = new Vector3d(1, 2, 3);
-        Vector3d result = Vector3Utils.transform(vertex, identity);
+        Vector3d result = Vector3dUtils.transform(vertex, identity);
         assertEquals(1, result.x);
         assertEquals(2, result.y);
         assertEquals(3, result.z);
@@ -57,7 +57,7 @@ public class CommonUtilsTest {
                 .scale(1.0)
                 .build();
         Vector3d transform = new Vector3d(1, 2, 3);
-        Vector3d result = Vector3Utils.transform(transform, translation);
+        Vector3d result = Vector3dUtils.transform(transform, translation);
         assertEquals(6, result.x);
         assertEquals(-1, result.y);
         assertEquals(5, result.z);
@@ -73,7 +73,7 @@ public class CommonUtilsTest {
                 .scale(1.0)
                 .build();
         Vector3d transform = new Vector3d(1, 0, 0);
-        Vector3d result = Vector3Utils.transform(transform, rotZ45);
+        Vector3d result = Vector3dUtils.transform(transform, rotZ45);
         assertEquals(sqrt2over2, result.x);
         assertEquals(sqrt2over2, result.y);
         assertEquals(0, result.z);

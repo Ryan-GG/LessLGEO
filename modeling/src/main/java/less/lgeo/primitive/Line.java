@@ -1,6 +1,9 @@
 package less.lgeo.primitive;
 
-import less.lgeo.common.*;
+import less.lgeo.common.Color;
+import less.lgeo.common.LineType;
+import less.lgeo.common.Matrix;
+import less.lgeo.common.Vector3dUtils;
 import org.joml.Vector3d;
 
 import java.util.List;
@@ -18,8 +21,8 @@ public record Line(Color color, Vector3d p1, Vector3d p2) {
             Optional<Matrix> transformationMatrix,
             Optional<Color> inheritedColor) {
         return new Line(
-                CommonUtils.getColor(inheritedColor, color),
-                transformationMatrix.map(matrix -> Vector3Utils.transform(p1, matrix)).orElse(p1),
-                transformationMatrix.map(matrix -> Vector3Utils.transform(p2, matrix)).orElse(p2));
+                color.inheritColor(inheritedColor),
+                transformationMatrix.map(matrix -> Vector3dUtils.transform(p1, matrix)).orElse(p1),
+                transformationMatrix.map(matrix -> Vector3dUtils.transform(p2, matrix)).orElse(p2));
     }
 }

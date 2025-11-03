@@ -19,7 +19,7 @@ public class ParseUtils {
 
 
     /**
-     * @return True, if line is marked as a comment containing '//' as '0 <comment>' format is
+     * @return True, if line is marked as a value containing '//' as '0 <value>' format is
      * deprecated
      */
     public static boolean isComment(List<String> values) {
@@ -47,7 +47,7 @@ public class ParseUtils {
 
 
     /**
-     * @return Join line values as singular string 'comment'
+     * @return Join line values as singular string 'value'
      */
     public static Comment parseComment(String commentLine) {
         return new Comment(commentLine);

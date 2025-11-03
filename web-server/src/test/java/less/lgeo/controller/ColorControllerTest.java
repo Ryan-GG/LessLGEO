@@ -40,7 +40,7 @@ class ColorControllerTest {
     }
 
     @Test
-    void getColor() throws Exception {
+    void inheritColor() throws Exception {
 
         int id = 1;
         ColorEntity colorEntity = createRandomColorEntity(id);

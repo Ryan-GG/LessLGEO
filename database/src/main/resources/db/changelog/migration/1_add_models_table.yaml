@@ -329,7 +329,7 @@ databaseChangeLog:
                   name: sub_model_id
                   type: BIGINT
                   constraints:
-                    nullable: false
+                    nullable: true
               - column:
                   name: color_id
                   type: BIGINT

@@ -10,8 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Embeddable
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class MatrixEmbeddable {
 
     private double a;

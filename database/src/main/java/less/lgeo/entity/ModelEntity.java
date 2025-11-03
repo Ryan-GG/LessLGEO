@@ -8,18 +8,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
 import java.util.List;
 
-// TODO, Entity <-> Domain Model(Service) <-> DTO(Controller)
 
 /**
- * ModelEntity is a joined representation of 'embedded' collections of complex
- * objects representing
- * a {@link Model} proto object. These 'embedded' objects are treated a separate
- * tables which are
- * joined by the model id
+ * ModelEntity is a joined representation of 'entities' of complex
+ * objects representing a {@link Model}. These 'entities' are treated a separate
+ * tables which are joined by the model id
  */
 @Getter
 @Setter
@@ -76,11 +74,11 @@ public class ModelEntity {
 
 
     public @Nullable ModelId getId() {
-        return id == null ? null : ModelId.of(id);
+        return ModelId.of(id);
     }
 
-    public void setId(ModelId id) {
-        this.id = id == null ? null : id.getValue();
+    public void setId(@NonNull ModelId id) {
+        this.id = id.getValue();
     }
 
 }

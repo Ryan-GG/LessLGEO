@@ -1,6 +1,9 @@
 package less.lgeo.primitive;
 
-import less.lgeo.common.*;
+import less.lgeo.common.Color;
+import less.lgeo.common.LineType;
+import less.lgeo.common.Matrix;
+import less.lgeo.common.Vector3dUtils;
 import lombok.Data;
 import org.joml.Vector3d;
 
@@ -43,10 +46,10 @@ public class Triangle {
             Optional<Matrix> transformationMatrix,
             Optional<Color> inheritedColor) {
         return new Triangle(
-                CommonUtils.getColor(inheritedColor, color),
-                transformationMatrix.map(matrix -> Vector3Utils.transform(p1, matrix)).orElse(p1),
-                transformationMatrix.map(matrix -> Vector3Utils.transform(p2, matrix)).orElse(p2),
-                transformationMatrix.map(matrix -> Vector3Utils.transform(p3, matrix)).orElse(p3));
+                color.inheritColor(inheritedColor),
+                transformationMatrix.map(matrix -> Vector3dUtils.transform(p1, matrix)).orElse(p1),
+                transformationMatrix.map(matrix -> Vector3dUtils.transform(p2, matrix)).orElse(p2),
+                transformationMatrix.map(matrix -> Vector3dUtils.transform(p3, matrix)).orElse(p3));
     }
 
 }

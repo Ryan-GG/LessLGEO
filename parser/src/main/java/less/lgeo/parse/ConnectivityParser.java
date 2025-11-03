@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import static less.lgeo.common.CommonUtils.getLineType;
+import static less.lgeo.common.LineType.getLineType;
 import static less.lgeo.util.ParseUtils.*;
 
 /**

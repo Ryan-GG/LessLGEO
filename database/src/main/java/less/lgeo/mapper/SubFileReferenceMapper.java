@@ -42,16 +42,7 @@ public class SubFileReferenceMapper {
         entity.setModel(modelEntity);
         return entity;
     }
-
-    /**
-     * FIXME
-     * Because Recursion, this cannot implement, {@link ModelDependencyMapper}
-     *
-     * @param domainList
-     * @param modelEntity
-     * @param modelMapper
-     * @return
-     */
+    
     public List<SubFileRefEntity> toEntityList(List<SubFileReference> domainList, ModelEntity modelEntity, ModelMapper modelMapper) {
         return domainList.stream().map(domain -> toEntity(domain, modelEntity, modelMapper)).toList();
     }

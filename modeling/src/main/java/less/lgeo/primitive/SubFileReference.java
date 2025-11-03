@@ -9,7 +9,6 @@ import org.ejml.dense.fixed.CommonOps_DDF4;
 
 import java.util.Optional;
 
-import static less.lgeo.common.CommonUtils.getColor;
 import static less.lgeo.common.Matrix.dMatrixToMatrix;
 import static less.lgeo.common.Matrix.matrixToDMatrix;
 
@@ -37,7 +36,7 @@ public record SubFileReference(
             resulted = matrix;
         }
 
-        Color subPartColor = getColor(inheritedColor, color);
+        Color subPartColor = color.inheritColor(inheritedColor);
 
         return new SubFileReference(
                 subPartColor,
