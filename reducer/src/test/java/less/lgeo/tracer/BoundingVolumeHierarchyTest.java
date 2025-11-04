@@ -1,7 +1,6 @@
 package less.lgeo.tracer;
 
 import less.lgeo.primitive.Model;
-import less.lgeo.primitive.ModelUtils;
 import less.lgeo.primitive.Triangle;
 import less.lgeo.test.ModelTestUtils;
 import org.joml.Vector3d;
@@ -9,23 +8,24 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static less.lgeo.common.VertexUtils.toVertex;
-import static less.lgeo.primitive.TriangleUtils.toTriangle;
+import static less.lgeo.test.ModelTestUtils.BLACK;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 public class BoundingVolumeHierarchyTest {
 
     /**
-     * For a cube, each quadrilateral will be split into two triangles and become both each a child from the parent node.
-     * Since each triangle extends to the min and max of the polygon, all values should be the same for the bounding box.
+     * For a cube, each quadrilateral will be split into two triangles and become
+     * both each a child from the parent node.
+     * Since each triangle extends to the min and max of the polygon, all values
+     * should be the same for the bounding box.
      * (i.e. - cube made oof triangles )
      */
     @Test
     void equalSharedPoints() {
 
-        Model cube = ModelTestUtils.cube().build();
-        List<Triangle> triangles = ModelUtils.tessellateModel(cube);
+        Model cube = ModelTestUtils.cube();
+        List<Triangle> triangles = cube.tessellate();
 
         BoundingVolumeHierarchy bvh = new BoundingVolumeHierarchy(triangles);
 
@@ -54,15 +54,15 @@ public class BoundingVolumeHierarchyTest {
 
     @Test
     void splitOnXAxis() {
-        Triangle negative = toTriangle(-1,
-                toVertex(0, 0, 0),
-                toVertex(0, 0, 1),
-                toVertex(-1, 0, 0));
+        Triangle negative = new Triangle(BLACK,
+                new Vector3d(0, 0, 0),
+                new Vector3d(0, 0, 1),
+                new Vector3d(-1, 0, 0));
 
-        Triangle positive = toTriangle(-1,
-                toVertex(0, 0, 0),
-                toVertex(0, 0, 1),
-                toVertex(1, 0, 0));
+        Triangle positive = new Triangle(BLACK,
+                new Vector3d(0, 0, 0),
+                new Vector3d(0, 0, 1),
+                new Vector3d(1, 0, 0));
 
         List<Triangle> triangles = List.of(negative, positive);
 
@@ -87,15 +87,15 @@ public class BoundingVolumeHierarchyTest {
 
     @Test
     void splitOnYAxis() {
-        Triangle negative = toTriangle(-1,
-                toVertex(0, 0, 0),
-                toVertex(0, -1, 0),
-                toVertex(1, 0, 0));
+        Triangle negative = new Triangle(BLACK,
+                new Vector3d(0, 0, 0),
+                new Vector3d(0, -1, 0),
+                new Vector3d(1, 0, 0));
 
-        Triangle positive = toTriangle(-1,
-                toVertex(0, 0, 0),
-                toVertex(0, 1, 0),
-                toVertex(1, 0, 0));
+        Triangle positive = new Triangle(BLACK,
+                new Vector3d(0, 0, 0),
+                new Vector3d(0, 1, 0),
+                new Vector3d(1, 0, 0));
 
         List<Triangle> triangles = List.of(negative, positive);
 
@@ -120,15 +120,15 @@ public class BoundingVolumeHierarchyTest {
 
     @Test
     void splitOnZAxis() {
-        Triangle negative = toTriangle(-1,
-                toVertex(0, 0, -1),
-                toVertex(0, 0, 0),
-                toVertex(1, 0, 0));
+        Triangle negative = new Triangle(BLACK,
+                new Vector3d(0, 0, -1),
+                new Vector3d(0, 0, 0),
+                new Vector3d(1, 0, 0));
 
-        Triangle positive = toTriangle(-1,
-                toVertex(0, 0, 1),
-                toVertex(0, 0, 0),
-                toVertex(1, 0, 0));
+        Triangle positive = new Triangle(BLACK,
+                new Vector3d(0, 0, 1),
+                new Vector3d(0, 0, 0),
+                new Vector3d(1, 0, 0));
 
         List<Triangle> triangles = List.of(negative, positive);
 

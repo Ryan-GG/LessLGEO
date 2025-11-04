@@ -1,10 +1,9 @@
 "use client";
-import { modeling } from "@/proto-bundle";
 import { ReactNode } from "react";
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
-import { BufferAttribute, BufferGeometry, DoubleSide, EdgesGeometry, WireframeGeometry } from "three";
+import { BufferAttribute, BufferGeometry, DoubleSide } from "three";
 import { verticesToFloat32Array, colorToFloat32Array } from "@/utils/common-utilities";
-import { LineEntity, ModelEntity, QuadrilateralEntity, TriangleEntity } from "@/api/schema";
+import { ModelEntity, QuadrilateralEntity, TriangleEntity, Vector3dEmbeddable } from "@/api/schema";
 
 /**
  * @returns a group of two meshes for all quads and triangles provided in the protobuf model object
@@ -16,8 +15,6 @@ export function Model( { entity }: { entity: ModelEntity | undefined } ): ReactN
 	const quadGeometries: BufferGeometry[] = getQuadrilaterals( entity ).map( quad => quadrilateralToBufferGeometry( quad ) ).filter( quadGeometry => quadGeometry != undefined );
 	
 	const triangleGeometries: BufferGeometry[] = getTriangles( entity ).map( triangle => triangleToBufferGeometry( triangle ) ).filter( triangleGeometry => triangleGeometry != undefined );
-
-	const lineGeometries: BufferGeometry[] = getLines( entity ).map( line => lineToBufferGeometry( line ) ).filter( lineGeometry => lineGeometry != undefined );
 
 	let quad: BufferGeometry | undefined = undefined;
 	let triangle: BufferGeometry | undefined = undefined;
@@ -57,16 +54,6 @@ export function Model( { entity }: { entity: ModelEntity | undefined } ): ReactN
 					</lineSegments>
 				</group>
 			)}
-			{
-				lineGeometries.map( ( line, index ) =>
-				{
-					return (
-						<lineSegments key={index} geometry={line}>
-							<lineBasicMaterial color="black" linewidth={1} />
-						</lineSegments >
-					);
-				} )
-			}
 		</group>	
 	);	  
 }
@@ -76,7 +63,7 @@ function getTriangles( model: ModelEntity ): TriangleEntity[] {
 
 	const triangles: TriangleEntity[] = model.triangles;
     
-	for ( const subModel of model.children ) triangles.push( ...getTriangles( subModel ) ); 
+	for ( const subFileReference of model.pieces ) triangles.push( ...getTriangles( subFileReference.subModel ) ); 
 
 	return triangles;
 }
@@ -84,17 +71,9 @@ function getTriangles( model: ModelEntity ): TriangleEntity[] {
 function getQuadrilaterals( model: ModelEntity ): QuadrilateralEntity[] {
 	const quads: QuadrilateralEntity[] = model.quadrilaterals;
     
-	for ( const subModel of model.children ) quads.push( ...getQuadrilaterals( subModel ) ); 
+	for ( const subFileReference of model.pieces ) quads.push( ...getQuadrilaterals( subFileReference.subModel ) ); 
 
 	return quads;
-} 
-
-function getLines( model: ModelEntity ): LineEntity[] {
-	const lines: LineEntity[] = model.lines;
-    
-	for ( const subModel of model.children ) lines.push( ...getLines( subModel ) ); 
-
-	return lines;
 } 
 
 function triangleToBufferGeometry( triangleEntity: TriangleEntity ): BufferGeometry | undefined
@@ -110,9 +89,7 @@ function triangleToBufferGeometry( triangleEntity: TriangleEntity ): BufferGeome
 	}
 
 	const geometry = new BufferGeometry();
-	const gpbVertices: Array<modeling.IVertex> = [ p1, p2, p3 ];
-
-	const vertices = verticesToFloat32Array( gpbVertices );
+	const vertices = verticesToFloat32Array( [ p1, p2, p3 ] );
 
 	const indices = [ 0, 1, 2  ];
         
@@ -140,8 +117,7 @@ function quadrilateralToBufferGeometry( quadrilateralEntity: QuadrilateralEntity
 	}
 
 	const geometry = new BufferGeometry();
-	const gpbVertices: Array<modeling.IVertex> = [ p1, p2, p3, p4 ];
-	const vertices = verticesToFloat32Array( gpbVertices );
+	const vertices = verticesToFloat32Array( [ p1, p2, p3, p4 ] );
 	const indices = [ 0, 1, 2, 2, 3, 0 ];
         
 	geometry.setIndex( indices );
@@ -153,23 +129,3 @@ function quadrilateralToBufferGeometry( quadrilateralEntity: QuadrilateralEntity
 
 	return geometry;
 }
-
-function lineToBufferGeometry( lineEntity: LineEntity ): BufferGeometry | undefined
-{
-	const { p1, p2 } = lineEntity;
-
-	if( !p1 || !p2 )
-	{
-		console.warn( "Vertex is undefined" );
-		return undefined;
-	}
-
-	const geometry = new BufferGeometry();
-	const gpbVertices: Array<modeling.IVertex> = [ p1, p2  ];
-	const vertices = verticesToFloat32Array( gpbVertices );
-        
-	geometry.setAttribute( "position", new BufferAttribute( vertices, 3, false ) );
-
-	return geometry;
-}
-

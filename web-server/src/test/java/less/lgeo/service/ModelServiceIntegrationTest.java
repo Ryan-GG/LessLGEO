@@ -7,8 +7,6 @@ import less.lgeo.primitive.Model;
 import less.lgeo.test.ModelTestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
@@ -40,7 +38,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @ContextConfiguration(initializers = PostgresTestInitializer.class)
 public class ModelServiceIntegrationTest {
 
-    private static final Logger logger = LoggerFactory.getLogger(ModelServiceIntegrationTest.class);
     @Autowired
     private ModelService modelService;
 
@@ -48,10 +45,10 @@ public class ModelServiceIntegrationTest {
     @Transactional
     void saveAndRetrieveModel() {
 
-        Model model = ModelTestUtils.cube().build();
+        Model model = ModelTestUtils.cube();
         ModelId id = modelService.insertModel(model);
 
-        ModelEntity retrievedEntity = modelService.getModelById(id);
+        ModelEntity retrievedEntity = modelService.getModelById(id).orElseThrow();
         assertNotNull(retrievedEntity);
         assertEquals(6, retrievedEntity.getQuadrilaterals().size());
     }

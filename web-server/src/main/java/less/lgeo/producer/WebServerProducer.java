@@ -1,8 +1,6 @@
 package less.lgeo.producer;
 
-
 import less.lgeo.embedded.ModelId;
-import less.lgeo.messaging.ModelJobRequest;
 import less.lgeo.rabbitmq.properties.RabbitWebToParserRpcProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +21,7 @@ public class WebServerProducer {
     private final RabbitWebToParserRpcProperties rabbitWebToParserRpcProperties;
 
     public WebServerProducer(RabbitTemplate rabbitTemplate,
-                             RabbitWebToParserRpcProperties rabbitWebToParserRpcProperties
-    ) {
+                             RabbitWebToParserRpcProperties rabbitWebToParserRpcProperties) {
         this.rabbitTemplate = rabbitTemplate;
         this.rabbitWebToParserRpcProperties = rabbitWebToParserRpcProperties;
 
@@ -35,16 +32,12 @@ public class WebServerProducer {
     /**
      * See at `less.lgeo.consumer.ParserConsumer`
      */
-    public @Nullable ModelId sendMessage(String message) {
-        ModelJobRequest modelJobRequest = ModelJobRequest.newBuilder()
-                .setModelString(message)
-                .build();
+    public @Nullable ModelId sendMessage(String lDraw) {
 
         return rabbitTemplate.convertSendAndReceiveAsType(
                 rabbitWebToParserRpcProperties.getName(),
-                modelJobRequest.toByteArray(),
+                lDraw,
                 ParameterizedTypeReference.forType(ModelId.class));
     }
-
 
 }

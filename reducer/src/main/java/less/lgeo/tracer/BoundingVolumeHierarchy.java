@@ -1,7 +1,5 @@
 package less.lgeo.tracer;
 
-import less.lgeo.common.Vertex;
-import less.lgeo.primitive.Line;
 import less.lgeo.primitive.Triangle;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,10 +8,6 @@ import org.joml.Vector3d;
 import java.util.ArrayList;
 import java.util.List;
 
-import static less.lgeo.common.VertexUtils.toVector3d;
-import static less.lgeo.primitive.TriangleUtils.getCentroid;
-import static less.lgeo.primitive.TriangleUtils.getVertices;
-
 @Getter
 public class BoundingVolumeHierarchy {
 
@@ -21,33 +15,13 @@ public class BoundingVolumeHierarchy {
     private final Node root;
 
     public BoundingVolumeHierarchy(List<Triangle> triangles) {
-        List<Vertex> vertices = triangles.stream()
-                .flatMap(triangle -> getVertices(triangle).stream())
+        List<Vector3d> vertices = triangles.stream()
+                .flatMap(triangle -> triangle.getVertices().stream())
                 .toList();
 
         BoundingBox boundingBox = new BoundingBox(vertices);
         this.root = new Node(boundingBox, triangles);
         this.root.split();
-    }
-
-
-    public List<Line> getBoundingBoxesAsLines() {
-        return getBoundBoxOfNode(root);
-    }
-
-    private List<Line> getBoundBoxOfNode(Node node) {
-        if (node == null || node.getBoundingBox() == null) {
-            return List.of();
-        }
-
-        List<Line> lines = new ArrayList<>(node.getBoundingBox().getBoundingBoxAsLines());
-        if (node.getChildA() != null) {
-            lines.addAll(getBoundBoxOfNode(node.getChildA()));
-        }
-        if (node.getChildB() != null) {
-            lines.addAll(getBoundBoxOfNode(node.getChildB()));
-        }
-        return lines;
     }
 
     @Getter
@@ -74,7 +48,7 @@ public class BoundingVolumeHierarchy {
          */
         private int getSplitComponentIndex() {
             Vector3d size = boundingBox.getSize();
-            return size.x > Math.max(size.y, size.z) ? 0 : size.y > size.z ? 1 : 2;
+            return size.x() > Math.max(size.y(), size.z()) ? 0 : size.y() > size.z() ? 1 : 2;
         }
 
         private void split(int currentDepth) {
@@ -87,7 +61,7 @@ public class BoundingVolumeHierarchy {
             List<Triangle> bList = new ArrayList<>();
 
             for (Triangle triangle : triangles) {
-                boolean inA = toVector3d(getCentroid(triangle)).get(splitAxis) < boundingBox.getCenter().get(splitAxis);
+                boolean inA = triangle.getCentroid().get(splitAxis) < boundingBox.getCenter().get(splitAxis);
                 (inA ? aList : bList).add(triangle);
             }
 
@@ -97,9 +71,9 @@ public class BoundingVolumeHierarchy {
             }
 
             BoundingBox leftBox = new BoundingBox(aList.stream()
-                    .flatMap(triangle -> getVertices(triangle).stream()).toList());
+                    .flatMap(triangle -> triangle.getVertices().stream()).toList());
             BoundingBox rightBox = new BoundingBox(bList.stream()
-                    .flatMap(triangle -> getVertices(triangle).stream()).toList());
+                    .flatMap(triangle -> triangle.getVertices().stream()).toList());
 
             childA = new Node(leftBox, aList);
             childB = new Node(rightBox, bList);

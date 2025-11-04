@@ -1,19 +1,11 @@
 package less.lgeo.tracer;
 
-import less.lgeo.common.Vertex;
-import less.lgeo.primitive.Line;
 import less.lgeo.primitive.Triangle;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.joml.Vector3d;
 
 import java.util.List;
-import java.util.stream.Stream;
-
-import static less.lgeo.common.VertexUtils.toVector3d;
-import static less.lgeo.common.VertexUtils.toVertex;
-import static less.lgeo.primitive.LineUtils.toLine;
-import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
 
 /**
  * Represents a 3D axis-aligned box defined by its 8 vertices.
@@ -26,7 +18,7 @@ import static less.lgeo.test.ModelTestUtils.UNKNOWN_COLOR_ID;
  *   <li>+Z → forward (toward H)</li>
  * </ul>
  * <p>
- * Vertex layout:
+ * Vector3 layout:
  *
  * <pre>
  *            (-Y up)
@@ -70,7 +62,7 @@ public class BoundingBox {
     private final Vector3d max = new Vector3d(Double.NEGATIVE_INFINITY);
     private Vector3d size = new Vector3d(Double.POSITIVE_INFINITY);
 
-    public BoundingBox(List<Vertex> vertices) {
+    public BoundingBox(List<Vector3d> vertices) {
         vertices.forEach(this::growToInclude);
     }
 
@@ -106,10 +98,6 @@ public class BoundingBox {
         return new Vector3d(min.x(), max.y, max.z);
     }
 
-    public void growToInclude(Vertex point) {
-        growToInclude(toVector3d(point));
-    }
-
     public void growToInclude(Vector3d point) {
         min.min(point);
         max.max(point);
@@ -117,9 +105,9 @@ public class BoundingBox {
     }
 
     public void growToInclude(Triangle triangle) {
-        growToInclude(triangle.getP1());
-        growToInclude(triangle.getP2());
-        growToInclude(triangle.getP3());
+        growToInclude(triangle.p1());
+        growToInclude(triangle.p2());
+        growToInclude(triangle.p3());
     }
 
     public boolean includesPoint(Vector3d point) {
@@ -130,76 +118,10 @@ public class BoundingBox {
         return inXBounds && inYBounds && inZBounds;
     }
 
-    public boolean includesPoint(Vertex point) {
-        return includesPoint(toVector3d(point));
-    }
-
     public Vector3d getCenter() {
         Vector3d min = new Vector3d(calculateA());
         Vector3d max = new Vector3d(calculateG());
         return min.add(max).mul(0.5);
-    }
-
-
-    public List<Line> getBoundingBoxAsLines() {
-        return Stream.of(
-                        getTopFace(),
-                        getBottomFace(),
-                        getTopToBottomConnectingLines())
-                .flatMap(List::stream)
-                .toList();
-
-    }
-
-    private List<Line> getTopFace() {
-        Vector3d a = calculateA();
-        Vector3d b = calculateB();
-        Vector3d c = calculateC();
-        Vector3d d = calculateD();
-        return List.of(
-                toLine(UNKNOWN_COLOR_ID, toVertex(a), toVertex(b)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(b), toVertex(c)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(c), toVertex(d)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(d), toVertex(a))
-        );
-    }
-
-    private List<Line> getBottomFace() {
-        Vector3d e = calculateE();
-        Vector3d f = calculateF();
-        Vector3d g = calculateG();
-        Vector3d h = calculateH();
-        return List.of(
-                toLine(UNKNOWN_COLOR_ID, toVertex(e), toVertex(f)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(f), toVertex(g)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(g), toVertex(h)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(h), toVertex(e))
-        );
-    }
-
-    /**
-     * <p>
-     * a -> e, b -> f, c -> g, d -> h
-     * </p>
-     *
-     * @return Connecting lines between top and bottom faces of the bounding box
-     */
-    private List<Line> getTopToBottomConnectingLines() {
-        Vector3d a = calculateA();
-        Vector3d e = calculateE();
-        Vector3d b = calculateB();
-        Vector3d f = calculateF();
-        Vector3d c = calculateC();
-        Vector3d g = calculateG();
-        Vector3d d = calculateD();
-        Vector3d h = calculateH();
-
-        return List.of(
-                toLine(UNKNOWN_COLOR_ID, toVertex(a), toVertex(e)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(b), toVertex(f)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(c), toVertex(g)),
-                toLine(UNKNOWN_COLOR_ID, toVertex(d), toVertex(h))
-        );
     }
 
     @Override

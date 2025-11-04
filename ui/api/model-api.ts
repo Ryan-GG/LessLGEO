@@ -2,8 +2,8 @@ import { API_VERSION, ModelEntity, ModelEntitySchema, IdSchema, IdSchemaArray } 
 
 const MODEL_API = "models";
 
-export async function fetchAllParentModelIds(): Promise<number[]> {
-	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/parents/ids`;
+export async function fetchModelIds(): Promise<number[]> {
+	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/ids`;
 	const response = await fetch( URI );
 	if ( !response.ok ) {
 		throw new Error( `${URI}, Status: ${response.statusText}` );
@@ -35,7 +35,7 @@ export async function fetchModelById( modelId: number ): Promise<ModelEntity> {
 	if( modelEntity == undefined || !success )
 	{
 		console.error( error );
-		throw new Error( error.message );
+		throw new Error( error?.message );
 	}
 	
 	return modelEntity as ModelEntity ?? [];

@@ -31,7 +31,9 @@ public class ColorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ColorEntity> getColor(@PathVariable int id) {
-        return ResponseEntity.ok().body(colorService.getColorByCode(id));
+        return colorService.getColorByCode(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
     }
 
     @DeleteMapping("/{id}")
