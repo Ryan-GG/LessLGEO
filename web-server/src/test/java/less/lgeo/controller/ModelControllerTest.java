@@ -96,7 +96,7 @@ class ModelControllerTest {
         List<ModelId> mockedReturn = Stream.of(1L, 2L, 3L, 4L).map(ModelId::of).toList();
         when(modelService.getAllRootModelIds()).thenReturn(mockedReturn);
         try {
-            mockMvc.perform(get("/v1/models/id")
+            mockMvc.perform(get("/v1/models/ids")
                             .contentType(MediaType.APPLICATION_JSON))
                     .andExpect(status().isOk())
                     .andExpect(content().string(objectMapper.writeValueAsString(mockedReturn)));

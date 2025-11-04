@@ -38,9 +38,9 @@ public class ModelJoiner {
         this.connectivityParser = connectivityParser;
     }
 
-    public Model joinAndTransformModel(String modelJobRequest) {
+    public Model joinAndTransformModel(String lDraw) {
 
-        Model parentModel = getLDrawModel(modelJobRequest);
+        Model parentModel = getLDrawModel(lDraw);
 
         List<SubFileReference> connectedPieces = parentModel.pieces().stream()
                 .map(this::joinPieceWithConnection)
@@ -61,8 +61,8 @@ public class ModelJoiner {
         return parentModel.transformModel();
     }
 
-    private @NonNull Model getLDrawModel(String modelJobRequest) {
-        return lDrawParser.parse(modelJobRequest);
+    private @NonNull Model getLDrawModel(String lDraw) {
+        return lDrawParser.parse(lDraw);
     }
 
     private @NonNull SubFileReference joinPieceWithConnection(SubFileReference piece) {

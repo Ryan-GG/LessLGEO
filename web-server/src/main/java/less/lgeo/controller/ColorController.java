@@ -1,6 +1,5 @@
 package less.lgeo.controller;
 
-import less.lgeo.common.Color;
 import less.lgeo.entity.ColorEntity;
 import less.lgeo.service.ColorService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +31,9 @@ public class ColorController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ColorEntity> getColor(@PathVariable int id) {
-        return ResponseEntity.ok().body(colorService.getColorByCode(id).orElseThrow());
+        return colorService.getColorByCode(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.noContent().build());
     }
 
     @DeleteMapping("/{id}")

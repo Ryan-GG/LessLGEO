@@ -3,7 +3,7 @@ import { API_VERSION, ModelEntity, ModelEntitySchema, IdSchema, IdSchemaArray } 
 const MODEL_API = "models";
 
 export async function fetchModelIds(): Promise<number[]> {
-	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/id`;
+	const URI = `http://localhost:8080/${API_VERSION}/${MODEL_API}/ids`;
 	const response = await fetch( URI );
 	if ( !response.ok ) {
 		throw new Error( `${URI}, Status: ${response.statusText}` );

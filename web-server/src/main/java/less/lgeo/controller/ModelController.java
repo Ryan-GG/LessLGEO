@@ -42,10 +42,10 @@ public class ModelController {
     public ResponseEntity<ModelEntity> getModel(@PathVariable("id") Long modelId) {
         return modelService.getModelById(ModelId.of(modelId))
                 .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.noContent().build());
     }
 
-    @GetMapping("/id")
+    @GetMapping("/ids")
     public ResponseEntity<List<ModelId>> getAllRootModelIds() {
         return ResponseEntity.ok(modelService.getAllRootModelIds());
     }
