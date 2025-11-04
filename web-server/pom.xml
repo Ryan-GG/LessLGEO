@@ -53,10 +53,9 @@
       <version>0.0.2-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <artifactId>autoconfigure</artifactId>
-      <groupId>less.lgeo</groupId>
+      <groupId>io.zonky.test</groupId>
+      <artifactId>embedded-database-spring-test</artifactId>
       <scope>test</scope>
-      <version>0.0.2-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <modelVersion>4.0.0</modelVersion>

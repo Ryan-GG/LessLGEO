@@ -126,6 +126,12 @@
                 <groupId>org.joml</groupId>
                 <version>1.10.8</version>
             </dependency>
+            <dependency>
+                <groupId>io.zonky.test</groupId>
+                <artifactId>embedded-database-spring-test</artifactId>
+                <version>2.6.0</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <modelVersion>4.0.0</modelVersion>
