@@ -41,14 +41,14 @@ public class ModelTestUtils {
         Vector3d g = new Vector3d(1, 0, 1);
         Vector3d h = new Vector3d(0, 0, 1);
 
-        Quadrilateral top = new Quadrilateral(INHERIT_PARENT_COLOR, a, b, c, d);
-        Quadrilateral bottom = new Quadrilateral(INHERIT_PARENT_COLOR, e, f, g, h);
+        Quadrilateral top = new Quadrilateral(RED, a, b, c, d);
+        Quadrilateral bottom = new Quadrilateral(RED, e, f, g, h);
 
-        Quadrilateral front = new Quadrilateral(INHERIT_PARENT_COLOR, e, f, b, a);
-        Quadrilateral back = new Quadrilateral(INHERIT_PARENT_COLOR, g, h, d, c);
+        Quadrilateral front = new Quadrilateral(RED, e, f, b, a);
+        Quadrilateral back = new Quadrilateral(RED, g, h, d, c);
 
-        Quadrilateral left = new Quadrilateral(INHERIT_PARENT_COLOR, h, e, a, d);
-        Quadrilateral right = new Quadrilateral(INHERIT_PARENT_COLOR, f, g, c, b);
+        Quadrilateral left = new Quadrilateral(RED, h, e, a, d);
+        Quadrilateral right = new Quadrilateral(RED, f, g, c, b);
 
         List<Quadrilateral> cube = List.of(top, bottom, front, back, left, right);
 
@@ -60,6 +60,24 @@ public class ModelTestUtils {
                 cube,
                 List.of(),
                 List.of());
+    }
+
+    private static Model subCubeModel() {
+        Model model = cube();
+        return new Model(
+                model.comments(),
+                model.commands(),
+                model.lines(),
+                model.triangles(),
+                model.quadrilaterals().stream().map(quadrilateral ->
+                        new Quadrilateral(
+                                INHERIT_PARENT_COLOR,
+                                quadrilateral.p1(),
+                                quadrilateral.p2(),
+                                quadrilateral.p3(),
+                                quadrilateral.p4())).toList(),
+                model.optionalLines(),
+                model.pieces());
     }
 
     public static Model pyramid() {
@@ -98,8 +116,8 @@ public class ModelTestUtils {
                 List.of(),
                 List.of(),
                 List.of(
-                        new SubFileReference(BLACK, Matrix.IDENTITY_MATRIX, cube(), "cube1", Optional.empty()),
-                        new SubFileReference(RED, Matrix.IDENTITY_MATRIX, cube(), "cube2", Optional.empty())
+                        new SubFileReference(BLACK, Matrix.IDENTITY_MATRIX, subCubeModel(), "cube1", Optional.empty()),
+                        new SubFileReference(RED, Matrix.IDENTITY_MATRIX, subCubeModel(), "cube2", Optional.empty())
                 )
         );
     }

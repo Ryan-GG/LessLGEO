@@ -10,7 +10,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -42,7 +43,6 @@ public class ModelServiceIntegrationTest {
     private ModelService modelService;
 
     @Test
-    @Transactional
     void saveAndRetrieveModel() {
 
         Model model = ModelTestUtils.cube();
@@ -51,6 +51,14 @@ public class ModelServiceIntegrationTest {
         ModelEntity retrievedEntity = modelService.getModelById(id).orElseThrow();
         assertNotNull(retrievedEntity);
         assertEquals(6, retrievedEntity.getQuadrilaterals().size());
+    }
+
+    @Test
+    void getParentModelIds() {
+        ModelId cubeId = modelService.insertModel(ModelTestUtils.cube());
+        ModelId nestedCubesId = modelService.insertModel(ModelTestUtils.nestedCubes());
+
+        assertEquals(List.of(cubeId, nestedCubesId), modelService.getAllRootModelIds());
     }
 
 }
