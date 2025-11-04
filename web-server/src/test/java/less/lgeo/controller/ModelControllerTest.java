@@ -19,6 +19,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.fail;
@@ -78,7 +79,7 @@ class ModelControllerTest {
         modelEntity.setId(modelId);
         LineEntity lineEntity = new LineEntity(1L, modelEntity, colorEntity, p1, p2);
         modelEntity.setLines(List.of(lineEntity));
-        when(modelService.getModelById(modelId)).thenReturn(modelEntity);
+        when(modelService.getModelById(modelId)).thenReturn(Optional.of(modelEntity));
 
         try {
             mockMvc.perform(get("/v1/models/{id}", modelId.getValue())

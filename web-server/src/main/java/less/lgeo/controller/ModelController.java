@@ -12,7 +12,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 /**
  * REST API endpoints for {@link ModelController} CRUD operations
@@ -41,13 +40,9 @@ public class ModelController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ModelEntity> getModel(@PathVariable("id") Long modelId) {
-        try {
-            ModelEntity modelEntity = modelService.getModelById(ModelId.of(modelId));
-            return ResponseEntity.ok(modelEntity);
-        } catch (NoSuchElementException e) {
-            logger.error("ModelEntity Id {} was not found", modelId);
-            return ResponseEntity.notFound().build();
-        }
+        return modelService.getModelById(ModelId.of(modelId))
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @GetMapping("/id")

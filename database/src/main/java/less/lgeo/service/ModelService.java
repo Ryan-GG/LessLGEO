@@ -4,14 +4,13 @@ import less.lgeo.embedded.ModelId;
 import less.lgeo.entity.ModelEntity;
 import less.lgeo.mapper.ModelMapper;
 import less.lgeo.primitive.Model;
-import less.lgeo.repository.ColorRepository;
 import less.lgeo.repository.ModelRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.Optional;
 
 /**
  * Service layer for interacting with {@link less.lgeo.entity.ModelEntity} from
@@ -38,8 +37,8 @@ public class ModelService {
     /**
      * @return database entity by {@link ModelId} throws if not found
      */
-    public ModelEntity getModelById(ModelId id) throws NoSuchElementException {
-        return modelRepository.findById(id.getValue()).orElseThrow();
+    public Optional<ModelEntity> getModelById(ModelId id) {
+        return modelRepository.findById(id.getValue());
     }
 
     @Transactional

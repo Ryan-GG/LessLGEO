@@ -48,7 +48,7 @@ public class ModelServiceIntegrationTest {
         Model model = ModelTestUtils.cube();
         ModelId id = modelService.insertModel(model);
 
-        ModelEntity retrievedEntity = modelService.getModelById(id);
+        ModelEntity retrievedEntity = modelService.getModelById(id).orElseThrow();
         assertNotNull(retrievedEntity);
         assertEquals(6, retrievedEntity.getQuadrilaterals().size());
     }

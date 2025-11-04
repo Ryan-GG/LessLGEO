@@ -40,7 +40,7 @@ public class ReducerHandler {
      * See {@link less.lgeo.consumer.ReducerConsumer}
      */
     public void consume(ModelId modelId) {
-        ModelEntity modelEntity = modelService.getModelById(modelId);
+        ModelEntity modelEntity = modelService.getModelById(modelId).orElseThrow();
 
         Model model = modelMapper.toDomain(modelEntity);
         logger.info("converted: {}", model);

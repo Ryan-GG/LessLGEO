@@ -32,13 +32,11 @@ public class WebServerProducer {
     /**
      * See at `less.lgeo.consumer.ParserConsumer`
      */
-    public @Nullable ModelId sendMessage(String message) {
+    public @Nullable ModelId sendMessage(String lDraw) {
 
         return rabbitTemplate.convertSendAndReceiveAsType(
                 rabbitWebToParserRpcProperties.getName(),
-                // FIXME, unsure if this is correct or if i can make this an actual amqp message
-                // to send
-                message,
+                lDraw,
                 ParameterizedTypeReference.forType(ModelId.class));
     }
 
