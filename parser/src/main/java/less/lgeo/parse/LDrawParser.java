@@ -16,7 +16,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Stream;
 
 import static less.lgeo.common.LineType.getLineType;
-import static less.lgeo.util.ParseUtils.*;
+import static less.lgeo.common.MetaCommand.isMetaCommand;
+import static less.lgeo.common.MetaCommand.parseCommand;
+import static less.lgeo.util.ParseUtils.toDouble;
+import static less.lgeo.util.ParseUtils.toInt;
 
 @Component
 public class LDrawParser implements Parser<Model> {
@@ -65,7 +68,7 @@ public class LDrawParser implements Parser<Model> {
                         if (isMetaCommand(command)) {
                             commands.add(parseCommand(command, lineIterator));
                         } else {
-                            comments.add(parseComment(line));
+                            comments.add(new Comment(line));
                         }
                     }
                 }

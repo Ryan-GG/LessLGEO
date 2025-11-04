@@ -4,8 +4,8 @@ import { Color, Vector3 } from "three";
 export const MISSING_VALUE_EXCEPTION = "Missing Value Exception" as const;
 
 /**
- * @param vertex vertex protobuf
- * @returns Vector3 encoding of vertex protobuf
+ * @param vertex vertex Vector3d
+ * @returns Vector3 encoding of Vector3d
  */
 export function toVector3( vertex: Vector3dEmbeddable ): Vector3
 {
@@ -18,8 +18,8 @@ export function toVector3( vertex: Vector3dEmbeddable ): Vector3
 
 /**
  * 
- * @param vertex vertex protobuf
- * @returns Float32Array encoding of vertex protobuf [ x, y, z ]
+ * @param vertex vertex
+ * @returns Float32Array encoding of Vector3
  */
 export function toFloat32Array( vertex: Vector3dEmbeddable): Float32Array
 {
@@ -32,7 +32,7 @@ export function toFloat32Array( vertex: Vector3dEmbeddable): Float32Array
 
 /**
  * 
- * @param vertices Array of vertex protobufs
+ * @param vertices Array of vector3d
  * @returns Float32Array encoding of each vertex [ x1, y1, z1, x2, y2, z2, ... xN-1, yN-1, zN-1 ]
  */
 export function verticesToFloat32Array( vertices: ReadonlyArray<Vector3dEmbeddable> ): Float32Array

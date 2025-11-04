@@ -16,7 +16,10 @@ import java.util.Iterator;
 import java.util.List;
 
 import static less.lgeo.common.LineType.getLineType;
-import static less.lgeo.util.ParseUtils.*;
+import static less.lgeo.common.MetaCommand.isMetaCommand;
+import static less.lgeo.common.MetaCommand.parseCommand;
+import static less.lgeo.util.ParseUtils.toDouble;
+import static less.lgeo.util.ParseUtils.toInt;
 
 /**
  * A connectivity Parser will parse a .dat file converted to a .part file and create a respective
@@ -56,7 +59,7 @@ public class ConnectivityParser implements Parser<Connection> {
                 if (isMetaCommand(command)) {
                     commands.add(parseCommand(command, iterator));
                 } else {
-                    comments.add(parseComment(line));
+                    comments.add(new Comment(line));
                 }
             }
         });

@@ -93,9 +93,5 @@ yarn-error.log*
 *.tsbuildinfo
 */next-env.d.ts
 
-# ProtobufJS
-ui/proto-bundle.js
-ui/proto-bundle.d.ts
-
 # Supabase
 supabase/
