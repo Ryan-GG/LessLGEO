@@ -17,6 +17,7 @@ public interface ModelRepository extends JpaRepository<ModelEntity, Long> {
 
     //find all model ids which are not contained in the subfile reference
     // should be the disjoint between parent_model_id & sub_model_id
+    //FIXME, A test should be written for this, This is not working for the BVH test models
     @Query(value = """
             SELECT DISTINCT parent_model_id AS num
             FROM models_sub_file_references

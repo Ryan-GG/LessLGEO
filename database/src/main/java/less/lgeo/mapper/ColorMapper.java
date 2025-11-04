@@ -1,24 +1,24 @@
 package less.lgeo.mapper;
 
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.PersistenceContext;
 import less.lgeo.common.Color;
 import less.lgeo.entity.ColorEntity;
+import less.lgeo.service.ColorService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class ColorMapper implements Mapper<Color, ColorEntity> {
 
-    @PersistenceContext
-    private final EntityManager entityManager;
+    @Autowired
+    private final ColorService colorService;
 
-    public ColorMapper(EntityManager entityManager) {
-        this.entityManager = entityManager;
+    public ColorMapper(ColorService colorService) {
+        this.colorService = colorService;
     }
 
     @Override
     public ColorEntity toEntity(Color domain) {
-        return entityManager.getReference(ColorEntity.class, domain.getId());
+        return colorService.getColorByCode(domain.getId()).orElseThrow();
     }
 
 

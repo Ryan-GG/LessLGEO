@@ -1,14 +1,14 @@
 package less.lgeo.config;
 
-import jakarta.persistence.EntityManager;
 import less.lgeo.mapper.*;
+import less.lgeo.service.ColorService;
 import org.springframework.context.annotation.Bean;
 
 public class MapperConfig {
 
     @Bean
-    public ColorMapper colorMapper(EntityManager entityManager) {
-        return new ColorMapper(entityManager);
+    public ColorMapper colorMapper(ColorService colorService) {
+        return new ColorMapper(colorService);
     }
 
     @Bean
