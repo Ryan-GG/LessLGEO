@@ -89,9 +89,7 @@ function triangleToBufferGeometry( triangleEntity: TriangleEntity ): BufferGeome
 	}
 
 	const geometry = new BufferGeometry();
-	const gpbVertices: Array<Vector3dEmbeddable> = [ p1, p2, p3 ];
-
-	const vertices = verticesToFloat32Array( gpbVertices );
+	const vertices = verticesToFloat32Array( [ p1, p2, p3 ] );
 
 	const indices = [ 0, 1, 2  ];
         
@@ -119,8 +117,7 @@ function quadrilateralToBufferGeometry( quadrilateralEntity: QuadrilateralEntity
 	}
 
 	const geometry = new BufferGeometry();
-	const gpbVertices: Array<Vector3dEmbeddable> = [ p1, p2, p3, p4 ];
-	const vertices = verticesToFloat32Array( gpbVertices );
+	const vertices = verticesToFloat32Array( [ p1, p2, p3, p4 ] );
 	const indices = [ 0, 1, 2, 2, 3, 0 ];
         
 	geometry.setIndex( indices );

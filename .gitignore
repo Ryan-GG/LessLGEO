@@ -54,9 +54,6 @@ connectivity/
 collider/
 *.col
 
-# GPB files
-*.gpb
-
 */node_modules
 */.pnp
 .pnp.*

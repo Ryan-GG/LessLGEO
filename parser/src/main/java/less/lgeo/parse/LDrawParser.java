@@ -33,7 +33,7 @@ public class LDrawParser implements Parser<Model> {
     }
 
     @Override
-    public void writeToFile(Model gpb, Path outputPath) {
+    public void writeToFile(Model domain, Path outputPath) {
         // TODO, [Task] Add export back to .ldr format of a Model file #24
         // return new File("TODO");
     }

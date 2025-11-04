@@ -21,7 +21,7 @@ import static less.lgeo.connection.Connection.changeFileExtension;
 
 /**
  * Provides parsing, transforming, and joining of .dat and .part Currently parses a file one by one
- * but is possible to do in parallel if recognize files before GPB creation
+ * but is possible to do in parallel if recognize files before creation
  */
 @Component
 public class ModelJoiner {
