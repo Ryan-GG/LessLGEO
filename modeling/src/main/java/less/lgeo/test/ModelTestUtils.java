@@ -108,7 +108,7 @@ public class ModelTestUtils {
     }
 
     public static Model nestedCubes() {
-        return new Model(
+        Model nestedCubes = new Model(
                 List.of(),
                 List.of(),
                 List.of(),
@@ -120,6 +120,7 @@ public class ModelTestUtils {
                         new SubFileReference(RED, Matrix.IDENTITY_MATRIX, subCubeModel(), "cube2", Optional.empty())
                 )
         );
+        return nestedCubes.transformModel();
     }
 
 

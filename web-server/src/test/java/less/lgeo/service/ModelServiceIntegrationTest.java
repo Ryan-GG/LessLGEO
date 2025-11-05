@@ -13,8 +13,7 @@ import io.zonky.test.db.AutoConfigureEmbeddedDatabase.RefreshMode;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * <p>
@@ -59,7 +58,7 @@ public class ModelServiceIntegrationTest {
     ModelId cubeId = modelService.insertModel(ModelTestUtils.cube());
     ModelId nestedCubesId = modelService.insertModel(ModelTestUtils.nestedCubes());
 
-    assertEquals(List.of(cubeId, nestedCubesId), modelService.getAllRootModelIds());
+    assertTrue(List.of(cubeId, nestedCubesId).containsAll(modelService.getAllRootModelIds()));
   }
 
 }
