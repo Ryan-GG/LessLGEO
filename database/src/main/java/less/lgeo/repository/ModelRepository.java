@@ -15,13 +15,14 @@ import java.util.List;
 @RepositoryDefinition(domainClass = ModelEntity.class, idClass = Long.class)
 public interface ModelRepository extends JpaRepository<ModelEntity, Long> {
 
-    //find all model ids which are not contained in the subfile reference
-    // should be the disjoint between parent_model_id & sub_model_id
-    //FIXME, A test should be written for this, This is not working for the BVH test models
-    @Query(value = """
-            SELECT DISTINCT parent_model_id AS num
-            FROM models_sub_file_references
-            WHERE parent_model_id NOT IN (SELECT sub_model_id FROM models_sub_file_references)
-            """, nativeQuery = true)
-    List<Long> findAllParentModelIds();
+  // find all model ids which are not contained in the subfile reference
+  // should be the disjoint between parent_model_id & sub_model_id
+  // FIXME, A test should be written for this, This is not working for the BVH
+  // test models
+  @Query(value = """
+      SELECT DISTINCT id AS num
+      FROM models
+      WHERE id NOT IN (SELECT sub_model_id FROM models_sub_file_references)
+      """, nativeQuery = true)
+  List<Long> findAllParentModelIds();
 }
