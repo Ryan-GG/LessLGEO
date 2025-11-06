@@ -3,6 +3,7 @@ package less.lgeo.tracer;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.Quadrilateral;
 import less.lgeo.test.ModelTestUtils;
+import less.lgeo.tracer.bvh.BoundingBox;
 import org.joml.Vector3d;
 import org.junit.jupiter.api.Test;
 

@@ -1,4 +1,4 @@
-package less.lgeo.tracer;
+package less.lgeo.tracer.bvh;
 
 import less.lgeo.primitive.Triangle;
 import lombok.Getter;

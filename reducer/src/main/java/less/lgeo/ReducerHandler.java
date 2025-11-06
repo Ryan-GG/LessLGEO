@@ -1,9 +1,9 @@
 package less.lgeo;
 
 import less.lgeo.embedded.ModelId;
-import less.lgeo.entity.ModelEntity;
 import less.lgeo.mapper.ModelMapper;
 import less.lgeo.primitive.Model;
+import less.lgeo.reducer.Reducer;
 import less.lgeo.service.ModelService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,9 +22,16 @@ public class ReducerHandler {
     @Autowired
     private final ModelMapper modelMapper;
 
-    public ReducerHandler(ModelService modelService, ModelMapper modelMapper) {
+    @Autowired
+    private final Reducer reducer;
+
+    public ReducerHandler(
+            ModelService modelService,
+            ModelMapper modelMapper,
+            Reducer reducer) {
         this.modelService = modelService;
         this.modelMapper = modelMapper;
+        this.reducer = reducer;
     }
 
     public static void main(String[] args) {
@@ -36,9 +43,13 @@ public class ReducerHandler {
      * See {@link less.lgeo.consumer.ReducerConsumer}
      */
     public void consume(ModelId modelId) {
-        ModelEntity modelEntity = modelService.getModelById(modelId).orElseThrow();
-
-        Model model = modelMapper.toDomain(modelEntity);
-        logger.info("converted: {}", model);
+        modelService.getModelById(modelId)
+                .map(modelMapper::toDomain)
+                .ifPresentOrElse(model ->
+                        {
+                            Model reducedModel = reducer.reduce(model);
+                            logger.info("Reduced Model {}", reducedModel);
+                        },
+                        () -> logger.info("Could not find any modelId {}", modelId));
     }
 }
