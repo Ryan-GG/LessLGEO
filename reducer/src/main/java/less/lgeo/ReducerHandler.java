@@ -48,7 +48,6 @@ public class ReducerHandler {
                 .ifPresentOrElse(model ->
                         {
                             Model reducedModel = reducer.reduce(model);
-                            logger.info("Reduced Model {}", reducedModel);
                         },
                         () -> logger.info("Could not find any modelId {}", modelId));
     }

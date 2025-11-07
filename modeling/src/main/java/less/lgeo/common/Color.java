@@ -42,4 +42,19 @@ public class Color {
                 isTransparent
         );
     }
+
+    //FIXME, i feel like this should just have the actual java.awt.Color value rather than the string
+    public int getRed() {
+        return java.awt.Color.decode(rgb).getRed();
+    }
+
+    public int getGreen() {
+        return java.awt.Color.decode(rgb).getGreen();
+    }
+
+    public int getBlue() {
+        return java.awt.Color.decode(rgb).getBlue();
+    }
+
+
 }

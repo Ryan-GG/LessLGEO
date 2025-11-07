@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 public class BoundingVolumeHierarchy {
 
+    //FIXME, put this into application.yaml
     private static final int MAX_DEPTH = 20;
     private final Node root;
 

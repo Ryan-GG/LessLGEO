@@ -92,3 +92,6 @@ yarn-error.log*
 
 # Supabase
 supabase/
+
+# ppm files
+*.ppm
