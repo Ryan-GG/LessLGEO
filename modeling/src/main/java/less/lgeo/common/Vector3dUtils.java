@@ -31,4 +31,9 @@ public class Vector3dUtils {
     public static Vector3d unitVector(Vector3d vector) {
         return vector.div(vector.length());
     }
+
+    public static Vector3d lerp(Vector3d v1, Vector3d v2, double t) {
+        return new Vector3d(v1).mul(1.0 - t).add(new Vector3d(v2).mul(t));
+    }
+
 }

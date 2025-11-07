@@ -30,21 +30,15 @@ public record RayTracer(Camera camera, Model model) {
                     imageWidth, imageHeight));
 
             for (int j = 0; j < imageHeight; j++) {
-                logger.info("Scanline's remaining: {}", imageHeight - j);
+                //logger.info("Scanline's remaining: {}", imageHeight - j);
                 for (int i = 0; i < imageWidth; i++) {
 
                     //pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
-                    Vector3d pixelCenter = camera.getPixelLocation00().add(
-                            i * camera.getPixelDeltaX(),
-                            i * camera.getPixelDeltaX(),
-                            i * camera.getPixelDeltaX()
-                    ).add(
-                            j * camera.getPixelDeltaY(),
-                            j * camera.getPixelDeltaY(),
-                            j * camera.getPixelDeltaY()
-                    );
+                    Vector3d pixelCenter = new Vector3d(camera.getPixelLocation00())
+                            .add(new Vector3d(camera.getPixelDeltaU()).mul(i))
+                            .add(new Vector3d(camera.getPixelDeltaV()).mul(j));
 
-                    Vector3d rayDirection = pixelCenter.sub(camera.getOrigin());
+                    Vector3d rayDirection = new Vector3d(pixelCenter).sub(camera.getOrigin());
                     Ray ray = new Ray(camera.getOrigin(), rayDirection);
 
                     Color pixelColor = ray.getColor();
