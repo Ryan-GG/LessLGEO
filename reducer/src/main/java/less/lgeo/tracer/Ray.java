@@ -15,7 +15,16 @@ public record Ray(Vector3d origin, Vector3d direction) {
         return origin.add(direction.mul(time));
     }
 
-    Color getColor() {
+    public Color getColor() {
+
+        if (hitSphere(new Vector3d(0, 0, -1), 0.5)) {
+            return Color.builder()
+                    .r(1)
+                    .g(0)
+                    .b(0)
+                    .isTransparent(false)
+                    .build();
+        }
 
         Vector3d unitDirection = direction().lengthSquared() == 0
                 ? new Vector3d(0, 0, 0)
@@ -32,12 +41,23 @@ public record Ray(Vector3d origin, Vector3d direction) {
                 colorTwo,
                 a
         );
-        
+
         return Color.builder()
                 .r(result.x())
                 .g(result.y())
                 .b(result.z())
                 .isTransparent(false)
                 .build();
+    }
+
+    public boolean hitSphere(Vector3d center, double radius) {
+        //centerSphere - ray origin
+        Vector3d oc = new Vector3d(center).sub(origin);
+
+        double a = new Vector3d(direction).dot(direction);
+        double b = -2.0 * new Vector3d(direction).dot(oc);
+        double c = new Vector3d(oc).dot(oc) - radius * radius;
+        double discriminant = b * b - 4 * a * c;
+        return (discriminant >= 0);
     }
 }

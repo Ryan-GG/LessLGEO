@@ -30,7 +30,7 @@ public record RayTracer(Camera camera, Model model) {
                     imageWidth, imageHeight));
 
             for (int j = 0; j < imageHeight; j++) {
-                //logger.info("Scanline's remaining: {}", imageHeight - j);
+                logger.info("Scanline's remaining: {}", imageHeight - j);
                 for (int i = 0; i < imageWidth; i++) {
 
                     //pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
@@ -49,6 +49,7 @@ public record RayTracer(Camera camera, Model model) {
                             (int) (255.999 * pixelColor.b())));
                 }
             }
+            logger.info("Done!");
         } catch (IOException e) {
             logger.error("IO Failure", e);
         }

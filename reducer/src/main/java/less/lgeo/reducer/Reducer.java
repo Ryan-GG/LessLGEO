@@ -1,6 +1,5 @@
 package less.lgeo.reducer;
 
-import less.lgeo.LDrawUnitsUtil;
 import less.lgeo.primitive.Model;
 import less.lgeo.tracer.RayTracer;
 import less.lgeo.tracer.camera.Camera;
@@ -14,7 +13,7 @@ public class Reducer {
 
     public Model reduce(Model model) {
         Camera camera = new Camera(
-                new Vector3d(0, 0, -1 * LDrawUnitsUtil.BRICK_TO_LDU),
+                new Vector3d(0, 0, 0),
                 ASPECT_RATIO_16_9,
                 400
         );
