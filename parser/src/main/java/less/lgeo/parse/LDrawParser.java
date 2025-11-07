@@ -124,8 +124,7 @@ public class LDrawParser implements Parser<Model> {
         String subFileName = subFileParts.getLast();
         Model parsedSubFileModel = getParsedSubFileModel(subFileName);
 
-        Color color = new Color();
-        color.setId(colorId);
+        Color color = Color.builder().id(colorId).build();
 
         return new SubFileReference(
                 color,
@@ -181,8 +180,7 @@ public class LDrawParser implements Parser<Model> {
         Vector3d p1 = new Vector3d(x1, y1, z1);
         Vector3d p2 = new Vector3d(x2, y2, z2);
 
-        Color color = new Color();
-        color.setId(colorId);
+        Color color = Color.builder().id(colorId).build();
 
         return new Line(
                 color,
@@ -210,8 +208,7 @@ public class LDrawParser implements Parser<Model> {
         Vector3d p2 = new Vector3d(x2, y2, z2);
         Vector3d p3 = new Vector3d(x3, y3, z3);
 
-        Color color = new Color();
-        color.setId(colorId);
+        Color color = Color.builder().id(colorId).build();
 
         return new Triangle(
                 color,
@@ -244,8 +241,7 @@ public class LDrawParser implements Parser<Model> {
         Vector3d p3 = new Vector3d(x3, y3, z3);
         Vector3d p4 = new Vector3d(x4, y4, z4);
 
-        Color color = new Color();
-        color.setId(colorId);
+        Color color = Color.builder().id(colorId).build();
 
         return new Quadrilateral(
                 color,
@@ -279,8 +275,7 @@ public class LDrawParser implements Parser<Model> {
         Vector3d p3 = new Vector3d(x3, y3, z3);
         Vector3d p4 = new Vector3d(x4, y4, z4);
 
-        Color color = new Color();
-        color.setId(colorId);
+        Color color = Color.builder().id(colorId).build();
 
         return new OptionalLine(
                 color,

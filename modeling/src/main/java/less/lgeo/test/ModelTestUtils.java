@@ -17,11 +17,11 @@ import java.util.Optional;
  */
 public class ModelTestUtils {
 
-    public static final Color BLACK = new Color(0, "Black", "#000000", false);
-    public static final Color RED = new Color(4, "Red", "#FF0000", false);
+    public static final Color BLACK = new Color(0, "Black", 0, 0, 0, false);
+    public static final Color RED = new Color(4, "Red", 255, 0, 0, false);
 
-    public static final Color INHERIT_PARENT_COLOR = new Color(16, "inherit_parent", "", false);
-    public static final Color INHERIT_EDGE_COLOR = new Color(24, "inherit_edge", "", false);
+    public static final Color INHERIT_PARENT_COLOR = new Color(16, "inherit_parent", 0, 0, 0, false);
+    public static final Color INHERIT_EDGE_COLOR = new Color(24, "inherit_edge", 0, 0, 0, false);
 
 
     /**

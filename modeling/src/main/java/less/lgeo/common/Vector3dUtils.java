@@ -27,4 +27,8 @@ public class Vector3dUtils {
 
         return new Vector3d(newX, newY, newZ);
     }
+
+    public static Vector3d unitVector(Vector3d vector) {
+        return vector.div(vector.length());
+    }
 }

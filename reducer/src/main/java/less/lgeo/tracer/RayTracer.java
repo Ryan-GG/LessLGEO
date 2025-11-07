@@ -32,7 +32,7 @@ public record RayTracer(Camera camera, Model model) {
             for (int j = 0; j < imageHeight; j++) {
                 logger.info("Scanline's remaining: {}", imageHeight - j);
                 for (int i = 0; i < imageWidth; i++) {
-                    
+
                     //pixel00_loc + (i * pixel_delta_u) + (j * pixel_delta_v);
                     Vector3d pixelCenter = camera.getPixelLocation00().add(
                             i * camera.getPixelDeltaX(),
@@ -50,9 +50,9 @@ public record RayTracer(Camera camera, Model model) {
                     Color pixelColor = ray.getColor();
 
                     fileWriter.write(String.format("%d %d %d\n",
-                            pixelColor.getRed(),
-                            pixelColor.getGreen(),
-                            pixelColor.getBlue()));
+                            (int) (255.999 * pixelColor.r()),
+                            (int) (255.999 * pixelColor.g()),
+                            (int) (255.999 * pixelColor.b())));
                 }
             }
         } catch (IOException e) {

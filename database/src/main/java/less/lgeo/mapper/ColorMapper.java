@@ -18,13 +18,14 @@ public class ColorMapper implements Mapper<Color, ColorEntity> {
 
     @Override
     public ColorEntity toEntity(Color domain) {
-        return colorService.getColorByCode(domain.getId()).orElseThrow();
+        return colorService.getColorByCode(domain.id()).orElseThrow();
     }
 
 
     @Override
     public Color toDomain(ColorEntity entity) {
-        return new Color(entity.getId(), entity.getName(), entity.getRgb(), entity.isTrans());
+        java.awt.Color color = java.awt.Color.decode(entity.getRgb());
+        return new Color(entity.getId(), entity.getName(), color.getRed(), color.getGreen(), color.getBlue(), entity.isTrans());
     }
 
 
