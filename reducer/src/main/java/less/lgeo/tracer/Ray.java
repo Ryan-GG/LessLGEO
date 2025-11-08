@@ -54,20 +54,20 @@ public record Ray(Vector3d origin, Vector3d direction) {
                 .isTransparent(false)
                 .build();
     }
-
+    
     public double hitSphere(Vector3d center, double radius) {
-        //centerSphere - ray origin
+        //FIXME, I'm still not sure what OC means
         Vector3d oc = new Vector3d(center).sub(origin);
 
-        double a = new Vector3d(direction).dot(direction);
-        double b = -2.0 * new Vector3d(direction).dot(oc);
-        double c = new Vector3d(oc).dot(oc) - radius * radius;
-        double discriminant = b * b - 4 * a * c;
+        double a = new Vector3d(direction).lengthSquared();
+        double h = new Vector3d(direction).dot(oc);
+        double c = oc.lengthSquared() - radius * radius;
+        double discriminant = h * h - a * c;
 
         if (discriminant < 0) {
             return -1.0;
         } else {
-            return (-b - Math.sqrt(discriminant)) / (2.0 * a);
+            return (h - Math.sqrt(discriminant)) / a;
         }
     }
 }
