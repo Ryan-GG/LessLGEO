@@ -2,6 +2,7 @@ package less.lgeo.tracer;
 
 import less.lgeo.common.Color;
 import less.lgeo.primitive.Model;
+import less.lgeo.primitive.Ray;
 import less.lgeo.tracer.camera.Camera;
 import org.joml.Vector3d;
 import org.slf4j.Logger;
