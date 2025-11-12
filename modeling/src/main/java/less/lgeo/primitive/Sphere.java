@@ -3,6 +3,8 @@ package less.lgeo.primitive;
 import lombok.Getter;
 import org.joml.Vector3d;
 
+import static less.lgeo.common.Vector3dUtils.unitVector;
+
 @Getter
 public class Sphere extends Hittable {
 
@@ -38,7 +40,8 @@ public class Sphere extends Hittable {
         }
 
         hitRecord.setPoint(ray.at(root));
-        hitRecord.setNormal(new Vector3d(ray.at(root)).sub(center).div(radius));
+        Vector3d outwardNormal = unitVector(new Vector3d(ray.at(root)).sub(center).div(radius));
+        hitRecord.setFrontFace(ray, outwardNormal);
         hitRecord.setT(root);
 
         return true;
