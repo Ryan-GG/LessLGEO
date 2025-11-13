@@ -1,8 +1,10 @@
 package less.lgeo.tracer;
 
 import less.lgeo.common.Color;
+import less.lgeo.hittable.HittableList;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.Ray;
+import less.lgeo.primitive.Sphere;
 import less.lgeo.tracer.camera.Camera;
 import org.joml.Vector3d;
 import org.slf4j.Logger;
@@ -21,6 +23,12 @@ public record RayTracer(Camera camera, Model model) {
     public void render() {
         int imageWidth = camera().getImageWidth();
         int imageHeight = camera().getImageHeight();
+
+
+        HittableList world = new HittableList();
+
+        world.add(new Sphere(new Vector3d(0, 0, -1), 0.5));
+        world.add(new Sphere(new Vector3d(0, -100.5, -1), 100));
 
         try (FileWriter fileWriter = new FileWriter("test.ppm")) {
             fileWriter.write(String.format("""
@@ -42,7 +50,7 @@ public record RayTracer(Camera camera, Model model) {
                     Vector3d rayDirection = new Vector3d(pixelCenter).sub(camera.getOrigin());
                     Ray ray = new Ray(camera.getOrigin(), rayDirection);
 
-                    Color pixelColor = ray.getColor();
+                    Color pixelColor = ray.getColor(world);
 
                     fileWriter.write(String.format("%d %d %d\n",
                             (int) (255.999 * pixelColor.r()),

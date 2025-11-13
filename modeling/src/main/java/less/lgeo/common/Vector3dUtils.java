@@ -29,7 +29,9 @@ public class Vector3dUtils {
     }
 
     public static Vector3d unitVector(Vector3d vector) {
-        return vector.div(vector.length());
+        return vector.lengthSquared() == 0
+                ? new Vector3d(0, 0, 0)
+                : new Vector3d(vector).normalize();
     }
 
     public static Vector3d lerp(Vector3d v1, Vector3d v2, double t) {

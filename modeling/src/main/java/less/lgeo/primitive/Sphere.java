@@ -1,5 +1,7 @@
 package less.lgeo.primitive;
 
+import less.lgeo.hittable.HitRecord;
+import less.lgeo.hittable.Hittable;
 import lombok.Getter;
 import org.joml.Vector3d;
 
@@ -39,10 +41,12 @@ public class Sphere extends Hittable {
                 return false;
         }
 
-        hitRecord.setPoint(ray.at(root));
-        Vector3d outwardNormal = unitVector(new Vector3d(ray.at(root)).sub(center).div(radius));
-        hitRecord.setFrontFace(ray, outwardNormal);
         hitRecord.setT(root);
+        hitRecord.setPoint(ray.at(root));
+
+        Vector3d rayAtRootSubCenter = new Vector3d(ray.at(root)).sub(center);
+        Vector3d outwardNormal = unitVector(rayAtRootSubCenter.div(radius));
+        hitRecord.setFrontFace(ray, outwardNormal);
 
         return true;
     }

@@ -1,6 +1,8 @@
 package less.lgeo.primitive;
 
 import less.lgeo.common.Color;
+import less.lgeo.hittable.HitRecord;
+import less.lgeo.hittable.HittableList;
 import org.joml.Vector3d;
 
 import static less.lgeo.common.Vector3dUtils.lerp;
@@ -12,30 +14,23 @@ public record Ray(Vector3d origin, Vector3d direction) {
         return new Vector3d(origin).add(direction.mul(time));
     }
 
-    public Color getColor() {
+    public Color getColor(HittableList world) {
+        HitRecord rec = new HitRecord();
+        boolean hasRayHitSurface = world.hit(this, 0, Double.POSITIVE_INFINITY, rec);
 
+        if (hasRayHitSurface) {
+            Vector3d normal = new Vector3d(rec.getNormal());
+            Vector3d colorVec = normal.add(1, 1, 1).mul(0.5);
 
-        Sphere sphere = new Sphere(new Vector3d(0, 0, -1), 0.5);
-        HitRecord hitRecord = new HitRecord();
-        if (sphere.hit(this, 0, 1, hitRecord)) {
-            
-            double t = hitRecord.getT();
-            if (t > 0.0) {
-                Vector3d normal = unitVector(at(t).sub(new Vector3d(0, 0, -1)));
-                Vector3d colorVec = new Vector3d(normal.x() + 1, normal.y() + 1, normal.z() + 1).mul(0.5);
-
-                return Color.builder()
-                        .r(colorVec.x())
-                        .g(colorVec.y())
-                        .b(colorVec.z())
-                        .isTransparent(false)
-                        .build();
-            }
+            return Color.builder()
+                    .r(colorVec.x())
+                    .g(colorVec.y())
+                    .b(colorVec.z())
+                    .isTransparent(false)
+                    .build();
         }
 
-        Vector3d unitDirection = direction().lengthSquared() == 0
-                ? new Vector3d(0, 0, 0)
-                : direction().normalize();
+        Vector3d unitDirection = unitVector(direction());
 
         double a = 0.5 * (unitDirection.y() + 1.0);
 
@@ -56,5 +51,4 @@ public record Ray(Vector3d origin, Vector3d direction) {
                 .isTransparent(false)
                 .build();
     }
-
 }

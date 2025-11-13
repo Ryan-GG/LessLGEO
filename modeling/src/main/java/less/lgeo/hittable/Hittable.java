@@ -1,4 +1,6 @@
-package less.lgeo.primitive;
+package less.lgeo.hittable;
+
+import less.lgeo.primitive.Ray;
 
 public abstract class Hittable {
 
