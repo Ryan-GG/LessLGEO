@@ -19,7 +19,7 @@ public record Ray(Vector3d origin, Vector3d direction) {
         boolean hasRayHitSurface = world.hit(this, 0, Double.POSITIVE_INFINITY, rec);
 
         if (hasRayHitSurface) {
-            Vector3d normal = new Vector3d(rec.getNormal());
+            Vector3d normal = unitVector(rec.getNormal());
             Vector3d colorVec = normal.add(1, 1, 1).mul(0.5);
 
             return Color.builder()
