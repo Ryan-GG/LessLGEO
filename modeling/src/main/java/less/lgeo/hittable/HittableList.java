@@ -1,5 +1,6 @@
 package less.lgeo.hittable;
 
+import less.lgeo.common.Interval;
 import less.lgeo.primitive.Ray;
 
 import java.util.ArrayList;
@@ -28,14 +29,14 @@ public class HittableList extends Hittable {
 
 
     @Override
-    public boolean hit(Ray ray, double rayTMin, double rayTMax, HitRecord hitRecord) {
+    public boolean hit(Ray ray, Interval rayTimeInterval, HitRecord hitRecord) {
 
         HitRecord tempRec = new HitRecord();
         boolean hitAnything = false;
-        double closestsoFar = rayTMax;
+        double closestsoFar = rayTimeInterval.max();
 
         for (Hittable hittable : hittableList) {
-            boolean hasRayHitSurface = hittable.hit(ray, rayTMin, closestsoFar, tempRec);
+            boolean hasRayHitSurface = hittable.hit(ray, Interval.of(rayTimeInterval.min(), closestsoFar), tempRec);
             if (hasRayHitSurface) {
                 hitAnything = true;
                 closestsoFar = tempRec.getT();

@@ -1,6 +1,7 @@
 package less.lgeo.primitive;
 
 import less.lgeo.common.Color;
+import less.lgeo.common.Interval;
 import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.HittableList;
 import org.joml.Vector3d;
@@ -16,7 +17,7 @@ public record Ray(Vector3d origin, Vector3d direction) {
 
     public Color getColor(HittableList world) {
         HitRecord rec = new HitRecord();
-        boolean hasRayHitSurface = world.hit(this, 0, Double.POSITIVE_INFINITY, rec);
+        boolean hasRayHitSurface = world.hit(this, Interval.of(0, Double.POSITIVE_INFINITY), rec);
 
         if (hasRayHitSurface) {
             Vector3d normal = unitVector(rec.getNormal());

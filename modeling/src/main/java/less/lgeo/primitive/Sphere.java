@@ -1,5 +1,6 @@
 package less.lgeo.primitive;
 
+import less.lgeo.common.Interval;
 import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.Hittable;
 import lombok.Getter;
@@ -17,7 +18,7 @@ public class Sphere extends Hittable {
     }
 
     @Override
-    public boolean hit(Ray ray, double rayTMin, double rayTMax, HitRecord hitRecord) {
+    public boolean hit(Ray ray, Interval rayTimeInterval, HitRecord hitRecord) {
         Vector3d oc = new Vector3d(center).sub(ray.origin());
 
         double a = ray.direction().lengthSquared();
@@ -33,9 +34,9 @@ public class Sphere extends Hittable {
 
         // Find nearest valid root
         double root = (h - sqrtd) / a;
-        if (root <= rayTMin || rayTMax <= root) {
+        if (!rayTimeInterval.surrounds(root)) {
             root = (h + sqrtd) / a;
-            if (root <= rayTMin || rayTMax <= root)
+            if (!rayTimeInterval.surrounds(root))
                 return false;
         }
 
