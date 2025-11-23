@@ -9,6 +9,9 @@ import org.springframework.stereotype.Component;
 
 import static less.lgeo.tracer.camera.Camera.ASPECT_RATIO_16_9;
 
+/**
+ * <a href="https://raytracing.github.io/books/RayTracingInOneWeekend.html">Ray Tracing in One Weekend</a>
+ */
 @Component
 public class Reducer {
 
