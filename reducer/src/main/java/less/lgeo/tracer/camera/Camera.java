@@ -13,8 +13,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-import static less.lgeo.common.Vector3dUtils.lerp;
-import static less.lgeo.common.Vector3dUtils.unitVector;
+import static less.lgeo.common.Vector3dUtils.*;
 
 @Getter
 public class Camera {
@@ -74,6 +73,7 @@ public class Camera {
                     imageWidth, imageHeight));
 
             for (int j = 0; j < imageHeight; j++) {
+                logger.info("Scanlines remaining: {}", imageHeight - j);
                 for (int i = 0; i < imageWidth; i++) {
                     Vector3d pixelColor = new Vector3d(0);
                     for (int sample = 0; sample < SAMPLES_PER_PIXEL; sample++) {
@@ -135,10 +135,9 @@ public class Camera {
         boolean hasRayHitSurface = world.hit(ray, Interval.of(0, Double.POSITIVE_INFINITY), rec);
 
         if (hasRayHitSurface) {
-            Vector3d normal = unitVector(rec.getNormal());
-            Vector3d colorVec = normal.add(1, 1, 1).mul(0.5);
-
-            return colorVec;
+            Vector3d direction = randomOnHemisphere(rec.getNormal());
+            Ray bouncingRay = new Ray(rec.getPoint(), direction);
+            return getRayColor(bouncingRay, world).mul(0.5);
         }
 
         Vector3d unitDirection = unitVector(ray.direction());
