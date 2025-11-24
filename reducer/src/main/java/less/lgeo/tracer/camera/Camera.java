@@ -18,12 +18,13 @@ import static less.lgeo.common.Vector3dUtils.*;
 @Getter
 public class Camera {
 
-    public static final double ASPECT_RATIO_16_9 = 16.0 / 9.0;
-    private static final int SAMPLES_PER_PIXEL = 100;
+    public static final double ASPECT_RATIO_16_9 = 16.0 / 9.0; // Ratio of image width over height
+    private static final int SAMPLES_PER_PIXEL = 100; // Count of random samples for each pixel
+    private static final int RAY_MAX_BOUNCES = 50;   // Maximum number of ray bounces into scene
     private static final double PIXEL_SAMPLES_SCALE = (double) 1 / SAMPLES_PER_PIXEL;
     private static final Logger logger = LoggerFactory.getLogger(Camera.class);
     private final Vector3d origin;
-    private final int imageWidth;
+    private final int imageWidth; // Rendered image width in pixel count
     private final int imageHeight;
     private final Vector3d pixelDeltaU;
     private final Vector3d pixelDeltaV;
@@ -131,13 +132,33 @@ public class Camera {
     }
 
     private Vector3d getRayColor(Ray ray, HittableList world) {
+        return getRayColor(ray, 0, world);
+    }
+
+    private Vector3d getRayColor(Ray ray, int rayBounceIteration, HittableList world) {
+
+        // If we've exceeded the ray bounce limit, no more light is gathered.
+        if (RAY_MAX_BOUNCES <= rayBounceIteration) return new Vector3d(0);
+
         HitRecord rec = new HitRecord();
-        boolean hasRayHitSurface = world.hit(ray, Interval.of(0, Double.POSITIVE_INFINITY), rec);
+        
+        /*
+         * There’s also a subtle bug that we need to address.
+         * A ray will attempt to accurately calculate the intersection point when it intersects with a surface.
+         * Unfortunately for us, this calculation is susceptible to floating point rounding errors which can cause
+         * the intersection point to be ever so slightly off. This means that the origin of the next ray, the ray that
+         * is randomly scattered off of the surface, is unlikely to be perfectly flush with the surface. It might
+         * be just above the surface. It might be just below the surface. If the ray's origin is just below the
+         * surface then it could intersect with that surface again. Which means that it will find the nearest
+         * surface at 𝑡=0.00000001 or whatever floating point approximation the hit function gives us.
+         * The simplest hack to address this is just to ignore hits that are very close to the calculated intersection point
+         */
+        boolean hasRayHitSurface = world.hit(ray, Interval.of(0.001, Double.POSITIVE_INFINITY), rec);
 
         if (hasRayHitSurface) {
             Vector3d direction = randomOnHemisphere(rec.getNormal());
             Ray bouncingRay = new Ray(rec.getPoint(), direction);
-            return getRayColor(bouncingRay, world).mul(0.5);
+            return getRayColor(bouncingRay, rayBounceIteration + 1, world).mul(0.5);
         }
 
         Vector3d unitDirection = unitVector(ray.direction());
