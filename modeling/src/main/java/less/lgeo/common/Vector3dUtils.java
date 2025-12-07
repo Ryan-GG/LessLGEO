@@ -82,4 +82,13 @@ public class Vector3dUtils {
             return onUnitSphere.negate();
     }
 
+    public static boolean nearZero(Vector3d vector) {
+        // Return true if the vector is close to zero in all dimensions.
+        double s = 1e-8;
+        return (Math.abs(vector.x()) < s) && (Math.abs(vector.y()) < s) && (Math.abs(vector.z()) < s);
+    }
+
+    public static Vector3d reflect(Vector3d vector, Vector3d normal) {
+        return new Vector3d(vector).sub(new Vector3d(normal).mul(vector.dot(normal) * 2));
+    }
 }

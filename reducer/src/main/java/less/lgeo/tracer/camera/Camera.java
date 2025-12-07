@@ -3,6 +3,7 @@ package less.lgeo.tracer.camera;
 import less.lgeo.common.Interval;
 import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.HittableList;
+import less.lgeo.hittable.ScatterResult;
 import less.lgeo.primitive.Ray;
 import lombok.Getter;
 import org.joml.Vector3d;
@@ -13,7 +14,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-import static less.lgeo.common.Vector3dUtils.*;
+import static less.lgeo.common.Vector3dUtils.lerp;
+import static less.lgeo.common.Vector3dUtils.unitVector;
 
 @Getter
 public class Camera {
@@ -161,9 +163,15 @@ public class Camera {
         boolean hasRayHitSurface = world.hit(ray, Interval.of(0.001, Double.POSITIVE_INFINITY), rec);
 
         if (hasRayHitSurface) {
-            Vector3d direction = new Vector3d(rec.getNormal()).add(randomUnitVector());
-            Ray bouncingRay = new Ray(rec.getPoint(), direction);
-            return getRayColor(bouncingRay, rayBounceIteration + 1, world).mul(0.5);
+            ScatterResult materialScatterResult = rec.getMaterial().scatter(ray, rec);
+            if (materialScatterResult.isScattered()) {
+                return getRayColor(
+                        materialScatterResult.scattered(),
+                        rayBounceIteration + 1,
+                        world)
+                        .mul(materialScatterResult.attenuation());
+            }
+            return new Vector3d(0, 0, 0);
         }
 
         Vector3d unitDirection = unitVector(ray.direction());

@@ -3,6 +3,7 @@ package less.lgeo.primitive;
 import less.lgeo.common.Interval;
 import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.Hittable;
+import less.lgeo.material.Material;
 import lombok.Getter;
 import org.joml.Vector3d;
 
@@ -11,10 +12,12 @@ public class Sphere extends Hittable {
 
     private final Vector3d center;
     private final double radius;
+    private final Material material;
 
-    public Sphere(Vector3d center, double radius) {
+    public Sphere(Vector3d center, double radius, Material material) {
         this.center = center;
         this.radius = Math.max(0, radius);
+        this.material = material;
     }
 
     @Override
@@ -48,6 +51,7 @@ public class Sphere extends Hittable {
         Vector3d outwardNormal = new Vector3d(p).sub(center).div(radius);
 
         hitRecord.setFrontFace(ray, outwardNormal);
+        hitRecord.setMaterial(material);
 
         return true;
     }

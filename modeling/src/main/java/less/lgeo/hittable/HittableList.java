@@ -46,6 +46,7 @@ public class HittableList extends Hittable {
                 hitRecord.setPoint(tempRec.getPoint());
                 hitRecord.setNormal(tempRec.getNormal());
                 hitRecord.setFrontFace(tempRec.isFrontFace());
+                hitRecord.setMaterial(tempRec.getMaterial());
             }
         }
 
