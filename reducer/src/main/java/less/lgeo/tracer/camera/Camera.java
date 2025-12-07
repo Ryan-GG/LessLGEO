@@ -141,7 +141,7 @@ public class Camera {
         if (RAY_MAX_BOUNCES <= rayBounceIteration) return new Vector3d(0);
 
         HitRecord rec = new HitRecord();
-        
+
         /*
          * There’s also a subtle bug that we need to address.
          * A ray will attempt to accurately calculate the intersection point when it intersects with a surface.
@@ -156,7 +156,7 @@ public class Camera {
         boolean hasRayHitSurface = world.hit(ray, Interval.of(0.001, Double.POSITIVE_INFINITY), rec);
 
         if (hasRayHitSurface) {
-            Vector3d direction = randomOnHemisphere(rec.getNormal());
+            Vector3d direction = new Vector3d(rec.getNormal()).add(randomUnitVector());
             Ray bouncingRay = new Ray(rec.getPoint(), direction);
             return getRayColor(bouncingRay, rayBounceIteration + 1, world).mul(0.5);
         }
