@@ -122,6 +122,11 @@ public class Camera {
         double g = pixelColor.y();
         double b = pixelColor.z();
 
+        // Apply a linear to gamma transform for gamma 2
+        r = linearToGammaSpace(r);
+        g = linearToGammaSpace(g);
+        b = linearToGammaSpace(b);
+
         // Translate the [0,1] component values to the byte range [0,255].
         Interval intensity = Interval.of(0.000, 0.999);
         int rbyte = (int) (256 * intensity.clamp(r));
@@ -174,5 +179,9 @@ public class Camera {
                 colorTwo,
                 a
         );
+    }
+
+    private double linearToGammaSpace(double linearComponent) {
+        return 0 < linearComponent ? Math.sqrt(linearComponent) : 0;
     }
 }
