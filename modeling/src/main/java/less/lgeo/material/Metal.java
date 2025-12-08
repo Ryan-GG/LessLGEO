@@ -5,20 +5,25 @@ import less.lgeo.hittable.ScatterResult;
 import less.lgeo.primitive.Ray;
 import org.joml.Vector3d;
 
-import static less.lgeo.common.Vector3dUtils.reflect;
+import static less.lgeo.common.Vector3dUtils.*;
 
 public class Metal implements Material {
 
     private final Vector3d albedo;
+    private final double fuzz;
 
-    public Metal(Vector3d albedo) {
+    //FIXME, albedo should be a color, and i should have the ability to go from Color to Vec3
+    public Metal(Vector3d albedo, double fuzz) {
         this.albedo = albedo;
+        this.fuzz = Math.min(fuzz, 1);
     }
 
 
     @Override
     public ScatterResult scatter(Ray rayIn, HitRecord record) {
-        Vector3d reflected = reflect(rayIn.direction(), record.getNormal());
-        return new ScatterResult(albedo, new Ray(record.getPoint(), reflected), true);
+        Vector3d reflected = unitVector(reflect(rayIn.direction(), record.getNormal()));
+        reflected = randomUnitVector().mul(fuzz).add(reflected);
+        Ray scattered = new Ray(record.getPoint(), reflected);
+        return new ScatterResult(albedo, scattered, 0 < scattered.direction().dot(record.getNormal()));
     }
 }
