@@ -6,6 +6,10 @@ import java.util.Random;
 
 import static java.lang.Math.sqrt;
 
+/**
+ * FIXME, i honestly kind of hate this an wonder if its possible to just write my own vec3 class.
+ * Maybe just essentially copy vector3d then add these methods into it.
+ */
 public class Vector3dUtils {
 
     /**
@@ -90,5 +94,12 @@ public class Vector3dUtils {
 
     public static Vector3d reflect(Vector3d vector, Vector3d normal) {
         return new Vector3d(vector).sub(new Vector3d(normal).mul(vector.dot(normal) * 2));
+    }
+
+    public static Vector3d refract(Vector3d uv, Vector3d normal, double etai_over_etat) {
+        double cos_theta = Math.min(new Vector3d(uv).dot(normal), 1.0);
+        Vector3d r_out_perp = new Vector3d(uv).add(new Vector3d(normal).mul(cos_theta)).mul(etai_over_etat);
+        Vector3d r_out_parallel = new Vector3d(normal).mul(-Math.sqrt(Math.abs(1.0 - r_out_perp.lengthSquared())));
+        return new Vector3d(r_out_perp).add(r_out_parallel);
     }
 }
