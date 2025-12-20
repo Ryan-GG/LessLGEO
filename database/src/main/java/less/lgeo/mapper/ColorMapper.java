@@ -24,7 +24,8 @@ public class ColorMapper implements Mapper<Color, ColorEntity> {
 
     @Override
     public Color toDomain(ColorEntity entity) {
-        java.awt.Color color = java.awt.Color.decode(entity.getRgb());
+        //FIXME, there needs to be a test for this, because im now unsure on this
+        java.awt.Color color = java.awt.Color.decode("#%s".formatted(entity.getRgb()));
         return new Color(entity.getId(), entity.getName(), color.getRed(), color.getGreen(), color.getBlue(), entity.isTrans());
     }
 

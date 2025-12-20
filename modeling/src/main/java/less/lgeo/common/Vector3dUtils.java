@@ -96,10 +96,10 @@ public class Vector3dUtils {
         return new Vector3d(vector).sub(new Vector3d(normal).mul(vector.dot(normal) * 2));
     }
 
-    public static Vector3d refract(Vector3d uv, Vector3d normal, double etai_over_etat) {
-        double cos_theta = Math.min(new Vector3d(uv).dot(normal), 1.0);
-        Vector3d r_out_perp = new Vector3d(uv).add(new Vector3d(normal).mul(cos_theta)).mul(etai_over_etat);
-        Vector3d r_out_parallel = new Vector3d(normal).mul(-Math.sqrt(Math.abs(1.0 - r_out_perp.lengthSquared())));
-        return new Vector3d(r_out_perp).add(r_out_parallel);
+    public static Vector3d refract(Vector3d uv, Vector3d normal, double eTaiOverEtat) {
+        double cosTheta = Math.min(new Vector3d(uv).negate().dot(normal), 1.0);
+        Vector3d rOutPerpendicular = new Vector3d(uv).add(new Vector3d(normal).mul(cosTheta)).mul(eTaiOverEtat);
+        Vector3d rOutParallel = new Vector3d(normal).mul(-Math.sqrt(Math.abs(1.0 - rOutPerpendicular.lengthSquared())));
+        return new Vector3d(rOutPerpendicular).add(rOutParallel);
     }
 }
