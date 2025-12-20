@@ -22,9 +22,16 @@ public class Dielectric implements Material{
         double ri = record.isFrontFace() ? (1.0/refractionIndex) : refractionIndex;
 
         Vector3d unitDirection = Vector3dUtils.unitVector(rayIn.direction());
-        Vector3d refracted = Vector3dUtils.refract(unitDirection, record.getNormal(), ri);
 
-        Ray scattered = new Ray(record.getPoint(), refracted);
+        double cosAngle = Math.min( new Vector3d(unitDirection).negate().dot(record.getNormal()),1.0);
+        double sinAngle = Math.sqrt(1.0 - cosAngle * cosAngle);
+
+        boolean cannotRefract = ri * sinAngle > 1.0;
+        Vector3d direction = cannotRefract
+                ? Vector3dUtils.reflect(unitDirection, record.getNormal())
+                : Vector3dUtils.refract(unitDirection, record.getNormal(), ri);
+
+        Ray scattered = new Ray(record.getPoint(), direction);
 
         return new ScatterResult(attenuation, scattered, true);
     }

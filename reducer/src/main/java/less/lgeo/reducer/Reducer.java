@@ -25,7 +25,7 @@ public class Reducer {
 
         Material material_ground = new Lambertian(new Vector3d(0.8, 0.8, 0.0));
         Material material_center = new Lambertian(new Vector3d(0.1, 0.2, 0.5));
-        Material material_left = new Dielectric(1.5);
+        Material material_left = new Dielectric(1.0 / 1.33);
         Material material_right = new Metal(new Vector3d(0.8, 0.6, 0.2), 1.0);
 
         world.add(new Sphere(new Vector3d(0.0, -100.5, -1.0), 100.0, material_ground));
