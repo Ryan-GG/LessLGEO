@@ -23,15 +23,17 @@ public class Reducer {
 
         HittableList world = new HittableList();
 
-        Material material_ground = new Lambertian(new Vector3d(0.8, 0.8, 0.0));
-        Material material_center = new Lambertian(new Vector3d(0.1, 0.2, 0.5));
-        Material material_left = new Dielectric(1.0 / 1.33);
-        Material material_right = new Metal(new Vector3d(0.8, 0.6, 0.2), 1.0);
+        Material materialGround = new Lambertian(new Vector3d(0.8, 0.8, 0.0));
+        Material materialCenter = new Lambertian(new Vector3d(0.1, 0.2, 0.5));
+        Material materialLeft = new Dielectric(1.0);
+        Material materialBubble = new Dielectric(1.0 / 1.5);
+        Material materialRight = new Metal(new Vector3d(0.8, 0.6, 0.2), 1.0);
 
-        world.add(new Sphere(new Vector3d(0.0, -100.5, -1.0), 100.0, material_ground));
-        world.add(new Sphere(new Vector3d(0.0, 0.0, -1.2), 0.5, material_center));
-        world.add(new Sphere(new Vector3d(-1.0, 0.0, -1.0), 0.5, material_left));
-        world.add(new Sphere(new Vector3d(1.0, 0.0, -1.0), 0.5, material_right));
+        world.add(new Sphere(new Vector3d(0.0, -100.5, -1.0), 100.0, materialGround));
+        world.add(new Sphere(new Vector3d(0.0, 0.0, -1.2), 0.5, materialCenter));
+        world.add(new Sphere(new Vector3d(-1.0, 0.0, -1.0), 0.5, materialLeft));
+        world.add(new Sphere(new Vector3d(-1.0, 0.0, -1.0), 0.4, materialBubble));
+        world.add(new Sphere(new Vector3d(1.0, 0.0, -1.0), 0.5, materialRight));
 
         Camera camera = new Camera(
                 new Vector3d(0, 0, 0),
