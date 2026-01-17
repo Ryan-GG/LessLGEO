@@ -25,25 +25,27 @@ public class Reducer {
 
         Material material_ground = new Lambertian(new Vector3d(0.8, 0.8, 0.0));
         Material material_center = new Lambertian(new Vector3d(0.1, 0.2, 0.5));
-        Material material_left   = new Dielectric(1.50);
+        Material material_left = new Dielectric(1.50);
         Material material_bubble = new Dielectric(1.00 / 1.50);
-        Material material_right  = new Metal(new Vector3d(0.8, 0.6, 0.2), 1.0);
+        Material material_right = new Metal(new Vector3d(0.8, 0.6, 0.2), 1.0);
 
-        world.add(new Sphere(new Vector3d( 0.0, -100.5, -1.0), 100.0, material_ground));
-        world.add(new Sphere(new Vector3d( 0.0,    0.0, -1.2),   0.5, material_center));
-        world.add(new Sphere(new Vector3d(-1.0,    0.0, -1.0),   0.5, material_left));
-        world.add(new Sphere(new Vector3d(-1.0,    0.0, -1.0),   0.4, material_bubble));
-        world.add(new Sphere(new Vector3d( 1.0,    0.0, -1.0),   0.5, material_right));
+        world.add(new Sphere(new Vector3d(0.0, -100.5, -1.0), 100.0, material_ground));
+        world.add(new Sphere(new Vector3d(0.0, 0.0, -1.2), 0.5, material_center));
+        world.add(new Sphere(new Vector3d(-1.0, 0.0, -1.0), 0.5, material_left));
+        world.add(new Sphere(new Vector3d(-1.0, 0.0, -1.0), 0.4, material_bubble));
+        world.add(new Sphere(new Vector3d(1.0, 0.0, -1.0), 0.5, material_right));
 
         CameraSettings settings = new CameraSettings(
                 CameraSettings.ASPECT_RATIO_16_9,
                 100,
                 30,
                 400,
-                90,
-                new Vector3d(-2,2,1),
-                new Vector3d(0,0,-1),
-                new Vector3d(0,1,0)
+                20,
+                new Vector3d(-2, 2, 1), //FIXME, refactor to Point wrapper class
+                new Vector3d(0, 0, -1), //FIXME, refactor to Point wrapper class
+                new Vector3d(0, 1, 0),
+                10.0,
+                3.4
         );
         Camera camera = new Camera(settings);
 

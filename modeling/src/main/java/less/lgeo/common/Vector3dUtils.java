@@ -78,6 +78,15 @@ public class Vector3dUtils {
         return new Vector3d(random.nextDouble(min, max), random.nextDouble(min, max), random.nextDouble(min, max));
     }
 
+    public static Vector3d randomUnitVectorInDisk() {
+        Random random = new Random();
+        while (true) {
+            Vector3d p = new Vector3d(random.nextDouble(-1, 1), random.nextDouble(-1, 1), 0);
+            if (p.lengthSquared() < 1)
+                return p;
+        }
+    }
+
     public static Vector3d randomOnHemisphere(Vector3d normal) {
         Vector3d onUnitSphere = randomUnitVector();
         if (onUnitSphere.dot(normal) > 0.0) // In the same hemisphere as the normal

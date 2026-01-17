@@ -14,8 +14,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-import static less.lgeo.common.Vector3dUtils.lerp;
-import static less.lgeo.common.Vector3dUtils.unitVector;
+import static less.lgeo.common.Vector3dUtils.*;
 
 
 //FIXME, this really needs a good refactor with tests
@@ -28,16 +27,19 @@ public class Camera {
 
     private final Vector3d pixelDeltaU; // Offset to pixel below
     private final Vector3d pixelDeltaV; // Offset to pixel below
+
+    private final Vector3d defocusDiskU; // Defocus disk horizontal radius
+    private final Vector3d defocusDiskV; // Defocus disk vertical radius
+
     private final Vector3d pixelLocation00; // Location of pixel 0, 0
 
-    public Camera(CameraSettings settings)
-    {
+    public Camera(CameraSettings settings) {
         this.settings = settings;
 
         double theta = Math.toRadians(settings.verticalFOV());
-        double h = Math.tan(theta/2);
-        double viewportHeight = 2 * h * settings.focalLength();
-        double viewportWidth = viewportHeight * ((double) (settings.imageWidth())/settings.imageHeight());
+        double h = Math.tan(theta / 2);
+        double viewportHeight = 2 * h * settings.focusDist();
+        double viewportWidth = viewportHeight * ((double) (settings.imageWidth()) / settings.imageHeight());
 
         // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
         Vector3d w = unitVector(new Vector3d(settings.position()).sub(settings.lookAt()));
@@ -54,9 +56,14 @@ public class Camera {
 
         // Calculate the location of the upper left pixel.
         Vector3d viewportUpperLeft = new Vector3d(settings.position())
-                .sub(new Vector3d(w).mul(settings.focalLength()))
-                        .sub(new Vector3d(viewportU).div(2))
-                        .sub(new Vector3d(viewportV).div(2));
+                .sub(new Vector3d(w).mul(settings.focusDist()))
+                .sub(new Vector3d(viewportU).div(2))
+                .sub(new Vector3d(viewportV).div(2));
+
+        // Calculate the camera defocus disk basis vectors.
+        double defocusRadius = settings.focusDist() * Math.tan(Math.toRadians(settings.defocusAngle() / 2));
+        defocusDiskU = new Vector3d(u).mul(defocusRadius);
+        defocusDiskV = new Vector3d(v).mul(defocusRadius);
 
         // Upper-left pixel center
         this.pixelLocation00 = new Vector3d(viewportUpperLeft)
@@ -125,7 +132,7 @@ public class Camera {
     /**
      * @param i delta U
      * @param j delta V
-     * @return a camera ray originating from the origin and directed at randomly sampled point around the pixel location i, j.
+     * @return a camera ray originating from the defocus disk and directed at a randomly sampled point around the pixel location i, j.
      */
     private Ray getRay(int i, int j) {
         Vector3d offset = sampleSquare();
@@ -134,10 +141,19 @@ public class Camera {
                 .add(new Vector3d(pixelDeltaU).mul(i + offset.x()))
                 .add(new Vector3d(pixelDeltaV).mul(j + offset.y()));
 
-        Vector3d rayOrigin = new Vector3d(settings.position());
+
+        Vector3d rayOrigin = (settings.defocusAngle() <= 0) ? new Vector3d(settings.position()) : defocusDiskSample();
         Vector3d rayDirection = new Vector3d(pixelSampleLocation).sub(rayOrigin);
 
         return new Ray(rayOrigin, rayDirection);
+    }
+
+    private Vector3d defocusDiskSample() {
+        // Returns a random point in the camera defocus disk.
+        Vector3d p = randomUnitVectorInDisk();
+        return new Vector3d(settings.position())
+                .add(new Vector3d(defocusDiskU).mul(p.x()))
+                .add(new Vector3d(defocusDiskV).mul(p.y()));
     }
 
     /**
