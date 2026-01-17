@@ -28,8 +28,8 @@ public class ParserConsumer {
     }
 
     @RabbitHandler
-    public ModelId handleMessage(@Payload String lDraw) {
-        return parserHandler.consume(lDraw);
+    public ModelId handleMessage(@Payload String lDrawText) {
+        return parserHandler.consume(lDrawText);
     }
 
 }

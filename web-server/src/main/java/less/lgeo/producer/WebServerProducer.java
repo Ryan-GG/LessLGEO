@@ -32,11 +32,11 @@ public class WebServerProducer {
     /**
      * See at `less.lgeo.consumer.ParserConsumer`
      */
-    public @Nullable ModelId sendMessage(String lDraw) {
+    public @Nullable ModelId sendMessage(String lDrawText) {
 
         return rabbitTemplate.convertSendAndReceiveAsType(
                 rabbitWebToParserRpcProperties.getName(),
-                lDraw,
+                lDrawText,
                 ParameterizedTypeReference.forType(ModelId.class));
     }
 
