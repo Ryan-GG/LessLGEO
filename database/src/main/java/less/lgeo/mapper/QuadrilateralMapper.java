@@ -42,12 +42,6 @@ public class QuadrilateralMapper implements ModelDependencyMapper<Quadrilateral,
         return entity;
     }
 
-    @Override
-    public QuadrilateralEntity toEntity(Quadrilateral domain, ModelEntity modelEntity) {
-        QuadrilateralEntity entity = toEntity(domain);
-        entity.setModel(modelEntity);
-        return entity;
-    }
 
     @Override
     public List<QuadrilateralEntity> toEntityList(List<Quadrilateral> domainList, ModelEntity modelEntity) {

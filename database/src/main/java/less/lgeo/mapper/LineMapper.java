@@ -37,14 +37,7 @@ public class LineMapper implements ModelDependencyMapper<Line, LineEntity> {
         entity.setP2(new Vector3dEmbeddable(domain.p2()));
         return entity;
     }
-
-    @Override
-    public LineEntity toEntity(Line domain, ModelEntity modelEntity) {
-        LineEntity entity = toEntity(domain);
-        entity.setModel(modelEntity);
-        return entity;
-    }
-
+    
     @Override
     public List<LineEntity> toEntityList(List<Line> domainList, ModelEntity modelEntity) {
         List<LineEntity> entityList = toEntityList(domainList);

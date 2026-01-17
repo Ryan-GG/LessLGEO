@@ -39,14 +39,7 @@ public class TriangleMapper implements ModelDependencyMapper<Triangle, TriangleE
         entity.setP3(new Vector3dEmbeddable(domain.p3()));
         return entity;
     }
-
-    @Override
-    public TriangleEntity toEntity(Triangle domain, ModelEntity modelEntity) {
-        TriangleEntity entity = toEntity(domain);
-        entity.setModel(modelEntity);
-        return entity;
-    }
-
+    
     @Override
     public List<TriangleEntity> toEntityList(List<Triangle> domainList, ModelEntity modelEntity) {
         List<TriangleEntity> entityList = toEntityList(domainList);

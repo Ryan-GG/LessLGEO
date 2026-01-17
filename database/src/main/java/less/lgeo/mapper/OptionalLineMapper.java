@@ -41,14 +41,7 @@ public class OptionalLineMapper implements ModelDependencyMapper<OptionalLine, O
         entity.setP4(new Vector3dEmbeddable(domain.p4()));
         return entity;
     }
-
-    @Override
-    public OptionalLineEntity toEntity(OptionalLine domain, ModelEntity modelEntity) {
-        OptionalLineEntity entity = toEntity(domain);
-        entity.setModel(modelEntity);
-        return entity;
-    }
-
+    
     @Override
     public List<OptionalLineEntity> toEntityList(List<OptionalLine> domainList, ModelEntity modelEntity) {
         List<OptionalLineEntity> entityList = toEntityList(domainList);
