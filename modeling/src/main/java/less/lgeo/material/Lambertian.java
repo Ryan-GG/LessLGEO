@@ -18,7 +18,7 @@ public class Lambertian implements Material {
 
     @Override
     public ScatterResult scatter(Ray rayIn, HitRecord record) {
-        Vector3d scatterDirection = new Vector3d(record.getNormal()).add(randomUnitVector());
+        Vector3d scatterDirection = record.getNormal().add(randomUnitVector(), new Vector3d());
 
         // Catch degenerate scatter direction
         if (nearZero(scatterDirection)) scatterDirection = record.getNormal();
