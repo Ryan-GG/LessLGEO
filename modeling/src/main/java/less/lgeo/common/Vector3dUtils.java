@@ -63,7 +63,7 @@ public class Vector3dUtils {
                 return p.div(sqrt(lensq));
         }
     }
-    
+
     public static Vector3d randomVec3d(double min, double max) {
         Random random = new Random();
         return new Vector3d(random.nextDouble(min, max), random.nextDouble(min, max), random.nextDouble(min, max));
@@ -77,15 +77,7 @@ public class Vector3dUtils {
                 return p;
         }
     }
-
-    public static Vector3d randomOnHemisphere(Vector3d normal) {
-        Vector3d onUnitSphere = randomUnitVector();
-        if (onUnitSphere.dot(normal) > 0.0) // In the same hemisphere as the normal
-            return onUnitSphere;
-        else
-            return onUnitSphere.negate();
-    }
-
+    
     public static boolean nearZero(Vector3d vector) {
         // Return true if the vector is close to zero in all dimensions.
         double s = 1e-8;
