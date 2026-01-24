@@ -1,4 +1,4 @@
-package less.lgeo.primitive;
+package less.lgeo.common;
 
 import org.joml.Vector3d;
 

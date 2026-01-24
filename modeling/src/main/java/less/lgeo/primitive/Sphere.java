@@ -1,6 +1,7 @@
 package less.lgeo.primitive;
 
 import less.lgeo.common.Interval;
+import less.lgeo.common.Ray;
 import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.Hittable;
 import less.lgeo.material.Material;

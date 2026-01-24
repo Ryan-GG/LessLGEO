@@ -1,9 +1,9 @@
 package less.lgeo.material;
 
+import less.lgeo.common.Ray;
 import less.lgeo.common.Vector3dUtils;
 import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.ScatterResult;
-import less.lgeo.primitive.Ray;
 import org.joml.Vector3d;
 
 import java.util.Random;

@@ -1,10 +1,10 @@
 package less.lgeo.tracer.camera;
 
 import less.lgeo.common.Interval;
+import less.lgeo.common.Ray;
 import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.HittableList;
 import less.lgeo.hittable.ScatterResult;
-import less.lgeo.primitive.Ray;
 import lombok.Getter;
 import org.joml.Vector3d;
 import org.slf4j.Logger;
@@ -198,7 +198,7 @@ public class Camera {
         //FIXME, this is hardcoded as the background
         Vector3d colorOne = new Vector3d(1.0, 1.0, 1.0);
         Vector3d colorTwo = new Vector3d(0.5, 0.7, 1.0);
-        
+
         return colorOne.lerp(colorTwo, a, new Vector3d());
     }
 

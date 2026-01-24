@@ -1,7 +1,7 @@
 package less.lgeo.hittable;
 
 import less.lgeo.common.Interval;
-import less.lgeo.primitive.Ray;
+import less.lgeo.common.Ray;
 
 import java.util.ArrayList;
 import java.util.List;

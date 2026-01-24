@@ -1,6 +1,6 @@
 package less.lgeo.hittable;
 
-import less.lgeo.primitive.Ray;
+import less.lgeo.common.Ray;
 import org.joml.Vector3d;
 
 //FIXME, fix for mutation reference but could cleanup more

@@ -1,7 +1,7 @@
 package less.lgeo.hittable;
 
+import less.lgeo.common.Ray;
 import less.lgeo.material.Material;
-import less.lgeo.primitive.Ray;
 import lombok.Getter;
 import lombok.Setter;
 import org.joml.Vector3d;
