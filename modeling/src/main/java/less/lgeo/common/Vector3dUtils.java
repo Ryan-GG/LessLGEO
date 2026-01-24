@@ -38,7 +38,7 @@ public class Vector3dUtils {
 
     public static Vector3d unitVector(Vector3d vector) {
         if (vector.length() == 0) return new Vector3d(0);
-        return new Vector3d(vector).div(vector.length());
+        return vector.div(vector.length(), new Vector3d());
     }
 
     /**
@@ -63,16 +63,7 @@ public class Vector3dUtils {
                 return p.div(sqrt(lensq));
         }
     }
-
-    public static Vector3d lerp(Vector3d v1, Vector3d v2, double t) {
-        return new Vector3d(v1).mul(1.0 - t).add(new Vector3d(v2).mul(t));
-    }
-
-    public static Vector3d randomVec3d() {
-        Random random = new Random();
-        return new Vector3d(random.nextDouble(), random.nextDouble(), random.nextDouble());
-    }
-
+    
     public static Vector3d randomVec3d(double min, double max) {
         Random random = new Random();
         return new Vector3d(random.nextDouble(min, max), random.nextDouble(min, max), random.nextDouble(min, max));
@@ -102,13 +93,13 @@ public class Vector3dUtils {
     }
 
     public static Vector3d reflect(Vector3d vector, Vector3d normal) {
-        return new Vector3d(vector).sub(new Vector3d(normal).mul(vector.dot(normal) * 2));
+        return vector.sub(normal.mul(vector.dot(normal) * 2, new Vector3d()), new Vector3d());
     }
 
     public static Vector3d refract(Vector3d uv, Vector3d normal, double eTaiOverEtat) {
-        double cosTheta = Math.min(new Vector3d(uv).negate().dot(normal), 1.0);
-        Vector3d rOutPerpendicular = new Vector3d(uv).add(new Vector3d(normal).mul(cosTheta)).mul(eTaiOverEtat);
-        Vector3d rOutParallel = new Vector3d(normal).mul(-Math.sqrt(Math.abs(1.0 - rOutPerpendicular.lengthSquared())));
-        return new Vector3d(rOutPerpendicular).add(rOutParallel);
+        double cosTheta = Math.min(uv.negate(new Vector3d()).dot(normal), 1.0);
+        Vector3d rOutPerpendicular = uv.add(normal.mul(cosTheta, new Vector3d()), new Vector3d()).mul(eTaiOverEtat);
+        Vector3d rOutParallel = normal.mul(-Math.sqrt(Math.abs(1.0 - rOutPerpendicular.lengthSquared())), new Vector3d());
+        return rOutPerpendicular.add(rOutParallel);
     }
 }

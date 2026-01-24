@@ -22,7 +22,7 @@ public class Sphere extends Hittable {
 
     @Override
     public boolean hit(Ray ray, Interval rayTimeInterval, HitRecord hitRecord) {
-        Vector3d oc = new Vector3d(center).sub(ray.origin());
+        Vector3d oc = center.sub(ray.origin(), new Vector3d());
 
         double a = ray.direction().lengthSquared();
         double h = ray.direction().dot(oc);
@@ -48,7 +48,7 @@ public class Sphere extends Hittable {
         Vector3d p = ray.at(root);
         hitRecord.setPoint(p);
 
-        Vector3d outwardNormal = new Vector3d(p).sub(center).div(radius);
+        Vector3d outwardNormal = p.sub(center, new Vector3d()).div(radius);
 
         hitRecord.setFrontFace(ray, outwardNormal);
         hitRecord.setMaterial(material);

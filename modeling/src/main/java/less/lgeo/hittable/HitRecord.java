@@ -22,6 +22,6 @@ public class HitRecord {
         // NOTE: the parameter `outward_normal` is assumed to have unit length.
 
         frontFace = new Vector3d(ray.direction()).dot(outwardNormal) < 0;
-        normal = frontFace ? new Vector3d(outwardNormal) : new Vector3d(outwardNormal).negate();
+        normal = frontFace ? new Vector3d(outwardNormal) : outwardNormal.negate(new Vector3d());
     }
 }

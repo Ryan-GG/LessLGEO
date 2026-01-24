@@ -14,7 +14,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Random;
 
-import static less.lgeo.common.Vector3dUtils.*;
+import static less.lgeo.common.Vector3dUtils.randomUnitVectorInDisk;
+import static less.lgeo.common.Vector3dUtils.unitVector;
 
 
 //FIXME, this really needs a good refactor with tests
@@ -194,16 +195,11 @@ public class Camera {
 
         double a = 0.5 * (unitDirection.y() + 1.0);
 
+        //FIXME, this is hardcoded as the background
         Vector3d colorOne = new Vector3d(1.0, 1.0, 1.0);
         Vector3d colorTwo = new Vector3d(0.5, 0.7, 1.0);
-
-        // result = (1 - a) * colorOne + a * colorTwo
-        //FIXME, Vector3d has a lerp func
-        return lerp(
-                colorOne,
-                colorTwo,
-                a
-        );
+        
+        return colorOne.lerp(colorTwo, a, new Vector3d());
     }
 
     private double linearToGammaSpace(double linearComponent) {
