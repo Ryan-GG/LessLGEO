@@ -42,64 +42,31 @@ public class Camera {
         double viewportWidth = viewportHeight * ((double) (settings.imageWidth()) / settings.imageHeight());
 
         // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
-        Vector3d w = unitVector(new Vector3d(settings.position()).sub(settings.lookAt()));
-        Vector3d u = unitVector(new Vector3d(settings.up()).cross(w));
-        Vector3d v = new Vector3d(w).cross(u);
+        Vector3d w = unitVector(settings.position().sub(settings.lookAt(), new Vector3d()));
+        Vector3d u = unitVector(settings.up().cross(w, new Vector3d()));
+        Vector3d v = w.cross(u, new Vector3d());
 
         // Calculate the vectors across the horizontal and down the vertical viewport edges.
-        Vector3d viewportU = new Vector3d(u).mul(viewportWidth);    // Vector across viewport horizontal edge
-        Vector3d viewportV = new Vector3d(v).negate().mul(viewportHeight);  // Vector down viewport vertical edge
+        Vector3d viewportU = u.mul(viewportWidth, new Vector3d());    // Vector across viewport horizontal edge
+        Vector3d viewportV = v.negate(new Vector3d()).mul(viewportHeight);  // Vector down viewport vertical edge
 
         // Calculate the horizontal and vertical delta vectors from pixel to pixel.
-        this.pixelDeltaU = new Vector3d(viewportU).div(settings.imageWidth());
-        this.pixelDeltaV = new Vector3d(viewportV).div(settings.imageHeight());
+        this.pixelDeltaU = viewportU.div(settings.imageWidth(), new Vector3d());
+        this.pixelDeltaV = viewportV.div(settings.imageHeight(), new Vector3d());
 
         // Calculate the location of the upper left pixel.
-        Vector3d viewportUpperLeft = new Vector3d(settings.position())
-                .sub(new Vector3d(w).mul(settings.focusDist()))
-                .sub(new Vector3d(viewportU).div(2))
-                .sub(new Vector3d(viewportV).div(2));
+        Vector3d viewportUpperLeft = settings.position()
+                .sub(w.mul(settings.focusDist(), new Vector3d()), new Vector3d())
+                .sub(viewportU.div(2, new Vector3d()))
+                .sub(viewportV.div(2, new Vector3d()));
 
         // Calculate the camera defocus disk basis vectors.
         double defocusRadius = settings.focusDist() * Math.tan(Math.toRadians(settings.defocusAngle() / 2));
-        defocusDiskU = new Vector3d(u).mul(defocusRadius);
-        defocusDiskV = new Vector3d(v).mul(defocusRadius);
+        defocusDiskU = u.mul(defocusRadius, new Vector3d());
+        defocusDiskV = v.mul(defocusRadius, new Vector3d());
 
         // Upper-left pixel center
-        this.pixelLocation00 = new Vector3d(viewportUpperLeft)
-                .add(new Vector3d(pixelDeltaU).add(pixelDeltaV).mul(0.5));
-
-
-        logger.info(
-                """
-                        theta: {}
-                        h: {}
-                        viewportHeight: {}
-                        viewportWidth: {}
-                        w: {}
-                        u: {}
-                        v: {}
-                        viewportU: {}
-                        viewportV: {}
-                        pixelDeltaU: {}
-                        pixelDeltaV: {}
-                        viewportUpperLeft: {}
-                        pixelLocation00: {}
-                        """,
-                theta,
-                h,
-                viewportHeight,
-                viewportWidth,
-                w,
-                u,
-                v,
-                viewportU,
-                viewportV,
-                pixelDeltaU,
-                pixelDeltaV,
-                viewportUpperLeft,
-                pixelLocation00
-        );
+        this.pixelLocation00 = viewportUpperLeft.add(pixelDeltaU.add(pixelDeltaV, new Vector3d()).mul(0.5), new Vector3d());
     }
 
     public void render(HittableList world) {
@@ -121,7 +88,9 @@ public class Camera {
                         Ray ray = getRay(i, j);
                         pixelColor.add(getRayColor(ray, world));
                     }
-                    writeColor(fileWriter, pixelColor.mul(settings.pixelSamplesScale()));
+
+                    Vector3d sampledPixelColor = pixelColor.mul(settings.pixelSamplesScale(), new Vector3d());
+                    writeColor(fileWriter, sampledPixelColor);
                 }
             }
         } catch (IOException e) {
@@ -137,13 +106,13 @@ public class Camera {
     private Ray getRay(int i, int j) {
         Vector3d offset = sampleSquare();
 
-        Vector3d pixelSampleLocation = new Vector3d(pixelLocation00)
-                .add(new Vector3d(pixelDeltaU).mul(i + offset.x()))
-                .add(new Vector3d(pixelDeltaV).mul(j + offset.y()));
+        Vector3d pixelSampleLocation = pixelLocation00
+                .add(pixelDeltaU.mul(i + offset.x(), new Vector3d()), new Vector3d())
+                .add(pixelDeltaV.mul(j + offset.y(), new Vector3d()));
 
 
         Vector3d rayOrigin = (settings.defocusAngle() <= 0) ? new Vector3d(settings.position()) : defocusDiskSample();
-        Vector3d rayDirection = new Vector3d(pixelSampleLocation).sub(rayOrigin);
+        Vector3d rayDirection = pixelSampleLocation.sub(rayOrigin, new Vector3d());
 
         return new Ray(rayOrigin, rayDirection);
     }
@@ -151,16 +120,16 @@ public class Camera {
     private Vector3d defocusDiskSample() {
         // Returns a random point in the camera defocus disk.
         Vector3d p = randomUnitVectorInDisk();
-        return new Vector3d(settings.position())
-                .add(new Vector3d(defocusDiskU).mul(p.x()))
-                .add(new Vector3d(defocusDiskV).mul(p.y()));
+        return settings.position()
+                .add(defocusDiskU.mul(p.x(), new Vector3d()), new Vector3d())
+                .add(defocusDiskV.mul(p.y(), new Vector3d()));
     }
 
     /**
      * @return a vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
      */
     private Vector3d sampleSquare() {
-
+        //FIXME, should this exist here?
         Random random = new Random();
         return new Vector3d(random.nextDouble() - 0.5, random.nextDouble() - 0.5, 0);
     }
@@ -229,6 +198,7 @@ public class Camera {
         Vector3d colorTwo = new Vector3d(0.5, 0.7, 1.0);
 
         // result = (1 - a) * colorOne + a * colorTwo
+        //FIXME, Vector3d has a lerp func
         return lerp(
                 colorOne,
                 colorTwo,
