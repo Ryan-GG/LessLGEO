@@ -6,6 +6,7 @@ import less.lgeo.material.Lambertian;
 import less.lgeo.material.Material;
 import less.lgeo.material.Metal;
 import less.lgeo.primitive.Model;
+import less.lgeo.primitive.Point;
 import less.lgeo.primitive.Sphere;
 import less.lgeo.tracer.camera.Camera;
 import less.lgeo.tracer.camera.CameraSettings;
@@ -41,8 +42,8 @@ public class Reducer {
                 30,
                 400,
                 20,
-                new Vector3d(-2, 2, 1), //FIXME, refactor to Point wrapper class
-                new Vector3d(0, 0, -1), //FIXME, refactor to Point wrapper class
+                new Point(-2, 2, 1),
+                new Point(0, 0, -1),
                 new Vector3d(0, 1, 0),
                 10.0,
                 3.4

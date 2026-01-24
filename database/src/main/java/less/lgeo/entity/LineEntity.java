@@ -2,7 +2,7 @@ package less.lgeo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import less.lgeo.embedded.Vector3dEmbeddable;
+import less.lgeo.embedded.PointEmbeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,7 +40,7 @@ public class LineEntity {
             @AttributeOverride(name = "y", column = @Column(name = "p1_y")),
             @AttributeOverride(name = "z", column = @Column(name = "p1_z"))
     })
-    private Vector3dEmbeddable p1;
+    private PointEmbeddable p1;
 
     @Embedded
     @AttributeOverrides({
@@ -48,6 +48,6 @@ public class LineEntity {
             @AttributeOverride(name = "y", column = @Column(name = "p2_y")),
             @AttributeOverride(name = "z", column = @Column(name = "p2_z"))
     })
-    private Vector3dEmbeddable p2;
+    private PointEmbeddable p2;
 
 }

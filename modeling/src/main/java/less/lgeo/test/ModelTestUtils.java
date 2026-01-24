@@ -2,11 +2,7 @@ package less.lgeo.test;
 
 import less.lgeo.common.Color;
 import less.lgeo.common.Matrix;
-import less.lgeo.primitive.Model;
-import less.lgeo.primitive.Quadrilateral;
-import less.lgeo.primitive.SubFileReference;
-import less.lgeo.primitive.Triangle;
-import org.joml.Vector3d;
+import less.lgeo.primitive.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,15 +27,15 @@ public class ModelTestUtils {
      */
     public static Model cube() {
 
-        Vector3d a = new Vector3d(0, -1, 0);
-        Vector3d b = new Vector3d(1, -1, 0);
-        Vector3d c = new Vector3d(1, -1, 1);
-        Vector3d d = new Vector3d(0, -1, 1);
+        Point a = new Point(0, -1, 0);
+        Point b = new Point(1, -1, 0);
+        Point c = new Point(1, -1, 1);
+        Point d = new Point(0, -1, 1);
 
-        Vector3d e = new Vector3d(0, 0, 0);
-        Vector3d f = new Vector3d(1, 0, 0);
-        Vector3d g = new Vector3d(1, 0, 1);
-        Vector3d h = new Vector3d(0, 0, 1);
+        Point e = new Point(0, 0, 0);
+        Point f = new Point(1, 0, 0);
+        Point g = new Point(1, 0, 1);
+        Point h = new Point(0, 0, 1);
 
         Quadrilateral top = new Quadrilateral(RED, a, b, c, d);
         Quadrilateral bottom = new Quadrilateral(RED, e, f, g, h);
@@ -82,11 +78,11 @@ public class ModelTestUtils {
 
     public static Model pyramid() {
 
-        Vector3d a = new Vector3d(0, 0, 0);
-        Vector3d b = new Vector3d(0, 0, 1);
-        Vector3d c = new Vector3d(1, 0, 1);
-        Vector3d d = new Vector3d(1, 0, 0);
-        Vector3d e = new Vector3d(0.5, -1, 0.5);
+        Point a = new Point(0, 0, 0);
+        Point b = new Point(0, 0, 1);
+        Point c = new Point(1, 0, 1);
+        Point d = new Point(1, 0, 0);
+        Point e = new Point(0.5, -1, 0.5);
 
         Quadrilateral bottom = new Quadrilateral(BLACK, a, b, c, d);
         Triangle front = new Triangle(BLACK, a, e, d);

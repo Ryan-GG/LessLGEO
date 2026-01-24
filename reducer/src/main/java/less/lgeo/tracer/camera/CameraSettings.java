@@ -1,5 +1,6 @@
 package less.lgeo.tracer.camera;
 
+import less.lgeo.primitive.Point;
 import org.joml.Vector3d;
 
 /**
@@ -20,8 +21,8 @@ public record CameraSettings(
         int rayMaxBounces,
         int imageWidth,
         double verticalFOV,
-        Vector3d position,
-        Vector3d lookAt,
+        Point position,
+        Point lookAt,
         Vector3d up,
         double defocusAngle,
         double focusDist
@@ -37,7 +38,4 @@ public record CameraSettings(
         return Math.max(1, imageHeight);
     }
 
-    public double focalLength() {
-        return new Vector3d(position).sub(lookAt).length();
-    }
 }

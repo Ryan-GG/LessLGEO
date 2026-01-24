@@ -2,7 +2,7 @@ package less.lgeo.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import less.lgeo.embedded.Vector3dEmbeddable;
+import less.lgeo.embedded.PointEmbeddable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,7 +40,7 @@ public class QuadrilateralEntity {
             @AttributeOverride(name = "y", column = @Column(name = "p1_y")),
             @AttributeOverride(name = "z", column = @Column(name = "p1_z"))
     })
-    private Vector3dEmbeddable p1;
+    private PointEmbeddable p1;
 
     @Embedded
     @AttributeOverrides({
@@ -48,7 +48,7 @@ public class QuadrilateralEntity {
             @AttributeOverride(name = "y", column = @Column(name = "p2_y")),
             @AttributeOverride(name = "z", column = @Column(name = "p2_z"))
     })
-    private Vector3dEmbeddable p2;
+    private PointEmbeddable p2;
 
     @Embedded
     @AttributeOverrides({
@@ -56,7 +56,7 @@ public class QuadrilateralEntity {
             @AttributeOverride(name = "y", column = @Column(name = "p3_y")),
             @AttributeOverride(name = "z", column = @Column(name = "p3_z"))
     })
-    private Vector3dEmbeddable p3;
+    private PointEmbeddable p3;
 
     @Embedded
     @AttributeOverrides({
@@ -64,7 +64,7 @@ public class QuadrilateralEntity {
             @AttributeOverride(name = "y", column = @Column(name = "p4_y")),
             @AttributeOverride(name = "z", column = @Column(name = "p4_z"))
     })
-    private Vector3dEmbeddable p4;
+    private PointEmbeddable p4;
 
 }
 

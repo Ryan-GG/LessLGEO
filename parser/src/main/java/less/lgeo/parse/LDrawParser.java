@@ -2,7 +2,6 @@ package less.lgeo.parse;
 
 import less.lgeo.common.*;
 import less.lgeo.primitive.*;
-import org.joml.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.lang.NonNull;
@@ -177,8 +176,8 @@ public class LDrawParser implements Parser<Model> {
         double y2 = toDouble(iterator.next());
         double z2 = toDouble(iterator.next());
 
-        Vector3d p1 = new Vector3d(x1, y1, z1);
-        Vector3d p2 = new Vector3d(x2, y2, z2);
+        Point p1 = new Point(x1, y1, z1);
+        Point p2 = new Point(x2, y2, z2);
 
         Color color = Color.builder().id(colorId).build();
 
@@ -204,9 +203,9 @@ public class LDrawParser implements Parser<Model> {
         double y3 = toDouble(iterator.next());
         double z3 = toDouble(iterator.next());
 
-        Vector3d p1 = new Vector3d(x1, y1, z1);
-        Vector3d p2 = new Vector3d(x2, y2, z2);
-        Vector3d p3 = new Vector3d(x3, y3, z3);
+        Point p1 = new Point(x1, y1, z1);
+        Point p2 = new Point(x2, y2, z2);
+        Point p3 = new Point(x3, y3, z3);
 
         Color color = Color.builder().id(colorId).build();
 
@@ -236,10 +235,10 @@ public class LDrawParser implements Parser<Model> {
         double y4 = toDouble(iterator.next());
         double z4 = toDouble(iterator.next());
 
-        Vector3d p1 = new Vector3d(x1, y1, z1);
-        Vector3d p2 = new Vector3d(x2, y2, z2);
-        Vector3d p3 = new Vector3d(x3, y3, z3);
-        Vector3d p4 = new Vector3d(x4, y4, z4);
+        Point p1 = new Point(x1, y1, z1);
+        Point p2 = new Point(x2, y2, z2);
+        Point p3 = new Point(x3, y3, z3);
+        Point p4 = new Point(x4, y4, z4);
 
         Color color = Color.builder().id(colorId).build();
 
@@ -270,10 +269,10 @@ public class LDrawParser implements Parser<Model> {
         double y4 = toDouble(iterator.next());
         double z4 = toDouble(iterator.next());
 
-        Vector3d p1 = new Vector3d(x1, y1, z1);
-        Vector3d p2 = new Vector3d(x2, y2, z2);
-        Vector3d p3 = new Vector3d(x3, y3, z3);
-        Vector3d p4 = new Vector3d(x4, y4, z4);
+        Point p1 = new Point(x1, y1, z1);
+        Point p2 = new Point(x2, y2, z2);
+        Point p3 = new Point(x3, y3, z3);
+        Point p4 = new Point(x4, y4, z4);
 
         Color color = Color.builder().id(colorId).build();
 

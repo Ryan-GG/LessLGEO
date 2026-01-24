@@ -43,7 +43,7 @@ public class Camera {
         double viewportWidth = viewportHeight * ((double) (settings.imageWidth()) / settings.imageHeight());
 
         // Calculate the u,v,w unit basis vectors for the camera coordinate frame.
-        Vector3d w = unitVector(settings.position().sub(settings.lookAt(), new Vector3d()));
+        Vector3d w = unitVector(settings.position().value().sub(settings.lookAt().value(), new Vector3d()));
         Vector3d u = unitVector(settings.up().cross(w, new Vector3d()));
         Vector3d v = w.cross(u, new Vector3d());
 
@@ -56,7 +56,7 @@ public class Camera {
         this.pixelDeltaV = viewportV.div(settings.imageHeight(), new Vector3d());
 
         // Calculate the location of the upper left pixel.
-        Vector3d viewportUpperLeft = settings.position()
+        Vector3d viewportUpperLeft = settings.position().value()
                 .sub(w.mul(settings.focusDist(), new Vector3d()), new Vector3d())
                 .sub(viewportU.div(2, new Vector3d()))
                 .sub(viewportV.div(2, new Vector3d()));
@@ -112,7 +112,7 @@ public class Camera {
                 .add(pixelDeltaV.mul(j + offset.y(), new Vector3d()));
 
 
-        Vector3d rayOrigin = (settings.defocusAngle() <= 0) ? new Vector3d(settings.position()) : defocusDiskSample();
+        Vector3d rayOrigin = (settings.defocusAngle() <= 0) ? new Vector3d(settings.position().value()) : defocusDiskSample();
         Vector3d rayDirection = pixelSampleLocation.sub(rayOrigin, new Vector3d());
 
         return new Ray(rayOrigin, rayDirection);
@@ -121,7 +121,7 @@ public class Camera {
     private Vector3d defocusDiskSample() {
         // Returns a random point in the camera defocus disk.
         Vector3d p = randomUnitVectorInDisk();
-        return settings.position()
+        return settings.position().value()
                 .add(defocusDiskU.mul(p.x(), new Vector3d()), new Vector3d())
                 .add(defocusDiskV.mul(p.y(), new Vector3d()));
     }

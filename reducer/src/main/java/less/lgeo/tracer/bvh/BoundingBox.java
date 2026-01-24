@@ -1,5 +1,6 @@
 package less.lgeo.tracer.bvh;
 
+import less.lgeo.primitive.Point;
 import less.lgeo.primitive.Triangle;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -58,50 +59,27 @@ import java.util.List;
 @NoArgsConstructor
 public class BoundingBox {
 
-    private final Vector3d min = new Vector3d(Double.POSITIVE_INFINITY);
-    private final Vector3d max = new Vector3d(Double.NEGATIVE_INFINITY);
+    private final Point min = new Point(Double.POSITIVE_INFINITY);
+    private final Point max = new Point(Double.NEGATIVE_INFINITY);
     private Vector3d size = new Vector3d(Double.POSITIVE_INFINITY);
 
-    public BoundingBox(List<Vector3d> vertices) {
+    public BoundingBox(List<Point> vertices) {
         vertices.forEach(this::growToInclude);
     }
 
-    private Vector3d calculateA() {
-        return min;
+
+    private void setMin(Point point) {
+        min.value().min(point.value());
     }
 
-    private Vector3d calculateB() {
-        return new Vector3d(max.x, min.y, min.z);
+    private void setMax(Point point) {
+        max.value().max(point.value());
     }
 
-    private Vector3d calculateC() {
-        return new Vector3d(max.x, min.y, max.z);
-    }
-
-    private Vector3d calculateD() {
-        return new Vector3d(min.x, min.y, max.z);
-    }
-
-    private Vector3d calculateE() {
-        return new Vector3d(min.x, max.y, min.z);
-    }
-
-    private Vector3d calculateF() {
-        return new Vector3d(max.x, max.y, min.z);
-    }
-
-    private Vector3d calculateG() {
-        return max;
-    }
-
-    private Vector3d calculateH() {
-        return new Vector3d(min.x(), max.y, max.z);
-    }
-
-    public void growToInclude(Vector3d point) {
-        min.min(point);
-        max.max(point);
-        size = new Vector3d(Math.abs(max.x - min.x), Math.abs(max.y - min.y), Math.abs(max.z - min.z));
+    public void growToInclude(Point point) {
+        setMin(point);
+        setMax(point);
+        size = new Vector3d(Math.abs(max.x() - min.x()), Math.abs(max.y() - min.y()), Math.abs(max.z() - min.z()));
     }
 
     public void growToInclude(Triangle triangle) {
@@ -110,18 +88,19 @@ public class BoundingBox {
         growToInclude(triangle.p3());
     }
 
-    public boolean includesPoint(Vector3d point) {
-        boolean inXBounds = min.x <= point.x && point.x <= max.x;
-        boolean inYBounds = min.y <= point.y && point.y <= max.y;
-        boolean inZBounds = min.z <= point.z && point.z <= max.z;
+    public boolean includesPoint(Point point) {
+        boolean inXBounds = min.x() <= point.x() && point.x() <= max.x();
+        boolean inYBounds = min.y() <= point.y() && point.y() <= max.y();
+        boolean inZBounds = min.z() <= point.z() && point.z() <= max.z();
 
         return inXBounds && inYBounds && inZBounds;
     }
 
-    public Vector3d getCenter() {
-        Vector3d min = new Vector3d(calculateA());
-        Vector3d max = new Vector3d(calculateG());
-        return min.add(max).mul(0.5);
+    public Point getCenter() {
+        Vector3d min = this.min.value();
+        Vector3d max = this.max.value();
+        Vector3d center = min.add(max, new Vector3d()).mul(0.5);
+        return new Point(center);
     }
 
     @Override

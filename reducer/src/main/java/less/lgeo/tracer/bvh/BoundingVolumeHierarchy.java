@@ -1,5 +1,6 @@
 package less.lgeo.tracer.bvh;
 
+import less.lgeo.primitive.Point;
 import less.lgeo.primitive.Triangle;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,11 +17,11 @@ public class BoundingVolumeHierarchy {
     private final Node root;
 
     public BoundingVolumeHierarchy(List<Triangle> triangles) {
-        List<Vector3d> vertices = triangles.stream()
+        List<Point> points = triangles.stream()
                 .flatMap(triangle -> triangle.getVertices().stream())
                 .toList();
 
-        BoundingBox boundingBox = new BoundingBox(vertices);
+        BoundingBox boundingBox = new BoundingBox(points);
         this.root = new Node(boundingBox, triangles);
         this.root.split();
     }
