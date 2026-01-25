@@ -6,6 +6,7 @@ import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.ScatterResult;
 import org.joml.Vector3d;
 
+import java.util.Optional;
 import java.util.Random;
 
 public class Dielectric implements Material {
@@ -29,7 +30,7 @@ public class Dielectric implements Material {
     }
 
     @Override
-    public ScatterResult scatter(Ray rayIn, HitRecord record) {
+    public Optional<ScatterResult> scatter(Ray rayIn, HitRecord record) {
         Vector3d attenuation = new Vector3d(1.0);
         double ri = record.frontFace() ? (1.0 / refractionIndex) : refractionIndex;
 
@@ -43,9 +44,9 @@ public class Dielectric implements Material {
                 ? Vector3dUtils.reflect(unitDirection, record.normal())
                 : Vector3dUtils.refract(unitDirection, record.normal(), ri);
 
-        Ray scattered = new Ray(record.point(), direction);
+        Ray scatteredRay = new Ray(record.point(), direction);
 
-        return new ScatterResult(attenuation, scattered, true);
+        return Optional.of(new ScatterResult(attenuation, scatteredRay));
     }
 
 }

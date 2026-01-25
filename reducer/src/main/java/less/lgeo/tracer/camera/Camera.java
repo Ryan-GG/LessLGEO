@@ -171,7 +171,7 @@ public class Camera {
          * A ray will attempt to accurately calculate the intersection point when it intersects with a surface.
          * Unfortunately for us, this calculation is susceptible to floating point rounding errors which can cause
          * the intersection point to be ever so slightly off. This means that the origin of the next ray, the ray that
-         * is randomly scattered off of the surface, is unlikely to be perfectly flush with the surface. It might
+         * is randomly scatteredRay off of the surface, is unlikely to be perfectly flush with the surface. It might
          * be just above the surface. It might be just below the surface. If the ray's origin is just below the
          * surface then it could intersect with that surface again. Which means that it will find the nearest
          * surface at 𝑡=0.00000001 or whatever floating point approximation the hit function gives us.
@@ -183,15 +183,16 @@ public class Camera {
         if (optionalHitRecord.isPresent()) {
 
             HitRecord hitRecord = optionalHitRecord.get();
+            Optional<ScatterResult> optionalScatterResult = hitRecord.material().scatter(ray, hitRecord);
+            
+            if (optionalScatterResult.isPresent()) {
 
-            //FIXME, why do i need to pass in hitrecoord?
-            ScatterResult materialScatterResult = hitRecord.material().scatter(ray, hitRecord);
-            if (materialScatterResult.isScattered()) {
+                ScatterResult scatterResult = optionalScatterResult.get();
                 return getRayColor(
-                        materialScatterResult.scattered(),
+                        scatterResult.scatteredRay(),
                         rayBounceIteration + 1,
                         world)
-                        .mul(materialScatterResult.attenuation());
+                        .mul(scatterResult.attenuation());
             }
             return new Vector3d(0, 0, 0);
         }

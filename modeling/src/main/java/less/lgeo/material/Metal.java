@@ -5,6 +5,8 @@ import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.ScatterResult;
 import org.joml.Vector3d;
 
+import java.util.Optional;
+
 import static less.lgeo.common.Vector3dUtils.*;
 
 public class Metal implements Material {
@@ -20,10 +22,15 @@ public class Metal implements Material {
 
 
     @Override
-    public ScatterResult scatter(Ray rayIn, HitRecord record) {
+    public Optional<ScatterResult> scatter(Ray rayIn, HitRecord record) {
         Vector3d reflected = unitVector(reflect(rayIn.direction(), record.normal()));
         reflected = randomUnitVector().mul(fuzz).add(reflected);
         Ray scattered = new Ray(record.point(), reflected);
-        return new ScatterResult(albedo, scattered, 0 < scattered.direction().dot(record.normal()));
+
+        if (0 < scattered.direction().dot(record.normal())) {
+            return Optional.of(new ScatterResult(albedo, scattered));
+        }
+
+        return Optional.empty();
     }
 }
