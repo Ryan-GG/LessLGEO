@@ -31,19 +31,19 @@ public class Dielectric implements Material {
     @Override
     public ScatterResult scatter(Ray rayIn, HitRecord record) {
         Vector3d attenuation = new Vector3d(1.0);
-        double ri = record.isFrontFace() ? (1.0 / refractionIndex) : refractionIndex;
+        double ri = record.frontFace() ? (1.0 / refractionIndex) : refractionIndex;
 
         Vector3d unitDirection = Vector3dUtils.unitVector(rayIn.direction());
 
-        double cosAngle = Math.min(unitDirection.negate(new Vector3d()).dot(record.getNormal()), 1.0);
+        double cosAngle = Math.min(unitDirection.negate(new Vector3d()).dot(record.normal()), 1.0);
         double sinAngle = Math.sqrt(1.0 - cosAngle * cosAngle);
 
         boolean cannotRefract = ri * sinAngle > 1.0;
         Vector3d direction = cannotRefract || reflectance(cosAngle, ri) > random.nextDouble()
-                ? Vector3dUtils.reflect(unitDirection, record.getNormal())
-                : Vector3dUtils.refract(unitDirection, record.getNormal(), ri);
+                ? Vector3dUtils.reflect(unitDirection, record.normal())
+                : Vector3dUtils.refract(unitDirection, record.normal(), ri);
 
-        Ray scattered = new Ray(record.getPoint(), direction);
+        Ray scattered = new Ray(record.point(), direction);
 
         return new ScatterResult(attenuation, scattered, true);
     }

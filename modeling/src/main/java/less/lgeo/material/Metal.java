@@ -21,9 +21,9 @@ public class Metal implements Material {
 
     @Override
     public ScatterResult scatter(Ray rayIn, HitRecord record) {
-        Vector3d reflected = unitVector(reflect(rayIn.direction(), record.getNormal()));
+        Vector3d reflected = unitVector(reflect(rayIn.direction(), record.normal()));
         reflected = randomUnitVector().mul(fuzz).add(reflected);
-        Ray scattered = new Ray(record.getPoint(), reflected);
-        return new ScatterResult(albedo, scattered, 0 < scattered.direction().dot(record.getNormal()));
+        Ray scattered = new Ray(record.point(), reflected);
+        return new ScatterResult(albedo, scattered, 0 < scattered.direction().dot(record.normal()));
     }
 }

@@ -5,6 +5,7 @@ import less.lgeo.common.Ray;
 import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.HittableList;
 import less.lgeo.hittable.ScatterResult;
+import less.lgeo.primitive.Point;
 import lombok.Getter;
 import org.joml.Vector3d;
 import org.slf4j.Logger;
@@ -12,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Optional;
 import java.util.Random;
 
 import static less.lgeo.common.Vector3dUtils.randomUnitVectorInDisk;
@@ -112,18 +114,18 @@ public class Camera {
                 .add(pixelDeltaV.mul(j + offset.y(), new Vector3d()));
 
 
-        Vector3d rayOrigin = (settings.defocusAngle() <= 0) ? new Vector3d(settings.position().value()) : defocusDiskSample();
-        Vector3d rayDirection = pixelSampleLocation.sub(rayOrigin, new Vector3d());
+        Point rayOrigin = (settings.defocusAngle() <= 0) ? settings.position() : defocusDiskSample();
+        Vector3d rayDirection = pixelSampleLocation.sub(rayOrigin.value(), new Vector3d());
 
         return new Ray(rayOrigin, rayDirection);
     }
 
-    private Vector3d defocusDiskSample() {
+    private Point defocusDiskSample() {
         // Returns a random point in the camera defocus disk.
         Vector3d p = randomUnitVectorInDisk();
-        return settings.position().value()
+        return new Point(settings.position().value()
                 .add(defocusDiskU.mul(p.x(), new Vector3d()), new Vector3d())
-                .add(defocusDiskV.mul(p.y(), new Vector3d()));
+                .add(defocusDiskV.mul(p.y(), new Vector3d())));
     }
 
     /**
@@ -164,8 +166,6 @@ public class Camera {
         // If we've exceeded the ray bounce limit, no more light is gathered.
         if (settings.rayMaxBounces() <= rayBounceIteration) return new Vector3d(0);
 
-        HitRecord rec = new HitRecord();
-
         /*
          * There’s also a subtle bug that we need to address.
          * A ray will attempt to accurately calculate the intersection point when it intersects with a surface.
@@ -177,10 +177,15 @@ public class Camera {
          * surface at 𝑡=0.00000001 or whatever floating point approximation the hit function gives us.
          * The simplest hack to address this is just to ignore hits that are very close to the calculated intersection point
          */
-        boolean hasRayHitSurface = world.hit(ray, Interval.of(0.001, Double.POSITIVE_INFINITY), rec);
+        Optional<HitRecord> optionalHitRecord = world.hit(ray, Interval.of(0.001, Double.POSITIVE_INFINITY));
 
-        if (hasRayHitSurface) {
-            ScatterResult materialScatterResult = rec.getMaterial().scatter(ray, rec);
+
+        if (optionalHitRecord.isPresent()) {
+
+            HitRecord hitRecord = optionalHitRecord.get();
+
+            //FIXME, why do i need to pass in hitrecoord?
+            ScatterResult materialScatterResult = hitRecord.material().scatter(ray, hitRecord);
             if (materialScatterResult.isScattered()) {
                 return getRayColor(
                         materialScatterResult.scattered(),

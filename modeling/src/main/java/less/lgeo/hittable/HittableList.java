@@ -5,6 +5,7 @@ import less.lgeo.common.Ray;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class HittableList extends Hittable {
 
@@ -29,27 +30,22 @@ public class HittableList extends Hittable {
 
 
     @Override
-    public boolean hit(Ray ray, Interval rayTimeInterval, HitRecord hitRecord) {
+    public Optional<HitRecord> hit(Ray ray, Interval rayTimeInterval) {
 
-        HitRecord tempRec = new HitRecord();
-        boolean hitAnything = false;
-        double closestsoFar = rayTimeInterval.max();
+        Optional<HitRecord> resultRecord = Optional.empty();
+        double closestSoFar = rayTimeInterval.max();
 
         for (Hittable hittable : hittableList) {
-            boolean hasRayHitSurface = hittable.hit(ray, Interval.of(rayTimeInterval.min(), closestsoFar), tempRec);
-            if (hasRayHitSurface) {
-                hitAnything = true;
-                closestsoFar = tempRec.getT();
+            Optional<HitRecord> optionalHitRecord = hittable.hit(ray, Interval.of(rayTimeInterval.min(), closestSoFar));
 
-                // FIXME, This for some reason doesn't mutate the pointer ref so i need to set the values
-                hitRecord.setT(tempRec.getT());
-                hitRecord.setPoint(tempRec.getPoint());
-                hitRecord.setNormal(tempRec.getNormal());
-                hitRecord.setFrontFace(tempRec.isFrontFace());
-                hitRecord.setMaterial(tempRec.getMaterial());
+            //FIXME, this could be refactored, i think
+            if (optionalHitRecord.isPresent()) {
+                HitRecord hitRecord = optionalHitRecord.get();
+                closestSoFar = hitRecord.time();
+                resultRecord = Optional.of(hitRecord);
             }
         }
 
-        return hitAnything;
+        return resultRecord;
     }
 }

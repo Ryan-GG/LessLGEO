@@ -1,10 +1,11 @@
 package less.lgeo.common;
 
+import less.lgeo.primitive.Point;
 import org.joml.Vector3d;
 
-public record Ray(Vector3d origin, Vector3d direction) {
+public record Ray(Point origin, Vector3d direction) {
 
-    public Vector3d at(double time) {
-        return origin.add(direction.mul(time, new Vector3d()), new Vector3d());
+    public Point at(double time) {
+        return new Point(origin.value().add(direction.mul(time, new Vector3d()), new Vector3d()));
     }
 }

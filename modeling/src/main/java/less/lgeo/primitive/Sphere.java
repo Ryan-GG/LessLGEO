@@ -8,6 +8,8 @@ import less.lgeo.material.Material;
 import lombok.Getter;
 import org.joml.Vector3d;
 
+import java.util.Optional;
+
 @Getter
 public class Sphere extends Hittable {
 
@@ -22,8 +24,8 @@ public class Sphere extends Hittable {
     }
 
     @Override
-    public boolean hit(Ray ray, Interval rayTimeInterval, HitRecord hitRecord) {
-        Vector3d oc = center.sub(ray.origin(), new Vector3d());
+    public Optional<HitRecord> hit(Ray ray, Interval rayTimeInterval) {
+        Vector3d oc = center.sub(ray.origin().value(), new Vector3d());
 
         double a = ray.direction().lengthSquared();
         double h = ray.direction().dot(oc);
@@ -32,7 +34,7 @@ public class Sphere extends Hittable {
         double discriminant = h * h - a * c;
 
         if (discriminant < 0)
-            return false;
+            return Optional.empty();
 
         double sqrtd = Math.sqrt(discriminant);
 
@@ -41,19 +43,24 @@ public class Sphere extends Hittable {
         if (!rayTimeInterval.surrounds(root)) {
             root = (h + sqrtd) / a;
             if (!rayTimeInterval.surrounds(root))
-                return false;
+                return Optional.empty();
         }
 
-        hitRecord.setT(root);
 
-        Vector3d p = ray.at(root);
-        hitRecord.setPoint(p);
+        Point p = ray.at(root);
+        
+        Vector3d outwardNormal = p.value().sub(center, new Vector3d()).div(radius);
+        boolean frontFace = new Vector3d(ray.direction()).dot(outwardNormal) < 0;
+        outwardNormal = frontFace ? new Vector3d(outwardNormal) : outwardNormal.negate(new Vector3d());
 
-        Vector3d outwardNormal = p.sub(center, new Vector3d()).div(radius);
 
-        hitRecord.setFrontFace(ray, outwardNormal);
-        hitRecord.setMaterial(material);
-
-        return true;
+        return Optional.of(new HitRecord(
+                        ray.at(root),
+                        outwardNormal,
+                        root,
+                        frontFace,
+                        material
+                )
+        );
     }
 }

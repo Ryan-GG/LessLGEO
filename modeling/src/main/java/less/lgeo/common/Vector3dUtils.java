@@ -6,12 +6,8 @@ import java.util.Random;
 
 import static java.lang.Math.sqrt;
 
-/**
- * FIXME, i honestly kind of hate this an wonder if its possible to just write my own vec3 class.
- * Maybe just essentially copy vector3d then add these methods into it.
- */
 public class Vector3dUtils {
-    
+
     public static Vector3d unitVector(Vector3d vector) {
         if (vector.length() == 0) return new Vector3d(0);
         return vector.div(vector.length(), new Vector3d());
