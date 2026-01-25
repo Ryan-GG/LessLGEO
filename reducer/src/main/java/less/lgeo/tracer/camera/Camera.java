@@ -14,10 +14,8 @@ import org.slf4j.LoggerFactory;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Optional;
-import java.util.Random;
 
-import static less.lgeo.common.Vector3dUtils.randomUnitVectorInDisk;
-import static less.lgeo.common.Vector3dUtils.unitVector;
+import static less.lgeo.common.Vector3dUtils.*;
 
 
 //FIXME, this really needs a good refactor with tests
@@ -26,6 +24,7 @@ import static less.lgeo.common.Vector3dUtils.unitVector;
 public class Camera {
 
     private static final Logger logger = LoggerFactory.getLogger(Camera.class);
+
     private final CameraSettings settings;
 
     private final Vector3d pixelDeltaU; // Offset to pixel below
@@ -128,14 +127,6 @@ public class Camera {
                 .add(defocusDiskV.mul(p.y(), new Vector3d())));
     }
 
-    /**
-     * @return a vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
-     */
-    private Vector3d sampleSquare() {
-        //FIXME, should this exist here?
-        Random random = new Random();
-        return new Vector3d(random.nextDouble() - 0.5, random.nextDouble() - 0.5, 0);
-    }
 
     private void writeColor(FileWriter fileWriter, Vector3d pixelColor) throws IOException {
 
@@ -184,7 +175,7 @@ public class Camera {
 
             HitRecord hitRecord = optionalHitRecord.get();
             Optional<ScatterResult> optionalScatterResult = hitRecord.material().scatter(ray, hitRecord);
-            
+
             if (optionalScatterResult.isPresent()) {
 
                 ScatterResult scatterResult = optionalScatterResult.get();

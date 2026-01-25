@@ -8,6 +8,8 @@ import static java.lang.Math.sqrt;
 
 public class Vector3dUtils {
 
+    private static final Random random = new Random();
+
     public static Vector3d unitVector(Vector3d vector) {
         if (vector.length() == 0) return new Vector3d(0);
         return vector.div(vector.length(), new Vector3d());
@@ -37,12 +39,10 @@ public class Vector3dUtils {
     }
 
     public static Vector3d randomVec3d(double min, double max) {
-        Random random = new Random();
         return new Vector3d(random.nextDouble(min, max), random.nextDouble(min, max), random.nextDouble(min, max));
     }
 
     public static Vector3d randomUnitVectorInDisk() {
-        Random random = new Random();
         while (true) {
             Vector3d p = new Vector3d(random.nextDouble(-1, 1), random.nextDouble(-1, 1), 0);
             if (p.lengthSquared() < 1)
@@ -65,5 +65,12 @@ public class Vector3dUtils {
         Vector3d rOutPerpendicular = uv.add(normal.mul(cosTheta, new Vector3d()), new Vector3d()).mul(eTaiOverEtat);
         Vector3d rOutParallel = normal.mul(-Math.sqrt(Math.abs(1.0 - rOutPerpendicular.lengthSquared())), new Vector3d());
         return rOutPerpendicular.add(rOutParallel);
+    }
+
+    /**
+     * @return a vector to a random point in the [-.5,-.5]-[+.5,+.5] unit square.
+     */
+    public static Vector3d sampleSquare() {
+        return new Vector3d(random.nextDouble() - 0.5, random.nextDouble() - 0.5, 0);
     }
 }
