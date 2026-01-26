@@ -5,17 +5,11 @@ import less.lgeo.common.Ray;
 import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.Hittable;
 import less.lgeo.material.Material;
-import lombok.Getter;
 import org.joml.Vector3d;
 
 import java.util.Optional;
 
-@Getter
-public class Sphere extends Hittable {
-
-    private final Vector3d center;
-    private final double radius;
-    private final Material material;
+public record Sphere(Vector3d center, double radius, Material material) implements Hittable {
 
     public Sphere(Vector3d center, double radius, Material material) {
         this.center = center;
@@ -48,7 +42,7 @@ public class Sphere extends Hittable {
 
 
         Point p = ray.at(root);
-        
+
         Vector3d outwardNormal = p.value().sub(center, new Vector3d()).div(radius);
         boolean frontFace = new Vector3d(ray.direction()).dot(outwardNormal) < 0;
         outwardNormal = frontFace ? new Vector3d(outwardNormal) : outwardNormal.negate(new Vector3d());

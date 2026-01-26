@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class HittableList extends Hittable {
+public class HittableList implements Hittable {
 
     private final List<Hittable> hittableList;
 
