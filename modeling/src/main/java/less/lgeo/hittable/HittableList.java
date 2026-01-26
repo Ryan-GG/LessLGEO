@@ -15,11 +15,6 @@ public class HittableList extends Hittable {
         hittableList = new ArrayList<>();
     }
 
-    public HittableList(Hittable hittable) {
-        hittableList = new ArrayList<>();
-        hittableList.add(hittable);
-    }
-
     public void clear() {
         hittableList.clear();
     }
@@ -38,7 +33,6 @@ public class HittableList extends Hittable {
         for (Hittable hittable : hittableList) {
             Optional<HitRecord> optionalHitRecord = hittable.hit(ray, Interval.of(rayTimeInterval.min(), closestSoFar));
 
-            //FIXME, this could be refactored, i think
             if (optionalHitRecord.isPresent()) {
                 HitRecord hitRecord = optionalHitRecord.get();
                 closestSoFar = hitRecord.time();
