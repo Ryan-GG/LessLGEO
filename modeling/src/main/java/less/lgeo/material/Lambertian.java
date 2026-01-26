@@ -1,5 +1,6 @@
 package less.lgeo.material;
 
+import less.lgeo.common.Color;
 import less.lgeo.common.Ray;
 import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.ScatterResult;
@@ -14,8 +15,8 @@ public class Lambertian implements Material {
 
     private final Vector3d albedo;
 
-    public Lambertian(Vector3d albedo) {
-        this.albedo = albedo;
+    public Lambertian(Color albedo) {
+        this.albedo = albedo.toVector3d();
     }
 
     @Override

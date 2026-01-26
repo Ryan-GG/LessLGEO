@@ -1,5 +1,6 @@
 package less.lgeo.material;
 
+import less.lgeo.common.Color;
 import less.lgeo.common.Ray;
 import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.ScatterResult;
@@ -14,9 +15,8 @@ public class Metal implements Material {
     private final Vector3d albedo;
     private final double fuzz;
 
-    //FIXME, albedo should be a color, and i should have the ability to go from Color to Vec3
-    public Metal(Vector3d albedo, double fuzz) {
-        this.albedo = albedo;
+    public Metal(Color albedo, double fuzz) {
+        this.albedo = albedo.toVector3d();
         this.fuzz = Math.min(fuzz, 1);
     }
 
