@@ -1,5 +1,6 @@
 package less.lgeo.tracer.camera;
 
+import less.lgeo.common.Color;
 import less.lgeo.common.Interval;
 import less.lgeo.common.Ray;
 import less.lgeo.hittable.HitRecord;
@@ -88,7 +89,7 @@ public class Camera {
                     Vector3d pixelColor = new Vector3d(0);
                     for (int sample = 0; sample < settings.samplesPerPixel(); sample++) {
                         Ray ray = getRay(i, j);
-                        pixelColor.add(getRayColor(ray, world));
+                        pixelColor.add(getRayColor(ray, world).toVector3d());
                     }
 
                     Vector3d sampledPixelColor = pixelColor.mul(settings.pixelSamplesScale(), new Vector3d());
@@ -148,14 +149,14 @@ public class Camera {
         fileWriter.write(String.format("%d %d %d\n", rbyte, gbyte, bbyte));
     }
 
-    private Vector3d getRayColor(Ray ray, HittableList world) {
+    private Color getRayColor(Ray ray, HittableList world) {
         return getRayColor(ray, 0, world);
     }
 
-    private Vector3d getRayColor(Ray ray, int rayBounceIteration, HittableList world) {
+    private Color getRayColor(Ray ray, int rayBounceIteration, HittableList world) {
 
         // If we've exceeded the ray bounce limit, no more light is gathered.
-        if (settings.rayMaxBounces() <= rayBounceIteration) return new Vector3d(0);
+        if (settings.rayMaxBounces() <= rayBounceIteration) return new Color(0);
 
         /*
          * There’s also a subtle bug that we need to address.
@@ -176,27 +177,19 @@ public class Camera {
             HitRecord hitRecord = optionalHitRecord.get();
             Optional<ScatterResult> optionalScatterResult = hitRecord.material().scatter(ray, hitRecord);
 
-            if (optionalScatterResult.isPresent()) {
-
-                ScatterResult scatterResult = optionalScatterResult.get();
-                return getRayColor(
-                        scatterResult.scatteredRay(),
-                        rayBounceIteration + 1,
-                        world)
-                        .mul(scatterResult.attenuation());
-            }
-            return new Vector3d(0, 0, 0);
+            return optionalScatterResult.map(scatterResult ->
+                    {
+                        Color rayColor = getRayColor(scatterResult.scatteredRay(), rayBounceIteration + 1, world);
+                        return new Color(rayColor.toVector3d().mul(scatterResult.attenuation()));
+                    })
+                    .orElse(new Color(0));
         }
 
         Vector3d unitDirection = unitVector(ray.direction());
 
         double a = 0.5 * (unitDirection.y() + 1.0);
 
-        //FIXME, this is hardcoded as the background
-        Vector3d colorOne = new Vector3d(1.0, 1.0, 1.0);
-        Vector3d colorTwo = new Vector3d(0.5, 0.7, 1.0);
-
-        return colorOne.lerp(colorTwo, a, new Vector3d());
+        return settings.getBackgroundColor().apply(a);
     }
 
     private double linearToGammaSpace(double linearComponent) {

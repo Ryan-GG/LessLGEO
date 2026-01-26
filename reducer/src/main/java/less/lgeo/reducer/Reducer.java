@@ -1,5 +1,6 @@
 package less.lgeo.reducer;
 
+import less.lgeo.common.Color;
 import less.lgeo.hittable.HittableList;
 import less.lgeo.material.Dielectric;
 import less.lgeo.material.Lambertian;
@@ -20,6 +21,28 @@ import org.springframework.stereotype.Component;
 @Component
 public class Reducer {
 
+    private static Camera getCamera() {
+        CameraSettings settings = new CameraSettings(
+                CameraSettings.ASPECT_RATIO_16_9,
+                100,
+                30,
+                400,
+                20,
+                new Point(-2, 2, 1),
+                new Point(0, 0, -1),
+                new Vector3d(0, 1, 0),
+                10.0,
+                3.4,
+                (time) -> {
+                    //TODO, these should be settings that can be controlled
+                    Color colorOne = new Color(new Vector3d(1.0, 1.0, 1.0));
+                    Color colorTwo = new Color(new Vector3d(0.5, 0.7, 1.0));
+                    return colorOne.interpolate(colorTwo, time);
+                }
+        );
+        return new Camera(settings);
+    }
+
     public Model reduce(Model model) {
 
         HittableList world = new HittableList();
@@ -36,19 +59,7 @@ public class Reducer {
         world.add(new Sphere(new Vector3d(-1.0, 0.0, -1.0), 0.4, material_bubble));
         world.add(new Sphere(new Vector3d(1.0, 0.0, -1.0), 0.5, material_right));
 
-        CameraSettings settings = new CameraSettings(
-                CameraSettings.ASPECT_RATIO_16_9,
-                100,
-                30,
-                400,
-                20,
-                new Point(-2, 2, 1),
-                new Point(0, 0, -1),
-                new Vector3d(0, 1, 0),
-                10.0,
-                3.4
-        );
-        Camera camera = new Camera(settings);
+        Camera camera = getCamera();
 
         camera.render(world);
 

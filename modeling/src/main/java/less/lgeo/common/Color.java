@@ -10,6 +10,25 @@ public record Color(int id, String name, double r, double g, double b, boolean i
     private static final int INHERIT_PRIMARY_COLOR_ID = 16;
     private static final int INHERIT_EDGE_COLOR_ID = 24;
 
+    public Color(Vector3d vector3d) {
+        this(vector3d.x(), vector3d.y(), vector3d.z());
+    }
+
+    public Color(double val) {
+        this(val, val, val);
+    }
+
+    /**
+     * Wrapper for {@link Vector3d}
+     *
+     * @param r Red, {@link Vector3d#x()}
+     * @param g Green, {@link Vector3d#y()}
+     * @param b Blue, {@link Vector3d#z()}
+     */
+    public Color(double r, double g, double b) {
+        this(-1, "Vector3", r, g, b, false);
+    }
+
     /**
      * @param inheritedColor Possibly inherit the color based on this {@link Color#id}
      * @return {@link Color}
@@ -38,6 +57,10 @@ public record Color(int id, String name, double r, double g, double b, boolean i
 
     public Vector3d toVector3d() {
         return new Vector3d(r, g, b);
+    }
+
+    public Color interpolate(Color other, Double t) {
+        return new Color(toVector3d().lerp(other.toVector3d(), t, new Vector3d()));
     }
 
 
