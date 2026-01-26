@@ -187,6 +187,7 @@ public class Camera {
 
         Vector3d unitDirection = unitVector(ray.direction());
 
+        //TODO, document this better
         double a = 0.5 * (unitDirection.y() + 1.0);
 
         return settings.getBackgroundColor().apply(a);

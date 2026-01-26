@@ -17,7 +17,7 @@ import java.util.function.Function;
  * @param up                 Camera relative up direction
  * @param defocusAngle       Variation angle of rays through each pixel
  * @param focusDist          Distance from camera {@code position} point to plane of perfect focus
- * @param getBackgroundColor Computes Background Color over Time(T)
+ * @param getBackgroundColor Computes Background Color
  */
 public record CameraSettings(
         double aspectRatio,
