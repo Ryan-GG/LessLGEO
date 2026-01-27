@@ -1,5 +1,6 @@
 package less.lgeo.primitive;
 
+import less.lgeo.Pair;
 import less.lgeo.common.Interval;
 import less.lgeo.common.Ray;
 import less.lgeo.hittable.HitRecord;
@@ -44,15 +45,13 @@ public record Sphere(Vector3d center, double radius, Material material) implemen
         Point p = ray.at(root);
 
         Vector3d outwardNormal = p.value().sub(center, new Vector3d()).div(radius);
-        boolean frontFace = new Vector3d(ray.direction()).dot(outwardNormal) < 0;
-        outwardNormal = frontFace ? new Vector3d(outwardNormal) : outwardNormal.negate(new Vector3d());
-
+        Pair<Vector3d, Boolean> res = HitRecord.getOutwardNormal(ray, outwardNormal);
 
         return Optional.of(new HitRecord(
                         ray.at(root),
-                        outwardNormal,
                         root,
-                        frontFace,
+                        res.first(),
+                        res.second(),
                         material
                 )
         );
