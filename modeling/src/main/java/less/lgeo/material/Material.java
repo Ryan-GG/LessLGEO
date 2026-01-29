@@ -9,7 +9,10 @@ import java.util.Optional;
 
 public interface Material {
 
-    //FIXME, there seems like there should be a better way to get the material from the color or just have it as the param
+    /**
+     * @param color LDraw defined Color
+     * @return Corresponding {@link Material} implementation based on color LDraw properties
+     */
     static Material fromColor(Color color) {
         if (color.isTransparent()) {
             return new Dielectric(1.5);

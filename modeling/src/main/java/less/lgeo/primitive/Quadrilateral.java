@@ -16,19 +16,24 @@ import static less.lgeo.common.Vector3dUtils.unitVector;
 public class Quadrilateral implements Hittable {
 
     public static final LineType type = LineType.QUADRILATERAL;
+
     private final Color color;
-    private final Material material;
     private final Point p1;
     private final Point p2;
     private final Point p3;
     private final Point p4;
+
+    private final Material material;
+
     private final Vector3d normal;
-    //FIXME, rename D, and W, and Q
-    private final double D;
-    private final Vector3d W;
-    private final Vector3d Q;
+
+    //Vectors defining edges from P1
     private final Vector3d u;
     private final Vector3d v;
+    
+    private final double d; // plane constant
+    private final Vector3d w; // helper vector
+
 
     public Quadrilateral(
             Color color,
@@ -44,14 +49,13 @@ public class Quadrilateral implements Hittable {
         this.p3 = p3;
         this.p4 = p4;
 
-        this.Q = p1.value();
-        this.v = p2.value().sub(Q, new Vector3d());
-        this.u = p4.value().sub(Q, new Vector3d());
+        this.v = p2.value().sub(p1.value(), new Vector3d());
+        this.u = p4.value().sub(p1.value(), new Vector3d());
 
         Vector3d n = u.cross(v, new Vector3d());
         this.normal = unitVector(n);
-        this.D = normal.dot(Q);
-        this.W = n.div(n.dot(n), new Vector3d());
+        this.d = normal.dot(p1.value());
+        this.w = n.div(n.dot(n), new Vector3d());
     }
 
     public Color color() {
@@ -110,15 +114,15 @@ public class Quadrilateral implements Hittable {
             return Optional.empty();
 
         // Return false if the hit point parameter t is outside the ray interval.
-        double t = (D - normal.dot(ray.origin().value())) / denominator;
+        double t = (d - normal.dot(ray.origin().value())) / denominator;
         if (!rayTimeInterval.contains(t))
             return Optional.empty();
 
         // Determine if the hit point lies within the planar shape using its plane coordinates.
         Point intersection = ray.at(t);
-        Vector3d planarHitPointVector = intersection.value().sub(Q, new Vector3d());
-        double alpha = W.dot(planarHitPointVector.cross(v, new Vector3d()));
-        double beta = W.dot(u.cross(planarHitPointVector, new Vector3d()));
+        Vector3d planarHitPointVector = intersection.value().sub(p1.value(), new Vector3d());
+        double alpha = w.dot(planarHitPointVector.cross(v, new Vector3d()));
+        double beta = w.dot(u.cross(planarHitPointVector, new Vector3d()));
 
         if (!isInterior(alpha, beta))
             return Optional.empty();

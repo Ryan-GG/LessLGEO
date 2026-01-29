@@ -5,6 +5,7 @@ import org.joml.Vector3d;
 
 import java.util.Optional;
 
+//TODO, #61 - Migrate from Rebrickable Color back to LDraw implementation of !Colour definition
 @Builder
 public record Color(int id, String name, double r, double g, double b, boolean isTransparent) {
     private static final int INHERIT_PRIMARY_COLOR_ID = 16;
@@ -67,5 +68,5 @@ public record Color(int id, String name, double r, double g, double b, boolean i
     public Color interpolate(Color other, Double t) {
         return Color.of(toVector3d().lerp(other.toVector3d(), t, new Vector3d()));
     }
-    
+
 }

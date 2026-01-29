@@ -19,16 +19,21 @@ public class Triangle implements Hittable {
     public static final LineType type = LineType.TRIANGLE;
 
     private final Color color;
-    private final Material material;
-    private final Vector3d normal;
-    //FIXME rename edge1, edge2, D, W
-    private final Vector3d edge1;
-    private final Vector3d edge2;
-    private final double D;
-    private final Vector3d W;
+
     private final Point p1;
     private final Point p2;
     private final Point p3;
+
+    private final Material material;
+
+    private final Vector3d normal;
+
+    //Vectors defining edges from P1
+    private final Vector3d u;
+    private final Vector3d v;
+
+    private final double d;    // plane constant
+    private final Vector3d w;  // barycentric helper vector
 
     public Triangle(Color color, Point p1, Point p2, Point p3) {
         this.color = color;
@@ -37,15 +42,15 @@ public class Triangle implements Hittable {
         this.p2 = p2;
         this.p3 = p3;
 
-        this.edge1 = p2.value().sub(p1.value(), new Vector3d());
-        this.edge2 = p3.value().sub(p1.value(), new Vector3d());
+        this.u = p2.value().sub(p1.value(), new Vector3d());
+        this.v = p3.value().sub(p1.value(), new Vector3d());
 
-        Vector3d n = edge1.cross(edge2, new Vector3d());
+        Vector3d n = u.cross(v, new Vector3d());
         this.normal = unitVector(n);
 
-        this.D = normal.dot(p1.value());
+        this.d = normal.dot(p1.value());
 
-        this.W = n.div(n.dot(n), new Vector3d());
+        this.w = n.div(n.dot(n), new Vector3d());
     }
 
     public Color color() {
@@ -92,14 +97,14 @@ public class Triangle implements Hittable {
 
         if (Math.abs(denominator) < 1e-8) return Optional.empty();
 
-        double t = (D - normal.dot(ray.origin().value())) / denominator;
+        double t = (d - normal.dot(ray.origin().value())) / denominator;
 
         if (!rayTimeInterval.contains(t)) return Optional.empty();
 
         Point intersection = ray.at(t);
         Vector3d p = intersection.value().sub(p1.value(), new Vector3d());
-        double u = W.dot(p.cross(edge2, new Vector3d()));
-        double v = W.dot(edge1.cross(p, new Vector3d()));
+        double u = w.dot(p.cross(v, new Vector3d()));
+        double v = w.dot(this.u.cross(p, new Vector3d()));
 
         if (!isInterior(u, v)) return Optional.empty();
 
@@ -113,7 +118,7 @@ public class Triangle implements Hittable {
         );
         return Optional.of(hitRecord);
     }
-    
+
     private boolean isInterior(double u, double v) {
         return (!(u < 0)) && (!(v < 0)) && (!(u + v > 1));
     }
