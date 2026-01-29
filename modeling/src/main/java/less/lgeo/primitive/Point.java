@@ -7,13 +7,13 @@ import org.joml.Vector3d;
  * Wrapper around {@link Vector3d}
  */
 public record Point(Vector3d value) {
-
-    public Point(double x, double y, double z) {
-        this(new Vector3d(x, y, z));
+    
+    public static Point of(double val) {
+        return new Point(new Vector3d(val));
     }
 
-    public Point(double val) {
-        this(new Vector3d(val, val, val));
+    public static Point of(double x, double y, double z) {
+        return new Point(new Vector3d(x, y, z));
     }
 
     /**
@@ -37,7 +37,7 @@ public record Point(Vector3d value) {
         double newZ = matrix.g() * x + matrix.h() * y
                 + matrix.i() * z + matrix.z();
 
-        return new Point(newX, newY, newZ);
+        return Point.of(newX, newY, newZ);
     }
 
     public double x() {

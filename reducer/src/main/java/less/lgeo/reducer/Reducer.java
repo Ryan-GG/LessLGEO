@@ -25,15 +25,15 @@ public class Reducer {
                 50,
                 400,
                 80,
-                new Point(0, 0, 9),
-                new Point(0, 0, 0),
+                Point.of(0, 0, 9),
+                Point.of(0),
                 new Vector3d(0, 1, 0),
                 0.0,
                 9,
                 (time) -> {
                     //TODO, these should be settings that can be controlled
-                    Color colorOne = new Color(new Vector3d(1.0, 1.0, 1.0));
-                    Color colorTwo = new Color(new Vector3d(0.5, 0.7, 1.0));
+                    Color colorOne = Color.of(1.0, 1.0, 1.0);
+                    Color colorTwo = Color.of(0.5, 0.7, 1.0);
                     return colorOne.interpolate(colorTwo, time);
                 }
         );
@@ -43,17 +43,37 @@ public class Reducer {
     public Model reduce(Model model) {
 
         HittableList world = new HittableList();
-        
-        Color leftRed = new Color(1.0, 0.2, 0.2);
 
-        world.add(
-                new Quadrilateral(
-                        leftRed,
-                        new Point(-3, -2, 5),
-                        new Point(-3, -2, 1),
-                        new Point(-3, 2, 1),
-                        new Point(-3, 2, 5)
-                ));
+        Color leftRed = Color.of(1.0, 0.2, 0.2);
+        Quadrilateral left = new Quadrilateral(
+                leftRed,
+                Point.of(-3, -2, 5),
+                Point.of(-3, -2, 1),
+                Point.of(-3, 2, 1),
+                Point.of(-3, 2, 5)
+        );
+
+
+        Color backGreen = Color.of(0.2, 1.0, 0.2);
+        Quadrilateral back = new Quadrilateral(
+                backGreen,
+                Point.of(-2, -2, 0),
+                Point.of(2, -2, 0),
+                Point.of(2, 2, 0),
+                Point.of(-2, 2, 0)
+        );
+
+        Color rightTransparentBlue = Color.of(0, 0, 1, true);
+
+        Quadrilateral right = new Quadrilateral(
+                rightTransparentBlue,
+                Point.of(3, -2, 5),
+                Point.of(3, -2, 1),
+                Point.of(3, 2, 1),
+                Point.of(3, 2, 5)
+        );
+
+        world.addAll(left, back, right);
 
         Camera camera = getCamera();
 

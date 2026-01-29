@@ -176,8 +176,8 @@ public class LDrawParser implements Parser<Model> {
         double y2 = toDouble(iterator.next());
         double z2 = toDouble(iterator.next());
 
-        Point p1 = new Point(x1, y1, z1);
-        Point p2 = new Point(x2, y2, z2);
+        Point p1 = Point.of(x1, y1, z1);
+        Point p2 = Point.of(x2, y2, z2);
 
         Color color = Color.builder().id(colorId).build();
 
@@ -203,9 +203,9 @@ public class LDrawParser implements Parser<Model> {
         double y3 = toDouble(iterator.next());
         double z3 = toDouble(iterator.next());
 
-        Point p1 = new Point(x1, y1, z1);
-        Point p2 = new Point(x2, y2, z2);
-        Point p3 = new Point(x3, y3, z3);
+        Point p1 = Point.of(x1, y1, z1);
+        Point p2 = Point.of(x2, y2, z2);
+        Point p3 = Point.of(x3, y3, z3);
 
         Color color = Color.builder().id(colorId).build();
 
@@ -235,10 +235,10 @@ public class LDrawParser implements Parser<Model> {
         double y4 = toDouble(iterator.next());
         double z4 = toDouble(iterator.next());
 
-        Point p1 = new Point(x1, y1, z1);
-        Point p2 = new Point(x2, y2, z2);
-        Point p3 = new Point(x3, y3, z3);
-        Point p4 = new Point(x4, y4, z4);
+        Point p1 = Point.of(x1, y1, z1);
+        Point p2 = Point.of(x2, y2, z2);
+        Point p3 = Point.of(x3, y3, z3);
+        Point p4 = Point.of(x4, y4, z4);
 
         Color color = Color.builder().id(colorId).build();
 
@@ -269,10 +269,10 @@ public class LDrawParser implements Parser<Model> {
         double y4 = toDouble(iterator.next());
         double z4 = toDouble(iterator.next());
 
-        Point p1 = new Point(x1, y1, z1);
-        Point p2 = new Point(x2, y2, z2);
-        Point p3 = new Point(x3, y3, z3);
-        Point p4 = new Point(x4, y4, z4);
+        Point p1 = Point.of(x1, y1, z1);
+        Point p2 = Point.of(x2, y2, z2);
+        Point p3 = Point.of(x3, y3, z3);
+        Point p4 = Point.of(x4, y4, z4);
 
         Color color = Color.builder().id(colorId).build();
 

@@ -23,6 +23,10 @@ public class HittableList implements Hittable {
         return hittableList.add(hittable);
     }
 
+    public boolean addAll(Hittable... hittables) {
+        return hittableList.addAll(List.of(hittables));
+    }
+
 
     @Override
     public Optional<HitRecord> hit(Ray ray, Interval rayTimeInterval) {

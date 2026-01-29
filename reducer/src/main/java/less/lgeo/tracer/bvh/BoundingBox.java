@@ -59,8 +59,8 @@ import java.util.List;
 @NoArgsConstructor
 public class BoundingBox {
 
-    private final Point min = new Point(Double.POSITIVE_INFINITY);
-    private final Point max = new Point(Double.NEGATIVE_INFINITY);
+    private final Point min = Point.of(Double.POSITIVE_INFINITY);
+    private final Point max = Point.of(Double.NEGATIVE_INFINITY);
     private Vector3d size = new Vector3d(Double.POSITIVE_INFINITY);
 
     public BoundingBox(List<Point> vertices) {

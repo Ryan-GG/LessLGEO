@@ -156,7 +156,7 @@ public class Camera {
     private Color getRayColor(Ray ray, int rayBounceIteration, HittableList world) {
 
         // If we've exceeded the ray bounce limit, no more light is gathered.
-        if (settings.rayMaxBounces() <= rayBounceIteration) return new Color(0);
+        if (settings.rayMaxBounces() <= rayBounceIteration) return Color.of(0);
 
         /*
          * There’s also a subtle bug that we need to address.
@@ -177,12 +177,13 @@ public class Camera {
             HitRecord hitRecord = optionalHitRecord.get();
             Optional<ScatterResult> optionalScatterResult = hitRecord.material().scatter(ray, hitRecord);
 
-            return optionalScatterResult.map(scatterResult ->
+            Vector3d colorVec = optionalScatterResult.map(scatterResult ->
                     {
                         Color rayColor = getRayColor(scatterResult.scatteredRay(), rayBounceIteration + 1, world);
-                        return new Color(rayColor.toVector3d().mul(scatterResult.attenuation()));
+                        return rayColor.toVector3d().mul(scatterResult.attenuation());
                     })
-                    .orElse(new Color(0));
+                    .orElse(new Vector3d(0));
+            return Color.of(colorVec);
         }
 
         Vector3d unitDirection = unitVector(ray.direction());

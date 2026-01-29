@@ -32,7 +32,7 @@ public class PointEmbeddable {
     }
 
     public Point toDomain() {
-        return new Point(getX(), getY(), getZ());
+        return Point.of(getX(), getY(), getZ());
     }
 
 }

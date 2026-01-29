@@ -27,15 +27,15 @@ public class ModelTestUtils {
      */
     public static Model cube() {
 
-        Point a = new Point(0, -1, 0);
-        Point b = new Point(1, -1, 0);
-        Point c = new Point(1, -1, 1);
-        Point d = new Point(0, -1, 1);
+        Point a = Point.of(0, -1, 0);
+        Point b = Point.of(1, -1, 0);
+        Point c = Point.of(1, -1, 1);
+        Point d = Point.of(0, -1, 1);
 
-        Point e = new Point(0, 0, 0);
-        Point f = new Point(1, 0, 0);
-        Point g = new Point(1, 0, 1);
-        Point h = new Point(0, 0, 1);
+        Point e = Point.of(0, 0, 0);
+        Point f = Point.of(1, 0, 0);
+        Point g = Point.of(1, 0, 1);
+        Point h = Point.of(0, 0, 1);
 
         Quadrilateral top = new Quadrilateral(RED, a, b, c, d);
         Quadrilateral bottom = new Quadrilateral(RED, e, f, g, h);
@@ -78,11 +78,11 @@ public class ModelTestUtils {
 
     public static Model pyramid() {
 
-        Point a = new Point(0, 0, 0);
-        Point b = new Point(0, 0, 1);
-        Point c = new Point(1, 0, 1);
-        Point d = new Point(1, 0, 0);
-        Point e = new Point(0.5, -1, 0.5);
+        Point a = Point.of(0, 0, 0);
+        Point b = Point.of(0, 0, 1);
+        Point c = Point.of(1, 0, 1);
+        Point d = Point.of(1, 0, 0);
+        Point e = Point.of(0.5, -1, 0.5);
 
         Quadrilateral bottom = new Quadrilateral(BLACK, a, b, c, d);
         Triangle front = new Triangle(BLACK, a, e, d);

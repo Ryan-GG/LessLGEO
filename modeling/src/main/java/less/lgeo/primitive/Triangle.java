@@ -16,7 +16,7 @@ public record Triangle(Color color, Point p1, Point p2, Point p3) {
         double yCentroid = (p1.y() + p2.y() + p3.y()) / 3;
         double zCentroid = (p1.z() + p2.z() + p3.z()) / 3;
 
-        return new Point(xCentroid, yCentroid, zCentroid);
+        return Point.of(xCentroid, yCentroid, zCentroid);
     }
 
     public List<Point> getVertices() {
