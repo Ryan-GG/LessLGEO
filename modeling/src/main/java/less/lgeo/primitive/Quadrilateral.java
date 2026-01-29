@@ -8,6 +8,7 @@ import less.lgeo.material.Material;
 import org.joml.Vector3d;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 import static less.lgeo.common.Vector3dUtils.unitVector;
@@ -136,5 +137,33 @@ public class Quadrilateral implements Hittable {
         // Given the hit point in plane coordinates, return false if it is outside the
         // primitive, otherwise set the hit record UV coordinates and return true.
         return unitInterval.contains(a) && unitInterval.contains(b);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Quadrilateral that = (Quadrilateral) o;
+        return Objects.equals(color, that.color)
+                && Objects.equals(p1, that.p1)
+                && Objects.equals(p2, that.p2)
+                && Objects.equals(p3, that.p3)
+                && Objects.equals(p4, that.p4);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(color, p1, p2, p3, p4);
+    }
+
+    @Override
+    public String toString() {
+        return "Quadrilateral{" +
+                "p4=" + p4 +
+                ", color=" + color +
+                ", p1=" + p1 +
+                ", p2=" + p2 +
+                ", p3=" + p3 +
+                '}';
     }
 }

@@ -5,6 +5,7 @@ import less.lgeo.hittable.HittableList;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.Point;
 import less.lgeo.primitive.Quadrilateral;
+import less.lgeo.primitive.Triangle;
 import less.lgeo.tracer.camera.Camera;
 import less.lgeo.tracer.camera.CameraSettings;
 import org.joml.Vector3d;
@@ -55,18 +56,17 @@ public class Reducer {
 
 
         Color backGreen = Color.of(0.2, 1.0, 0.2);
-        Quadrilateral back = new Quadrilateral(
+        Triangle back = new Triangle(
                 backGreen,
-                Point.of(-2, -2, 0),
                 Point.of(2, -2, 0),
-                Point.of(2, 2, 0),
-                Point.of(-2, 2, 0)
+                Point.of(-2, -2, 0),
+                Point.of(2, 2, 0)
         );
 
-        Color rightTransparentBlue = Color.of(0, 0, 1, true);
+        Color rightBlue = Color.of(0, 0, 1, false);
 
         Quadrilateral right = new Quadrilateral(
-                rightTransparentBlue,
+                rightBlue,
                 Point.of(3, -2, 5),
                 Point.of(3, -2, 1),
                 Point.of(3, 2, 1),
