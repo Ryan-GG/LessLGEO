@@ -15,7 +15,7 @@ public class Vector3dUtilsTest {
                 .c(0).f(0).i(1).z(0)
                 .scale(1.0)
                 .build();
-        Point vertex = new Point(1, 2, 3);
+        Point vertex = Point.of(1, 2, 3);
         Point result = vertex.transform(identity);
         assertEquals(1, result.x());
         assertEquals(2, result.y());
@@ -30,7 +30,7 @@ public class Vector3dUtilsTest {
                 .c(0).f(0).i(1).z(2)
                 .scale(1.0)
                 .build();
-        Point transform = new Point(1, 2, 3);
+        Point transform = Point.of(1, 2, 3);
         Point result = transform.transform(translation);
         assertEquals(6, result.x());
         assertEquals(-1, result.y());
@@ -46,7 +46,7 @@ public class Vector3dUtilsTest {
                 .c(0).f(0).i(1).z(0)
                 .scale(1.0)
                 .build();
-        Point transform = new Point(1, 0, 0);
+        Point transform = Point.of(1, 0, 0);
         Point result = transform.transform(rotZ45);
         assertEquals(sqrt2over2, result.x());
         assertEquals(sqrt2over2, result.y());

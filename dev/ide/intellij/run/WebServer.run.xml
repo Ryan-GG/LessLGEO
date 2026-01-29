@@ -5,7 +5,7 @@
     <option name="VM_PARAMETERS" value="-ea -Dspring.profiles.active=local -Xms2g -Xmx4g" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="less.lgeo.test.*" />
+        <option name="PATTERN" value="less.lgeo.util.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

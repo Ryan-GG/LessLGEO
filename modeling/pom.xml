@@ -44,4 +44,20 @@
         <version>0.0.2-SNAPSHOT</version>
     </parent>
     <version>0.0.2-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <version>3.5.0</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>

@@ -3,11 +3,11 @@ package less.lgeo.primitive;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
-import static less.lgeo.test.ModelTestUtils.*;
+import static less.lgeo.util.ModelTestUtils.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-public class ModelTest {
+class ModelTest {
 
     @Nested
     class Transform {

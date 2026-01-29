@@ -3,8 +3,8 @@ package less.lgeo.tracer;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.Point;
 import less.lgeo.primitive.Quadrilateral;
-import less.lgeo.test.ModelTestUtils;
 import less.lgeo.tracer.bvh.BoundingBox;
+import less.lgeo.util.ModelTestUtils;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,10 +18,10 @@ class BoundBoxTest {
     @Test
     void getBoundingBoxSinglePoint() {
         BoundingBox boundingBox = new BoundingBox();
-        Point vertex = new Point(1);
+        Point vertex = Point.of(1);
 
-        assertEquals(boundingBox.getMin(), new Point(Double.POSITIVE_INFINITY));
-        assertEquals(boundingBox.getMax(), new Point(Double.NEGATIVE_INFINITY));
+        assertEquals(boundingBox.getMin(), Point.of(Double.POSITIVE_INFINITY));
+        assertEquals(boundingBox.getMax(), Point.of(Double.NEGATIVE_INFINITY));
 
         boundingBox.growToInclude(vertex);
 
@@ -33,16 +33,16 @@ class BoundBoxTest {
     @Test
     void getBoundingBoxThreePoints() {
 
-        Point min = new Point(0, 0, 0);
-        Point mid = new Point(0.5, -0.5, 0.5);
-        Point max = new Point(1, -1, 1);
+        Point min = Point.of(0, 0, 0);
+        Point mid = Point.of(0.5, -0.5, 0.5);
+        Point max = Point.of(1, -1, 1);
         BoundingBox boundingBox = new BoundingBox(List.of(min, mid, max));
         assertTrue(boundingBox.includesPoint(min));
         assertTrue(boundingBox.includesPoint(mid));
         assertTrue(boundingBox.includesPoint(max));
-        assertEquals(new Point(0, -1, 0), boundingBox.getMin());
+        assertEquals(Point.of(0, -1, 0), boundingBox.getMin());
         assertEquals(mid, boundingBox.getCenter());
-        assertEquals(new Point(1, 0, 1), boundingBox.getMax());
+        assertEquals(Point.of(1, 0, 1), boundingBox.getMax());
     }
 
     @Test

@@ -31,6 +31,13 @@
             <version>0.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <artifactId>modeling</artifactId>
+            <groupId>less.lgeo</groupId>
+            <type>test-jar</type>
+            <scope>test</scope>
+            <version>0.0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <artifactId>messaging</artifactId>
             <groupId>less.lgeo</groupId>
             <scope>compile</scope>

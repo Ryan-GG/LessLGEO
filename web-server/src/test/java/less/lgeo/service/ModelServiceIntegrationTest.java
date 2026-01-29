@@ -1,15 +1,14 @@
 package less.lgeo.service;
 
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
+import io.zonky.test.db.AutoConfigureEmbeddedDatabase.RefreshMode;
 import less.lgeo.embedded.ModelId;
 import less.lgeo.entity.ModelEntity;
 import less.lgeo.primitive.Model;
-import less.lgeo.test.ModelTestUtils;
+import less.lgeo.util.ModelTestUtils;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import io.zonky.test.db.AutoConfigureEmbeddedDatabase;
-import io.zonky.test.db.AutoConfigureEmbeddedDatabase.RefreshMode;
 
 import java.util.List;
 
@@ -39,26 +38,26 @@ import static org.junit.jupiter.api.Assertions.*;
 @AutoConfigureEmbeddedDatabase(refresh = RefreshMode.AFTER_EACH_TEST_METHOD)
 public class ModelServiceIntegrationTest {
 
-  @Autowired
-  private ModelService modelService;
+    @Autowired
+    private ModelService modelService;
 
-  @Test
-  void saveAndRetrieveModel() {
+    @Test
+    void saveAndRetrieveModel() {
 
-    Model model = ModelTestUtils.cube();
-    ModelId id = modelService.insertModel(model);
+        Model model = ModelTestUtils.cube();
+        ModelId id = modelService.insertModel(model);
 
-    ModelEntity retrievedEntity = modelService.getModelById(id).orElseThrow();
-    assertNotNull(retrievedEntity);
-    assertEquals(6, retrievedEntity.getQuadrilaterals().size());
-  }
+        ModelEntity retrievedEntity = modelService.getModelById(id).orElseThrow();
+        assertNotNull(retrievedEntity);
+        assertEquals(6, retrievedEntity.getQuadrilaterals().size());
+    }
 
-  @Test
-  void getParentModelIds() {
-    ModelId cubeId = modelService.insertModel(ModelTestUtils.cube());
-    ModelId nestedCubesId = modelService.insertModel(ModelTestUtils.nestedCubes());
+    @Test
+    void getParentModelIds() {
+        ModelId cubeId = modelService.insertModel(ModelTestUtils.cube());
+        ModelId nestedCubesId = modelService.insertModel(ModelTestUtils.nestedCubes());
 
-    assertTrue(List.of(cubeId, nestedCubesId).containsAll(modelService.getAllRootModelIds()));
-  }
+        assertTrue(List.of(cubeId, nestedCubesId).containsAll(modelService.getAllRootModelIds()));
+    }
 
 }

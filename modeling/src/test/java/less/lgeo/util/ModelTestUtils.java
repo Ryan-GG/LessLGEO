@@ -1,4 +1,4 @@
-package less.lgeo.test;
+package less.lgeo.util;
 
 import less.lgeo.common.Color;
 import less.lgeo.common.Matrix;
