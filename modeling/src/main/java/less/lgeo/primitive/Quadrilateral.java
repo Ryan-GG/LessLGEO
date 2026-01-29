@@ -30,7 +30,7 @@ public class Quadrilateral implements Hittable {
     //Vectors defining edges from P1
     private final Vector3d u;
     private final Vector3d v;
-    
+
     private final double d; // plane constant
     private final Vector3d w; // helper vector
 
@@ -108,17 +108,14 @@ public class Quadrilateral implements Hittable {
     @Override
     public Optional<HitRecord> hit(Ray ray, Interval rayTimeInterval) {
         double denominator = normal.dot(ray.direction());
-
-        // No hit if the ray is parallel to the plane.
+        
         if (Math.abs(denominator) < 1e-8)
             return Optional.empty();
 
-        // Return false if the hit point parameter t is outside the ray interval.
         double t = (d - normal.dot(ray.origin().value())) / denominator;
         if (!rayTimeInterval.contains(t))
             return Optional.empty();
 
-        // Determine if the hit point lies within the planar shape using its plane coordinates.
         Point intersection = ray.at(t);
         Vector3d planarHitPointVector = intersection.value().sub(p1.value(), new Vector3d());
         double alpha = w.dot(planarHitPointVector.cross(v, new Vector3d()));
@@ -126,8 +123,6 @@ public class Quadrilateral implements Hittable {
 
         if (!isInterior(alpha, beta))
             return Optional.empty();
-
-        // Ray hits the 2D shape; set the rest of the hit record and return true.
 
         Pair<Vector3d, Boolean> res = HitRecord.getOutwardNormal(ray, normal);
         HitRecord record = new HitRecord(intersection, t, res.first(), res.second(), material);
@@ -138,8 +133,6 @@ public class Quadrilateral implements Hittable {
     private boolean isInterior(double a, double b) {
         Interval unitInterval = Interval.of(0, 1);
 
-        // Given the hit point in plane coordinates, return false if it is outside the
-        // primitive, otherwise set the hit record UV coordinates and return true.
         return unitInterval.contains(a) && unitInterval.contains(b);
     }
 
