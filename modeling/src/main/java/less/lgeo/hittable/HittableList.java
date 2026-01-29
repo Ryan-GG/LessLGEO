@@ -4,6 +4,7 @@ import less.lgeo.common.Interval;
 import less.lgeo.common.Ray;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,10 @@ public class HittableList implements Hittable {
 
     public boolean addAll(Hittable... hittables) {
         return hittableList.addAll(List.of(hittables));
+    }
+
+    public boolean addAll(Collection<Hittable> hittables) {
+        return hittableList.addAll(hittables);
     }
 
 
