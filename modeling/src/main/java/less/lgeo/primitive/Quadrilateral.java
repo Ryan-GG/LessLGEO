@@ -1,15 +1,77 @@
 package less.lgeo.primitive;
 
-import less.lgeo.common.Color;
-import less.lgeo.common.LineType;
-import less.lgeo.common.Matrix;
+import less.lgeo.Pair;
+import less.lgeo.common.*;
+import less.lgeo.hittable.HitRecord;
+import less.lgeo.hittable.Hittable;
+import less.lgeo.material.Material;
+import org.joml.Vector3d;
 
 import java.util.List;
 import java.util.Optional;
 
-public record Quadrilateral(Color color, Point p1, Point p2, Point p3, Point p4) {
+import static less.lgeo.common.Vector3dUtils.unitVector;
+
+public class Quadrilateral implements Hittable {
 
     public static final LineType type = LineType.QUADRILATERAL;
+    private final Color color;
+    private final Material material;
+    private final Point p1;
+    private final Point p2;
+    private final Point p3;
+    private final Point p4;
+    private final Vector3d normal;
+    //FIXME, rename D, and W, and Q
+    private final double D;
+    private final Vector3d W;
+    private final Vector3d Q;
+    private final Vector3d u;
+    private final Vector3d v;
+
+    public Quadrilateral(
+            Color color,
+            Point p1,
+            Point p2,
+            Point p3,
+            Point p4
+    ) {
+        this.color = color;
+        this.material = Material.fromColor(color);
+        this.p1 = p1;
+        this.p2 = p2;
+        this.p3 = p3;
+        this.p4 = p4;
+
+        this.Q = p1.value();
+        this.v = p2.value().sub(Q, new Vector3d());
+        this.u = p4.value().sub(Q, new Vector3d());
+
+        Vector3d n = u.cross(v, new Vector3d());
+        this.normal = unitVector(n);
+        this.D = normal.dot(Q);
+        this.W = n.div(n.dot(n), new Vector3d());
+    }
+
+    public Color color() {
+        return color;
+    }
+
+    public Point p1() {
+        return p1;
+    }
+
+    public Point p2() {
+        return p2;
+    }
+
+    public Point p3() {
+        return p3;
+    }
+
+    public Point p4() {
+        return p4;
+    }
 
     public List<Point> getVertices() {
         return List.of(p1, p2, p3, p4);
@@ -33,4 +95,46 @@ public record Quadrilateral(Color color, Point p1, Point p2, Point p3, Point p4)
         return List.of(bottomLeft, topRight);
     }
 
+    /**
+     * @param ray             Ray being cast
+     * @param rayTimeInterval time of ray during cast interval
+     * @return Empty if nothing was hit, otherwise return the {@link HitRecord} which defines what was hit
+     */
+    @Override
+    public Optional<HitRecord> hit(Ray ray, Interval rayTimeInterval) {
+        double denominator = normal.dot(ray.direction());
+
+        // No hit if the ray is parallel to the plane.
+        if (Math.abs(denominator) < 1e-8)
+            return Optional.empty();
+
+        // Return false if the hit point parameter t is outside the ray interval.
+        double t = (D - normal.dot(ray.origin().value())) / denominator;
+        if (!rayTimeInterval.contains(t))
+            return Optional.empty();
+
+        // Determine if the hit point lies within the planar shape using its plane coordinates.
+        Point intersection = ray.at(t);
+        Vector3d planarHitPointVector = intersection.value().sub(Q, new Vector3d());
+        double alpha = W.dot(planarHitPointVector.cross(v, new Vector3d()));
+        double beta = W.dot(u.cross(planarHitPointVector, new Vector3d()));
+
+        if (!isInterior(alpha, beta))
+            return Optional.empty();
+
+        // Ray hits the 2D shape; set the rest of the hit record and return true.
+
+        Pair<Vector3d, Boolean> res = HitRecord.getOutwardNormal(ray, normal);
+        HitRecord record = new HitRecord(intersection, t, res.first(), res.second(), material);
+
+        return Optional.of(record);
+    }
+
+    private boolean isInterior(double a, double b) {
+        Interval unitInterval = Interval.of(0, 1);
+
+        // Given the hit point in plane coordinates, return false if it is outside the
+        // primitive, otherwise set the hit record UV coordinates and return true.
+        return unitInterval.contains(a) && unitInterval.contains(b);
+    }
 }

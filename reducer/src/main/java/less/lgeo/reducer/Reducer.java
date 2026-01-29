@@ -2,13 +2,9 @@ package less.lgeo.reducer;
 
 import less.lgeo.common.Color;
 import less.lgeo.hittable.HittableList;
-import less.lgeo.material.Dielectric;
-import less.lgeo.material.Lambertian;
-import less.lgeo.material.Material;
-import less.lgeo.material.Metal;
 import less.lgeo.primitive.Model;
 import less.lgeo.primitive.Point;
-import less.lgeo.primitive.Sphere;
+import less.lgeo.primitive.Quadrilateral;
 import less.lgeo.tracer.camera.Camera;
 import less.lgeo.tracer.camera.CameraSettings;
 import org.joml.Vector3d;
@@ -22,17 +18,18 @@ import org.springframework.stereotype.Component;
 public class Reducer {
 
     private static Camera getCamera() {
+
         CameraSettings settings = new CameraSettings(
-                CameraSettings.ASPECT_RATIO_16_9,
+                1.0,
                 100,
-                30,
+                50,
                 400,
-                20,
-                new Point(-2, 2, 1),
-                new Point(0, 0, -1),
+                80,
+                new Point(0, 0, 9),
+                new Point(0, 0, 0),
                 new Vector3d(0, 1, 0),
-                10.0,
-                3.4,
+                0.0,
+                9,
                 (time) -> {
                     //TODO, these should be settings that can be controlled
                     Color colorOne = new Color(new Vector3d(1.0, 1.0, 1.0));
@@ -46,18 +43,17 @@ public class Reducer {
     public Model reduce(Model model) {
 
         HittableList world = new HittableList();
+        
+        Color leftRed = new Color(1.0, 0.2, 0.2);
 
-        Material materialGround = new Lambertian(new Color(0.8, 0.8, 0.0));
-        Material materialCenter = new Lambertian(new Color(0.1, 0.2, 0.5));
-        Material materialLeft = new Dielectric(1.50);
-        Material materialBubble = new Dielectric(1.00 / 1.50);
-        Material materialRight = new Metal(new Color(0.8, 0.6, 0.2), 1.0);
-
-        world.add(new Sphere(new Vector3d(0.0, -100.5, -1.0), 100.0, materialGround));
-        world.add(new Sphere(new Vector3d(0.0, 0.0, -1.2), 0.5, materialCenter));
-        world.add(new Sphere(new Vector3d(-1.0, 0.0, -1.0), 0.5, materialLeft));
-        world.add(new Sphere(new Vector3d(-1.0, 0.0, -1.0), 0.4, materialBubble));
-        world.add(new Sphere(new Vector3d(1.0, 0.0, -1.0), 0.5, materialRight));
+        world.add(
+                new Quadrilateral(
+                        leftRed,
+                        new Point(-3, -2, 5),
+                        new Point(-3, -2, 1),
+                        new Point(-3, 2, 1),
+                        new Point(-3, 2, 5)
+                ));
 
         Camera camera = getCamera();
 
