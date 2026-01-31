@@ -5,6 +5,7 @@ import less.lgeo.common.Interval;
 import less.lgeo.common.Matrix;
 import less.lgeo.common.Ray;
 import less.lgeo.hittable.HitRecord;
+import less.lgeo.util.ModelTestUtils;
 import org.joml.Vector3d;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -24,7 +25,7 @@ class QuadrilateralTest {
 
     @BeforeEach
     void setUp() {
-        redColor = Color.of(255, 0, 0);
+        redColor = ModelTestUtils.RED;
         p1 = Point.of(-0.5, 0, 0);
         p2 = Point.of(0.5, 0, 0);
         p3 = Point.of(0.5, -0.5, 0);
