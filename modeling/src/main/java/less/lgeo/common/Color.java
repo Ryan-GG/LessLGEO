@@ -1,6 +1,7 @@
 package less.lgeo.common;
 
 import lombok.Builder;
+import lombok.NonNull;
 import org.joml.Vector3d;
 
 import java.util.Optional;
@@ -49,14 +50,15 @@ public record Color(int id, String name, double r, double g, double b, boolean i
 
     }
 
+    @NonNull
     @Override
     public String toString() {
         return String.format("(id: %d, name: %s, rgb: %02X%02X%02X, isTransparent: %b)",
                 id,
                 name,
-                (int) (255.999 * r),
-                (int) (255.999 * g),
-                (int) (255.999 * b),
+                (int) (255 * r),
+                (int) (255 * g),
+                (int) (255 * b),
                 isTransparent
         );
     }
