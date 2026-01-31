@@ -7,7 +7,6 @@ import less.lgeo.hittable.HitRecord;
 import less.lgeo.hittable.HittableList;
 import less.lgeo.hittable.ScatterResult;
 import less.lgeo.primitive.Point;
-import lombok.Getter;
 import org.joml.Vector3d;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,9 +18,6 @@ import java.util.Optional;
 import static less.lgeo.common.Vector3dUtils.*;
 
 
-//FIXME, this really needs a good refactor with tests
-
-@Getter
 public class Camera {
 
     private static final Logger logger = LoggerFactory.getLogger(Camera.class);
