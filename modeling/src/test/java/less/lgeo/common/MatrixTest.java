@@ -15,8 +15,8 @@ class MatrixTest {
                 .c(9).f(10).i(11).z(12)
                 .scale(1.0)
                 .build();
-        Matrix4d dMatrixFromMatrix = Matrix.toMatrix4d(m);
-        Matrix matrixFromDMatrix = Matrix.fromMatrix4d(dMatrixFromMatrix);
+        Matrix4d dMatrixFromMatrix = m.toMatrix4d();
+        Matrix matrixFromDMatrix = new Matrix(dMatrixFromMatrix);
         assertEquals(m.a(), matrixFromDMatrix.a());
         assertEquals(m.b(), matrixFromDMatrix.b());
         assertEquals(m.c(), matrixFromDMatrix.c());

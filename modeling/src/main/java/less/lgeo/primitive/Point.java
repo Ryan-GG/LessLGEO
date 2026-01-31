@@ -7,7 +7,7 @@ import org.joml.Vector3d;
  * Wrapper around {@link Vector3d}
  */
 public record Point(Vector3d value) {
-    
+
     public static Point of(double val) {
         return new Point(new Vector3d(val));
     }
@@ -26,6 +26,7 @@ public record Point(Vector3d value) {
      * transformation applied.
      */
     public Point transform(Matrix matrix) {
+        
         double x = value().x();
         double y = value().y();
         double z = value().z();

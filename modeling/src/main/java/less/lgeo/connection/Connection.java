@@ -11,9 +11,6 @@ import org.joml.Vector3d;
 
 import java.util.List;
 
-import static less.lgeo.common.Matrix.fromMatrix4d;
-import static less.lgeo.common.Matrix.toMatrix4d;
-
 /**
  * I’ve been playing around with these values and compared it with the other
  * connectivity elements. What I’ve found out so far:
@@ -133,7 +130,7 @@ public class Connection {
 
         Matrix4d resultVector = new Matrix4d();
 
-        toMatrix4d(partconnectionMatrix).mul(transformVector, resultVector);
+        partconnectionMatrix.toMatrix4d().mul(transformVector, resultVector);
 
         double x = resultVector.get(0, 0);
         double y = resultVector.get(1, 0);
@@ -152,9 +149,9 @@ public class Connection {
                 .map(partConnection -> {
                     Matrix4d result = new Matrix4d();
 
-                    toMatrix4d(transformationMatrix).mul(toMatrix4d(partConnection.getMatrix()), result);
+                    transformationMatrix.toMatrix4d().mul(partConnection.getMatrix().toMatrix4d(), result);
 
-                    Matrix resulted = fromMatrix4d(result);
+                    Matrix resulted = new Matrix(result);
 
                     return new PartConnection(partConnection.groupId, partConnection.elementId, resulted, partConnection.groupStud);
                 })

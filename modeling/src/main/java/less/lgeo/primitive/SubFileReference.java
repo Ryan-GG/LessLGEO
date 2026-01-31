@@ -8,9 +8,6 @@ import org.joml.Matrix4d;
 
 import java.util.Optional;
 
-import static less.lgeo.common.Matrix.fromMatrix4d;
-import static less.lgeo.common.Matrix.toMatrix4d;
-
 public record SubFileReference(
         Color color,
         Matrix matrix,
@@ -28,9 +25,10 @@ public record SubFileReference(
         if (transformationMatrix.isPresent()) {
             Matrix4d result = new Matrix4d();
 
-            toMatrix4d(transformationMatrix.get()).mul(toMatrix4d(matrix), result);
-
-            resulted = fromMatrix4d(result);
+            transformationMatrix.get().toMatrix4d()
+                    .mul(matrix.toMatrix4d(), result);
+            
+            resulted = new Matrix(result);
         } else {
             resulted = matrix;
         }
