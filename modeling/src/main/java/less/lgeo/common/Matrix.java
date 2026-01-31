@@ -1,7 +1,7 @@
 package less.lgeo.common;
 
 import lombok.Builder;
-import org.ejml.data.DMatrix4x4;
+import org.joml.Matrix4d;
 
 /**
  * / a b c x \
@@ -23,22 +23,22 @@ public record Matrix(
             .scale(1)
             .build();
 
-    public static DMatrix4x4 matrixToDMatrix(Matrix matrix) {
-        return new DMatrix4x4(
+    public static Matrix4d toMatrix4d(Matrix matrix) {
+        return new Matrix4d(
                 matrix.a(), matrix.b(), matrix.c(), matrix.x(),
                 matrix.d(), matrix.e(), matrix.f(), matrix.y(),
                 matrix.g(), matrix.h(), matrix.i(), matrix.z(),
                 0.0, 0.0, 0.0, matrix.scale());
     }
 
-    public static Matrix dMatrixToMatrix(DMatrix4x4 matrix) {
+    public static Matrix fromMatrix4d(Matrix4d matrix) {
         return new Matrix(
-                matrix.a11, matrix.a12, matrix.a13, matrix.a14,
-                matrix.a21, matrix.a22, matrix.a23, matrix.a24,
-                matrix.a31, matrix.a32, matrix.a33, matrix.a34,
-                matrix.a44);
+                matrix.m00(), matrix.m01(), matrix.m02(), matrix.m03(),
+                matrix.m10(), matrix.m11(), matrix.m12(), matrix.m13(),
+                matrix.m20(), matrix.m21(), matrix.m22(), matrix.m23(),
+                matrix.m33());
     }
-    
+
     @Override
     public String toString() {
         return String.format(

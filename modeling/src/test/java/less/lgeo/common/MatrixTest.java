@@ -1,6 +1,6 @@
 package less.lgeo.common;
 
-import org.ejml.data.DMatrix4x4;
+import org.joml.Matrix4d;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -15,8 +15,8 @@ class MatrixTest {
                 .c(9).f(10).i(11).z(12)
                 .scale(1.0)
                 .build();
-        DMatrix4x4 dMatrixFromMatrix = Matrix.matrixToDMatrix(m);
-        Matrix matrixFromDMatrix = Matrix.dMatrixToMatrix(dMatrixFromMatrix);
+        Matrix4d dMatrixFromMatrix = Matrix.toMatrix4d(m);
+        Matrix matrixFromDMatrix = Matrix.fromMatrix4d(dMatrixFromMatrix);
         assertEquals(m.a(), matrixFromDMatrix.a());
         assertEquals(m.b(), matrixFromDMatrix.b());
         assertEquals(m.c(), matrixFromDMatrix.c());

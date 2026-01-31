@@ -6,16 +6,13 @@ import less.lgeo.common.MetaCommand;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import org.ejml.data.DMatrix4x4;
-import org.ejml.data.DMatrixRMaj;
-import org.ejml.dense.fixed.CommonOps_DDF4;
-import org.ejml.dense.row.CommonOps_DDRM;
+import org.joml.Matrix4d;
 import org.joml.Vector3d;
 
 import java.util.List;
 
-import static less.lgeo.common.Matrix.dMatrixToMatrix;
-import static less.lgeo.common.Matrix.matrixToDMatrix;
+import static less.lgeo.common.Matrix.fromMatrix4d;
+import static less.lgeo.common.Matrix.toMatrix4d;
 
 /**
  * I’ve been playing around with these values and compared it with the other
@@ -52,7 +49,7 @@ public class Connection {
     // This is because traditional .conn files are proprietary and cannot be parsed
     // normally
     public static String PART_EXT = ".part";
-        
+
     private List<Comment> comments;
     private List<MetaCommand> commands;
     private List<PartConnection> partConnections;
@@ -128,15 +125,15 @@ public class Connection {
     private static Vector3d transformConnectionVector3(double xOffset, double yOffset, double zOffset,
                                                        Matrix partconnectionMatrix) {
 
-        DMatrixRMaj transformVector = new DMatrixRMaj(4, 1);
+        Matrix4d transformVector = new Matrix4d();
         transformVector.set(0, 0, xOffset);
         transformVector.set(1, 0, yOffset);
         transformVector.set(2, 0, zOffset);
         transformVector.set(3, 0, partconnectionMatrix.scale());
 
-        DMatrixRMaj resultVector = new DMatrixRMaj(4, 1);
-        CommonOps_DDRM.mult(new DMatrixRMaj(matrixToDMatrix(partconnectionMatrix)), transformVector,
-                resultVector);
+        Matrix4d resultVector = new Matrix4d();
+
+        toMatrix4d(partconnectionMatrix).mul(transformVector, resultVector);
 
         double x = resultVector.get(0, 0);
         double y = resultVector.get(1, 0);
@@ -153,11 +150,11 @@ public class Connection {
 
         List<PartConnection> transformedPartConnections = getPartConnections().stream()
                 .map(partConnection -> {
-                    DMatrix4x4 result = new DMatrix4x4();
-                    CommonOps_DDF4.mult(matrixToDMatrix(transformationMatrix),
-                            matrixToDMatrix(partConnection.getMatrix()),
-                            result);
-                    Matrix resulted = dMatrixToMatrix(result);
+                    Matrix4d result = new Matrix4d();
+
+                    toMatrix4d(transformationMatrix).mul(toMatrix4d(partConnection.getMatrix()), result);
+
+                    Matrix resulted = fromMatrix4d(result);
 
                     return new PartConnection(partConnection.groupId, partConnection.elementId, resulted, partConnection.groupStud);
                 })

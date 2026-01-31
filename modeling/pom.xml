@@ -11,16 +11,6 @@
             <version>0.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <artifactId>ejml-core</artifactId>
-            <groupId>org.ejml</groupId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <artifactId>ejml-ddense</artifactId>
-            <groupId>org.ejml</groupId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <artifactId>joml</artifactId>
             <groupId>org.joml</groupId>
             <scope>compile</scope>

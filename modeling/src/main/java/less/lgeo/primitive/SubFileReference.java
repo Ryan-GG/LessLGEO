@@ -4,13 +4,12 @@ import less.lgeo.common.Color;
 import less.lgeo.common.LineType;
 import less.lgeo.common.Matrix;
 import less.lgeo.connection.Connection;
-import org.ejml.data.DMatrix4x4;
-import org.ejml.dense.fixed.CommonOps_DDF4;
+import org.joml.Matrix4d;
 
 import java.util.Optional;
 
-import static less.lgeo.common.Matrix.dMatrixToMatrix;
-import static less.lgeo.common.Matrix.matrixToDMatrix;
+import static less.lgeo.common.Matrix.fromMatrix4d;
+import static less.lgeo.common.Matrix.toMatrix4d;
 
 public record SubFileReference(
         Color color,
@@ -27,11 +26,11 @@ public record SubFileReference(
         final Matrix resulted;
 
         if (transformationMatrix.isPresent()) {
-            DMatrix4x4 result = new DMatrix4x4();
-            CommonOps_DDF4.mult(matrixToDMatrix(transformationMatrix.get()),
-                    matrixToDMatrix(matrix),
-                    result);
-            resulted = dMatrixToMatrix(result);
+            Matrix4d result = new Matrix4d();
+
+            toMatrix4d(transformationMatrix.get()).mul(toMatrix4d(matrix), result);
+
+            resulted = fromMatrix4d(result);
         } else {
             resulted = matrix;
         }
