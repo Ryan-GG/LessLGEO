@@ -32,7 +32,7 @@ public class ModelMapper implements Mapper<Model, ModelEntity> {
 
     @Override
     public Model toDomain(ModelEntity entity) {
-        //FIXME, comments/commands need to be stored in the database
+        //TODO, #62 - Update Model schema to include Comments & Commands
         return new Model(
                 List.of(),
                 List.of(),
@@ -54,5 +54,5 @@ public class ModelMapper implements Mapper<Model, ModelEntity> {
         modelEntity.setPieces(subFileReferenceMapper.toEntityList(domain.pieces(), modelEntity, this));
         return modelEntity;
     }
-    
+
 }

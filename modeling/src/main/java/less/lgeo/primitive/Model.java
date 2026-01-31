@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public record Model(
-        //FIXME, comments/commands need to be stored in the database
+        //TODO, #62 - Update Model schema to include Comments & Commands
         List<Comment> comments,
         List<MetaCommand> commands,
         List<Line> lines,
@@ -97,7 +97,7 @@ public record Model(
                 .toList();
 
         triangles.addAll(quadTriangles);
-        
+
         return triangles;
 
     }
