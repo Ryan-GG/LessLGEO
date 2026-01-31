@@ -33,7 +33,7 @@
             <artifactId>modeling</artifactId>
             <groupId>less.lgeo</groupId>
             <scope>compile</scope>
-            <version>0.0.2-SNAPSHOT</version>
+
         </dependency>
         <dependency>
             <artifactId>jackson-databind</artifactId>
@@ -49,5 +49,4 @@
         <relativePath>../bom/pom.xml</relativePath>
         <version>0.0.2-SNAPSHOT</version>
     </parent>
-    <version>0.0.2-SNAPSHOT</version>
 </project>

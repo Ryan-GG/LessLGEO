@@ -68,6 +68,49 @@
     </dependencies>
     <dependencyManagement>
         <dependencies>
+            <!-- First Party Modules -->
+            <dependency>
+                <groupId>less.lgeo</groupId>
+                <artifactId>web-server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>less.lgeo</groupId>
+                <artifactId>database</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>less.lgeo</groupId>
+                <artifactId>modeling</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <artifactId>modeling</artifactId>
+                <groupId>less.lgeo</groupId>
+                <type>test-jar</type>
+                <scope>test</scope>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>less.lgeo</groupId>
+                <artifactId>messaging</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>less.lgeo</groupId>
+                <artifactId>reducer</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>less.lgeo</groupId>
+                <artifactId>parser</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>less.lgeo</groupId>
+                <artifactId>util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
             <dependency>
                 <artifactId>spring-boot-starter-web</artifactId>
                 <groupId>org.springframework.boot</groupId>
@@ -154,5 +197,4 @@
         <groupId>less.lgeo</groupId>
         <version>0.0.2-SNAPSHOT</version>
     </parent>
-    <version>0.0.2-SNAPSHOT</version>
 </project>
