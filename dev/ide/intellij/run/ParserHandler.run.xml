@@ -2,7 +2,7 @@
   <configuration default="false" name="ParserHandler" type="Application" factoryName="Application" singleton="false" nameIsGenerated="true">
     <option name="MAIN_CLASS_NAME" value="less.lgeo.ParserHandler" />
     <module name="parser" />
-    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=local -Xms2g -Xmx4g" />
+    <option name="VM_PARAMETERS" value="-ea -Dspring.profiles.active=local -Xms2g -Xmx4g" />
     <extension name="coverage">
       <pattern>
         <option name="PATTERN" value=".*" />

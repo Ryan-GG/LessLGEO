@@ -5,29 +5,24 @@
     <artifactId>modeling</artifactId>
     <dependencies>
         <dependency>
-            <artifactId>protobuf-java</artifactId>
-            <groupId>com.google.protobuf</groupId>
-            <version>${protobuf.version}</version>
-        </dependency>
-        <dependency>
             <artifactId>util</artifactId>
             <groupId>less.lgeo</groupId>
+            <scope>compile</scope>
             <version>0.0.2-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <artifactId>ejml-core</artifactId>
-            <groupId>org.ejml</groupId>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
-            <artifactId>ejml-ddense</artifactId>
-            <groupId>org.ejml</groupId>
+            <artifactId>joml</artifactId>
+            <groupId>org.joml</groupId>
             <scope>compile</scope>
         </dependency>
         <dependency>
             <artifactId>junit-jupiter</artifactId>
             <groupId>org.junit.jupiter</groupId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <artifactId>lombok</artifactId>
+            <groupId>org.projectlombok</groupId>
         </dependency>
     </dependencies>
     <modelVersion>4.0.0</modelVersion>
@@ -39,4 +34,20 @@
         <version>0.0.2-SNAPSHOT</version>
     </parent>
     <version>0.0.2-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <version>3.5.0</version>
+            </plugin>
+        </plugins>
+    </build>
 </project>

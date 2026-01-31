@@ -4,32 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <artifactId>bom</artifactId>
     <build>
-        <extensions>
-            <extension>
-                <artifactId>os-maven-plugin</artifactId>
-                <groupId>kr.motd.maven</groupId>
-                <version>1.7.1</version>
-            </extension>
-        </extensions>
         <plugins>
-            <plugin>
-                <artifactId>protobuf-maven-plugin</artifactId>
-                <configuration>
-                    <!--suppress UnresolvedMavenProperty -->
-                    <protocArtifact>
-                        com.google.protobuf:protoc:${protobuf.version}:exe:${os.detected.classifier}
-                    </protocArtifact>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>compile</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <groupId>org.xolstice.maven.plugins</groupId>
-                <version>0.6.1</version>
-            </plugin>
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
@@ -72,6 +47,24 @@
             <scope>runtime</scope>
             <version>${spring.version}</version>
         </dependency>
+        <dependency>
+            <artifactId>junit-jupiter-api</artifactId>
+            <groupId>org.junit.jupiter</groupId>
+            <scope>test</scope>
+            <version>${junit-jupiter.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-test</artifactId>
+            <scope>test</scope>
+            <version>${spring.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>${mockito.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <dependencyManagement>
         <dependencies>
@@ -106,24 +99,14 @@
                 <version>${spring.version}</version>
             </dependency>
             <dependency>
-                <artifactId>protobuf-java-util</artifactId>
-                <groupId>com.google.protobuf</groupId>
-                <version>${protobuf.version}</version>
-            </dependency>
-            <dependency>
-                <artifactId>ejml-core</artifactId>
-                <groupId>org.ejml</groupId>
-                <version>${ejml.version}</version>
-            </dependency>
-            <dependency>
-                <artifactId>ejml-ddense</artifactId>
-                <groupId>org.ejml</groupId>
-                <version>${ejml.version}</version>
-            </dependency>
-            <dependency>
                 <artifactId>junit-jupiter-api</artifactId>
                 <groupId>org.junit.jupiter</groupId>
                 <version>${junit-jupiter.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-core</artifactId>
+                <version>${mockito.version}</version>
             </dependency>
             <dependency>
                 <artifactId>postgresql</artifactId>
@@ -151,6 +134,17 @@
                 <scope>test</scope>
                 <version>1.21.3</version>
             </dependency>
+            <dependency>
+                <artifactId>joml</artifactId>
+                <groupId>org.joml</groupId>
+                <version>1.10.8</version>
+            </dependency>
+            <dependency>
+                <groupId>io.zonky.test</groupId>
+                <artifactId>embedded-database-spring-test</artifactId>
+                <version>2.6.0</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
     <modelVersion>4.0.0</modelVersion>
@@ -160,9 +154,5 @@
         <groupId>less.lgeo</groupId>
         <version>0.0.2-SNAPSHOT</version>
     </parent>
-    <properties>
-        <ejml.version>0.44.0</ejml.version>
-        <protobuf.version>4.31.0</protobuf.version>
-    </properties>
     <version>0.0.2-SNAPSHOT</version>
 </project>

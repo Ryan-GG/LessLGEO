@@ -37,7 +37,6 @@
         <module>web-server</module>
         <module>database</module>
         <module>bom</module>
-        <module>autoconfigure</module>
     </modules>
     <name>LessLGEO</name>
     <packaging>pom</packaging>

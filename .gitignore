@@ -43,7 +43,6 @@ replay_pid*
 
 # Local ldraw files
 ldraw/
-*.ldr
 *.dat
 
 # Connectivity files
@@ -54,9 +53,6 @@ connectivity/
 # Collision files
 collider/
 *.col
-
-# GPB files
-*.gpb
 
 */node_modules
 */.pnp
@@ -94,9 +90,8 @@ yarn-error.log*
 *.tsbuildinfo
 */next-env.d.ts
 
-# ProtobufJS
-ui/proto-bundle.js
-ui/proto-bundle.d.ts
-
 # Supabase
 supabase/
+
+# ppm files
+*.ppm

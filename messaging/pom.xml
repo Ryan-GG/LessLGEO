@@ -5,12 +5,6 @@
     <artifactId>messaging</artifactId>
     <dependencies>
         <dependency>
-            <artifactId>protobuf-java</artifactId>
-            <groupId>com.google.protobuf</groupId>
-            <version>${protobuf.version}</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <artifactId>modeling</artifactId>
             <groupId>less.lgeo</groupId>
             <version>0.0.2-SNAPSHOT</version>

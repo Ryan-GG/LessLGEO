@@ -2,10 +2,10 @@
   <configuration default="false" name="WebServer" type="Application" factoryName="Application">
     <option name="MAIN_CLASS_NAME" value="less.lgeo.WebServer" />
     <module name="web-server" />
-    <option name="VM_PARAMETERS" value="-Dspring.profiles.active=local -Xms2g -Xmx4g" />
+    <option name="VM_PARAMETERS" value="-ea -Dspring.profiles.active=local -Xms2g -Xmx4g" />
     <extension name="coverage">
       <pattern>
-        <option name="PATTERN" value="less.lgeo.test.*" />
+        <option name="PATTERN" value="less.lgeo.util.*" />
         <option name="ENABLED" value="true" />
       </pattern>
     </extension>

@@ -1,9 +1,7 @@
 package less.lgeo.consumer;
 
-import com.google.protobuf.InvalidProtocolBufferException;
 import less.lgeo.ParserHandler;
 import less.lgeo.embedded.ModelId;
-import less.lgeo.messaging.ModelJobRequest;
 import less.lgeo.rabbitmq.properties.RabbitWebToParserRpcProperties;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -30,8 +28,8 @@ public class ParserConsumer {
     }
 
     @RabbitHandler
-    public ModelId handleMessage(@Payload byte[] modelJobRequest) throws InvalidProtocolBufferException {
-        return parserHandler.consume(ModelJobRequest.parseFrom(modelJobRequest));
+    public ModelId handleMessage(@Payload String lDrawText) {
+        return parserHandler.consume(lDrawText);
     }
 
 }

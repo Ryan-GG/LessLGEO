@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.awt.*;
 import java.util.List;
+import java.util.Optional;
 import java.util.Random;
 import java.util.stream.IntStream;
 
@@ -39,12 +40,12 @@ class ColorControllerTest {
     }
 
     @Test
-    void getColor() throws Exception {
+    void inheritColor() throws Exception {
 
         int id = 1;
         ColorEntity colorEntity = createRandomColorEntity(id);
 
-        when(colorService.getColorByCode(id)).thenReturn(colorEntity);
+        when(colorService.getColorByCode(id)).thenReturn(Optional.of(colorEntity));
 
         mockMvc.perform(get("/v1/colors/{id}", id)
                         .contentType(MediaType.APPLICATION_JSON))

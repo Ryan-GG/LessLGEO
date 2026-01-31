@@ -1,10 +1,9 @@
 "use client";
-import { modeling } from "@/proto-bundle";
 import { ReactNode } from "react";
 import * as BufferGeometryUtils from 'three/addons/utils/BufferGeometryUtils.js';
 import { BufferAttribute, BufferGeometry, DoubleSide } from "three";
 import { verticesToFloat32Array, colorToFloat32Array } from "@/utils/common-utilities";
-import { ModelEntity, QuadrilateralEntity, TriangleEntity } from "@/api/schema";
+import { ModelEntity, QuadrilateralEntity, TriangleEntity, Vector3dEmbeddable } from "@/api/schema";
 
 /**
  * @returns a group of two meshes for all quads and triangles provided in the protobuf model object
@@ -14,28 +13,47 @@ export function Model( { entity }: { entity: ModelEntity | undefined } ): ReactN
 	if( entity == undefined ) return [];
 
 	const quadGeometries: BufferGeometry[] = getQuadrilaterals( entity ).map( quad => quadrilateralToBufferGeometry( quad ) ).filter( quadGeometry => quadGeometry != undefined );
+	
 	const triangleGeometries: BufferGeometry[] = getTriangles( entity ).map( triangle => triangleToBufferGeometry( triangle ) ).filter( triangleGeometry => triangleGeometry != undefined );
 
+	let quad: BufferGeometry | undefined = undefined;
+	let triangle: BufferGeometry | undefined = undefined;
 
-	const quad: BufferGeometry = BufferGeometryUtils.mergeGeometries( quadGeometries, false );
-	const triangle: BufferGeometry = BufferGeometryUtils.mergeGeometries( triangleGeometries, false );
+	if( quadGeometries.length > 0 )
+	{
+		quad = BufferGeometryUtils.mergeGeometries( quadGeometries, false );
+	}
+	if( triangleGeometries.length > 0 )
+	{
+		triangle = BufferGeometryUtils.mergeGeometries( triangleGeometries, false );
+	}
 
 	return (
 		<group>
-			<mesh geometry={quad}>
-				<meshPhongMaterial vertexColors transparent side={DoubleSide}/>
-				<lineSegments>
-					<edgesGeometry args={[ quad ]} />
-					<lineBasicMaterial color={"black"} linewidth={1}/>
-				</lineSegments>
-			</mesh>	
-			<mesh geometry={triangle}>
-				<meshPhongMaterial vertexColors transparent side={DoubleSide}/>
-				<lineSegments>
-					<edgesGeometry args={[ triangle ]} />
-					<lineBasicMaterial color={"black"} linewidth={1}/>
-				</lineSegments>
-			</mesh>	
+			{quad && (
+				<group>
+					<mesh geometry={quad}>
+						<meshPhongMaterial vertexColors transparent side={DoubleSide} />
+					</mesh>
+
+					<lineSegments>
+						<edgesGeometry args={[ quad ]}/>
+						<lineBasicMaterial color="black" linewidth={1} />
+					</lineSegments>
+				</group>
+			)}
+			{triangle && (
+				<group>
+					<mesh geometry={triangle}>
+						<meshPhongMaterial vertexColors transparent side={DoubleSide} />
+					</mesh>
+
+					<lineSegments>
+						<wireframeGeometry args={[ triangle ]}/>
+						<lineBasicMaterial color="black" linewidth={1} />
+					</lineSegments>
+				</group>
+			)}
 		</group>	
 	);	  
 }
@@ -43,17 +61,17 @@ export function Model( { entity }: { entity: ModelEntity | undefined } ): ReactN
 
 function getTriangles( model: ModelEntity ): TriangleEntity[] {
 
-	const triangles: TriangleEntity[] = model.triangles ?? [];
+	const triangles: TriangleEntity[] = model.triangles;
     
-	for ( const subModel of model.children ) triangles.push( ...getTriangles( subModel ) ); 
+	for ( const subFileReference of model.pieces ) triangles.push( ...getTriangles( subFileReference.subModel ) ); 
 
 	return triangles;
 }
 
 function getQuadrilaterals( model: ModelEntity ): QuadrilateralEntity[] {
-	const quads: QuadrilateralEntity[] = model.quadrilaterals ?? [];
+	const quads: QuadrilateralEntity[] = model.quadrilaterals;
     
-	for ( const subModel of model.children ) quads.push( ...getQuadrilaterals( subModel ) ); 
+	for ( const subFileReference of model.pieces ) quads.push( ...getQuadrilaterals( subFileReference.subModel ) ); 
 
 	return quads;
 } 
@@ -71,11 +89,9 @@ function triangleToBufferGeometry( triangleEntity: TriangleEntity ): BufferGeome
 	}
 
 	const geometry = new BufferGeometry();
-	const gpbVertices: Array<modeling.IVertex> = [ p1, p2, p3 ];
+	const vertices = verticesToFloat32Array( [ p1, p2, p3 ] );
 
-	const vertices = verticesToFloat32Array( gpbVertices );
-
-	const indices = [ 0, 1, 2 ];
+	const indices = [ 0, 1, 2  ];
         
 	geometry.setIndex( indices );
 	geometry.setAttribute( 'position', new BufferAttribute( vertices, 3, false ) );
@@ -101,9 +117,8 @@ function quadrilateralToBufferGeometry( quadrilateralEntity: QuadrilateralEntity
 	}
 
 	const geometry = new BufferGeometry();
-	const gpbVertices: Array<modeling.IVertex> = [ p1, p2, p3, p4 ];
-	const vertices = verticesToFloat32Array( gpbVertices );
-	const indices = [ 0, 1, 2, 2, 3, 0, ];
+	const vertices = verticesToFloat32Array( [ p1, p2, p3, p4 ] );
+	const indices = [ 0, 1, 2, 2, 3, 0 ];
         
 	geometry.setIndex( indices );
 	geometry.setAttribute( "position", new BufferAttribute( vertices, 3, false ) );

@@ -29,9 +29,6 @@ jobs:
       - name: 'Install NPM Dependencies'
         run: npm ci
 
-      - name: 'Generate Proto Sources'
-        run: npm run generate-sources
-
       - name: 'Type-check'
         run: npm run type-check
 

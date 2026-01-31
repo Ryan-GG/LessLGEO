@@ -1,0 +1,20 @@
+0 Name: Cube.ldr
+0 Author: Gross
+
+0 // Bottom face (a, b, c, d)
+4 4 0 -1 0  1 -1 0  1 -1 1  0 -1 1
+
+0 // Top face (e, f, g, h)
+4 4 0 0 0  1 0 0  1 0 1  0 0 1
+
+0 // Front face (a, b, f, e)
+4 4 0 -1 0  1 -1 0  1 0 0  0 0 0
+
+0 // Back face (d, c, g, h)
+4 4 0 -1 1  1 -1 1  1 0 1  0 0 1
+
+0 // Left face (a, d, h, e)
+4 4 0 -1 0  0 -1 1  0 0 1  0 0 0
+
+0 // Right face (b, c, g, f)
+4 4 1 -1 0  1 -1 1  1 0 1  1 0 0

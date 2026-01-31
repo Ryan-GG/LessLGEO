@@ -37,3 +37,14 @@ rabbit:
     parser-to-reducer-dead-letter-queue: "parser-to-reducer-dead-letter-queue"
     web-to-parser-routing-key: "web.parser.dlq"
     parser-to-reducer-routing-key: "parser.reducer.dlq"
+
+zonky:
+  test:
+    database:
+      type: auto                        # The type of embedded database to be created when replacing the data source.
+      provider: default                 # Provider to be used to create the underlying embedded database.
+      refresh: after-each-test-method   # Determines the refresh mode of the embedded database.
+      replace: any                      # Determines what type of existing DataSource beans can be replaced.
+      postgres:
+        docker:
+          image: postgres:18.0          # Docker image containing PostgreSQL database.
