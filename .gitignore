@@ -95,3 +95,6 @@ supabase/
 
 # ppm files
 *.ppm
+
+# Release XML backups
+*.xml.releaseBackup
