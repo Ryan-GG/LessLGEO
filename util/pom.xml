@@ -25,6 +25,6 @@
         <artifactId>bom</artifactId>
         <groupId>less.lgeo</groupId>
         <relativePath>../bom/pom.xml</relativePath>
-        <version>0.1.1-alpha</version>
+        <version>0.2.0-SNAPSHOT</version>
     </parent>
 </project>
