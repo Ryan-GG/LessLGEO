@@ -6,9 +6,13 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>versions-maven-plugin</artifactId>
-                <version>2.19.1</version>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <version>3.3.1</version>
+                <configuration>
+                    <tagNameFormat>v@{project.version}</tagNameFormat>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -55,4 +59,10 @@
         <spring.version>3.5.6</spring.version>
     </properties>
     <version>0.0.2-SNAPSHOT</version>
+    <scm>
+        <connection>scm:git:https://github.com/Ryan-GG/LessLGEO.git</connection>
+        <developerConnection>scm:git:https://github.com/Ryan-GG/LessLGEO.git</developerConnection>
+        <url>https://github.com/Ryan-GG/LessLGEO</url>
+        <tag>HEAD</tag>
+    </scm>
 </project>
