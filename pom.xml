@@ -12,6 +12,8 @@
                     <tagNameFormat>v@{project.version}</tagNameFormat>
                     <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
+                <!-- Remove default of mvn deploy -->
+                <goals/>
             </plugin>
         </plugins>
     </build>
@@ -64,11 +66,4 @@
         <url>https://github.com/Ryan-GG/LessLGEO</url>
         <tag>HEAD</tag>
     </scm>
-    <distributionManagement>
-        <repository>
-            <id>github</id>
-            <name>GitHub LessLGEO Maven Packages</name>
-            <url>https://github.com/Ryan-GG/LessLGEO</url>
-        </repository>
-    </distributionManagement>
 </project>
