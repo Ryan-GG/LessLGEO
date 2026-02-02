@@ -63,4 +63,7 @@ jobs:
           tag_name: v${{ inputs.releaseVersion }}
           generate_release_notes: true
           files: |
-            target/*.jar
+            LICENSE.txt
+            **/target/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
