@@ -29,7 +29,7 @@
         <artifactId>bom</artifactId>
         <groupId>less.lgeo</groupId>
         <relativePath>../bom/pom.xml</relativePath>
-        <version>0.2.3-alpha</version>
+        <version>0.2.4-SNAPSHOT</version>
     </parent>
 
     <build>
