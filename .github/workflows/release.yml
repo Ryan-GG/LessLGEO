@@ -30,8 +30,8 @@ jobs:
           distribution: 'temurin'
           architecture: 'x64'
           cache: 'maven'
-          server-id: github
-          server-username: ${{ github.actor }}
+          server-id: 'github'
+          server-username: 'Ryan-GG'
           server-password: ${{ secrets.PACKAGE_TOKEN }}
 
       - name: Configure Git
