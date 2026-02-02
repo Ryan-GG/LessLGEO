@@ -30,6 +30,9 @@ jobs:
           distribution: 'temurin'
           architecture: 'x64'
           cache: 'maven'
+          server-id: 'github'  # Must match <id> in your pom.xml <distributionManagement>
+          server-username: GITHUB_ACTOR
+          server-password: GITHUB_TOKEN
 
       - name: Configure Git
         run: |
@@ -49,6 +52,9 @@ jobs:
             -Dtag=v${{ inputs.releaseVersion }}
 
       - name: Maven Release Perform
+        env:
+          GITHUB_ACTOR: ${{ github.actor }}
+          GITHUB_TOKEN: ${{ secrets.PACKAGE_TOKEN }}
         run: mvn release:perform -B
 
       - name: Create GitHub Release
@@ -57,4 +63,6 @@ jobs:
           tag_name: v${{ inputs.releaseVersion }}
           generate_release_notes: true
           files: |
-            target/*.jar
+            **/target/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
