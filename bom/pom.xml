@@ -193,6 +193,6 @@
     <parent>
         <artifactId>parent</artifactId>
         <groupId>less.lgeo</groupId>
-        <version>0.2.2-alpha</version>
+        <version>0.2.3-SNAPSHOT</version>
     </parent>
 </project>
