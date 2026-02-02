@@ -54,7 +54,7 @@
         <artifactId>bom</artifactId>
         <groupId>less.lgeo</groupId>
         <relativePath>../bom/pom.xml</relativePath>
-        <version>0.2.4-SNAPSHOT</version>
+        <version>0.2.4</version>
     </parent>
 
 </project>
