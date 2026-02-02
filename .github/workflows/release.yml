@@ -32,7 +32,7 @@ jobs:
           cache: 'maven'
           server-id: 'github'
           server-username: 'Ryan-GG'
-          server-password: ${{ secrets.PACKAGE_TOKEN }}
+          server-password: ${{ secrets.RELEASE_TOKEN }}
 
       - name: Configure Git
         run: |
